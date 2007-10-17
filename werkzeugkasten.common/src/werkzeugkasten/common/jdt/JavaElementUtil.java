@@ -136,4 +136,5 @@ public class JavaElementUtil {
 				path.segment(0));
 		return JavaCore.create(project);
 	}
+
 }
