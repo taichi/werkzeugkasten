@@ -9,5 +9,34 @@
             variable="H2">
       </classpathVariableInitializer>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="werkzeugkasten.dblauncher.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            category="launcher"
+            class="werkzeugkasten.dblauncher.preferences.DbPreferencesPage"
+            id="werkzeugkasten.dblauncher.page"
+            name="%plugin.label">
+         <enabledWhen>
+            <adapt
+                  type="org.eclipse.core.resources.IProject">
+            </adapt>
+         </enabledWhen>
+      </page>
+   </extension>
+   <extension
+         id="nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="werkzeugkasten.dblauncher.nature.DbLauncherNature">
+         </run>
+      </runtime>
+   </extension>
 
 </plugin>

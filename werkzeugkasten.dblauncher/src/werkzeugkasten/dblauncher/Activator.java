@@ -3,6 +3,8 @@ package werkzeugkasten.dblauncher;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import werkzeugkasten.common.resource.LogUtil;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -44,6 +46,14 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
+	}
+
+	public static void log(String msg) {
+		LogUtil.log(getDefault(), msg);
+	}
+
+	public static void log(Throwable throwable) {
+		LogUtil.log(getDefault(), throwable);
 	}
 
 }

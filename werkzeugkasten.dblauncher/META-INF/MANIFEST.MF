@@ -1,10 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Dblauncher Plug-in
+Bundle-Name: %plugin.name
 Bundle-SymbolicName: werkzeugkasten.dblauncher;singleton:=true
 Bundle-Version: 0.0.0
 Bundle-Activator: werkzeugkasten.dblauncher.Activator
-Bundle-Vendor: ryushi
+Bundle-Vendor: %plugin.author
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -17,3 +19,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors,
  org.eclipse.jface.text
 Eclipse-LazyStart: true
+Bundle-ClassPath: lib/h2-2007-10-03.jar,
+ .
