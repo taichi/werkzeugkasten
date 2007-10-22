@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.jdt.core.classpathVariableInitializer">
+      <classpathVariableInitializer
+            class="werkzeugkasten.dblauncher.variable.Variable"
+            readOnly="true"
+            variable="H2">
+      </classpathVariableInitializer>
+   </extension>
+
+</plugin>

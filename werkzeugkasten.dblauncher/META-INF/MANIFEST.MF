@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Dblauncher Plug-in
-Bundle-SymbolicName: werkzeugkasten.dblauncher
+Bundle-SymbolicName: werkzeugkasten.dblauncher;singleton:=true
 Bundle-Version: 0.0.0
 Bundle-Activator: werkzeugkasten.dblauncher.Activator
 Bundle-Vendor: ryushi
