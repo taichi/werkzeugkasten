@@ -1,6 +1,7 @@
 package werkzeugkasten.dblauncher.action;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunch;
@@ -80,8 +81,7 @@ public class ToggleServerAction extends EnablerAction {
 	}
 
 	protected synchronized boolean checkEnabled() {
-		IProject project = ResourceUtil
-				.getCurrentSelectedResouce(IProject.class);
+		IProject project = findCurrentProject();
 		boolean result = checkEnabled(project);
 		if (result) {
 			ILaunch launch = Activator.getLaunch(project);
@@ -101,10 +101,31 @@ public class ToggleServerAction extends EnablerAction {
 				&& ProjectUtil.hasNature(project, Constants.ID_NATURE);
 	}
 
+	protected IProject findCurrentProject() {
+		IProject result = ResourceUtil
+				.getCurrentSelectedResouce(IProject.class);
+		if (result != null) {
+			return result;
+		}
+
+		IWorkspaceRoot root = ProjectUtil.getWorkspaceRoot();
+		IProject[] projects = root.getProjects();
+		for (IProject p : projects) {
+			ILaunch l = Activator.getLaunch(p);
+
+			if ((l == null || l.isTerminated() == false)
+					&& ProjectUtil.hasNature(p, Constants.ID_NATURE)) {
+				result = p;
+				break;
+			}
+		}
+
+		return result;
+	}
+
 	public void run(IAction action) {
 		try {
-			IProject project = ResourceUtil
-					.getCurrentSelectedResouce(IProject.class);
+			IProject project = findCurrentProject();
 			if (project != null) {
 				current.run(action, project);
 				if (current == start) {

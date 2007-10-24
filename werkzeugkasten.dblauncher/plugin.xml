@@ -23,9 +23,14 @@
             id="werkzeugkasten.dblauncher.page"
             name="%plugin.label">
          <enabledWhen>
-            <adapt
-                  type="org.eclipse.core.resources.IProject">
-            </adapt>
+            <or>
+               <instanceof
+                     value="org.eclipse.jdt.core.IJavaProject">
+               </instanceof>
+               <adapt
+                     type="org.eclipse.core.resources.IProject">
+               </adapt>
+            </or>
          </enabledWhen>
       </page>
    </extension>
@@ -60,6 +65,69 @@
             </and>
          </enablement>
       </decorator>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="werkzeugkasten.dblauncher.launch.DbLaunchConfigurationDelegate"
+            id="werkzeugkasten.dblauncher.launchConfigurationType"
+            modes="run, debug"
+            name="%plugin.label"
+            public="true"
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector">
+      </launchConfigurationType>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="werkzeugkasten.dblauncher.launch.DbLaunchConfigurationTabGroup"
+            id="werkzeugkasten.dblauncher.launchConfigurationTabGroup"
+            type="werkzeugkasten.dblauncher.launchConfigurationType">
+      </launchConfigurationTabGroup>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="werkzeugkasten.dblauncher.launchConfigurationType"
+            icon="icons/h2.gif"
+            id="werkzeugkasten.dblauncher.launchConfigurationTypeImage">
+      </launchConfigurationTypeImage>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="werkzeugkasten.dblauncher.actionSet"
+            label="%plugin.label"
+            visible="true">
+         <menu
+               id="werkzeugkasten.dblauncher.menu"
+               label="%plugin.label">
+            <groupMarker
+                  name="werkzeugkasten.dblauncher.groupMarker">
+            </groupMarker>
+         </menu>
+         <action
+               class="werkzeugkasten.dblauncher.action.ToggleServerAction"
+               definitionId="werkzeugkasten.dblauncher.command.toggle"
+               icon="icons/run_exc.gif"
+               id="werkzeugkasten.dblauncher.action.start"
+               label="%start"
+               menubarPath="werkzeugkasten.dblauncher.menu/werkzeugkasten.dblauncher.groupMarker"
+               toolbarPath="werkzeugkasten.dblauncher.groupMarker">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="werkzeugkasten.dblauncher.category"
+            name="%plugin.label">
+      </category>
+      <command
+            categoryId="werkzeugkasten.dblauncher.category"
+            id="werkzeugkasten.dblauncher.command.toggle"
+            name="%toggle">
+      </command>
    </extension>
 
 </plugin>

@@ -8,9 +8,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -263,9 +263,13 @@ public class DbPreferencesPage extends PropertyPage implements
 						&& numeric.matcher(no).matches()) {
 					store.setValue(Constants.PREF_WEB_PORTNO, no);
 				}
+				if (store instanceof IPersistentPreferenceStore) {
+					IPersistentPreferenceStore pps = (IPersistentPreferenceStore) store;
+					pps.save();
+				}
 				result = true;
 			}
-		} catch (CoreException e) {
+		} catch (Exception e) {
 			Activator.log(e);
 		}
 

@@ -1,15 +1,20 @@
 package werkzeugkasten.dblauncher.job;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 
+import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
 import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.Constants;
@@ -45,11 +50,15 @@ public class StartServerJob extends WorkspaceJob {
 				&& (launch == null || launch.isTerminated())) {
 			try {
 				project.setSessionProperty(Constants.KEY_JOB_PROCESSING, "");
-				ILaunchConfiguration config = new DbConfigurationBuilder(
-						project).build();
 				DbPreferences pref = Activator.getPreferences(project);
-				config.launch(pref.isDebug() ? ILaunchManager.DEBUG_MODE
-						: ILaunchManager.RUN_MODE, monitor);
+				DbConfigurationBuilder builder = new DbConfigurationBuilder(
+						project);
+				builder.setArgs(buildBootArgs(pref));
+				ILaunchConfiguration config = builder.build();
+				launch = config.launch(
+						pref.isDebug() ? ILaunchManager.DEBUG_MODE
+								: ILaunchManager.RUN_MODE, monitor);
+				Activator.setLaunch(project, launch);
 				AbstractLightweightLabelDecorator.updateDecorators(
 						Constants.ID_DECORATOR, project);
 			} finally {
@@ -57,5 +66,25 @@ public class StartServerJob extends WorkspaceJob {
 			}
 		}
 		return Status.OK_STATUS;
+	}
+
+	public String buildBootArgs(DbPreferences pref) {
+		StringBuffer stb = new StringBuffer();
+		stb.append(" -tcp -tcpPort ");
+		stb.append(pref.getDbPortNo());
+		stb.append(" -web -webPort ");
+		stb.append(pref.getWebPortNo());
+
+		IWorkspaceRoot root = ProjectUtil.getWorkspaceRoot();
+		IContainer c = root.getFolder(new Path(pref.getBaseDir()));
+		IPath p = c.getLocation();
+		if (p == null) {
+			p = root.getLocation();
+			p = p.append(pref.getBaseDir());
+		}
+		stb.append(" -baseDir \"");
+		stb.append(p.toString());
+		stb.append("\"");
+		return stb.toString();
 	}
 }
