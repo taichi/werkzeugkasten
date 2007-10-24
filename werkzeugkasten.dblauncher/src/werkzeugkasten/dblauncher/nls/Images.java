@@ -9,6 +9,10 @@ public class Images {
 
 	public static ImageDescriptor RUNNING;
 
+	public static ImageDescriptor START;
+
+	public static ImageDescriptor STOP;
+
 	static {
 		Class<?> clazz = Images.class;
 		ImageLoader.load(Activator.getDefault().getImageRegistry(), clazz);

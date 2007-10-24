@@ -9,6 +9,15 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+
+import werkzeugkasten.common.runtime.AdaptableUtil;
+import werkzeugkasten.common.ui.WorkbenchUtil;
 
 public class ResourceUtil {
 
@@ -51,4 +60,32 @@ public class ResourceUtil {
 			LogUtil.log(ResourcesPlugin.getPlugin(), e);
 		}
 	}
+
+	public static <T extends IResource> T getCurrentSelectedResouce(
+			Class<T> clazz) {
+		T result = null;
+		IWorkbenchWindow window = WorkbenchUtil.getWorkbenchWindow();
+		if (window != null) {
+			IWorkbenchPage page = window.getActivePage();
+			if (page != null) {
+				// getActiveEditorで取れる参照は、フォーカスがどこにあってもアクティブなエディタの参照が取れてしまう為。
+				IWorkbenchPart part = page.getActivePart();
+				if (part instanceof IEditorPart) {
+					IEditorPart editor = (IEditorPart) part;
+					result = AdaptableUtil.to(editor.getEditorInput(), clazz);
+				}
+			}
+			if (result == null) {
+				ISelection selection = window.getSelectionService()
+						.getSelection();
+				if (selection instanceof IStructuredSelection) {
+					IStructuredSelection ss = (IStructuredSelection) selection;
+					Object o = ss.getFirstElement();
+					result = AdaptableUtil.to(o, clazz);
+				}
+			}
+		}
+		return result;
+	}
+
 }

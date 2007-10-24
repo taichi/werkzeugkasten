@@ -9,11 +9,8 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
@@ -23,6 +20,7 @@ import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.h2.tools.Server;
 
+import werkzeugkasten.common.debug.LaunchConfigurationFactory;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.Constants;
@@ -61,72 +59,72 @@ public class DbConfigurationBuilder {
 	}
 
 	public ILaunchConfiguration build() throws CoreException {
-		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-		ILaunchConfigurationType type = manager
-				.getLaunchConfigurationType(Constants.ID_H2_LAUNCH_CONFIG);
-		ILaunchConfiguration config = null;
-		ILaunchConfiguration[] configs = manager.getLaunchConfigurations(type);
-		for (int i = 0; i < configs.length; i++) {
-			if (configs[i].getName().equals(getName())) {
-				String current = configs[i]
-						.getAttribute(
-								IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-								"");
-				if (current.equals(getArgs())) {
-					config = configs[i];
-				} else {
-					configs[i].delete();
-				}
-				break;
-			}
+		return LaunchConfigurationFactory
+				.create(new LaunchConfigurationFactory.CreationHandler() {
+					public String getTypeName() {
+						return Constants.ID_H2_LAUNCH_CONFIG;
+					}
+
+					public void setUp(ILaunchConfigurationWorkingCopy copy)
+							throws CoreException {
+						DbConfigurationBuilder.this.setUp(copy);
+					};
+
+					public String getConfigName() {
+						return Constants.ID_PLUGIN + "." + project.getName();
+					}
+
+					public boolean equals(ILaunchConfiguration config)
+							throws CoreException {
+						String current = config
+								.getAttribute(
+										IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+										"");
+						return current.equals(getArgs());
+					}
+				});
+	}
+
+	public void setUp(ILaunchConfigurationWorkingCopy copy)
+			throws CoreException {
+		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME,
+				project.getName());
+
+		DbPreferences pref = Activator.getPreferences(project);
+		IPath baseDirPath = new Path(pref.getBaseDir());
+		IWorkspaceRoot root = ProjectUtil.getWorkspaceRoot();
+		IContainer c = root.getFolder(baseDirPath);
+		String workDir = project.getLocation().toString();
+		if (c.exists()) {
+			workDir = baseDirPath.toString();
 		}
-		if (config == null) {
-			ILaunchConfigurationWorkingCopy copy = type.newInstance(null,
-					getName());
-			copy.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME,
-					project.getName());
+		copy.setAttribute(
+				IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
+				workDir);
 
-			DbPreferences pref = Activator.getPreferences(project);
-			IPath baseDirPath = new Path(pref.getBaseDir());
-			IWorkspaceRoot root = ProjectUtil.getWorkspaceRoot();
-			IContainer c = root.getFolder(baseDirPath);
-			String workDir = project.getLocation().toString();
-			if (c.exists()) {
-				workDir = baseDirPath.toString();
-			}
+		if (hasMain(getProject(), getMainClass()) == false) {
 			copy.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
-					workDir);
-
-			if (hasMain(getProject(), getMainClass()) == false) {
+					IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH,
+					false);
+			copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH,
+					toMemento(getClasspath()));
+			if (srcpath != null && 0 < srcpath.length) {
 				copy
 						.setAttribute(
-								IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH,
+								IJavaLaunchConfigurationConstants.ATTR_DEFAULT_SOURCE_PATH,
 								false);
 				copy.setAttribute(
-						IJavaLaunchConfigurationConstants.ATTR_CLASSPATH,
-						toMemento(getClasspath()));
-				if (this.srcpath != null && 0 < this.srcpath.length) {
-					copy
-							.setAttribute(
-									IJavaLaunchConfigurationConstants.ATTR_DEFAULT_SOURCE_PATH,
-									false);
-					copy.setAttribute(
-							IJavaLaunchConfigurationConstants.ATTR_SOURCE_PATH,
-							toMemento(getSrcpath()));
-				}
+						IJavaLaunchConfigurationConstants.ATTR_SOURCE_PATH,
+						toMemento(getSrcpath()));
 			}
-
-			copy.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
-					getMainClass());
-			copy.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-					getArgs());
-			config = copy.doSave();
 		}
-		return config;
+
+		copy.setAttribute(
+				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
+				getMainClass());
+		copy.setAttribute(
+				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+				getArgs());
 	}
 
 	private List<String> toMemento(IRuntimeClasspathEntry[] classpath)

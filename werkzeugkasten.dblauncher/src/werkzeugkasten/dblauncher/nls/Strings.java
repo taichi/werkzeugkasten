@@ -22,6 +22,12 @@ public class Strings extends NLS {
 
 	public static String DEC_LABEL_FMT;
 
+	public static String MSG_START_SERVER;
+
+	public static String LABEL_START;
+
+	public static String LABEL_STOP;
+
 	static {
 		Class<?> clazz = Strings.class;
 		NLS.initializeMessages(clazz.getName(), clazz);

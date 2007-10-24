@@ -16,6 +16,8 @@ public final class Constants {
 	/* ---------------------------------------------------------------------- */
 	public static final QualifiedName KEY_SERVER_STATE = new QualifiedName(
 			ID_PLUGIN, "serverstate");
+	public static final QualifiedName KEY_JOB_PROCESSING = new QualifiedName(
+			ID_PLUGIN, "jobstarted");
 
 	/* ---------------------------------------------------------------------- */
 	public static final String PREF_BASE_DIR = "baseDir";
