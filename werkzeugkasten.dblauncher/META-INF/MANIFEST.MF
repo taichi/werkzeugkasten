@@ -17,7 +17,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.browser,
  org.eclipse.ui.ide,
  org.eclipse.ui.editors,
- org.eclipse.jface.text
+ org.eclipse.jface.text,
+ org.eclipse.debug.ui,
+ org.eclipse.jdt.debug.ui
 Eclipse-LazyStart: true
 Bundle-ClassPath: lib/h2-2007-10-03.jar,
  .

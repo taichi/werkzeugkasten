@@ -20,6 +20,8 @@ public class Strings extends NLS {
 
 	public static String ERR_ONLY_NUMERIC;
 
+	public static String DEC_LABEL_FMT;
+
 	static {
 		Class<?> clazz = Strings.class;
 		NLS.initializeMessages(clazz.getName(), clazz);

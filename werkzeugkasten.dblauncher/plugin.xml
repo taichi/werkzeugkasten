@@ -38,5 +38,28 @@
          </run>
       </runtime>
    </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            adaptable="true"
+            class="werkzeugkasten.dblauncher.viewers.DBRunningDecorator"
+            id="werkzeugkasten.dblauncher.decorator"
+            label="DBRunningDecorator"
+            lightweight="true"
+            location="BOTTOM_RIGHT"
+            state="true">
+         <enablement>
+            <and>
+               <objectState
+                     name="projectNature"
+                     value="werkzeugkasten.dblauncher.nature">
+               </objectState>
+               <objectClass
+                     name="org.eclipse.jdt.core.IJavaProject">
+               </objectClass>
+            </and>
+         </enablement>
+      </decorator>
+   </extension>
 
 </plugin>
