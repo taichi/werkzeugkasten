@@ -8,9 +8,9 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 
+import werkzeugkasten.common.action.EnablerAction;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.resource.ResourceUtil;
-import werkzeugkasten.common.ui.EnablerAction;
 import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.Constants;
 import werkzeugkasten.dblauncher.job.StartServerJob;
@@ -101,7 +101,7 @@ public class ToggleServerAction extends EnablerAction {
 				&& ProjectUtil.hasNature(project, Constants.ID_NATURE);
 	}
 
-	protected IProject findCurrentProject() {
+	protected static IProject findCurrentProject() {
 		IProject result = ResourceUtil
 				.getCurrentSelectedResouce(IProject.class);
 		if (result != null) {
@@ -111,15 +111,14 @@ public class ToggleServerAction extends EnablerAction {
 		IWorkspaceRoot root = ProjectUtil.getWorkspaceRoot();
 		IProject[] projects = root.getProjects();
 		for (IProject p : projects) {
-			ILaunch l = Activator.getLaunch(p);
-
-			if ((l == null || l.isTerminated() == false)
-					&& ProjectUtil.hasNature(p, Constants.ID_NATURE)) {
-				result = p;
-				break;
+			if (ProjectUtil.hasNature(p, Constants.ID_NATURE)) {
+				ILaunch l = Activator.getLaunch(p);
+				if ((l == null || l.isTerminated() == false)) {
+					result = p;
+					break;
+				}
 			}
 		}
-
 		return result;
 	}
 

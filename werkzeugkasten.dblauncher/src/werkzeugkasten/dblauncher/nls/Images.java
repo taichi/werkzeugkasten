@@ -13,6 +13,10 @@ public class Images {
 
 	public static ImageDescriptor STOP;
 
+	public static ImageDescriptor EXECUTE;
+
+	public static ImageDescriptor TERMINATE;
+
 	static {
 		Class<?> clazz = Images.class;
 		ImageLoader.load(Activator.getDefault().getImageRegistry(), clazz);

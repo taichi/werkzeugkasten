@@ -10,6 +10,15 @@
       </classpathVariableInitializer>
    </extension>
    <extension
+         id="nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="werkzeugkasten.dblauncher.nature.DbLauncherNature">
+         </run>
+      </runtime>
+   </extension>
+   <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
             class="werkzeugkasten.dblauncher.preferences.PreferenceInitializer">
@@ -35,15 +44,6 @@
       </page>
    </extension>
    <extension
-         id="nature"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="werkzeugkasten.dblauncher.nature.DbLauncherNature">
-         </run>
-      </runtime>
-   </extension>
-   <extension
          point="org.eclipse.ui.decorators">
       <decorator
             adaptable="true"
@@ -65,6 +65,38 @@
             </and>
          </enablement>
       </decorator>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="werkzeugkasten.dblauncher.objectContribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+         <visibility>
+            <objectState
+                  name="projectNature"
+                  value="werkzeugkasten.dblauncher.dblauncher.nature">
+            </objectState>
+         </visibility>
+         <menu
+               id="werkzeugkasten.dblauncher.menu.popup"
+               label="%plugin.name">
+            <groupMarker
+                  name="additions">
+            </groupMarker>
+            <groupMarker
+                  name="additions2">
+            </groupMarker>
+         </menu>
+         <action
+               class="werkzeugkasten.dblauncher.action.ToggleServerAction"
+               enablesFor="1"
+               icon="icons/start.gif"
+               id="werkzeugkasten.dblauncher.action1"
+               label="%start"
+               menubarPath="werkzeugkasten.dblauncher.menu.popup/additions">
+         </action>
+      </objectContribution>
    </extension>
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
@@ -107,10 +139,19 @@
             </groupMarker>
          </menu>
          <action
+               class="werkzeugkasten.dblauncher.action.ViewDatabaseManagerAction"
+               definitionId="werkzeugkasten.dblauncher.command.manager"
+               icon="icons/dbman.gif"
+               id="werkzeugkasten.dblauncher.action.manager"
+               label="%manager"
+               menubarPath="werkzeugkasten.dblauncher.menu/werkzeugkasten.dblauncher.groupMarker"
+               toolbarPath="werkzeugkasten.dblauncher.menu/werkzeugkasten.dblauncher.groupMarker">
+         </action>
+         <action
                class="werkzeugkasten.dblauncher.action.ToggleServerAction"
                definitionId="werkzeugkasten.dblauncher.command.toggle"
-               icon="icons/run_exc.gif"
-               id="werkzeugkasten.dblauncher.action.start"
+               icon="icons/start.gif"
+               id="werkzeugkasten.dblauncher.action.toggle"
                label="%start"
                menubarPath="werkzeugkasten.dblauncher.menu/werkzeugkasten.dblauncher.groupMarker"
                toolbarPath="werkzeugkasten.dblauncher.groupMarker">
@@ -127,6 +168,11 @@
             categoryId="werkzeugkasten.dblauncher.category"
             id="werkzeugkasten.dblauncher.command.toggle"
             name="%toggle">
+      </command>
+      <command
+            categoryId="werkzeugkasten.dblauncher.category"
+            id="werkzeugkasten.dblauncher.command.manager"
+            name="%manager">
       </command>
    </extension>
 
