@@ -59,6 +59,10 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	public static void refreshActions() {
+		getDefault().refreshPluginActions();
+	}
+
 	public static DbPreferences getPreferences(IProject project) {
 		return new DbPreferencesImpl(project);
 	}

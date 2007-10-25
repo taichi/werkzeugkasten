@@ -60,6 +60,7 @@ public class TerminateListener implements IDebugEventSetListener {
 							Activator.setLaunch(p, null);
 							AbstractLightweightLabelDecorator.updateDecorators(
 									Constants.ID_DECORATOR, p);
+							Activator.refreshActions();
 						}
 					} catch (CoreException e) {
 						Activator.log(e);

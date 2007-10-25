@@ -75,7 +75,7 @@
          <visibility>
             <objectState
                   name="projectNature"
-                  value="werkzeugkasten.dblauncher.dblauncher.nature">
+                  value="werkzeugkasten.dblauncher.nature">
             </objectState>
          </visibility>
          <menu
@@ -92,9 +92,18 @@
                class="werkzeugkasten.dblauncher.action.ToggleServerAction"
                enablesFor="1"
                icon="icons/start.gif"
-               id="werkzeugkasten.dblauncher.action1"
+               id="werkzeugkasten.dblauncher.action.toggle"
                label="%start"
                menubarPath="werkzeugkasten.dblauncher.menu.popup/additions">
+         </action>
+         <action
+               class="werkzeugkasten.dblauncher.action.ViewDatabaseManagerAction"
+               definitionId="werkzeugkasten.dblauncher.command.manager"
+               enablesFor="1"
+               icon="icons/dbman.gif"
+               id="werkzeugkasten.dblauncher.action2"
+               label="%manager"
+               menubarPath="werkzeugkasten.dblauncher.menu.popup/additions2">
          </action>
       </objectContribution>
    </extension>
