@@ -6,29 +6,30 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import werkzeugkasten.common.resource.LogUtil;
 
 public class ImageLoader {
 
-	public static void load(Class<?> holder) {
-		load(JFaceResources.getImageRegistry(), holder);
+	public static void load(AbstractUIPlugin plugin, Class<?> holder) {
+		load(plugin, holder, holder.getName());
 	}
 
-	public static void load(ImageRegistry registry, Class<?> holder) {
-		load(registry, holder, holder.getName());
-	}
-
-	public static void load(ImageRegistry registry, Class<?> holder, String name) {
-		ResourceBundle bundle = getBundle(name, holder.getClassLoader());
-		if (bundle == null) {
+	public static void load(AbstractUIPlugin plugin, Class<?> holder,
+			String name) {
+		ResourceBundle rb = getBundle(name, holder.getClassLoader());
+		if (rb == null) {
 			return;
 		}
+
+		ImageRegistry registry = plugin.getImageRegistry();
 		Field[] fields = holder.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			Field field = fields[i];
@@ -36,17 +37,17 @@ public class ImageLoader {
 				continue;
 			}
 			String key = field.getName();
-			if (bundle.containsKey(key) == false) {
-				log(key + " not found in " + name);
+			if (rb.containsKey(key) == false) {
+				log(plugin, key + " not found in " + name);
 				continue;
 			}
 			ImageDescriptor id = registry.getDescriptor(key);
 			if (id == null) {
-				id = ImageDescriptor.createFromFile(holder, bundle
-						.getString(key));
+				id = ImageDescriptor.createFromURL(FileLocator.find(plugin
+						.getBundle(), new Path(rb.getString(key)), null));
 				registry.put(key, id);
 			} else {
-				log(key + " is already registered [" + holder + "]");
+				log(plugin, key + " is already registered [" + holder + "]");
 			}
 
 			try {
@@ -56,7 +57,7 @@ public class ImageLoader {
 					field.set(null, registry.get(key));
 				}
 			} catch (Exception e) {
-				log(e.getMessage());
+				log(plugin, e.getMessage());
 			}
 		}
 	}
@@ -67,8 +68,8 @@ public class ImageLoader {
 		return (f.getModifiers() & MOD_MASK) != MOD_EXPECTED;
 	}
 
-	private static void log(String msg) {
-		LogUtil.log(ResourcesPlugin.getPlugin(), msg);
+	private static void log(Plugin p, String msg) {
+		LogUtil.log(p, msg);
 	}
 
 	private static ResourceBundle getBundle(String name, ClassLoader loader) {
