@@ -1,5 +1,9 @@
 package werkzeugkasten.dblauncher;
 
+import java.net.URL;
+import java.util.Hashtable;
+import java.util.Map;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
@@ -8,6 +12,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import werkzeugkasten.common.resource.LogUtil;
+import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.dblauncher.launch.TerminateListener;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
 import werkzeugkasten.dblauncher.preferences.impl.DbPreferencesImpl;
@@ -19,6 +24,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+
+	private static Map<String, IProject> urlToProjectCache = new Hashtable<String, IProject>();
 
 	private TerminateListener terminateListener = new TerminateListener();
 
@@ -96,5 +103,16 @@ public class Activator extends AbstractUIPlugin {
 			log(e);
 		}
 		return result;
+	}
+
+	public static void entry(IProject project, URL url) {
+		urlToProjectCache.put(url.toExternalForm(), project);
+	}
+
+	public static IProject findProject(String url) {
+		if (StringUtil.isEmpty(url) == false) {
+			return urlToProjectCache.get(url);
+		}
+		return null;
 	}
 }

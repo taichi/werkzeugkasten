@@ -28,6 +28,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IEclipsePreferences pref = new DefaultScope()
 				.getNode(Constants.ID_PLUGIN);
+		pref.put(Constants.PREF_USE_INTERNAL_WEBBROWSER, String.valueOf(false));
 		pref.put(Constants.PREF_DB_PORTNO, String
 				.valueOf(TcpServer.DEFAULT_PORT));
 		pref.put(Constants.PREF_WEB_PORTNO, String

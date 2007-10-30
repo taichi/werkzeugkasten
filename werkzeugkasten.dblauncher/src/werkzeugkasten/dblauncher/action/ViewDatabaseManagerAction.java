@@ -44,10 +44,7 @@ public class ViewDatabaseManagerAction extends EnablerAction {
 			IProject project = ToggleServerAction.findCurrentProject();
 			DbPreferences pref = Activator.getPreferences(project);
 			if (pref != null) {
-				IWorkbenchBrowserSupport support = PlatformUI.getWorkbench()
-						.getBrowserSupport();
-				IWebBrowser browser = support.getExternalBrowser();
-				browser.openURL(new URL(buildManagerUrl(pref)));
+				open(new URL(buildManagerUrl(pref)), project, pref);
 			}
 		} catch (Exception e) {
 			Activator.log(e);
@@ -59,6 +56,31 @@ public class ViewDatabaseManagerAction extends EnablerAction {
 		stb.append("http://localhost:");
 		stb.append(pref.getWebPortNo());
 		return stb.toString();
+	}
+
+	private static void open(URL url, IProject project, DbPreferences pref)
+			throws Exception {
+		if (url != null) {
+			IWorkbenchBrowserSupport support = PlatformUI.getWorkbench()
+					.getBrowserSupport();
+			IWebBrowser browser = null;
+			if (support.isInternalWebBrowserAvailable()
+					&& pref.useInternalWebBrowser()) {
+				int flag = IWorkbenchBrowserSupport.AS_EDITOR
+						| IWorkbenchBrowserSupport.LOCATION_BAR
+						| IWorkbenchBrowserSupport.NAVIGATION_BAR
+						| IWorkbenchBrowserSupport.STATUS
+						| IWorkbenchBrowserSupport.PERSISTENT;
+				browser = support.createBrowser(flag, Constants.ID_PLUGIN,
+						null, null);
+				Activator.entry(project, url);
+			} else {
+				browser = support.getExternalBrowser();
+			}
+			if (browser != null) {
+				browser.openURL(url);
+			}
+		}
 	}
 
 }

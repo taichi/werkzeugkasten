@@ -31,4 +31,6 @@ public final class Constants {
 	public static final String PREF_USER = "user";
 
 	public static final String PREF_PASSWORD = "password";
+
+	public static final String PREF_USE_INTERNAL_WEBBROWSER = "useInternalWebBrowser";
 }

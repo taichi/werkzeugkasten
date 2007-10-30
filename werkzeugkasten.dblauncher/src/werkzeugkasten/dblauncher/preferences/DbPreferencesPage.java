@@ -51,6 +51,8 @@ public class DbPreferencesPage extends PropertyPage implements
 
 	private Button isDebug;
 
+	private Button useInternalWebBrowser;
+
 	private Text baseDir;
 
 	private Text dbPortNo;
@@ -87,6 +89,12 @@ public class DbPreferencesPage extends PropertyPage implements
 
 		this.isDebug = new Button(createDefaultComposite(composite), SWT.CHECK);
 		this.isDebug.setText(Strings.LABEL_IS_DEBUG);
+
+		this.useInternalWebBrowser = new Button(
+				createDefaultComposite(composite), SWT.CHECK);
+		this.useInternalWebBrowser
+				.setText(Strings.LABEL_USE_INTERNAL_WEBBROWSER);
+
 		NumberVerifier nv = new NumberVerifier();
 		this.dbPortNo = createPart(composite, Strings.LABEL_DB_PORTNO);
 		this.dbPortNo.addModifyListener(nv);
@@ -95,26 +103,7 @@ public class DbPreferencesPage extends PropertyPage implements
 		this.user = createPart(composite, Strings.LABEL_USER);
 		this.password = createPart(composite, Strings.LABEL_PASSWORD,
 				SWT.BORDER | SWT.PASSWORD);
-		this.baseDir = createPart(composite, Strings.LABEL_BASE_DIR);
-		new Label(composite, SWT.NONE);
-		Button outpath = new Button(composite, SWT.PUSH);
-		outpath.setText("Browse ...");
-		outpath.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				ResourceTreeSelectionDialog dialog = new ResourceTreeSelectionDialog(
-						getShell(), getProject().getParent(), IResource.FOLDER
-								| IResource.PROJECT);
-				dialog.setInitialSelection(getProject());
-				dialog.setAllowMultiple(false);
-				if (dialog.open() == Dialog.OK) {
-					Object[] results = dialog.getResult();
-					if (results != null && 0 < results.length) {
-						IResource r = (IResource) results[0];
-						baseDir.setText(r.getFullPath().toString());
-					}
-				}
-			}
-		});
+		this.baseDir = createPartOfBaseDir(composite, Strings.LABEL_BASE_DIR);
 
 		setUpStoredValue();
 		setUpPortNos();
@@ -145,6 +134,8 @@ public class DbPreferencesPage extends PropertyPage implements
 		this.useH2.setSelection(ProjectUtil.hasNature(getProject(),
 				Constants.ID_NATURE));
 		this.isDebug.setSelection(store.getBoolean(Constants.PREF_IS_DEBUG));
+		this.useInternalWebBrowser.setSelection(store
+				.getBoolean(Constants.PREF_USE_INTERNAL_WEBBROWSER));
 		this.baseDir.setText(store.getString(Constants.PREF_BASE_DIR));
 		this.dbPortNo.setText(store.getString(Constants.PREF_DB_PORTNO));
 		this.webPortNo.setText(store.getString(Constants.PREF_WEB_PORTNO));
@@ -196,6 +187,50 @@ public class DbPreferencesPage extends PropertyPage implements
 
 	}
 
+	protected Text createPartOfBaseDir(Composite composite, String label) {
+		Label l = new Label(composite, SWT.NONE);
+		l.setText(label);
+
+		composite = new Composite(composite, SWT.NONE);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		data.grabExcessHorizontalSpace = true;
+		data.horizontalSpan = 0;
+		composite.setLayoutData(data);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		composite.setLayout(layout);
+
+		Text txt = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		txt.setLayoutData(new GridData(GridData.FILL_BOTH));
+		Button outpath = new Button(composite, SWT.PUSH);
+		outpath.setText(Strings.LABEL_BROWSE);
+		outpath.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ResourceTreeSelectionDialog dialog = new ResourceTreeSelectionDialog(
+						getShell(), getProject().getParent(), IResource.FOLDER
+								| IResource.PROJECT);
+				dialog.setInitialSelection(getProject());
+				dialog.setAllowMultiple(false);
+				if (dialog.open() == Dialog.OK) {
+					Object[] results = dialog.getResult();
+					if (results != null && 0 < results.length) {
+						IResource r = (IResource) results[0];
+						baseDir.setText(r.getFullPath().toString());
+					}
+				}
+			}
+		});
+		data = new GridData();
+		data.horizontalAlignment = GridData.END;
+		data.horizontalSpan = 0;
+		data.horizontalIndent = 0;
+		data.verticalIndent = 0;
+		outpath.setLayoutData(data);
+		return txt;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -223,6 +258,8 @@ public class DbPreferencesPage extends PropertyPage implements
 		this.useH2.setSelection(false);
 		this.isDebug.setSelection(store
 				.getDefaultBoolean(Constants.PREF_IS_DEBUG));
+		this.useInternalWebBrowser.setSelection(store
+				.getDefaultBoolean(Constants.PREF_USE_INTERNAL_WEBBROWSER));
 		this.baseDir.setText(DbPreferencesImpl.getDefaultBaseDir(getProject()));
 		this.dbPortNo.setText(store.getDefaultString(Constants.PREF_DB_PORTNO));
 		this.webPortNo.setText(store
@@ -249,6 +286,8 @@ public class DbPreferencesPage extends PropertyPage implements
 
 				store.setValue(Constants.PREF_IS_DEBUG, this.isDebug
 						.getSelection());
+				store.setValue(Constants.PREF_USE_INTERNAL_WEBBROWSER,
+						this.useInternalWebBrowser.getSelection());
 				String dir = this.baseDir.getText();
 				if (StringUtil.isEmpty(dir) == false) {
 					store.setValue(Constants.PREF_BASE_DIR, dir);

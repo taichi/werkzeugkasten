@@ -30,4 +30,8 @@ public interface DbPreferences {
 
 	void setPassword(String pass);
 
+	boolean useInternalWebBrowser();
+
+	void setInternalWebBrowser(boolean is);
+
 }

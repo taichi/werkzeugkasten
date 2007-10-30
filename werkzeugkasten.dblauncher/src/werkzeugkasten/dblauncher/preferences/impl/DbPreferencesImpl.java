@@ -122,4 +122,11 @@ public class DbPreferencesImpl implements DbPreferences {
 		this.store.setValue(Constants.PREF_USER, user);
 	}
 
+	public void setInternalWebBrowser(boolean is) {
+		this.store.setValue(Constants.PREF_USE_INTERNAL_WEBBROWSER, is);
+	}
+
+	public boolean useInternalWebBrowser() {
+		return this.store.getBoolean(Constants.PREF_USE_INTERNAL_WEBBROWSER);
+	}
 }
