@@ -19,7 +19,7 @@ public class Images {
 
 	static {
 		Class<?> clazz = Images.class;
-		ImageLoader.load(Activator.getDefault().getImageRegistry(), clazz);
+		ImageLoader.load(Activator.getDefault(), clazz);
 	}
 
 }
