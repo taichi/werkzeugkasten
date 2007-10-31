@@ -441,4 +441,10 @@ limitations under the License.
          version="0.0.2"
          unpack="false"/>
 
+   <plugin
+         id="werkzeugkasten.docs"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
 </feature>
