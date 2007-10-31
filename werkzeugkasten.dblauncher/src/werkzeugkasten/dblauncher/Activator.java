@@ -1,7 +1,9 @@
 package werkzeugkasten.dblauncher;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
@@ -12,8 +14,10 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import werkzeugkasten.common.resource.LogUtil;
+import werkzeugkasten.common.ui.ImageLoader;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.dblauncher.launch.TerminateListener;
+import werkzeugkasten.dblauncher.nls.Images;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
 import werkzeugkasten.dblauncher.preferences.impl.DbPreferencesImpl;
 
@@ -25,7 +29,7 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 
-	private static Map<String, IProject> urlToProjectCache = new Hashtable<String, IProject>();
+	private static Map<String, IProject> urlToProjectCache;
 
 	private TerminateListener terminateListener = new TerminateListener();
 
@@ -44,6 +48,8 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		DebugPlugin.getDefault().addDebugEventListener(terminateListener);
+		ImageLoader.load(plugin, Images.class);
+		urlToProjectCache = new Hashtable<String, IProject>();
 	}
 
 	/*
@@ -53,6 +59,9 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		DebugPlugin.getDefault().removeDebugEventListener(terminateListener);
+		urlToProjectCache.clear();
+		urlToProjectCache = null;
+		ImageLoader.unload(plugin, Images.class);
 		plugin = null;
 		super.stop(context);
 	}
@@ -114,5 +123,20 @@ public class Activator extends AbstractUIPlugin {
 			return urlToProjectCache.get(url);
 		}
 		return null;
+	}
+
+	public synchronized static void reject(IProject project) {
+		if (project == null) {
+			return;
+		}
+		List<String> l = new ArrayList<String>();
+		for (String key : urlToProjectCache.keySet()) {
+			if (project.equals(urlToProjectCache.get(key))) {
+				l.add(key);
+			}
+		}
+		for (String key : l) {
+			urlToProjectCache.remove(key);
+		}
 	}
 }

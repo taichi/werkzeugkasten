@@ -31,6 +31,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.h2.server.TcpServer;
 
 import werkzeugkasten.common.resource.ProjectUtil;
+import werkzeugkasten.common.ui.WorkbenchUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
 import werkzeugkasten.dblauncher.Activator;
@@ -76,6 +77,7 @@ public class DbPreferencesPage extends PropertyPage implements
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createContents(Composite parent) {
+		WorkbenchUtil.setHelp(parent, Constants.CTX_HELP_PREF);
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;

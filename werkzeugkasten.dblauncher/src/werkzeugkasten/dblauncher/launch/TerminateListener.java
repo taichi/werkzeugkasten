@@ -58,6 +58,7 @@ public class TerminateListener implements IDebugEventSetListener {
 						if (Constants.ID_H2_LAUNCH_CONFIG.equals(id)) {
 							IProject p = LaunchUtil.getProject(l);
 							Activator.setLaunch(p, null);
+							Activator.reject(p);
 							AbstractLightweightLabelDecorator.updateDecorators(
 									Constants.ID_DECORATOR, p);
 							Activator.refreshActions();

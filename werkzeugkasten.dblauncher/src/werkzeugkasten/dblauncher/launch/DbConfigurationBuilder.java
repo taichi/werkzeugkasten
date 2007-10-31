@@ -76,11 +76,7 @@ public class DbConfigurationBuilder {
 
 					public boolean equals(ILaunchConfiguration config)
 							throws CoreException {
-						String current = config
-								.getAttribute(
-										IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-										"");
-						return current.equals(getArgs());
+						return true;
 					}
 				});
 	}
