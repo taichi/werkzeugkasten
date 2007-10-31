@@ -187,7 +187,8 @@
    <extension
          point="org.eclipse.help.contexts">
       <contexts
-            file="docs/context.xml">
+            file="docs/context.xml"
+            plugin="werkzeugkasten.dblauncher">
       </contexts>
    </extension>
 

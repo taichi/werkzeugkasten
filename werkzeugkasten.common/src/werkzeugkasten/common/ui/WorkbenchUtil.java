@@ -2,6 +2,7 @@ package werkzeugkasten.common.ui;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
@@ -77,5 +78,9 @@ public class WorkbenchUtil {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		BasicNewResourceWizard.selectAndReveal(newResource, workbench
 				.getActiveWorkbenchWindow());
+	}
+
+	public static void setHelp(Composite composite, String contextId) {
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, contextId);
 	}
 }
