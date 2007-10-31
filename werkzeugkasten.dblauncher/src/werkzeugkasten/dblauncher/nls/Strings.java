@@ -32,6 +32,8 @@ public class Strings extends NLS {
 
 	public static String LABEL_USE_INTERNAL_WEBBROWSER;
 
+	public static String LABEL_ADD_DRIVER_TO_BUILDPATH;
+
 	static {
 		Class<?> clazz = Strings.class;
 		NLS.initializeMessages(clazz.getName(), clazz);

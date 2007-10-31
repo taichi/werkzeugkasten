@@ -8,7 +8,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -30,6 +34,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.h2.server.TcpServer;
 
+import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.ui.WorkbenchUtil;
 import werkzeugkasten.common.util.StringUtil;
@@ -38,6 +43,7 @@ import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.Constants;
 import werkzeugkasten.dblauncher.nls.Strings;
 import werkzeugkasten.dblauncher.preferences.impl.DbPreferencesImpl;
+import werkzeugkasten.dblauncher.variable.Variable;
 
 /**
  * @author taichi
@@ -53,6 +59,8 @@ public class DbPreferencesPage extends PropertyPage implements
 	private Button isDebug;
 
 	private Button useInternalWebBrowser;
+
+	private Button addDriverToBuildPath;
 
 	private Text baseDir;
 
@@ -86,16 +94,15 @@ public class DbPreferencesPage extends PropertyPage implements
 		data.grabExcessHorizontalSpace = true;
 		composite.setLayoutData(data);
 
-		this.useH2 = new Button(createDefaultComposite(composite), SWT.CHECK);
-		this.useH2.setText(Strings.LABEL_USE_H2_PLUGIN);
+		this.useH2 = createCheckBox(composite, Strings.LABEL_USE_H2_PLUGIN);
 
-		this.isDebug = new Button(createDefaultComposite(composite), SWT.CHECK);
-		this.isDebug.setText(Strings.LABEL_IS_DEBUG);
+		this.isDebug = createCheckBox(composite, Strings.LABEL_IS_DEBUG);
 
-		this.useInternalWebBrowser = new Button(
-				createDefaultComposite(composite), SWT.CHECK);
-		this.useInternalWebBrowser
-				.setText(Strings.LABEL_USE_INTERNAL_WEBBROWSER);
+		this.useInternalWebBrowser = createCheckBox(composite,
+				Strings.LABEL_USE_INTERNAL_WEBBROWSER);
+
+		this.addDriverToBuildPath = createCheckBox(composite,
+				Strings.LABEL_ADD_DRIVER_TO_BUILDPATH);
 
 		NumberVerifier nv = new NumberVerifier();
 		this.dbPortNo = createPart(composite, Strings.LABEL_DB_PORTNO);
@@ -110,6 +117,12 @@ public class DbPreferencesPage extends PropertyPage implements
 		setUpStoredValue();
 		setUpPortNos();
 		return composite;
+	}
+
+	private Button createCheckBox(Composite composite, String label) {
+		Button b = new Button(createDefaultComposite(composite), SWT.CHECK);
+		b.setText(label);
+		return b;
 	}
 
 	private class NumberVerifier implements ModifyListener {
@@ -138,11 +151,24 @@ public class DbPreferencesPage extends PropertyPage implements
 		this.isDebug.setSelection(store.getBoolean(Constants.PREF_IS_DEBUG));
 		this.useInternalWebBrowser.setSelection(store
 				.getBoolean(Constants.PREF_USE_INTERNAL_WEBBROWSER));
+		this.addDriverToBuildPath.setSelection(hasDriver());
 		this.baseDir.setText(store.getString(Constants.PREF_BASE_DIR));
 		this.dbPortNo.setText(store.getString(Constants.PREF_DB_PORTNO));
 		this.webPortNo.setText(store.getString(Constants.PREF_WEB_PORTNO));
 		this.user.setText(store.getString(Constants.PREF_USER));
 		this.password.setText(store.getString(Constants.PREF_PASSWORD));
+	}
+
+	protected boolean hasDriver() {
+		boolean result = false;
+		try {
+			IProject p = getProject();
+			result = ClasspathEntryUtil.hasClasspathEntry(JavaCore.create(p),
+					Variable.LIB);
+		} catch (CoreException e) {
+			Activator.log(e);
+		}
+		return result;
 	}
 
 	private void setUpPortNos() {
@@ -262,6 +288,7 @@ public class DbPreferencesPage extends PropertyPage implements
 				.getDefaultBoolean(Constants.PREF_IS_DEBUG));
 		this.useInternalWebBrowser.setSelection(store
 				.getDefaultBoolean(Constants.PREF_USE_INTERNAL_WEBBROWSER));
+		this.addDriverToBuildPath.setSelection(false);
 		this.baseDir.setText(DbPreferencesImpl.getDefaultBaseDir(getProject()));
 		this.dbPortNo.setText(store.getDefaultString(Constants.PREF_DB_PORTNO));
 		this.webPortNo.setText(store
@@ -304,6 +331,15 @@ public class DbPreferencesPage extends PropertyPage implements
 						&& numeric.matcher(no).matches()) {
 					store.setValue(Constants.PREF_WEB_PORTNO, no);
 				}
+				IJavaProject jp = JavaCore.create(project);
+				if (this.addDriverToBuildPath.getSelection()) {
+					ClasspathEntryUtil.addClasspathEntry(jp, JavaCore
+							.newVariableEntry(Variable.LIB, Variable.SRC,
+									new Path("./")));
+				} else {
+					ClasspathEntryUtil.removeClasspathEntry(jp, Variable.LIB);
+				}
+
 				if (store instanceof IPersistentPreferenceStore) {
 					IPersistentPreferenceStore pps = (IPersistentPreferenceStore) store;
 					pps.save();

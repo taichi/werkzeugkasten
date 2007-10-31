@@ -57,7 +57,22 @@ public class ImageLoader {
 					field.set(null, registry.get(key));
 				}
 			} catch (Exception e) {
-				log(plugin, e.getMessage());
+				LogUtil.log(plugin, e);
+			}
+		}
+	}
+
+	public static void unload(Plugin plugin, Class<?> holder) {
+		Field[] fields = holder.getDeclaredFields();
+		for (int i = 0; i < fields.length; i++) {
+			Field field = fields[i];
+			if (validateMask(field)) {
+				continue;
+			}
+			try {
+				field.set(null, null);
+			} catch (Exception e) {
+				LogUtil.log(plugin, e);
 			}
 		}
 	}
