@@ -15,6 +15,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 
 import werkzeugkasten.common.resource.ProjectUtil;
+import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
 import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.Constants;
@@ -77,11 +78,15 @@ public class StartServerJob extends WorkspaceJob {
 
 		IWorkspaceRoot root = ProjectUtil.getWorkspaceRoot();
 		IContainer c = root.getFolder(new Path(pref.getBaseDir()));
+		if (c.exists() == false) {
+			ResourceUtil.createDir(root, pref.getBaseDir());
+		}
 		IPath p = c.getLocation();
 		if (p == null) {
 			p = root.getLocation();
 			p = p.append(pref.getBaseDir());
 		}
+
 		stb.append(" -baseDir \"");
 		stb.append(p.toString());
 		stb.append("\"");
