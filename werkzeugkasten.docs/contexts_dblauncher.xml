@@ -3,7 +3,7 @@
 <contexts>
 	<context id="preferences_page_context">
     	<description>How to configre H2 Database Launching options.</description>
-		<topic label="Configure Options" href="html/concepts/dblauncheroptions.html"/>
-		<topic label="Configure More Options" href="html/concepts/dblaunchermoreoptions.html"/>
+		<topic label="Basic Options" href="html/concepts/basicoptions.html"/>
+		<topic label="Advanced Options" href="html/concepts/advancedoptions.html"/>
 	</context>
 </contexts>

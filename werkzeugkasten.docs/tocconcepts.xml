@@ -4,8 +4,9 @@
 <toc label="Concepts" link_to="toc.xml#concepts"> 
 	<topic label="DbLauncher">
 		<anchor id="options"/>
-		<topic label="Configure Options" href="html/concepts/dblauncheroptions.html" />
-		<topic label="Configure More Options" href="html/concepts/dblaunchermoreoptions.html" />
+		<topic label="Basic Options" href="html/concepts/basicoptions.html" />
+		<topic label="Advanced Options" href="html/concepts/advancedoptions.html" />
+		<topic label="Customize " href="" />
 	</topic>
 	<!-- 
 	<topic label="WebLauncher">
