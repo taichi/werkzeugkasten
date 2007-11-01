@@ -2,7 +2,7 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="Concepts" link_to="toc.xml#concepts"> 
-	<topic label="DbLauncher">
+	<topic label="DbLauncher" href="html/concepts/dblauncher.html">
 		<anchor id="options"/>
 		<topic label="Basic Options" href="html/concepts/dblauncher/basicoptions.html"/>
 		<topic label="Advanced Options" href="html/concepts/dblauncher/advancedoptions.html"/>
