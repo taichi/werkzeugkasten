@@ -2,6 +2,5 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="Getting Started" link_to="toc.xml#gettingstarted"> 
-	<topic label="DbLauncher"  href="html/gettingstarted/dblauncher.html">
-	</topic>
+	<topic label="DbLauncher" href="html/gettingstarted/dblauncher.html"/>
 </toc>
