@@ -71,7 +71,7 @@ public class DbConfigurationBuilder {
 					};
 
 					public String getConfigName() {
-						return Constants.ID_PLUGIN + "." + project.getName();
+						return project.getName() + "." + Constants.ID_PLUGIN;
 					}
 
 					public boolean equals(ILaunchConfiguration config)
