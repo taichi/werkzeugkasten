@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Nl Fragment
+Bundle-SymbolicName: werkzeugkasten.docs.nl
+Bundle-Version: 0.0.1
+Fragment-Host: werkzeugkasten.docs;bundle-version="0.0.1"
