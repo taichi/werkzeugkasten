@@ -1,21 +1,17 @@
 package werkzeugkasten.dblauncher.variable;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ClasspathVariableInitializer;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.osgi.framework.Bundle;
 
+import werkzeugkasten.common.jdt.VariableUtil;
 import werkzeugkasten.dblauncher.Activator;
 
 public class Variable extends ClasspathVariableInitializer {
@@ -44,27 +40,10 @@ public class Variable extends ClasspathVariableInitializer {
 					String s = e.nextElement().toString();
 					if (p.matcher(s).matches()) {
 						URL u = bundle.getEntry(s);
-						set(v, u);
+						VariableUtil.set(v, u);
 					}
 				}
 			}
-		}
-	}
-
-	protected void set(String variable, URL installLocation) {
-		URL local = null;
-		try {
-			local = FileLocator.toFileURL(installLocation);
-		} catch (IOException e) {
-			JavaCore.removeClasspathVariable(variable, null);
-			return;
-		}
-		try {
-			String fullPath = new File(local.getPath()).getAbsolutePath();
-			JavaCore.setClasspathVariable(variable,
-					Path.fromOSString(fullPath), null);
-		} catch (JavaModelException e1) {
-			JavaCore.removeClasspathVariable(variable, null);
 		}
 	}
 }
