@@ -11,7 +11,7 @@ import org.eclipse.jdt.core.JavaModelException;
 
 public class VariableUtil {
 
-	public void set(String variable, URL installLocation) {
+	public static void set(String variable, URL installLocation) {
 		URL local = null;
 		try {
 			local = FileLocator.toFileURL(installLocation);
