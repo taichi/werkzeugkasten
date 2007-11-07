@@ -1,0 +1,10 @@
+D:\development\java\apache-tomcat-6.0.13\bin>
+start "Tomcat" "C:\jdk1.5.0_07\bin\java"  
+-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager 
+-Djava.util.logging.config.file="D:\development\java\apache-tomcat-6.0.13\conf\logging.properties"   
+-Djava.endorsed.dirs="D:\development\java\apache-tomcat-6.0.13\endorsed" 
+-classpath ";D:\development\java\apache-tomcat-6.0.13\bin\bootstrap.jar" 
+-Dcatalina.base="D:\development\java\apache-tomcat-6.0.13" 
+-Dcatalina.home="D:\development\java\apache-tomcat-6.0.13" 
+-Djava.io.tmpdir="D:\development\java\apache-tomcat-6.0.13\temp" 
+org.apache.catalina.startup.Bootstrap  start
