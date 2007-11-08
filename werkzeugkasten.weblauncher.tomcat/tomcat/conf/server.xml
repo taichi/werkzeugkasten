@@ -108,7 +108,9 @@
        -->
       <Host name="localhost"  appBase="webapps"
             unpackWARs="true" autoDeploy="true"
-            xmlValidation="false" xmlNamespaceAware="false">
+            xmlValidation="false" xmlNamespaceAware="false"
+            hostConfigClass="werkzeugkasten.weblauncher.tomcat.startup.DbLauncherHostConfig"
+            >
 
         <!-- SingleSignOn valve, share authentication between web applications
              Documentation at: /docs/config/valve.html -->
