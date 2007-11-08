@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.apache.catalina.startup.HostConfig;
 
-public class DbLauncherHostConfig extends HostConfig {
+public class WebLauncherHostConfig extends HostConfig {
 
 	public static final String KEY_CTX_LOC = "dblauncher.loc";
 	public static final String KEY_CTX_NAME = "dblauncher.name";
