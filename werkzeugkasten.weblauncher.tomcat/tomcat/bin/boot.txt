@@ -18,5 +18,6 @@ org.apache.catalina.startup.Bootstrap  start
 -Dcatalina.base="${workspace_loc:werkzeugkasten.weblauncher.tomcat/tomcat}" 
 -Dcatalina.home="${workspace_loc:werkzeugkasten.weblauncher.tomcat/tomcat}" 
 -Djava.io.tmpdir="${workspace_loc:werkzeugkasten.weblauncher.tomcat/tomcat}\temp"
--Ddblauncher.loc="C:\development\java\workspace\teeda-html-example\src\main\context.xml"
--Ddblauncher.name="/teeda-html-example"
+-Dworkspace_loc=${workspace_loc}
+-Ddblauncher.ctx.loc="${workspace_loc:servlet-test}\context.xml"
+-Ddblauncher.ctx.name="/servlet-test"
