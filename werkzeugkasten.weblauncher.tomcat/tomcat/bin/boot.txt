@@ -10,3 +10,13 @@ start "Tomcat" "C:\jdk1.5.0_07\bin\java"
 -Ddblauncher.loc="${workspace_loc:servlet-test}\context.xml"
 -Ddblauncher.name="/servlet-test"
 org.apache.catalina.startup.Bootstrap  start
+
+-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager 
+-Djava.util.logging.config.file="${workspace_loc:werkzeugkasten.weblauncher.tomcat/tomcat}\conf\logging.properties"   
+-Djava.endorsed.dirs="${workspace_loc:werkzeugkasten.weblauncher.tomcat/tomcat}\endorsed" 
+-classpath ";${workspace_loc:werkzeugkasten.weblauncher.tomcat/tomcat}\bin\bootstrap.jar" 
+-Dcatalina.base="${workspace_loc:werkzeugkasten.weblauncher.tomcat/tomcat}" 
+-Dcatalina.home="${workspace_loc:werkzeugkasten.weblauncher.tomcat/tomcat}" 
+-Djava.io.tmpdir="${workspace_loc:werkzeugkasten.weblauncher.tomcat/tomcat}\temp"
+-Ddblauncher.loc="C:\development\java\workspace\teeda-html-example\src\main\context.xml"
+-Ddblauncher.name="/teeda-html-example"

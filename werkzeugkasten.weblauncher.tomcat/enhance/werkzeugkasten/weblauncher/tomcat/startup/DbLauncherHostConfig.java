@@ -21,7 +21,6 @@ public class DbLauncherHostConfig extends HostConfig {
 				deployDescriptor(name, file, file.getName());
 			}
 		}
-
 	}
 
 	private static final boolean isEmpty(String s) {
