@@ -1,5 +1,7 @@
 package werkzeugkasten.dblauncher.preferences;
 
+import werkzeugkasten.common.debug.LaunchConfigurationBuilder;
+
 /**
  * @author taichi
  * 
@@ -33,5 +35,11 @@ public interface DbPreferences {
 	boolean useInternalWebBrowser();
 
 	void setInternalWebBrowser(boolean is);
+
+	String getDbType();
+
+	void setDbType(String type);
+
+	LaunchConfigurationBuilder getBuilder();
 
 }

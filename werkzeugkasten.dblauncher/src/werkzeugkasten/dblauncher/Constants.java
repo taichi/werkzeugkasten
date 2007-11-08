@@ -33,8 +33,13 @@ public final class Constants {
 	public static final String PREF_PASSWORD = "password";
 
 	public static final String PREF_USE_INTERNAL_WEBBROWSER = "useInternalWebBrowser";
-	/* ---------------------------------------------------------------------- */
 
+	public static final String PREF_DB_TYPE = "dbType";
+
+	/* ---------------------------------------------------------------------- */
 	public static final String CTX_HELP_PREF = ID_PLUGIN
 			+ ".preferences_page_context";
+
+	/* ---------------------------------------------------------------------- */
+	public static final String EXT_LAUNCHCONFIG_BUILDER = "launchConfigurationBuilder";
 }

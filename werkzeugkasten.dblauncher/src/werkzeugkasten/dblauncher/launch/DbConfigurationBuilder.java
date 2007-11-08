@@ -20,8 +20,10 @@ import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.h2.tools.Server;
 
+import werkzeugkasten.common.debug.LaunchConfigurationBuilder;
 import werkzeugkasten.common.debug.LaunchConfigurationFactory;
 import werkzeugkasten.common.resource.ProjectUtil;
+import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.Constants;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
@@ -30,7 +32,7 @@ import werkzeugkasten.dblauncher.variable.Variable;
 /**
  * @author taichi
  */
-public class DbConfigurationBuilder {
+public class DbConfigurationBuilder implements LaunchConfigurationBuilder {
 
 	private IProject project;
 
@@ -44,18 +46,17 @@ public class DbConfigurationBuilder {
 
 	private String args;
 
-	public DbConfigurationBuilder(IProject project) {
-		this(Constants.ID_PLUGIN + "." + project.getName(), project);
+	public DbConfigurationBuilder() {
 	}
 
-	public DbConfigurationBuilder(String name, IProject project) {
-		super();
-		this.name = name;
+	public void setProject(IProject project) {
+		this.name = Constants.ID_PLUGIN + "." + project.getName();
 		this.project = project;
 		this.classpath = new IRuntimeClasspathEntry[] { JavaRuntime
 				.newVariableRuntimeClasspathEntry(Variable.LIB) };
 		this.srcpath = new IRuntimeClasspathEntry[] { JavaRuntime
 				.newVariableRuntimeClasspathEntry(Variable.SRC) };
+		setArgs(buildBootArgs(Activator.getPreferences(project)));
 	}
 
 	public ILaunchConfiguration build() throws CoreException {
@@ -142,6 +143,30 @@ public class DbConfigurationBuilder {
 			Activator.log(e);
 		}
 		return result;
+	}
+
+	public String buildBootArgs(DbPreferences pref) {
+		StringBuffer stb = new StringBuffer();
+		stb.append(" -tcp -tcpPort ");
+		stb.append(pref.getDbPortNo());
+		stb.append(" -web -webPort ");
+		stb.append(pref.getWebPortNo());
+
+		IWorkspaceRoot root = ProjectUtil.getWorkspaceRoot();
+		IContainer c = root.getFolder(new Path(pref.getBaseDir()));
+		if (c.exists() == false) {
+			ResourceUtil.createDir(root, pref.getBaseDir());
+		}
+		IPath p = c.getLocation();
+		if (p == null) {
+			p = root.getLocation();
+			p = p.append(pref.getBaseDir());
+		}
+
+		stb.append(" -baseDir \"");
+		stb.append(p.toString());
+		stb.append("\"");
+		return stb.toString();
 	}
 
 	/**

@@ -1,32 +1,22 @@
-/*
- * Copyright 2004-2006 the Seasar Foundation and the Others.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
- * either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
 package werkzeugkasten.dblauncher.preferences.impl;
+
+import static werkzeugkasten.dblauncher.Constants.*;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
+import werkzeugkasten.common.debug.LaunchConfigurationBuilder;
+import werkzeugkasten.common.runtime.ExtensionAcceptor;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.dblauncher.Activator;
-import werkzeugkasten.dblauncher.Constants;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
 
 /**
@@ -42,15 +32,14 @@ public class DbPreferencesImpl implements DbPreferences {
 	 */
 	public DbPreferencesImpl(IProject project) {
 		super();
-		store = new ScopedPreferenceStore(new ProjectScope(project),
-				Constants.ID_PLUGIN);
+		store = new ScopedPreferenceStore(new ProjectScope(project), ID_PLUGIN);
 		setupPreferences(project, store);
 	}
 
 	public static void setupPreferences(IProject project, IPreferenceStore store) {
-		String baseDir = store.getString(Constants.PREF_BASE_DIR);
+		String baseDir = store.getString(PREF_BASE_DIR);
 		if (StringUtil.isEmpty(baseDir)) {
-			store.setValue(Constants.PREF_BASE_DIR, getDefaultBaseDir(project));
+			store.setValue(PREF_BASE_DIR, getDefaultBaseDir(project));
 		}
 	}
 
@@ -75,58 +64,90 @@ public class DbPreferencesImpl implements DbPreferences {
 	}
 
 	public String getBaseDir() {
-		return store.getString(Constants.PREF_BASE_DIR);
+		return store.getString(PREF_BASE_DIR);
 	}
 
 	public void setBaseDir(String path) {
-		this.store.setValue(Constants.PREF_BASE_DIR, path);
+		this.store.setValue(PREF_BASE_DIR, path);
 	}
 
 	public String getDbPortNo() {
-		return this.store.getString(Constants.PREF_DB_PORTNO);
+		return this.store.getString(PREF_DB_PORTNO);
 	}
 
 	public void setDbPortNo(String no) {
-		this.store.setValue(Constants.PREF_DB_PORTNO, no);
+		this.store.setValue(PREF_DB_PORTNO, no);
 	}
 
 	public String getWebPortNo() {
-		return this.store.getString(Constants.PREF_WEB_PORTNO);
+		return this.store.getString(PREF_WEB_PORTNO);
 	}
 
 	public void setWebPortNo(String no) {
-		this.store.setValue(Constants.PREF_WEB_PORTNO, no);
+		this.store.setValue(PREF_WEB_PORTNO, no);
 	}
 
 	public boolean isDebug() {
-		return this.store.getBoolean(Constants.PREF_IS_DEBUG);
+		return this.store.getBoolean(PREF_IS_DEBUG);
 	}
 
 	public void setDebug(boolean is) {
-		this.store.setValue(Constants.PREF_IS_DEBUG, is);
+		this.store.setValue(PREF_IS_DEBUG, is);
 	}
 
 	public String getPassword() {
-		return this.store.getString(Constants.PREF_PASSWORD);
+		return this.store.getString(PREF_PASSWORD);
 	}
 
 	public String getUser() {
-		return this.store.getString(Constants.PREF_USER);
+		return this.store.getString(PREF_USER);
 	}
 
 	public void setPassword(String pass) {
-		this.store.setValue(Constants.PREF_PASSWORD, pass);
+		this.store.setValue(PREF_PASSWORD, pass);
 	}
 
 	public void setUser(String user) {
-		this.store.setValue(Constants.PREF_USER, user);
+		this.store.setValue(PREF_USER, user);
 	}
 
 	public void setInternalWebBrowser(boolean is) {
-		this.store.setValue(Constants.PREF_USE_INTERNAL_WEBBROWSER, is);
+		this.store.setValue(PREF_USE_INTERNAL_WEBBROWSER, is);
 	}
 
 	public boolean useInternalWebBrowser() {
-		return this.store.getBoolean(Constants.PREF_USE_INTERNAL_WEBBROWSER);
+		return this.store.getBoolean(PREF_USE_INTERNAL_WEBBROWSER);
+	}
+
+	public String getDbType() {
+		return this.store.getString(PREF_DB_TYPE);
+	}
+
+	public void setDbType(String type) {
+		this.store.setValue(PREF_DB_TYPE, type);
+	}
+
+	public LaunchConfigurationBuilder getBuilder() {
+		final LaunchConfigurationBuilder[] result = new LaunchConfigurationBuilder[1];
+		ExtensionAcceptor.accept(ID_PLUGIN, EXT_LAUNCHCONFIG_BUILDER,
+				new ExtensionAcceptor.ExtensionVisitor() {
+					public boolean visit(IConfigurationElement e) {
+						if (EXT_LAUNCHCONFIG_BUILDER.equals(e.getName())
+								&& e.getAttribute("type").equalsIgnoreCase(
+										getDbType())) {
+							try {
+								Object o = e.createExecutableExtension("class");
+								if (o instanceof LaunchConfigurationBuilder) {
+									result[0] = (LaunchConfigurationBuilder) o;
+									return false;
+								}
+							} catch (CoreException ex) {
+								Activator.log(ex);
+							}
+						}
+						return true;
+					}
+				});
+		return result[0];
 	}
 }

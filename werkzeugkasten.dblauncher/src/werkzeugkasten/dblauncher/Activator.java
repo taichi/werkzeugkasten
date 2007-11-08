@@ -1,5 +1,7 @@
 package werkzeugkasten.dblauncher;
 
+import static werkzeugkasten.dblauncher.Constants.*;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -44,6 +46,7 @@ public class Activator extends AbstractUIPlugin {
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
@@ -57,6 +60,7 @@ public class Activator extends AbstractUIPlugin {
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		DebugPlugin.getDefault().removeDebugEventListener(terminateListener);
 		urlToProjectCache.clear();
@@ -94,7 +98,7 @@ public class Activator extends AbstractUIPlugin {
 	public static void setLaunch(IProject project, ILaunch launch) {
 		try {
 			if (project != null) {
-				project.setSessionProperty(Constants.KEY_SERVER_STATE, launch);
+				project.setSessionProperty(KEY_SERVER_STATE, launch);
 			}
 		} catch (CoreException e) {
 			log(e);
@@ -105,8 +109,7 @@ public class Activator extends AbstractUIPlugin {
 		ILaunch result = null;
 		try {
 			if (project != null) {
-				result = (ILaunch) project
-						.getSessionProperty(Constants.KEY_SERVER_STATE);
+				result = (ILaunch) project.getSessionProperty(KEY_SERVER_STATE);
 			}
 		} catch (CoreException e) {
 			log(e);
