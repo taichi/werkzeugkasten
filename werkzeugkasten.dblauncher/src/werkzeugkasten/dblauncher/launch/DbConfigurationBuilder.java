@@ -20,7 +20,6 @@ import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.h2.tools.Server;
 
-import werkzeugkasten.common.debug.LaunchConfigurationBuilder;
 import werkzeugkasten.common.debug.LaunchConfigurationFactory;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.resource.ResourceUtil;
@@ -28,6 +27,7 @@ import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.Constants;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
 import werkzeugkasten.dblauncher.variable.Variable;
+import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 
 /**
  * @author taichi

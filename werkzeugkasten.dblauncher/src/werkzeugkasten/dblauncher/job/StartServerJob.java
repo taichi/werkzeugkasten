@@ -10,12 +10,12 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 
-import werkzeugkasten.common.debug.LaunchConfigurationBuilder;
 import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
 import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.Constants;
 import werkzeugkasten.dblauncher.nls.Strings;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
+import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 
 public class StartServerJob extends WorkspaceJob {
 	private static final Object FAMILY_START_SERVER_JOB = new Object();

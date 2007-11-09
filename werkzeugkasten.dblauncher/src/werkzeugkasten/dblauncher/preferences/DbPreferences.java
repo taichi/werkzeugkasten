@@ -1,6 +1,6 @@
 package werkzeugkasten.dblauncher.preferences;
 
-import werkzeugkasten.common.debug.LaunchConfigurationBuilder;
+import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 
 /**
  * @author taichi

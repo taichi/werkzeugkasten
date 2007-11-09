@@ -13,11 +13,11 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
-import werkzeugkasten.common.debug.LaunchConfigurationBuilder;
 import werkzeugkasten.common.runtime.ExtensionAcceptor;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
+import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 
 /**
  * @author taichi
