@@ -10,7 +10,7 @@ public final class Constants {
 
 	public static final String ID_DECORATOR = ID_PLUGIN + ".decorator";
 
-	public static final String ID_H2_LAUNCH_CONFIG = ID_PLUGIN
+	public static final String ID_LAUNCH_CONFIG = ID_PLUGIN
 			+ ".launchConfigurationType";
 
 	/* ---------------------------------------------------------------------- */

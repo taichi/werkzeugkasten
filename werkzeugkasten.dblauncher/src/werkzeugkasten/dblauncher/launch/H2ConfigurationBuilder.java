@@ -63,7 +63,7 @@ public class H2ConfigurationBuilder implements LaunchConfigurationBuilder {
 		return LaunchConfigurationFactory
 				.create(new LaunchConfigurationFactory.CreationHandler() {
 					public String getTypeName() {
-						return Constants.ID_H2_LAUNCH_CONFIG;
+						return Constants.ID_LAUNCH_CONFIG;
 					}
 
 					public void setUp(ILaunchConfigurationWorkingCopy copy)

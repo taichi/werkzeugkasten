@@ -1,4 +1,4 @@
-package werkzeugkasten.dblauncher.launch;
+package werkzeugkasten.common.debug;
 
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTabGroup;
 import org.eclipse.debug.ui.CommonTab;

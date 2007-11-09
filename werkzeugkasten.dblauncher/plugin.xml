@@ -122,7 +122,7 @@
    <extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            class="werkzeugkasten.dblauncher.launch.DbLaunchConfigurationTabGroup"
+            class="werkzeugkasten.common.debug.BasicLaunchConfigurationTabGroup"
             id="werkzeugkasten.dblauncher.launchConfigurationTabGroup"
             type="werkzeugkasten.dblauncher.launchConfigurationType">
       </launchConfigurationTabGroup>

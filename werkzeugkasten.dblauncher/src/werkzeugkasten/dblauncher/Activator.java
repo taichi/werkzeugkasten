@@ -15,9 +15,11 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import werkzeugkasten.common.debug.LaunchUtil;
 import werkzeugkasten.common.resource.LogUtil;
 import werkzeugkasten.common.ui.ImageLoader;
 import werkzeugkasten.common.util.StringUtil;
+import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
 import werkzeugkasten.dblauncher.launch.TerminateListener;
 import werkzeugkasten.dblauncher.nls.Images;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
@@ -34,7 +36,20 @@ public class Activator extends AbstractUIPlugin {
 
 	private static Map<String, IProject> urlToProjectCache;
 
-	private TerminateListener terminateListener = new TerminateListener();
+	private TerminateListener terminateListener = new TerminateListener() {
+		@Override
+		public void handle(ILaunch l) throws CoreException {
+			String id = l.getLaunchConfiguration().getType().getIdentifier();
+			if (Constants.ID_LAUNCH_CONFIG.equals(id)) {
+				IProject p = LaunchUtil.getProject(l);
+				Activator.setLaunch(p, null);
+				Activator.reject(p);
+				AbstractLightweightLabelDecorator.updateDecorators(
+						Constants.ID_DECORATOR, p);
+				Activator.getDefault().refreshPluginActions();
+			}
+		}
+	};
 
 	private LaunchConfigurationFacetRegistry facetRegistry = new LaunchConfigurationFacetRegistry(
 			ID_PLUGIN, EXT_LAUNCHCONFIG_FACET);
@@ -82,10 +97,6 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
-	}
-
-	public static void refreshActions() {
-		getDefault().refreshPluginActions();
 	}
 
 	public static DbPreferences getPreferences(IProject project) {
