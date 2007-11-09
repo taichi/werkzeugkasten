@@ -1,7 +1,7 @@
 package werkzeugkasten.launcher;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -17,7 +17,7 @@ public class LaunchConfigurationFacetRegistry {
 
 	protected final AtomicBoolean initialized = new AtomicBoolean(false);
 
-	protected Map<String, LaunchConfigurationFacet> facets = new Hashtable<String, LaunchConfigurationFacet>();
+	protected Map<String, LaunchConfigurationFacet> facets = new HashMap<String, LaunchConfigurationFacet>();
 
 	protected final String namespace;
 	protected final String extensionPointName;
