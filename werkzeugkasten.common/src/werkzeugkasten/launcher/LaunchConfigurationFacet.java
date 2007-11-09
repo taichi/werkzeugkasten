@@ -1,7 +1,7 @@
 package werkzeugkasten.launcher;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
-
 
 public interface LaunchConfigurationFacet {
 
@@ -9,9 +9,11 @@ public interface LaunchConfigurationFacet {
 
 	String getDescription();
 
-	void addLibrary(IJavaProject project);
+	boolean hasLibrary(IJavaProject project) throws CoreException;
 
-	void removeLibrary(IJavaProject project);
+	void addLibrary(IJavaProject project) throws CoreException;
+
+	void removeLibrary(IJavaProject project) throws CoreException;
 
 	LaunchConfigurationBuilder getBuilder();
 

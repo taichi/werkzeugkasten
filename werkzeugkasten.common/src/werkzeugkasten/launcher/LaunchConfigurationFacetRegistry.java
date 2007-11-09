@@ -1,7 +1,9 @@
 package werkzeugkasten.launcher;
 
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -41,6 +43,15 @@ public class LaunchConfigurationFacetRegistry {
 		}
 	}
 
+	public Set<String> keys() {
+		synchronized (initialized) {
+			if (initialized.compareAndSet(false, true)) {
+				initialize();
+			}
+			return new HashSet<String>(this.facets.keySet());
+		}
+	}
+
 	protected void initialize() {
 		ExtensionAcceptor.accept(this.namespace, this.extensionPointName,
 				new ExtensionAcceptor.ExtensionVisitor() {
@@ -59,5 +70,13 @@ public class LaunchConfigurationFacetRegistry {
 						return true;
 					}
 				});
+	}
+
+	public void dispose() {
+		synchronized (initialized) {
+			if (initialized.compareAndSet(true, false)) {
+				this.facets.clear();
+			}
+		}
 	}
 }
