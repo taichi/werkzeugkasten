@@ -14,4 +14,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.ui,
  org.eclipse.ui.browser,
  org.eclipse.ui.ide,
- org.eclipse.ui.editors
+ org.eclipse.ui.editors,
+ org.eclipse.jface.text,
+ org.eclipse.debug.ui,
+ org.eclipse.jdt.debug.ui,
+ org.eclipse.help
