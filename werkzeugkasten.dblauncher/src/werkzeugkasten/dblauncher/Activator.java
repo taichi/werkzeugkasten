@@ -22,6 +22,7 @@ import werkzeugkasten.dblauncher.launch.TerminateListener;
 import werkzeugkasten.dblauncher.nls.Images;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
 import werkzeugkasten.dblauncher.preferences.impl.DbPreferencesImpl;
+import werkzeugkasten.launcher.LaunchConfigurationFacetRegistry;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -34,6 +35,9 @@ public class Activator extends AbstractUIPlugin {
 	private static Map<String, IProject> urlToProjectCache;
 
 	private TerminateListener terminateListener = new TerminateListener();
+
+	private LaunchConfigurationFacetRegistry facetRegistry = new LaunchConfigurationFacetRegistry(
+			ID_PLUGIN, EXT_LAUNCHCONFIG_FACET);
 
 	/**
 	 * The constructor
@@ -65,6 +69,7 @@ public class Activator extends AbstractUIPlugin {
 		DebugPlugin.getDefault().removeDebugEventListener(terminateListener);
 		urlToProjectCache.clear();
 		urlToProjectCache = null;
+		facetRegistry.dispose();
 		ImageLoader.unload(plugin, Images.class);
 		plugin = null;
 		super.stop(context);
@@ -141,5 +146,9 @@ public class Activator extends AbstractUIPlugin {
 		for (String key : l) {
 			urlToProjectCache.remove(key);
 		}
+	}
+
+	public static LaunchConfigurationFacetRegistry getFacetRegistry() {
+		return getDefault().facetRegistry;
 	}
 }

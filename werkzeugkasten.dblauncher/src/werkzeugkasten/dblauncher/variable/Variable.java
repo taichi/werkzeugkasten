@@ -16,7 +16,7 @@ import werkzeugkasten.dblauncher.Activator;
 
 public class Variable extends ClasspathVariableInitializer {
 
-	public static final IPath LIB = new Path("H2_LIB");
+	public static final IPath LIB = new Path("H2");
 	public static final IPath SRC = new Path("H2_SRC");
 
 	private static final Map<String, Pattern> VARIABLES = new HashMap<String, Pattern>();

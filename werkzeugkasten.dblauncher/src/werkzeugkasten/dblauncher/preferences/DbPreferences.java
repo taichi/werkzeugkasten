@@ -1,6 +1,5 @@
 package werkzeugkasten.dblauncher.preferences;
 
-import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 
 /**
  * @author taichi
@@ -39,7 +38,4 @@ public interface DbPreferences {
 	String getDbType();
 
 	void setDbType(String type);
-
-	LaunchConfigurationBuilder getBuilder();
-
 }

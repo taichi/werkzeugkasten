@@ -16,6 +16,7 @@ import werkzeugkasten.dblauncher.Constants;
 import werkzeugkasten.dblauncher.nls.Strings;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
+import werkzeugkasten.launcher.LaunchConfigurationFacet;
 
 public class StartServerJob extends WorkspaceJob {
 	private static final Object FAMILY_START_SERVER_JOB = new Object();
@@ -47,15 +48,19 @@ public class StartServerJob extends WorkspaceJob {
 			try {
 				project.setSessionProperty(Constants.KEY_JOB_PROCESSING, "");
 				DbPreferences pref = Activator.getPreferences(project);
-				LaunchConfigurationBuilder builder = pref.getBuilder();
-				builder.setProject(project);
-				ILaunchConfiguration config = builder.build();
-				launch = config.launch(
-						pref.isDebug() ? ILaunchManager.DEBUG_MODE
-								: ILaunchManager.RUN_MODE, monitor);
-				Activator.setLaunch(project, launch);
-				AbstractLightweightLabelDecorator.updateDecorators(
-						Constants.ID_DECORATOR, project);
+				LaunchConfigurationFacet facet = Activator.getFacetRegistry()
+						.find(pref.getDbType());
+				if (facet != null) {
+					LaunchConfigurationBuilder builder = facet.getBuilder();
+					builder.setProject(project);
+					ILaunchConfiguration config = builder.build();
+					launch = config.launch(
+							pref.isDebug() ? ILaunchManager.DEBUG_MODE
+									: ILaunchManager.RUN_MODE, monitor);
+					Activator.setLaunch(project, launch);
+					AbstractLightweightLabelDecorator.updateDecorators(
+							Constants.ID_DECORATOR, project);
+				}
 			} finally {
 				project.setSessionProperty(Constants.KEY_JOB_PROCESSING, null);
 			}

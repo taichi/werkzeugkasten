@@ -41,5 +41,5 @@ public final class Constants {
 			+ ".preferences_page_context";
 
 	/* ---------------------------------------------------------------------- */
-	public static final String EXT_LAUNCHCONFIG_BUILDER = "launchConfigurationBuilder";
+	public static final String EXT_LAUNCHCONFIG_FACET = "launchConfigurationFacet";
 }

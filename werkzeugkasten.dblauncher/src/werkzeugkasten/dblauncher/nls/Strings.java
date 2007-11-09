@@ -4,7 +4,9 @@ import org.eclipse.osgi.util.NLS;
 
 public class Strings extends NLS {
 
-	public static String LABEL_USE_H2_PLUGIN;
+	public static String LABEL_USE_DBLAUNCHER;
+
+	public static String LABEL_DB_TYPE;
 
 	public static String LABEL_IS_DEBUG;
 

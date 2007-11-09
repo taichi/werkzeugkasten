@@ -32,7 +32,7 @@ import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 /**
  * @author taichi
  */
-public class DbConfigurationBuilder implements LaunchConfigurationBuilder {
+public class H2ConfigurationBuilder implements LaunchConfigurationBuilder {
 
 	private IProject project;
 
@@ -46,7 +46,7 @@ public class DbConfigurationBuilder implements LaunchConfigurationBuilder {
 
 	private String args;
 
-	public DbConfigurationBuilder() {
+	public H2ConfigurationBuilder() {
 	}
 
 	public void setProject(IProject project) {
@@ -68,7 +68,7 @@ public class DbConfigurationBuilder implements LaunchConfigurationBuilder {
 
 					public void setUp(ILaunchConfigurationWorkingCopy copy)
 							throws CoreException {
-						DbConfigurationBuilder.this.setUp(copy);
+						H2ConfigurationBuilder.this.setUp(copy);
 					};
 
 					public String getConfigName() {

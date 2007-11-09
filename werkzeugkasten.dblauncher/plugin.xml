@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
+   <extension-point id="launchConfigurationFacet" name="launchConfigurationFacet" schema="schema/launchConfigurationFacet.exsd"/>
    <extension
          point="org.eclipse.jdt.core.classpathVariableInitializer">
       <classpathVariableInitializer
@@ -183,6 +184,14 @@
             id="werkzeugkasten.dblauncher.command.manager"
             name="%manager">
       </command>
+   </extension>
+   <extension
+         point="werkzeugkasten.dblauncher.launchConfigurationFacet">
+      <launchConfigurationFacet
+            class="werkzeugkasten.dblauncher.preferences.H2LaunchConfigurationFacet"
+            description="Version 1.0.60 (2007-10-20)"
+            type="H2">
+      </launchConfigurationFacet>
    </extension>
 
 </plugin>

@@ -5,19 +5,15 @@ import static werkzeugkasten.dblauncher.Constants.*;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
-import werkzeugkasten.common.runtime.ExtensionAcceptor;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
-import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 
 /**
  * @author taichi
@@ -125,29 +121,5 @@ public class DbPreferencesImpl implements DbPreferences {
 
 	public void setDbType(String type) {
 		this.store.setValue(PREF_DB_TYPE, type);
-	}
-
-	public LaunchConfigurationBuilder getBuilder() {
-		final LaunchConfigurationBuilder[] result = new LaunchConfigurationBuilder[1];
-		ExtensionAcceptor.accept(ID_PLUGIN, EXT_LAUNCHCONFIG_BUILDER,
-				new ExtensionAcceptor.ExtensionVisitor() {
-					public boolean visit(IConfigurationElement e) {
-						if (EXT_LAUNCHCONFIG_BUILDER.equals(e.getName())
-								&& e.getAttribute("type").equalsIgnoreCase(
-										getDbType())) {
-							try {
-								Object o = e.createExecutableExtension("class");
-								if (o instanceof LaunchConfigurationBuilder) {
-									result[0] = (LaunchConfigurationBuilder) o;
-									return false;
-								}
-							} catch (CoreException ex) {
-								Activator.log(ex);
-							}
-						}
-						return true;
-					}
-				});
-		return result[0];
 	}
 }

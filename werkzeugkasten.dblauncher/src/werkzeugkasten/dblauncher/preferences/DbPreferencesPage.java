@@ -1,5 +1,7 @@
 package werkzeugkasten.dblauncher.preferences;
 
+import static werkzeugkasten.dblauncher.Constants.*;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -9,8 +11,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.dialogs.Dialog;
@@ -22,9 +22,11 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -34,16 +36,15 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.h2.server.TcpServer;
 
-import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.common.resource.ProjectUtil;
+import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.ui.WorkbenchUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
 import werkzeugkasten.dblauncher.Activator;
-import werkzeugkasten.dblauncher.Constants;
 import werkzeugkasten.dblauncher.nls.Strings;
 import werkzeugkasten.dblauncher.preferences.impl.DbPreferencesImpl;
-import werkzeugkasten.dblauncher.variable.Variable;
+import werkzeugkasten.launcher.LaunchConfigurationFacet;
 
 /**
  * @author taichi
@@ -54,13 +55,17 @@ public class DbPreferencesPage extends PropertyPage implements
 
 	private Pattern numeric = Pattern.compile("\\d*");
 
-	private Button useH2;
+	private Button useDbLauncher;
 
 	private Button isDebug;
 
 	private Button useInternalWebBrowser;
 
 	private Button addDriverToBuildPath;
+
+	private Combo dbType;
+
+	private Label dbDesc;
 
 	private Text baseDir;
 
@@ -84,8 +89,9 @@ public class DbPreferencesPage extends PropertyPage implements
 	 * 
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected Control createContents(Composite parent) {
-		WorkbenchUtil.setHelp(parent, Constants.CTX_HELP_PREF);
+		WorkbenchUtil.setHelp(parent, CTX_HELP_PREF);
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
@@ -94,7 +100,8 @@ public class DbPreferencesPage extends PropertyPage implements
 		data.grabExcessHorizontalSpace = true;
 		composite.setLayoutData(data);
 
-		this.useH2 = createCheckBox(composite, Strings.LABEL_USE_H2_PLUGIN);
+		this.useDbLauncher = createCheckBox(composite,
+				Strings.LABEL_USE_DBLAUNCHER);
 
 		this.isDebug = createCheckBox(composite, Strings.LABEL_IS_DEBUG);
 
@@ -103,6 +110,8 @@ public class DbPreferencesPage extends PropertyPage implements
 
 		this.addDriverToBuildPath = createCheckBox(composite,
 				Strings.LABEL_ADD_DRIVER_TO_BUILDPATH);
+
+		this.dbType = createPartOfDbType(composite, Strings.LABEL_DB_TYPE);
 
 		NumberVerifier nv = new NumberVerifier();
 		this.dbPortNo = createPart(composite, Strings.LABEL_DB_PORTNO);
@@ -116,6 +125,21 @@ public class DbPreferencesPage extends PropertyPage implements
 
 		setUpStoredValue();
 		setUpPortNos();
+		return composite;
+	}
+
+	private Composite createDefaultComposite(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NULL);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;
+		composite.setLayout(layout);
+
+		GridData data = new GridData();
+		data.verticalAlignment = GridData.FILL;
+		data.horizontalAlignment = GridData.FILL;
+		data.horizontalSpan = 2;
+		composite.setLayoutData(data);
+
 		return composite;
 	}
 
@@ -146,55 +170,47 @@ public class DbPreferencesPage extends PropertyPage implements
 	 */
 	private void setUpStoredValue() {
 		IPreferenceStore store = getPreferenceStore();
-		this.useH2.setSelection(ProjectUtil.hasNature(getProject(),
-				Constants.ID_NATURE));
-		this.isDebug.setSelection(store.getBoolean(Constants.PREF_IS_DEBUG));
+		this.useDbLauncher.setSelection(ProjectUtil.hasNature(getProject(),
+				ID_NATURE));
+		int index = this.dbType.indexOf(store.getString(PREF_DB_TYPE));
+		this.dbType.select(-1 < index ? index : 0);
+		this.isDebug.setSelection(store.getBoolean(PREF_IS_DEBUG));
 		this.useInternalWebBrowser.setSelection(store
-				.getBoolean(Constants.PREF_USE_INTERNAL_WEBBROWSER));
-		this.addDriverToBuildPath.setSelection(hasDriver());
-		this.baseDir.setText(store.getString(Constants.PREF_BASE_DIR));
-		this.dbPortNo.setText(store.getString(Constants.PREF_DB_PORTNO));
-		this.webPortNo.setText(store.getString(Constants.PREF_WEB_PORTNO));
-		this.user.setText(store.getString(Constants.PREF_USER));
-		this.password.setText(store.getString(Constants.PREF_PASSWORD));
+				.getBoolean(PREF_USE_INTERNAL_WEBBROWSER));
+		LaunchConfigurationFacet facet = getCurrentFacet();
+		if (facet != null) {
+			setDriverExists(facet);
+			this.dbDesc.setText(facet.getDescription());
+		}
+
+		this.baseDir.setText(store.getString(PREF_BASE_DIR));
+		this.dbPortNo.setText(store.getString(PREF_DB_PORTNO));
+		this.webPortNo.setText(store.getString(PREF_WEB_PORTNO));
+		this.user.setText(store.getString(PREF_USER));
+		this.password.setText(store.getString(PREF_PASSWORD));
 	}
 
-	protected boolean hasDriver() {
+	protected void setDriverExists(LaunchConfigurationFacet facet) {
+		this.addDriverToBuildPath.setSelection(hasDriver(facet));
+	}
+
+	protected LaunchConfigurationFacet getCurrentFacet() {
+		LaunchConfigurationFacet facet = Activator.getFacetRegistry().find(
+				this.dbType.getText());
+		return facet;
+	}
+
+	protected boolean hasDriver(LaunchConfigurationFacet facet) {
 		boolean result = false;
 		try {
-			IProject p = getProject();
-			result = ClasspathEntryUtil.hasClasspathEntry(JavaCore.create(p),
-					Variable.LIB);
+			IJavaProject p = getJavaProject();
+			if (facet != null) {
+				result = facet.hasLibrary(p);
+			}
 		} catch (CoreException e) {
 			Activator.log(e);
 		}
 		return result;
-	}
-
-	private void setUpPortNos() {
-		IProject project = getProject();
-		if (ProjectUtil.hasNature(project, Constants.ID_NATURE) == false) {
-			IWorkspaceRoot root = ProjectUtil.getWorkspaceRoot();
-			IProject[] all = root.getProjects();
-			Set<String> nos = new HashSet<String>();
-			for (int i = 0; i < all.length; i++) {
-				if (ProjectUtil.hasNature(all[i], Constants.ID_NATURE)) {
-					IPreferenceStore other = new ScopedPreferenceStore(
-							new ProjectScope(all[i]), Constants.ID_PLUGIN);
-					nos.add(other.getString(Constants.PREF_DB_PORTNO));
-					nos.add(other.getString(Constants.PREF_WEB_PORTNO));
-				}
-			}
-			int dbPort = TcpServer.DEFAULT_PORT - 1;
-			while (nos.contains(String.valueOf(++dbPort))) {
-			}
-			nos.add(String.valueOf(dbPort));
-			int webPort = org.h2.engine.Constants.DEFAULT_HTTP_PORT - 1;
-			while (nos.contains(String.valueOf(++webPort))) {
-			}
-			this.dbPortNo.setText(String.valueOf(dbPort));
-			this.webPortNo.setText(String.valueOf(webPort));
-		}
 	}
 
 	/**
@@ -213,6 +229,48 @@ public class DbPreferencesPage extends PropertyPage implements
 		txt.setLayoutData(data);
 		return txt;
 
+	}
+
+	private Combo createPartOfDbType(Composite parent, String label) {
+		Label l = new Label(parent, SWT.NONE);
+		l.setText(label);
+
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		data.grabExcessHorizontalSpace = true;
+		data.horizontalSpan = 0;
+		composite.setLayoutData(data);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		composite.setLayout(layout);
+
+		Combo c = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
+		c.setLayoutData(new GridData(GridData.BEGINNING));
+		Set<String> keys = Activator.getFacetRegistry().keys();
+		c.setItems(keys.toArray(new String[keys.size()]));
+		this.dbDesc = new Label(composite, SWT.NONE);
+		c.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				LaunchConfigurationFacet facet = getCurrentFacet();
+				if (facet != null) {
+					setDriverExists(facet);
+					dbDesc.setText(facet.getDescription());
+					dbDesc.getParent().layout();
+				}
+			}
+		});
+		data = new GridData();
+		data.horizontalSpan = 0;
+		data.horizontalIndent = 0;
+		data.verticalIndent = 0;
+		dbDesc.setLayoutData(data);
+		return c;
 	}
 
 	protected Text createPartOfBaseDir(Composite composite, String label) {
@@ -235,6 +293,7 @@ public class DbPreferencesPage extends PropertyPage implements
 		Button outpath = new Button(composite, SWT.PUSH);
 		outpath.setText(Strings.LABEL_BROWSE);
 		outpath.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ResourceTreeSelectionDialog dialog = new ResourceTreeSelectionDialog(
 						getShell(), getProject().getParent(), IResource.FOLDER
@@ -264,12 +323,13 @@ public class DbPreferencesPage extends PropertyPage implements
 	 * 
 	 * @see org.eclipse.jface.preference.PreferencePage#doGetPreferenceStore()
 	 */
+	@Override
 	protected IPreferenceStore doGetPreferenceStore() {
 		IProject project = getProject();
 		ScopedPreferenceStore store = null;
 		if (project != null) {
 			store = new ScopedPreferenceStore(new ProjectScope(project),
-					Constants.ID_PLUGIN);
+					ID_PLUGIN);
 			DbPreferencesImpl.setupPreferences(project, store);
 			setPreferenceStore(store);
 		}
@@ -281,18 +341,18 @@ public class DbPreferencesPage extends PropertyPage implements
 	 * 
 	 * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
 	 */
+	@Override
 	protected void performDefaults() {
 		IPreferenceStore store = getPreferenceStore();
-		this.useH2.setSelection(false);
-		this.isDebug.setSelection(store
-				.getDefaultBoolean(Constants.PREF_IS_DEBUG));
+		this.useDbLauncher.setSelection(false);
+		this.dbType.select(0);
+		this.isDebug.setSelection(store.getDefaultBoolean(PREF_IS_DEBUG));
 		this.useInternalWebBrowser.setSelection(store
-				.getDefaultBoolean(Constants.PREF_USE_INTERNAL_WEBBROWSER));
+				.getDefaultBoolean(PREF_USE_INTERNAL_WEBBROWSER));
 		this.addDriverToBuildPath.setSelection(false);
 		this.baseDir.setText(DbPreferencesImpl.getDefaultBaseDir(getProject()));
-		this.dbPortNo.setText(store.getDefaultString(Constants.PREF_DB_PORTNO));
-		this.webPortNo.setText(store
-				.getDefaultString(Constants.PREF_WEB_PORTNO));
+		this.dbPortNo.setText(store.getDefaultString(PREF_DB_PORTNO));
+		this.webPortNo.setText(store.getDefaultString(PREF_WEB_PORTNO));
 		super.performDefaults();
 	}
 
@@ -301,43 +361,47 @@ public class DbPreferencesPage extends PropertyPage implements
 	 * 
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
+	@Override
 	public boolean performOk() {
 		boolean result = false;
 		IProject project = getProject();
 		try {
 			if (project != null) {
 				IPreferenceStore store = getPreferenceStore();
-				if (this.useH2.getSelection()) {
-					ProjectUtil.addNature(project, Constants.ID_NATURE);
+				if (this.useDbLauncher.getSelection()) {
+					ProjectUtil.addNature(project, ID_NATURE);
 				} else {
-					ProjectUtil.removeNature(project, Constants.ID_NATURE);
+					ProjectUtil.removeNature(project, ID_NATURE);
 				}
 
-				store.setValue(Constants.PREF_IS_DEBUG, this.isDebug
-						.getSelection());
-				store.setValue(Constants.PREF_USE_INTERNAL_WEBBROWSER,
+				store.setValue(PREF_DB_TYPE, this.dbType.getText());
+
+				store.setValue(PREF_IS_DEBUG, this.isDebug.getSelection());
+				store.setValue(PREF_USE_INTERNAL_WEBBROWSER,
 						this.useInternalWebBrowser.getSelection());
 				String dir = this.baseDir.getText();
 				if (StringUtil.isEmpty(dir) == false) {
-					store.setValue(Constants.PREF_BASE_DIR, dir);
+					store.setValue(PREF_BASE_DIR, dir);
 				}
 				String no = this.dbPortNo.getText();
 				if (StringUtil.isEmpty(no) == false
 						&& numeric.matcher(no).matches()) {
-					store.setValue(Constants.PREF_DB_PORTNO, no);
+					store.setValue(PREF_DB_PORTNO, no);
 				}
 				no = this.webPortNo.getText();
 				if (StringUtil.isEmpty(no) == false
 						&& numeric.matcher(no).matches()) {
-					store.setValue(Constants.PREF_WEB_PORTNO, no);
+					store.setValue(PREF_WEB_PORTNO, no);
 				}
-				IJavaProject jp = JavaCore.create(project);
-				if (this.addDriverToBuildPath.getSelection()) {
-					ClasspathEntryUtil.addClasspathEntry(jp, JavaCore
-							.newVariableEntry(Variable.LIB, Variable.SRC,
-									new Path("./")));
-				} else {
-					ClasspathEntryUtil.removeClasspathEntry(jp, Variable.LIB);
+				IJavaProject jp = getJavaProject();
+				LaunchConfigurationFacet facet = Activator.getFacetRegistry()
+						.find(this.dbType.getText());
+				if (facet != null) {
+					if (this.addDriverToBuildPath.getSelection()) {
+						facet.addLibrary(jp);
+					} else {
+						facet.removeLibrary(jp);
+					}
 				}
 
 				if (store instanceof IPersistentPreferenceStore) {
@@ -353,27 +417,47 @@ public class DbPreferencesPage extends PropertyPage implements
 		return result;
 	}
 
+	protected IProject project;
+	protected IJavaProject javaP;
+
 	private IProject getProject() {
-		IProject result = null;
-		IAdaptable adaptable = getElement();
-		if (adaptable != null) {
-			result = (IProject) adaptable.getAdapter(IProject.class);
+		if (project == null) {
+			project = AdaptableUtil.to(getElement(), IProject.class);
 		}
-		return result;
+		return project;
 	}
 
-	private Composite createDefaultComposite(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NULL);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		composite.setLayout(layout);
-
-		GridData data = new GridData();
-		data.verticalAlignment = GridData.FILL;
-		data.horizontalAlignment = GridData.FILL;
-		data.horizontalSpan = 2;
-		composite.setLayoutData(data);
-
-		return composite;
+	protected IJavaProject getJavaProject() {
+		if (javaP == null) {
+			javaP = JavaCore.create(getProject());
+		}
+		return javaP;
 	}
+
+	private void setUpPortNos() {
+		IProject project = getProject();
+		if (ProjectUtil.hasNature(project, ID_NATURE) == false) {
+			IWorkspaceRoot root = ProjectUtil.getWorkspaceRoot();
+			IProject[] all = root.getProjects();
+			Set<String> nos = new HashSet<String>();
+			for (int i = 0; i < all.length; i++) {
+				if (ProjectUtil.hasNature(all[i], ID_NATURE)) {
+					IPreferenceStore other = new ScopedPreferenceStore(
+							new ProjectScope(all[i]), ID_PLUGIN);
+					nos.add(other.getString(PREF_DB_PORTNO));
+					nos.add(other.getString(PREF_WEB_PORTNO));
+				}
+			}
+			int dbPort = TcpServer.DEFAULT_PORT - 1;
+			while (nos.contains(String.valueOf(++dbPort))) {
+			}
+			nos.add(String.valueOf(dbPort));
+			int webPort = org.h2.engine.Constants.DEFAULT_HTTP_PORT - 1;
+			while (nos.contains(String.valueOf(++webPort))) {
+			}
+			this.dbPortNo.setText(String.valueOf(dbPort));
+			this.webPortNo.setText(String.valueOf(webPort));
+		}
+	}
+
 }
