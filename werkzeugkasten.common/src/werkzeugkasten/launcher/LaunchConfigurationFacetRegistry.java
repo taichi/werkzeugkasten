@@ -33,10 +33,12 @@ public class LaunchConfigurationFacetRegistry {
 	}
 
 	public LaunchConfigurationFacet find(String key) {
-		if (initialized.compareAndSet(false, true)) {
-			initialize();
+		synchronized (initialized) {
+			if (initialized.compareAndSet(false, true)) {
+				initialize();
+			}
+			return facets.get(key);
 		}
-		return facets.get(key);
 	}
 
 	protected void initialize() {
