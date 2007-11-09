@@ -16,11 +16,11 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import werkzeugkasten.common.debug.LaunchUtil;
+import werkzeugkasten.common.debug.TerminateListener;
 import werkzeugkasten.common.resource.LogUtil;
 import werkzeugkasten.common.ui.ImageLoader;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
-import werkzeugkasten.dblauncher.launch.TerminateListener;
 import werkzeugkasten.dblauncher.nls.Images;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
 import werkzeugkasten.dblauncher.preferences.impl.DbPreferencesImpl;

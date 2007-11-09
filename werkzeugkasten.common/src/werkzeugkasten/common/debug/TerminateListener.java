@@ -1,4 +1,4 @@
-package werkzeugkasten.dblauncher.launch;
+package werkzeugkasten.common.debug;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
