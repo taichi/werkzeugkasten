@@ -13,27 +13,31 @@ public class LaunchConfigurationFacetRegistryTest {
 
 	@Test
 	public void testFind() {
+		// ReentrantLockで遊んでみた。
+		// 結局10スレッド程度では、余り競合しないので、syncで十分。
 		final Tester t = new Tester();
 		List<R> rs = new ArrayList<R>();
 		final long now = System.nanoTime();
 		for (int i = 0; i < 10; i++) {
-			final int count = i;
+			final int count = 999000 - i * 90000;
 			rs.add(new R() {
 				@Override
 				public void run() {
 					try {
-						Thread.sleep(0, 10 - count);
+						Thread.sleep(0, count);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					long begin = System.nanoTime();
 					LaunchConfigurationFacet f = t.find(String.valueOf(System
 							.nanoTime()
 							- now));
 					StringBuilder stb = new StringBuilder();
-					new Formatter(stb).format("%1$d %2$s %3$s", System
-							.nanoTime()
-							- now, f.getType(), Thread.currentThread()
-							.getName());
+					new Formatter(stb).format(
+							"BEGIN:[%2$s] COST:[%1$d] THD:[%3$s]", System
+									.nanoTime()
+									- begin, f.getType(), Thread
+									.currentThread().getName());
 					msg = stb.toString();
 				}
 			});
@@ -68,6 +72,8 @@ public class LaunchConfigurationFacetRegistryTest {
 	private class Tester extends LaunchConfigurationFacetRegistry {
 		volatile boolean called = false;
 
+		String name = null;
+
 		public Tester() {
 			super("aaa", "bbb");
 		}
@@ -93,7 +99,7 @@ public class LaunchConfigurationFacetRegistryTest {
 					if (called == false) {
 						throw new AssertionError();
 					}
-					return key;
+					return key + " " + name;
 				}
 
 				@Override
@@ -114,6 +120,7 @@ public class LaunchConfigurationFacetRegistryTest {
 				e.printStackTrace();
 			}
 			called = true;
+			name = Thread.currentThread().getName();
 		}
 	}
 
