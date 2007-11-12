@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.junit.Test;
 
@@ -105,6 +106,13 @@ public class LaunchConfigurationFacetRegistryTest {
 				@Override
 				public void removeLibrary(IJavaProject project) {
 
+				}
+
+				@Override
+				public boolean hasLibrary(IJavaProject project)
+						throws CoreException {
+					// TODO Auto-generated method stub
+					return false;
 				}
 			};
 		}
