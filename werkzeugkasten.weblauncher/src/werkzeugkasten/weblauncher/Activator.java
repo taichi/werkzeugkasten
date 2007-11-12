@@ -159,6 +159,10 @@ public class Activator extends AbstractUIPlugin {
 		}
 	}
 
+	public synchronized static void exit(String url) {
+		urlToProjectCache.remove(url);
+	}
+
 	public static LaunchConfigurationFacetRegistry getFacetRegistry() {
 		return getDefault().facetRegistry;
 	}

@@ -2,7 +2,7 @@ package werkzeugkasten.weblauncher.nls;
 
 import org.eclipse.osgi.util.NLS;
 
-public class Strings {
+public class Strings extends NLS {
 
 	public static String LABEL_USE_WEB_LAUNCHER;
 

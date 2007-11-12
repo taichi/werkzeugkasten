@@ -121,4 +121,14 @@ public class WebPreferencesImpl implements WebPreferences {
 		return store.getBoolean(PREF_USE_INTERNAL_WEBBROWSER);
 	}
 
+	@Override
+	public String getWebServerType() {
+		return store.getString(PREF_WEB_SERVER_TYPE);
+	}
+
+	@Override
+	public void setWebServerType(String type) {
+		store.setValue(PREF_WEB_SERVER_TYPE, type);
+	}
+
 }

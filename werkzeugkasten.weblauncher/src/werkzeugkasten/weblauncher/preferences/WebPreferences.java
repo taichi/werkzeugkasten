@@ -4,6 +4,11 @@ package werkzeugkasten.weblauncher.preferences;
  * @author ryushi
  */
 public interface WebPreferences {
+
+	String getWebServerType();
+
+	void setWebServerType(String type);
+
 	String getContextName();
 
 	void setContextName(String name);

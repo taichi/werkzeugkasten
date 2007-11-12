@@ -31,7 +31,7 @@ public final class Constants {
 			ID_PLUGIN, "checkserver");
 
 	/* ---------------------------------------------------------------------- */
-	public static final String PREF_CONTEXT_NAME = "prefix";
+	public static final String PREF_CONTEXT_NAME = "contextName";
 
 	public static final String PREF_BASE_DIR = "baseDir";
 
@@ -44,6 +44,8 @@ public final class Constants {
 	public static final String PREF_CHECK_SERVER = "checkServer";
 
 	public static final String PREF_USE_INTERNAL_WEBBROWSER = "useInternalWebBrowser";
+
+	public static final String PREF_WEB_SERVER_TYPE = "webType";
 
 	/* ---------------------------------------------------------------------- */
 	public static final String EXT_LAUNCHCONFIG_FACET = "launchConfigurationFacet";
