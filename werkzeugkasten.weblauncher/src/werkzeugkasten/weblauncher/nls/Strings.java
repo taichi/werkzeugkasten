@@ -36,6 +36,8 @@ public class Strings {
 
 	public static String LABEL_STOP;
 
+	public static String DEC_LABEL_FMT;
+
 	static {
 		Class<Strings> clazz = Strings.class;
 		NLS.initializeMessages(clazz.getName(), clazz);

@@ -2,6 +2,11 @@ package werkzeugkasten.weblauncher;
 
 import org.eclipse.core.runtime.QualifiedName;
 
+/**
+ * 
+ * @author ryushi
+ * 
+ */
 public final class Constants {
 
 	public static final String ID_PLUGIN = "org.seasar.weblauncher";

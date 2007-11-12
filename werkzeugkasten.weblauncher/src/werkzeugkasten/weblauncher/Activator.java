@@ -1,8 +1,6 @@
 package werkzeugkasten.weblauncher;
 
-import static werkzeugkasten.weblauncher.Constants.EXT_LAUNCHCONFIG_FACET;
-import static werkzeugkasten.weblauncher.Constants.ID_PLUGIN;
-import static werkzeugkasten.weblauncher.Constants.KEY_SERVER_STATE;
+import static werkzeugkasten.weblauncher.Constants.*;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,6 +24,7 @@ import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
 import werkzeugkasten.launcher.LaunchConfigurationFacetRegistry;
 import werkzeugkasten.weblauncher.nls.Images;
 import werkzeugkasten.weblauncher.preferences.WebPreferences;
+import werkzeugkasten.weblauncher.preferences.impl.WebPreferencesImpl;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -101,7 +100,7 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public static WebPreferences getPreferences(IProject project) {
-		return null;
+		return new WebPreferencesImpl(project);
 	}
 
 	public static void log(String msg) {

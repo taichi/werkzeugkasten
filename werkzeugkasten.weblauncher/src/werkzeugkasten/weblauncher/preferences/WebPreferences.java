@@ -1,5 +1,34 @@
 package werkzeugkasten.weblauncher.preferences;
 
+/**
+ * @author ryushi
+ */
 public interface WebPreferences {
+	String getContextName();
 
+	void setContextName(String name);
+
+	String getBaseDir();
+
+	void setBaseDir(String path);
+
+	String getWebPortNo();
+
+	void setWebPortNo(String no);
+
+	void setDebug(boolean is);
+
+	boolean isDebug();
+
+	void setConfig(String path);
+
+	String getConfig();
+
+	boolean checkServerWhenOpen();
+
+	void setCheckServerWhenOpen(boolean is);
+
+	boolean useInternalWebBrowser();
+
+	void setInternalWebBrowser(boolean is);
 }
