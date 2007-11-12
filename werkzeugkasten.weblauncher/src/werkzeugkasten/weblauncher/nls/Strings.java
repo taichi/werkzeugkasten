@@ -38,6 +38,8 @@ public class Strings extends NLS {
 
 	public static String DEC_LABEL_FMT;
 
+	public static String LABEL_BROWSE;
+
 	static {
 		Class<Strings> clazz = Strings.class;
 		NLS.initializeMessages(clazz.getName(), clazz);
