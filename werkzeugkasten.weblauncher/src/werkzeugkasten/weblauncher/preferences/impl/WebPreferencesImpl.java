@@ -51,82 +51,66 @@ public class WebPreferencesImpl implements WebPreferences {
 		return result;
 	}
 
-	@Override
 	public boolean checkServerWhenOpen() {
 		return store.getBoolean(PREF_CHECK_SERVER);
 	}
 
-	@Override
 	public String getBaseDir() {
 		return store.getString(PREF_BASE_DIR);
 	}
 
-	@Override
 	public String getConfig() {
 		return store.getString(PREF_CONFIG);
 	}
 
-	@Override
 	public String getContextName() {
 		return store.getString(PREF_CONTEXT_NAME);
 	}
 
-	@Override
 	public String getWebPortNo() {
 		return store.getString(PREF_WEB_PORTNO);
 	}
 
-	@Override
 	public boolean isDebug() {
 		return store.getBoolean(PREF_IS_DEBUG);
 	}
 
-	@Override
 	public void setBaseDir(String path) {
 		store.setValue(PREF_BASE_DIR, path);
 	}
 
-	@Override
 	public void setCheckServerWhenOpen(boolean is) {
 		store.setValue(PREF_CHECK_SERVER, is);
 	}
 
-	@Override
 	public void setConfig(String path) {
 		store.setValue(PREF_CONFIG, path);
 	}
 
-	@Override
 	public void setContextName(String name) {
 		store.setValue(PREF_CONTEXT_NAME, name);
 	}
 
-	@Override
 	public void setDebug(boolean is) {
 		store.setValue(PREF_IS_DEBUG, is);
 	}
 
-	@Override
 	public void setInternalWebBrowser(boolean is) {
 		store.setValue(PREF_USE_INTERNAL_WEBBROWSER, is);
 	}
 
-	@Override
 	public void setWebPortNo(String no) {
 		store.setValue(PREF_WEB_PORTNO, no);
 	}
 
-	@Override
 	public boolean useInternalWebBrowser() {
 		return store.getBoolean(PREF_USE_INTERNAL_WEBBROWSER);
 	}
 
-	@Override
 	public String getWebServerType() {
 		return store.getString(PREF_WEB_SERVER_TYPE);
 	}
 
-	@Override
 	public void setWebServerType(String type) {
 		store.setValue(PREF_WEB_SERVER_TYPE, type);
 	}
