@@ -40,12 +40,12 @@ public class Activator extends AbstractUIPlugin {
 		@Override
 		public void handle(ILaunch l) throws CoreException {
 			String id = l.getLaunchConfiguration().getType().getIdentifier();
-			if (Constants.ID_LAUNCH_CONFIG.equals(id)) {
+			if (ID_LAUNCH_CONFIG.equals(id)) {
 				IProject p = LaunchUtil.getProject(l);
 				Activator.setLaunch(p, null);
 				Activator.reject(p);
 				AbstractLightweightLabelDecorator.updateDecorators(
-						Constants.ID_DECORATOR, p);
+						ID_DECORATOR, p);
 				Activator.getDefault().refreshPluginActions();
 			}
 		}
