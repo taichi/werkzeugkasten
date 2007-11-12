@@ -16,7 +16,6 @@ import org.eclipse.jdt.launching.JavaLaunchDelegate;
 import org.eclipse.jdt.launching.JavaRuntime;
 
 import werkzeugkasten.common.debug.LaunchUtil;
-import werkzeugkasten.weblauncher.Activator;
 
 /**
  * @author taichi
@@ -51,9 +50,5 @@ public class WebLaunchConfigurationDelegate extends JavaLaunchDelegate
 			}
 		}
 		super.launch(configuration, mode, launch, monitor);
-		if (project != null && launch.isTerminated() == false) {
-			Activator.setLaunch(project, launch);
-		}
 	}
-
 }
