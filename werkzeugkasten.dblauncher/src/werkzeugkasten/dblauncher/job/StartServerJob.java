@@ -1,5 +1,7 @@
 package werkzeugkasten.dblauncher.job;
 
+import static werkzeugkasten.dblauncher.Constants.*;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -12,7 +14,6 @@ import org.eclipse.debug.core.ILaunchManager;
 
 import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
 import werkzeugkasten.dblauncher.Activator;
-import werkzeugkasten.dblauncher.Constants;
 import werkzeugkasten.dblauncher.nls.Strings;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
@@ -43,10 +44,10 @@ public class StartServerJob extends WorkspaceJob {
 			throws CoreException {
 		ILaunch launch = Activator.getLaunch(project);
 		if (project != null
-				&& project.getSessionProperty(Constants.KEY_JOB_PROCESSING) == null
+				&& project.getSessionProperty(KEY_JOB_PROCESSING) == null
 				&& (launch == null || launch.isTerminated())) {
 			try {
-				project.setSessionProperty(Constants.KEY_JOB_PROCESSING, "");
+				project.setSessionProperty(KEY_JOB_PROCESSING, "");
 				DbPreferences pref = Activator.getPreferences(project);
 				LaunchConfigurationFacet facet = Activator.getFacetRegistry()
 						.find(pref.getDbType());
@@ -59,10 +60,10 @@ public class StartServerJob extends WorkspaceJob {
 									: ILaunchManager.RUN_MODE, monitor);
 					Activator.setLaunch(project, launch);
 					AbstractLightweightLabelDecorator.updateDecorators(
-							Constants.ID_DECORATOR, project);
+							ID_DECORATOR, project);
 				}
 			} finally {
-				project.setSessionProperty(Constants.KEY_JOB_PROCESSING, null);
+				project.setSessionProperty(KEY_JOB_PROCESSING, null);
 			}
 		}
 		return Status.OK_STATUS;
