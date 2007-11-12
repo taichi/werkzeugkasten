@@ -29,7 +29,7 @@ public class DBRunningDecorator extends AbstractLightweightLabelDecorator {
 								null);
 					} else {
 						DbPreferences pref = Activator.getPreferences(project);
-						String dec = NLS.bind(Strings.DEC_LABEL_FMT, pref
+						String dec = NLS.bind(" " + Strings.DEC_LABEL_FMT, pref
 								.getDbPortNo());
 						decoration.addSuffix(dec);
 						decoration.addOverlay(Images.RUNNING,
