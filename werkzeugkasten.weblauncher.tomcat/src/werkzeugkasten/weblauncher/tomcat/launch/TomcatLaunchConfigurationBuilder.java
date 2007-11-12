@@ -28,7 +28,6 @@ public class TomcatLaunchConfigurationBuilder implements
 
 	private String args;
 
-	@Override
 	public void setProject(IProject project) {
 		this.name = Constants.ID_PLUGIN + "." + project.getName();
 		this.project = project;
@@ -39,7 +38,6 @@ public class TomcatLaunchConfigurationBuilder implements
 		return "start";
 	}
 
-	@Override
 	public ILaunchConfiguration build() throws CoreException {
 		return LaunchConfigurationFactory
 				.create(new LaunchConfigurationFactory.CreationHandler() {
@@ -66,7 +64,7 @@ public class TomcatLaunchConfigurationBuilder implements
 	}
 
 	protected void setUp(ILaunchConfigurationWorkingCopy copy) {
-
+		String a = name + classpath + srcpath + args + mainClass;
+		System.out.println(a);
 	}
-
 }
