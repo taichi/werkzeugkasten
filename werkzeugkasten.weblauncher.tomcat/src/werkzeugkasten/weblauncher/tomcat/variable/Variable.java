@@ -14,13 +14,11 @@ import werkzeugkasten.weblauncher.tomcat.Activator;
 
 public class Variable extends ClasspathVariableInitializer {
 
-	public static final IPath TOMCAT_BASE = new Path("TOMCAT_BASE");
 	public static final IPath SERVLET_API_2_5 = new Path("SERVLET_API_2_5");
 	public static final IPath JSP_API_2_1 = new Path("JSP_API_2_1");
 
 	protected static Set<String> VARIABLES = new HashSet<String>();
 	static {
-		VARIABLES.add(TOMCAT_BASE.toString());
 		VARIABLES.add(SERVLET_API_2_5.toString());
 		VARIABLES.add(JSP_API_2_1.toString());
 	}
@@ -28,7 +26,6 @@ public class Variable extends ClasspathVariableInitializer {
 	@Override
 	public void initialize(String variable) {
 		if (VARIABLES.contains(variable)) {
-			set(TOMCAT_BASE, "/tomcat");
 			set(SERVLET_API_2_5, "/tomcat/lib/servlet-api.jar");
 			set(JSP_API_2_1, "/tomcat/lib/jsp-api.jar");
 		}

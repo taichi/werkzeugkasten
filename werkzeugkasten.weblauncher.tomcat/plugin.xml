@@ -6,11 +6,6 @@
       <classpathVariableInitializer
             class="werkzeugkasten.weblauncher.tomcat.variable.Variable"
             readOnly="true"
-            variable="TOMCAT_BASE">
-      </classpathVariableInitializer>
-      <classpathVariableInitializer
-            class="werkzeugkasten.weblauncher.tomcat.variable.Variable"
-            readOnly="true"
             variable="SERVLET_API_2_5">
       </classpathVariableInitializer>
       <classpathVariableInitializer

@@ -47,18 +47,54 @@ public class TomcatLaunchConfigurationBuilder implements
 	public void setProject(IProject project) {
 		this.name = Constants.ID_PLUGIN + "." + project.getName();
 		this.project = project;
-		this.args = buildBootArgs(Activator.getPreferences(project));
-
+		this.args = buildBootArgs(project, Activator.getPreferences(project));
+		setUpClasspathEntries();
 	}
 
-	protected String buildBootArgs(WebPreferences preferences) {
-		return "start";
+	protected String buildBootArgs(IProject project, WebPreferences preferences) {
+		Bundle bundle = werkzeugkasten.weblauncher.tomcat.Activator
+				.getDefault().getBundle();
+		URL u = bundle.getEntry("/tomcat");
+		try {
+			u = FileLocator.toFileURL(u);
+		} catch (Exception e) {
+			Activator.log(e);
+			throw new IllegalStateException(e);
+		}
+		String tomcatbase = new File(u.getPath()).getAbsolutePath();
+
+		StringBuilder stb = new StringBuilder();
+
+		stb
+				.append(" -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager");
+
+		stb.append(" -Djava.util.logging.config.file=\"");
+		stb.append(tomcatbase);
+		stb.append("/conf/logging.properties\"");
+
+		stb.append(" -Djava.endorsed.dirs=\"");
+		stb.append(tomcatbase);
+		stb.append("/endorsed\"");
+
+		stb.append(" -Dcatalina.base=\"");
+		stb.append(tomcatbase);
+		stb.append("\"");
+		stb.append(" -Dcatalina.home=\"");
+		stb.append(tomcatbase);
+		stb.append("\"");
+
+		stb.append(" -Dworkspace_loc=${workspace_loc}");
+		stb.append(" -Ddblauncher.ctx.loc=\"${workspace_loc:");
+		stb.append(project.getName());
+		stb.append("}/.settings/context.xml\"");
+		return stb.toString();
 	}
 
 	@SuppressWarnings("unchecked")
 	protected void setUpClasspathEntries() {
-		Bundle bundle = Activator.getDefault().getBundle();
-		for (Enumeration e = bundle.getEntryPaths("/tomcat/bin"); e
+		Bundle bundle = werkzeugkasten.weblauncher.tomcat.Activator
+				.getDefault().getBundle();
+		for (Enumeration e = bundle.getEntryPaths("/tomcat/bin/"); e
 				.hasMoreElements();) {
 			String s = e.nextElement().toString().toLowerCase();
 			if (s.endsWith(".jar")) {
@@ -102,7 +138,8 @@ public class TomcatLaunchConfigurationBuilder implements
 				});
 	}
 
-	protected void setUp(ILaunchConfigurationWorkingCopy copy) {
+	protected void setUp(ILaunchConfigurationWorkingCopy copy)
+			throws CoreException {
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME,
 				getProject().getName());
 
@@ -123,14 +160,25 @@ public class TomcatLaunchConfigurationBuilder implements
 						IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH,
 						false);
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH,
-				getClasspath());
+				toMemento(getClasspath()));
 
 		copy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
 				getMainClass());
 		copy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+				"start");
+		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
 				getArgs());
+	}
+
+	private List<String> toMemento(List<IRuntimeClasspathEntry> classpath)
+			throws CoreException {
+		List<String> classpathList = new ArrayList<String>(classpath.size());
+		for (IRuntimeClasspathEntry e : classpath) {
+			classpathList.add(e.getMemento());
+		}
+		return classpathList;
 	}
 
 	public String getName() {

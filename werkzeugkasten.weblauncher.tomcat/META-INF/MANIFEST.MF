@@ -18,3 +18,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors,
  werkzeugkasten.weblauncher
 Eclipse-LazyStart: true
+Bundle-ClassPath: .,
+ tomcat/bin/bootstrap.jar
