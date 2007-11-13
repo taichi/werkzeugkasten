@@ -84,9 +84,11 @@ public class ResourceUtil {
 			if (result == null) {
 				Object o = getCurrentSelectedResouce(window);
 				result = AdaptableUtil.to(o, IProject.class);
-				if (result == null && o instanceof IResource) {
-					IResource r = (IResource) o;
-					result = r.getProject();
+				if (result == null) {
+					IResource r = AdaptableUtil.to(o, IResource.class);
+					if (r != null) {
+						result = r.getProject();
+					}
 				}
 			}
 		}
