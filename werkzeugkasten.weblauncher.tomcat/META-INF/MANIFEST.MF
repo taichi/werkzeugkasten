@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: WebLauncher Tomcat
-Bundle-SymbolicName: werkzeugkasten.weblauncher.tomcat
+Bundle-SymbolicName: werkzeugkasten.weblauncher.tomcat;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: werkzeugkasten.weblauncher.tomcat.Activator
 Require-Bundle: org.eclipse.ui,
