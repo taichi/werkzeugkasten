@@ -1,7 +1,9 @@
 package werkzeugkasten.weblauncher.tomcat.launch;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -9,7 +11,9 @@ import java.util.List;
 
 import org.apache.catalina.startup.Bootstrap;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -24,6 +28,7 @@ import org.osgi.framework.Bundle;
 
 import werkzeugkasten.common.debug.LaunchConfigurationFactory;
 import werkzeugkasten.common.resource.ProjectUtil;
+import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.Constants;
@@ -32,6 +37,8 @@ import werkzeugkasten.weblauncher.preferences.WebPreferences;
 public class TomcatLaunchConfigurationBuilder implements
 		LaunchConfigurationBuilder {
 
+	protected static final String CONTEXT_XML = ".settings/"
+			+ Constants.ID_PLUGIN + ".context.xml";
 	private IProject project;
 
 	private String name;
@@ -58,7 +65,6 @@ public class TomcatLaunchConfigurationBuilder implements
 		try {
 			u = FileLocator.toFileURL(u);
 		} catch (Exception e) {
-			Activator.log(e);
 			throw new IllegalStateException(e);
 		}
 		String tomcatbase = new File(u.getPath()).getAbsolutePath();
@@ -86,7 +92,9 @@ public class TomcatLaunchConfigurationBuilder implements
 		stb.append(" -Dworkspace_loc=${workspace_loc}");
 		stb.append(" -Ddblauncher.ctx.loc=\"${workspace_loc:");
 		stb.append(project.getName());
-		stb.append("}/.settings/context.xml\"");
+		stb.append("}/");
+		stb.append(CONTEXT_XML);
+		stb.append("\"");
 		return stb.toString();
 	}
 
@@ -114,6 +122,11 @@ public class TomcatLaunchConfigurationBuilder implements
 	}
 
 	public ILaunchConfiguration build() throws CoreException {
+		IFile f = getProject().getFile(CONTEXT_XML);
+		if (f == null || f.exists() == false) {
+			buildXML(f);
+		}
+
 		return LaunchConfigurationFactory
 				.create(new LaunchConfigurationFactory.CreationHandler() {
 					public String getTypeName() {
@@ -136,6 +149,30 @@ public class TomcatLaunchConfigurationBuilder implements
 						return true;
 					}
 				});
+	}
+
+	private void buildXML(IFile f) {
+		StringBuilder stb = new StringBuilder();
+		WebPreferences pref = Activator.getPreferences(getProject());
+		IPath path = new Path("${workspace_loc}/");
+		path = path.append(pref.getBaseDir());
+		stb.append("<Context docBase=\"");
+		stb.append(path.toString());
+		stb.append("\" className=\"");
+		stb
+				.append("werkzeugkasten.weblauncher.tomcat.startup.WebLauncherContext");
+		stb.append("\"/>");
+		InputStream in = null;
+		try {
+			byte[] bytes = stb.toString().getBytes("UTF-8");
+			in = new ByteArrayInputStream(bytes);
+			f.create(in, IResource.FORCE, null);
+			f.getParent().refreshLocal(IResource.DEPTH_ONE, null);
+		} catch (Exception e) {
+			Activator.log(e);
+		} finally {
+			StreamUtil.close(in);
+		}
 	}
 
 	protected void setUp(ILaunchConfigurationWorkingCopy copy)
