@@ -3,6 +3,7 @@ package werkzeugkasten.common.resource;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -66,26 +67,53 @@ public class ResourceUtil {
 		T result = null;
 		IWorkbenchWindow window = WorkbenchUtil.getWorkbenchWindow();
 		if (window != null) {
-			IWorkbenchPage page = window.getActivePage();
-			if (page != null) {
-				// getActiveEditorで取れる参照は、フォーカスがどこにあってもアクティブなエディタの参照が取れてしまう為。
-				IWorkbenchPart part = page.getActivePart();
-				if (part instanceof IEditorPart) {
-					IEditorPart editor = (IEditorPart) part;
-					result = AdaptableUtil.to(editor.getEditorInput(), clazz);
-				}
-			}
+			result = getCurrentSelectedResouce(window, clazz);
 			if (result == null) {
-				ISelection selection = window.getSelectionService()
-						.getSelection();
-				if (selection instanceof IStructuredSelection) {
-					IStructuredSelection ss = (IStructuredSelection) selection;
-					Object o = ss.getFirstElement();
-					result = AdaptableUtil.to(o, clazz);
+				result = AdaptableUtil.to(getCurrentSelectedResouce(window),
+						clazz);
+			}
+		}
+		return result;
+	}
+
+	public static IProject getCurrentSelectedProject() {
+		IProject result = null;
+		IWorkbenchWindow window = WorkbenchUtil.getWorkbenchWindow();
+		if (window != null) {
+			result = getCurrentSelectedResouce(window, IProject.class);
+			if (result == null) {
+				Object o = getCurrentSelectedResouce(window);
+				result = AdaptableUtil.to(o, IProject.class);
+				if (result == null && o instanceof IResource) {
+					IResource r = (IResource) o;
+					result = r.getProject();
 				}
 			}
 		}
 		return result;
+	}
+
+	private static <T extends IResource> T getCurrentSelectedResouce(
+			IWorkbenchWindow window, Class<T> clazz) {
+		IWorkbenchPage page = window.getActivePage();
+		if (page != null) {
+			// getActiveEditorで取れる参照は、フォーカスがどこにあってもアクティブなエディタの参照が取れてしまう為。
+			IWorkbenchPart part = page.getActivePart();
+			if (part instanceof IEditorPart) {
+				IEditorPart editor = (IEditorPart) part;
+				return AdaptableUtil.to(editor.getEditorInput(), clazz);
+			}
+		}
+		return null;
+	}
+
+	private static Object getCurrentSelectedResouce(IWorkbenchWindow window) {
+		ISelection selection = window.getSelectionService().getSelection();
+		if (selection instanceof IStructuredSelection) {
+			IStructuredSelection ss = (IStructuredSelection) selection;
+			return ss.getFirstElement();
+		}
+		return null;
 	}
 
 }

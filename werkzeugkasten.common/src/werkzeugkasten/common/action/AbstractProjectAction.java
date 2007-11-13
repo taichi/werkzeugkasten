@@ -56,8 +56,7 @@ public abstract class AbstractProjectAction implements IActionDelegate {
 	public void run(IAction action) {
 		try {
 			if (this.project == null) {
-				this.project = ResourceUtil
-						.getCurrentSelectedResouce(IProject.class);
+				this.project = ResourceUtil.getCurrentSelectedProject();
 			}
 			if (this.project != null) {
 				run(action, this.project);
