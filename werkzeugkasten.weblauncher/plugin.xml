@@ -41,7 +41,7 @@
       <decorator
             adaptable="true"
             class="werkzeugkasten.weblauncher.viewers.WebRunningDecorator"
-            id="werkzeugkasten.weblauncher.decorator1"
+            id="werkzeugkasten.weblauncher.decorator"
             label="WebRunningDecorator"
             lightweight="true"
             location="BOTTOM_RIGHT"

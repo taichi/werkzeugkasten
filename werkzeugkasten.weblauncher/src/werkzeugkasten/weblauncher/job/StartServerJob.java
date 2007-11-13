@@ -12,7 +12,6 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 
-import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.launcher.LaunchConfigurationFacet;
 import werkzeugkasten.weblauncher.Activator;
@@ -55,12 +54,8 @@ public class StartServerJob extends WorkspaceJob {
 					LaunchConfigurationBuilder builder = facet.getBuilder();
 					builder.setProject(project);
 					ILaunchConfiguration config = builder.build();
-					launch = config.launch(
-							pref.isDebug() ? ILaunchManager.DEBUG_MODE
-									: ILaunchManager.RUN_MODE, monitor);
-					Activator.setLaunch(project, launch);
-					AbstractLightweightLabelDecorator.updateDecorators(
-							ID_DECORATOR, project);
+					config.launch(pref.isDebug() ? ILaunchManager.DEBUG_MODE
+							: ILaunchManager.RUN_MODE, monitor);
 				}
 			} catch (Exception e) {
 				Activator.log(e);

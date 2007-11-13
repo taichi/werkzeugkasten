@@ -1,5 +1,7 @@
 package werkzeugkasten.weblauncher.launch;
 
+import static werkzeugkasten.weblauncher.Constants.*;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -16,6 +18,8 @@ import org.eclipse.jdt.launching.JavaLaunchDelegate;
 import org.eclipse.jdt.launching.JavaRuntime;
 
 import werkzeugkasten.common.debug.LaunchUtil;
+import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
+import werkzeugkasten.weblauncher.Activator;
 
 /**
  * @author taichi
@@ -50,5 +54,8 @@ public class WebLaunchConfigurationDelegate extends JavaLaunchDelegate
 			}
 		}
 		super.launch(configuration, mode, launch, monitor);
+		Activator.setLaunch(project, launch);
+		AbstractLightweightLabelDecorator.updateDecorators(ID_DECORATOR,
+				project);
 	}
 }
