@@ -1,31 +1,45 @@
 package werkzeugkasten.weblauncher.tomcat;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IJavaProject;
+import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+
+import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.launcher.impl.AbstractLaunchConfigurationFacet;
 import werkzeugkasten.weblauncher.tomcat.launch.TomcatLaunchConfigurationBuilder;
+import werkzeugkasten.weblauncher.tomcat.variable.Variable;
 
 public class Tomcat6LaunchConfigurationFacet extends
 		AbstractLaunchConfigurationFacet {
 
 	@Override
 	public boolean hasLibrary(IJavaProject project) throws CoreException {
-		// TODO Auto-generated method stub
-		return false;
+		Map<IPath, IClasspathEntry> m = ClasspathEntryUtil
+				.toClasspathMap(project);
+		return m.containsKey(Variable.SERVLET_API_2_5)
+				&& m.containsKey(Variable.JSP_API_2_1);
 	}
 
 	@Override
 	public void addLibrary(IJavaProject project) throws CoreException {
-		// TODO Auto-generated method stub
-
+		ClasspathEntryUtil.addClasspathEntry(project, JavaCore
+				.newVariableEntry(Variable.SERVLET_API_2_5, null,
+						new Path("./")));
+		ClasspathEntryUtil.addClasspathEntry(project, JavaCore
+				.newVariableEntry(Variable.JSP_API_2_1, null, new Path("./")));
 	}
 
 	@Override
 	public void removeLibrary(IJavaProject project) throws CoreException {
-		// TODO Auto-generated method stub
-
+		ClasspathEntryUtil.removeClasspathEntry(project,
+				Variable.SERVLET_API_2_5);
+		ClasspathEntryUtil.removeClasspathEntry(project, Variable.JSP_API_2_1);
 	}
 
 	@Override
