@@ -1,7 +1,6 @@
 package werkzeugkasten.dblauncher.action;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunch;
@@ -111,28 +110,11 @@ public class ToggleServerAction extends EnablerAction {
 	}
 
 	protected static IProject findCurrentProject() {
-		IProject result = ResourceUtil
-				.getCurrentSelectedResouce(IProject.class);
+		IProject result = ResourceUtil.getCurrentSelectedProject();
 		if (result != null) {
 			return result;
 		}
-		result = getProjectByBrowserId();
-		if (result != null) {
-			return result;
-		}
-
-		IWorkspaceRoot root = ProjectUtil.getWorkspaceRoot();
-		IProject[] projects = root.getProjects();
-		for (IProject p : projects) {
-			if (ProjectUtil.hasNature(p, Constants.ID_NATURE)) {
-				ILaunch l = Activator.getLaunch(p);
-				if ((l == null || l.isTerminated() == false)) {
-					result = p;
-					break;
-				}
-			}
-		}
-		return result;
+		return getProjectByBrowserId();
 	}
 
 	protected static IProject getProjectByBrowserId() {
