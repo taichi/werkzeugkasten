@@ -26,6 +26,10 @@ public class WebPreferencesImpl implements WebPreferences {
 		if (StringUtil.isEmpty(baseDir)) {
 			store.setValue(PREF_BASE_DIR, getDefaultBaseDir(project));
 		}
+		String ctxname = store.getString(PREF_CONTEXT_NAME);
+		if (StringUtil.isEmpty(ctxname)) {
+			store.setValue(PREF_CONTEXT_NAME, "/" + project.getName());
+		}
 	}
 
 	public static String getDefaultBaseDir(IProject project) {

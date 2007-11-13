@@ -3,11 +3,13 @@ package werkzeugkasten.weblauncher.preferences;
 import static werkzeugkasten.weblauncher.Constants.*;
 import static werkzeugkasten.weblauncher.nls.Strings.*;
 
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.dialogs.Dialog;
@@ -19,9 +21,11 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -33,6 +37,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
+import werkzeugkasten.launcher.LaunchConfigurationFacet;
 import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.preferences.impl.WebPreferencesImpl;
 
@@ -45,6 +50,12 @@ public class WebPreferencesPage extends PropertyPage {
 	private Pattern numeric = Pattern.compile("\\d*");
 
 	private Button useWebLauncher;
+
+	private Button addLibraryToBuildPath;
+
+	private Combo webType;
+
+	private Label webDesc;
 
 	private Text contextName;
 
@@ -61,6 +72,7 @@ public class WebPreferencesPage extends PropertyPage {
 	private Button useInternalWebBrowser;
 
 	protected IProject project;
+
 	protected IJavaProject javaP;
 
 	/*
@@ -77,9 +89,12 @@ public class WebPreferencesPage extends PropertyPage {
 		data.grabExcessHorizontalSpace = true;
 		composite.setLayoutData(data);
 
-		this.useWebLauncher = new Button(createDefaultComposite(composite),
-				SWT.CHECK);
-		this.useWebLauncher.setText(LABEL_USE_WEB_LAUNCHER);
+		this.useWebLauncher = createCheckBox(composite, LABEL_USE_WEB_LAUNCHER);
+
+		this.addLibraryToBuildPath = createCheckBox(composite,
+				LABEL_ADD_LIBRARY_TO_BUILDPATH);
+
+		this.webType = createPartOfDbType(composite, LABEL_SERVER_TYPE);
 
 		this.contextName = createPart(composite, LABEL_CONTEXT_NAME);
 		this.baseDir = createBaseDir(composite);
@@ -88,15 +103,11 @@ public class WebPreferencesPage extends PropertyPage {
 		this.webPortNo.addModifyListener(nv);
 		this.config = createConfig(composite);
 
-		this.isCheckServer = new Button(createDefaultComposite(composite),
-				SWT.CHECK);
-		this.isCheckServer.setText(LABEL_CHECK_SERVER);
+		this.isCheckServer = createCheckBox(composite, LABEL_CHECK_SERVER);
 		this.isCheckServer.setToolTipText(TOOLTIP_CHECK_SERVER);
-		this.isDebug = new Button(createDefaultComposite(composite), SWT.CHECK);
-		this.isDebug.setText(LABEL_IS_DEBUG);
-		this.useInternalWebBrowser = new Button(
-				createDefaultComposite(composite), SWT.CHECK);
-		this.useInternalWebBrowser.setText(LABEL_USE_INTERNAL_WEBBROWSER);
+		this.isDebug = createCheckBox(composite, LABEL_IS_DEBUG);
+		this.useInternalWebBrowser = createCheckBox(composite,
+				LABEL_USE_INTERNAL_WEBBROWSER);
 
 		setUpStoredValue();
 		return composite;
@@ -113,6 +124,35 @@ public class WebPreferencesPage extends PropertyPage {
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		txt.setLayoutData(data);
 		return txt;
+	}
+
+	private Button createCheckBox(Composite composite, String label) {
+		Button b = new Button(createDefaultComposite(composite), SWT.CHECK);
+		b.setText(label);
+		return b;
+	}
+
+	protected void setDriverExists(LaunchConfigurationFacet facet) {
+		this.addLibraryToBuildPath.setSelection(hasLibrary(facet));
+	}
+
+	protected LaunchConfigurationFacet getCurrentFacet() {
+		LaunchConfigurationFacet facet = Activator.getFacetRegistry().find(
+				this.webType.getText());
+		return facet;
+	}
+
+	protected boolean hasLibrary(LaunchConfigurationFacet facet) {
+		boolean result = false;
+		try {
+			IJavaProject p = getJavaProject();
+			if (facet != null) {
+				result = facet.hasLibrary(p);
+			}
+		} catch (CoreException e) {
+			Activator.log(e);
+		}
+		return result;
 	}
 
 	private class NumberVerifier implements ModifyListener {
@@ -134,6 +174,15 @@ public class WebPreferencesPage extends PropertyPage {
 		WebPreferences wp = Activator.getPreferences(getProject());
 		this.useWebLauncher.setSelection(ProjectUtil.hasNature(getProject(),
 				ID_NATURE));
+
+		int index = this.webType.indexOf(wp.getWebServerType());
+		this.webType.select(-1 < index ? index : 0);
+
+		LaunchConfigurationFacet facet = getCurrentFacet();
+		if (facet != null) {
+			setDriverExists(facet);
+			this.webDesc.setText(facet.getDescription());
+		}
 		this.contextName.setText(wp.getContextName());
 		this.baseDir.setText(wp.getBaseDir());
 		this.webPortNo.setText(wp.getWebPortNo());
@@ -168,6 +217,8 @@ public class WebPreferencesPage extends PropertyPage {
 	protected void performDefaults() {
 		IPreferenceStore store = getPreferenceStore();
 		this.useWebLauncher.setSelection(false);
+		this.webType.select(0);
+		this.addLibraryToBuildPath.setSelection(false);
 		this.contextName.setText(store.getDefaultString(PREF_CONTEXT_NAME));
 		this.baseDir.setText(store.getDefaultString(PREF_BASE_DIR));
 		this.webPortNo.setText(store.getDefaultString(PREF_WEB_PORTNO));
@@ -197,6 +248,7 @@ public class WebPreferencesPage extends PropertyPage {
 					ProjectUtil.removeNature(project, ID_NATURE);
 				}
 
+				store.setValue(PREF_WEB_SERVER_TYPE, this.webType.getText());
 				store.setValue(PREF_CONTEXT_NAME, this.contextName.getText());
 				store.setValue(PREF_BASE_DIR, this.baseDir.getText());
 				store.setValue(PREF_WEB_PORTNO, this.webPortNo.getText());
@@ -214,6 +266,18 @@ public class WebPreferencesPage extends PropertyPage {
 				store.setValue(PREF_IS_DEBUG, this.isDebug.getSelection());
 				store.setValue(PREF_USE_INTERNAL_WEBBROWSER,
 						this.useInternalWebBrowser.getSelection());
+
+				IJavaProject jp = getJavaProject();
+				LaunchConfigurationFacet facet = Activator.getFacetRegistry()
+						.find(this.webType.getText());
+				if (facet != null) {
+					if (this.addLibraryToBuildPath.getSelection()) {
+						facet.addLibrary(jp);
+					} else {
+						facet.removeLibrary(jp);
+					}
+				}
+
 				if (store instanceof IPersistentPreferenceStore) {
 					IPersistentPreferenceStore pps = (IPersistentPreferenceStore) store;
 					pps.save();
@@ -315,6 +379,48 @@ public class WebPreferencesPage extends PropertyPage {
 		});
 
 		return t;
+	}
+
+	private Combo createPartOfDbType(Composite parent, String label) {
+		Label l = new Label(parent, SWT.NONE);
+		l.setText(label);
+
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		data.grabExcessHorizontalSpace = true;
+		data.horizontalSpan = 0;
+		composite.setLayoutData(data);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		composite.setLayout(layout);
+
+		Combo c = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
+		c.setLayoutData(new GridData(GridData.BEGINNING));
+		Set<String> keys = Activator.getFacetRegistry().keys();
+		c.setItems(keys.toArray(new String[keys.size()]));
+		this.webDesc = new Label(composite, SWT.NONE);
+		c.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				LaunchConfigurationFacet facet = getCurrentFacet();
+				if (facet != null) {
+					setDriverExists(facet);
+					webDesc.setText(facet.getDescription());
+					webDesc.getParent().layout();
+				}
+			}
+		});
+		data = new GridData();
+		data.horizontalSpan = 0;
+		data.horizontalIndent = 0;
+		data.verticalIndent = 0;
+		webDesc.setLayoutData(data);
+		return c;
 	}
 
 	private IProject getProject() {

@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.QualifiedName;
  */
 public final class Constants {
 
-	public static final String ID_PLUGIN = "org.seasar.weblauncher";
+	public static final String ID_PLUGIN = "werkzeugkasten.weblauncher";
 
 	public static final String ID_NATURE = ID_PLUGIN + ".nature";
 

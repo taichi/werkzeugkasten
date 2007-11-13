@@ -12,6 +12,10 @@ public class Strings extends NLS {
 
 	public static String LABEL_WEB_PORTNO;
 
+	public static String LABEL_ADD_LIBRARY_TO_BUILDPATH;
+
+	public static String LABEL_SERVER_TYPE;
+
 	public static String LABEL_CONTEXT_NAME;
 
 	public static String LABEL_CONFIG;
