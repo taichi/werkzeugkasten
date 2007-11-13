@@ -14,6 +14,7 @@ import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author taichi
@@ -28,9 +29,14 @@ public abstract class EnablerAction implements IWorkbenchWindowActionDelegate,
 		public void handleDebugEvents(DebugEvent[] events) {
 			for (int i = 0; i < events.length; i++) {
 				DebugEvent event = events[i];
-				if (((DebugEvent.CHANGE | DebugEvent.TERMINATE) & event
+				if (((DebugEvent.CREATE | DebugEvent.TERMINATE) & event
 						.getKind()) != 0) {
-					maybeEnabled();
+					PlatformUI.getWorkbench().getDisplay().asyncExec(
+							new Runnable() {
+								public void run() {
+									maybeEnabled();
+								}
+							});
 				}
 			}
 		}
