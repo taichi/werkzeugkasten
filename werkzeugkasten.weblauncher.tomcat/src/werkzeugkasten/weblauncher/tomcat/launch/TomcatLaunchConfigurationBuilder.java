@@ -89,12 +89,17 @@ public class TomcatLaunchConfigurationBuilder implements
 		stb.append(tomcatbase);
 		stb.append("\"");
 
-		stb.append(" -Dworkspace_loc=${workspace_loc}");
-		stb.append(" -Ddblauncher.ctx.loc=\"${workspace_loc:");
-		stb.append(project.getName());
-		stb.append("}/");
-		stb.append(CONTEXT_XML);
+		stb.append(" -Ddoc_base=\"");
+		IPath p = getProject().getLocation().removeLastSegments(1).append(
+				preferences.getBaseDir());
+		stb.append(p.toOSString());
 		stb.append("\"");
+
+		stb.append(" -Ddblauncher.ctx.loc=\"");
+		stb.append(getProject().getLocation().append(CONTEXT_XML).toOSString());
+		stb.append("\"");
+		stb.append(" -Ddblauncher.ctx.name=");
+		stb.append(preferences.getContextName());
 		return stb.toString();
 	}
 
@@ -153,12 +158,7 @@ public class TomcatLaunchConfigurationBuilder implements
 
 	private void buildXML(IFile f) {
 		StringBuilder stb = new StringBuilder();
-		WebPreferences pref = Activator.getPreferences(getProject());
-		IPath path = new Path("${workspace_loc}/");
-		path = path.append(pref.getBaseDir());
-		stb.append("<Context docBase=\"");
-		stb.append(path.toString());
-		stb.append("\" className=\"");
+		stb.append("<Context docBase=\"${doc_base}\" className=\"");
 		stb
 				.append("werkzeugkasten.weblauncher.tomcat.startup.WebLauncherContext");
 		stb.append("\"/>");
