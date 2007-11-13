@@ -46,7 +46,6 @@ public class Activator extends AbstractUIPlugin {
 				Activator.reject(p);
 				AbstractLightweightLabelDecorator.updateDecorators(
 						ID_DECORATOR, p);
-				Activator.getDefault().refreshPluginActions();
 			}
 		}
 	};
