@@ -72,7 +72,6 @@ public class ToggleServerAction extends EnablerAction {
 			ILaunch launch = Activator.getLaunch(project);
 			if (launch != null) {
 				launch.terminate();
-				Activator.setLaunch(project, null);
 			}
 		}
 	}
@@ -89,6 +88,7 @@ public class ToggleServerAction extends EnablerAction {
 		current = start;
 	}
 
+	@Override
 	protected synchronized boolean checkEnabled() {
 		IProject project = findCurrentProject();
 		boolean result = checkEnabled(project);
