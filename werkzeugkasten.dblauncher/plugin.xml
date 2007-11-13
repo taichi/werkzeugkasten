@@ -28,7 +28,7 @@
    <extension
          point="org.eclipse.ui.propertyPages">
       <page
-            category="launcher"
+            category="werkzeugkasten"
             class="werkzeugkasten.dblauncher.preferences.DbPreferencesPage"
             id="werkzeugkasten.dblauncher.page"
             name="%plugin.label">
@@ -71,7 +71,7 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="werkzeugkasten.dblauncher.objectContribution1"
+            id="werkzeugkasten.dblauncher.objectContribution"
             objectClass="org.eclipse.core.resources.IProject">
          <visibility>
             <objectState
@@ -81,7 +81,7 @@
          </visibility>
          <menu
                id="werkzeugkasten.dblauncher.menu.popup"
-               label="%plugin.name">
+               label="%plugin.label">
             <groupMarker
                   name="additions">
             </groupMarker>
@@ -102,7 +102,7 @@
                definitionId="werkzeugkasten.dblauncher.command.manager"
                enablesFor="1"
                icon="icons/dbman.gif"
-               id="werkzeugkasten.dblauncher.action2"
+               id="werkzeugkasten.dblauncher.action.manager"
                label="%manager"
                menubarPath="werkzeugkasten.dblauncher.menu.popup/additions2">
          </action>
@@ -164,7 +164,7 @@
                id="werkzeugkasten.dblauncher.action.toggle"
                label="%start"
                menubarPath="werkzeugkasten.dblauncher.menu/werkzeugkasten.dblauncher.groupMarker"
-               toolbarPath="werkzeugkasten.dblauncher.groupMarker">
+               toolbarPath="werkzeugkasten.dblauncher.menu/werkzeugkasten.dblauncher.groupMarker">
          </action>
       </actionSet>
    </extension>
