@@ -1,5 +1,8 @@
 package werkzeugkasten.common.action;
 
+import org.eclipse.debug.core.DebugEvent;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Event;
@@ -20,6 +23,18 @@ public abstract class EnablerAction implements IWorkbenchWindowActionDelegate,
 		IActionDelegate2, IEditorActionDelegate {
 
 	protected IAction delegate;
+
+	protected IDebugEventSetListener debugListener = new IDebugEventSetListener() {
+		public void handleDebugEvents(DebugEvent[] events) {
+			for (int i = 0; i < events.length; i++) {
+				DebugEvent event = events[i];
+				if (((DebugEvent.CHANGE | DebugEvent.TERMINATE) & event
+						.getKind()) != 0) {
+					maybeEnabled();
+				}
+			}
+		}
+	};
 
 	protected abstract boolean checkEnabled();
 
@@ -89,6 +104,8 @@ public abstract class EnablerAction implements IWorkbenchWindowActionDelegate,
 			}
 
 		});
+
+		DebugPlugin.getDefault().addDebugEventListener(debugListener);
 		maybeEnabled();
 	}
 
@@ -98,6 +115,7 @@ public abstract class EnablerAction implements IWorkbenchWindowActionDelegate,
 	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
 	 */
 	public void dispose() {
+		DebugPlugin.getDefault().removeDebugEventListener(debugListener);
 		this.delegate = null;
 	}
 
