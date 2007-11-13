@@ -62,6 +62,8 @@ public class StartServerJob extends WorkspaceJob {
 					AbstractLightweightLabelDecorator.updateDecorators(
 							ID_DECORATOR, project);
 				}
+			} catch (Exception e) {
+				Activator.log(e);
 			} finally {
 				project.setSessionProperty(KEY_JOB_PROCESSING, null);
 			}
