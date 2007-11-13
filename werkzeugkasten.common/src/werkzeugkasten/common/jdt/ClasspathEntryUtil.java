@@ -47,7 +47,7 @@ public class ClasspathEntryUtil {
 		}
 	}
 
-	protected static Map<IPath, IClasspathEntry> toClasspathMap(IJavaProject p)
+	public static Map<IPath, IClasspathEntry> toClasspathMap(IJavaProject p)
 			throws CoreException {
 		Map<IPath, IClasspathEntry> map = new LinkedHashMap<IPath, IClasspathEntry>();
 		if (p != null) {
