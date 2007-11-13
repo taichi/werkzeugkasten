@@ -8,6 +8,16 @@
             readOnly="true"
             variable="TOMCAT_BASE">
       </classpathVariableInitializer>
+      <classpathVariableInitializer
+            class="werkzeugkasten.weblauncher.tomcat.variable.Variable"
+            readOnly="true"
+            variable="SERVLET_API_2_5">
+      </classpathVariableInitializer>
+      <classpathVariableInitializer
+            class="werkzeugkasten.weblauncher.tomcat.variable.Variable"
+            readOnly="true"
+            variable="JSP_API_2_1">
+      </classpathVariableInitializer>
    </extension>
    <extension
          point="werkzeugkasten.weblauncher.launchConfigurationFacet">
