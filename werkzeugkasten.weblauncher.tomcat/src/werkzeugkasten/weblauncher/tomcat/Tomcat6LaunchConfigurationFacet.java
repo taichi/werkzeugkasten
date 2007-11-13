@@ -18,7 +18,6 @@ import werkzeugkasten.weblauncher.tomcat.variable.Variable;
 public class Tomcat6LaunchConfigurationFacet extends
 		AbstractLaunchConfigurationFacet {
 
-	@Override
 	public boolean hasLibrary(IJavaProject project) throws CoreException {
 		Map<IPath, IClasspathEntry> m = ClasspathEntryUtil
 				.toClasspathMap(project);
@@ -26,7 +25,6 @@ public class Tomcat6LaunchConfigurationFacet extends
 				&& m.containsKey(Variable.JSP_API_2_1);
 	}
 
-	@Override
 	public void addLibrary(IJavaProject project) throws CoreException {
 		ClasspathEntryUtil.addClasspathEntry(project, JavaCore
 				.newVariableEntry(Variable.SERVLET_API_2_5, null,
@@ -35,14 +33,12 @@ public class Tomcat6LaunchConfigurationFacet extends
 				.newVariableEntry(Variable.JSP_API_2_1, null, new Path("./")));
 	}
 
-	@Override
 	public void removeLibrary(IJavaProject project) throws CoreException {
 		ClasspathEntryUtil.removeClasspathEntry(project,
 				Variable.SERVLET_API_2_5);
 		ClasspathEntryUtil.removeClasspathEntry(project, Variable.JSP_API_2_1);
 	}
 
-	@Override
 	public LaunchConfigurationBuilder getBuilder() {
 		return new TomcatLaunchConfigurationBuilder();
 	}
