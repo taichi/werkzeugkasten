@@ -21,6 +21,10 @@
             file="contexts_dblauncher.xml"
             plugin="werkzeugkasten.dblauncher">
       </contexts>
+      <contexts
+            file="contexts_weblauncher.xml"
+            plugin="werkzeugkasten.weblauncher">
+      </contexts>
    </extension>
 
 </plugin>
