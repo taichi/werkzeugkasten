@@ -30,6 +30,6 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Examples</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/examples</url-pattern>
 	</servlet-mapping>
 </web-app>
