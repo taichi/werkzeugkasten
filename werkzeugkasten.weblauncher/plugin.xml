@@ -63,7 +63,7 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="werkzeugkasten.weblauncher.objectContribution"
+            id="werkzeugkasten.weblauncher.objectContribution.toggle"
             objectClass="org.eclipse.core.resources.IProject">
          <menu
                id="werkzeugkasten.weblauncher.menu.popup"
@@ -89,6 +89,27 @@
                label="%start"
                menubarPath="werkzeugkasten.weblauncher.menu.popup/additions">
          </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="werkzeugkasten.weblauncher.objectContribution.view"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="werkzeugkasten.weblauncher.menu.popup"
+               label="%plugin.label">
+            <groupMarker
+                  name="additions">
+            </groupMarker>
+            <groupMarker
+                  name="additions2">
+            </groupMarker>
+         </menu>
+         <visibility>
+            <objectState
+                  name="projectNature"
+                  value="werkzeugkasten.weblauncher.nature">
+            </objectState>
+         </visibility>
          <action
                class="werkzeugkasten.weblauncher.action.ViewOnServerAction"
                enablesFor="1"
@@ -96,6 +117,18 @@
                id="werkzeugkasten.weblauncher.action.view"
                label="%view"
                menubarPath="werkzeugkasten.weblauncher.menu.popup/additions2">
+            <enablement>
+               <or>
+                  <objectState
+                        name="projectPersistentProperty"
+                        value="werkzeugkasten.weblauncher.checkserver=true">
+                  </objectState>
+                  <objectState
+                        name="projectSessionProperty"
+                        value="werkzeugkasten.weblauncher.serverstate">
+                  </objectState>
+               </or>
+            </enablement>
          </action>
       </objectContribution>
    </extension>
