@@ -36,6 +36,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
+import werkzeugkasten.common.ui.WorkbenchUtil;
 import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
 import werkzeugkasten.launcher.LaunchConfigurationFacet;
 import werkzeugkasten.weblauncher.Activator;
@@ -81,6 +82,7 @@ public class WebPreferencesPage extends PropertyPage {
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createContents(Composite parent) {
+		WorkbenchUtil.setHelp(parent, CTX_HELP_PREF);
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
