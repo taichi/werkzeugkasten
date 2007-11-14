@@ -3,7 +3,7 @@
    <feature url="features/werkzeugkasten.dblauncher.feature_0.0.4.jar" id="werkzeugkasten.dblauncher.feature" version="0.0.4">
       <category name="DbLauncher"/>
    </feature>
-   <feature url="features/werkzeugkasten.weblauncher.feature_0.0.1.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.1">
+   <feature url="features/werkzeugkasten.weblauncher.feature_0.0.2.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.2">
       <category name="WebLauncher"/>
    </feature>
    <category-def name="DbLauncher" label="DbLauncher">
