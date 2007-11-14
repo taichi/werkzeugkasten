@@ -38,7 +38,7 @@ public class TomcatLaunchConfigurationBuilder implements
 		LaunchConfigurationBuilder {
 
 	protected static final String CONTEXT_XML = ".settings/"
-			+ Constants.ID_PLUGIN + ".context.xml";
+			+ Constants.ID_PLUGIN + ".tomcat.context.xml";
 	private IProject project;
 
 	private String name;
