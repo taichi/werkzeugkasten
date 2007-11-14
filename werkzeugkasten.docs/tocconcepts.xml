@@ -8,8 +8,10 @@
 		<topic label="Advanced Options" href="html/concepts/dblauncher/advancedoptions.html"/>
 		<topic label="Customizing DbLauncher" href="html/concepts/dblauncher/customizing.html"/>
 	</topic>
-	<!-- 
-	<topic label="WebLauncher">
-		<topic label="Sub Topic 2" href="html/concepts/subtopic2.html" /> 
-	</topic>  -->
+	<topic label="WebLauncher" href="html/concepts/weblauncher.html">
+		<anchor id="options"/>
+		<topic label="Basic Options" href="html/concepts/weblauncher/basicoptions.html"/>
+		<topic label="Advanced Options" href="html/concepts/weblauncher/advancedoptions.html"/>
+		<topic label="Customizing WebLauncher" href="html/concepts/weblauncher/customizing.html"/>
+	</topic>
 </toc>

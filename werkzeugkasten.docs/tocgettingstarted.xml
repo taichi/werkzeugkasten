@@ -3,4 +3,5 @@
 
 <toc label="Getting Started" link_to="toc.xml#gettingstarted"> 
 	<topic label="DbLauncher" href="html/gettingstarted/dblauncher.html"/>
+	<topic label="WebLauncher" href="html/gettingstarted/weblauncher.html"/>
 </toc>
