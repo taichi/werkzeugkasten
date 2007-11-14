@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/werkzeugkasten.dblauncher.feature_0.0.3.jar" id="werkzeugkasten.dblauncher.feature" version="0.0.3">
+   <feature url="features/werkzeugkasten.dblauncher.feature_0.0.4.jar" id="werkzeugkasten.dblauncher.feature" version="0.0.4">
       <category name="DbLauncher"/>
+   </feature>
+   <feature url="features/werkzeugkasten.weblauncher.feature_0.0.1.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.1">
+      <category name="WebLauncher"/>
    </feature>
    <category-def name="DbLauncher" label="DbLauncher">
       <description>
          Launching Plugin for H2.
+      </description>
+   </category-def>
+   <category-def name="WebLauncher" label="WebLauncher">
+      <description>
+         Launching Plugin for Web Container.
       </description>
    </category-def>
 </site>
