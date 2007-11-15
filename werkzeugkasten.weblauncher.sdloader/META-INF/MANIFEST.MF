@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: WebLauncher SDLoader
-Bundle-SymbolicName: werkzeugkasten.weblauncher.sdloader
+Bundle-SymbolicName: werkzeugkasten.weblauncher.sdloader;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: werkzeugkasten.weblauncher.sdloader.Activator
 Require-Bundle: org.eclipse.ui,
@@ -11,3 +11,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.launching,
  werkzeugkasten.weblauncher
 Eclipse-LazyStart: true
+Bundle-ClassPath: .,
+ sdloader/lib/sdloader-jsp20.jar
