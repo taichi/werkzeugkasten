@@ -1,3 +1,0 @@
-<Context
- docBase="${doc_base}" 
- className="werkzeugkasten.weblauncher.tomcat.startup.WebLauncherContext"/>
