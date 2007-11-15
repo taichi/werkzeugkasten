@@ -36,6 +36,7 @@ Export-Package: werkzeugkasten.common.action,
  werkzeugkasten.weblauncher.nls,
  werkzeugkasten.weblauncher.preferences,
  werkzeugkasten.weblauncher.preferences.impl,
+ werkzeugkasten.weblauncher.variable,
  werkzeugkasten.weblauncher.viewers
 Bundle-Vendor: %plugin.author
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
