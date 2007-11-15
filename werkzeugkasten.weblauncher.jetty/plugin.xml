@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="werkzeugkasten.weblauncher.launchConfigurationFacet">
+      <launchConfigurationFacet
+            class="werkzeugkasten.weblauncher.jetty.Jetty6LaunchConfigurationFacet"
+            description="Version 6.1.5"
+            type="Jetty6.1">
+      </launchConfigurationFacet>
+   </extension>
+
+</plugin>
