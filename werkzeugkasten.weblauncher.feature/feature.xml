@@ -444,7 +444,7 @@ limitations under the License.
          id="werkzeugkasten.weblauncher.tomcat"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.2"/>
 
    <plugin
          id="werkzeugkasten.docs"
