@@ -10,6 +10,7 @@ import org.mortbay.jetty.handler.ContextHandlerCollection;
 import org.mortbay.log.Log;
 import org.mortbay.xml.XmlConfiguration;
 
+@SuppressWarnings("unchecked")
 public class ContextFileDeployer extends AbstractLifeCycle {
 
 	private String contextfile;
@@ -130,5 +131,6 @@ public class ContextFileDeployer extends AbstractLifeCycle {
 
 	@Override
 	protected void doStop() throws Exception {
+		undeploy(contextfile);
 	}
 }
