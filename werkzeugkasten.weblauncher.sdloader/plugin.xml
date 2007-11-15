@@ -4,7 +4,7 @@
    <extension
          point="werkzeugkasten.weblauncher.launchConfigurationFacet">
       <launchConfigurationFacet
-            class="werkzeugkasten.weblauncher.sdloader.LaunchConfigurationFacet2"
+            class="werkzeugkasten.weblauncher.sdloader.SDLoaderLaunchConfigurationFacet"
             description="v0_1_05_200711152047"
             type="SDLoader">
       </launchConfigurationFacet>

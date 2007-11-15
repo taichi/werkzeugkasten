@@ -56,28 +56,10 @@ public class SDLoaderLaunchConfigurationBuilder implements
 	}
 
 	protected String buildBootArgs(IProject project, WebPreferences preferences) {
-		Bundle bundle = werkzeugkasten.weblauncher.sdloader.Activator
-				.getDefault().getBundle();
-		URL u = bundle.getEntry("/sdloader");
-		try {
-			u = FileLocator.toFileURL(u);
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
-		}
-		String jettybase = new File(u.getPath()).getAbsolutePath();
-
 		StringBuilder stb = new StringBuilder();
 
-		stb.append(" -Djetty.home=\"");
-		stb.append(jettybase);
-		stb.append("\"");
-
-		stb.append(" -Ddoc_base=\"");
-		IPath p = getProject().getLocation().removeLastSegments(1).append(
-				preferences.getBaseDir());
-		stb.append(p.toOSString());
-		stb.append("\"");
-
+		stb.append("-Ddblauncher.port=");
+		stb.append(preferences.getWebPortNo());
 		stb.append(" -Ddblauncher.ctx.loc=\"");
 		stb.append(getProject().getLocation().append(CONTEXT_XML).toOSString());
 		stb.append("\"");
@@ -138,10 +120,19 @@ public class SDLoaderLaunchConfigurationBuilder implements
 	}
 
 	private void buildXML(IFile f) {
+		WebPreferences preferences = Activator.getPreferences(getProject());
+
 		StringBuilder stb = new StringBuilder();
-		stb.append("<Context docBase=\"${doc_base}\" className=\"");
-		stb
-				.append("werkzeugkasten.weblauncher.tomcat.startup.WebLauncherContext");
+		stb.append("<Context ");
+		stb.append(" path=\"");
+		stb.append(preferences.getContextName());
+
+		// TODO System.propertiesからの変数をSDLoaderが受付けてくれるようになったら要修正。
+		// 現状のままだと、SVN等で共有した時に、パスがずれる危険性が高い。
+		stb.append("\" docBase=\"");
+		IPath p = getProject().getLocation().removeLastSegments(1).append(
+				preferences.getBaseDir());
+		stb.append(p.toOSString());
 		stb.append("\"/>");
 		InputStream in = null;
 		try {
