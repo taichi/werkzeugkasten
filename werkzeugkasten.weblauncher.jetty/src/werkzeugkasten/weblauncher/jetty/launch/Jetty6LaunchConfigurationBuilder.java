@@ -185,9 +185,6 @@ public class Jetty6LaunchConfigurationBuilder implements
 		copy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
 				getMainClass());
-		// copy.setAttribute(
-		// IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-		// "start");
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
 				getArgs());
 	}
