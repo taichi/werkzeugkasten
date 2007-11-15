@@ -26,7 +26,7 @@ public class Variable extends ClasspathVariableInitializer {
 	@Override
 	public void initialize(String variable) {
 		if (VARIABLES.contains(variable)) {
-			set(SERVLET_API_2_5, "/lib/servlet-api_2.5.jar");
+			set(SERVLET_API_2_5, "lib/servlet-api_2.5.jar");
 			set(JSP_API_2_1, "/lib/jsp-api_2.1.jar");
 		}
 	}
