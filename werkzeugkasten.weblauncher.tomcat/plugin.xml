@@ -2,19 +2,6 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.eclipse.jdt.core.classpathVariableInitializer">
-      <classpathVariableInitializer
-            class="werkzeugkasten.weblauncher.tomcat.variable.Variable"
-            readOnly="true"
-            variable="SERVLET_API_2_5">
-      </classpathVariableInitializer>
-      <classpathVariableInitializer
-            class="werkzeugkasten.weblauncher.tomcat.variable.Variable"
-            readOnly="true"
-            variable="JSP_API_2_1">
-      </classpathVariableInitializer>
-   </extension>
-   <extension
          point="werkzeugkasten.weblauncher.launchConfigurationFacet">
       <launchConfigurationFacet
             class="werkzeugkasten.weblauncher.tomcat.Tomcat6LaunchConfigurationFacet"

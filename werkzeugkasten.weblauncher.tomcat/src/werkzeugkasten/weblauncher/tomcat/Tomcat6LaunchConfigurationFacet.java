@@ -13,7 +13,7 @@ import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.launcher.impl.AbstractLaunchConfigurationFacet;
 import werkzeugkasten.weblauncher.tomcat.launch.TomcatLaunchConfigurationBuilder;
-import werkzeugkasten.weblauncher.tomcat.variable.Variable;
+import werkzeugkasten.weblauncher.variable.Variable;
 
 public class Tomcat6LaunchConfigurationFacet extends
 		AbstractLaunchConfigurationFacet {
