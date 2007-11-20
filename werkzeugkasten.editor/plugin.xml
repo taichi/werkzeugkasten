@@ -5,11 +5,11 @@
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="werkzeugkasten.editor.actionSet"
-            label="Editor Charactors"
+            label="%plugin.name"
             visible="true">
          <menu
                id="werkzeugkasten.editor.menu"
-               label="Editor Charactors">
+               label="%plugin.name">
             <groupMarker
                   name="werkzeugkasten.editor.groupMarker">
             </groupMarker>
@@ -29,7 +29,7 @@
          point="org.eclipse.ui.commands">
       <category
             id="werkzeugkasten.editor.category"
-            name="Editor Charactors">
+            name="%plugin.name">
       </category>
       <command
             categoryId="werkzeugkasten.editor.category"
