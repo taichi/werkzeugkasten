@@ -2,7 +2,7 @@
 <feature
       id="werkzeugkasten.editor.feature"
       label="Alternative Whitespace Render"
-      version="0.0.1"
+      version="0.0.2"
       provider-name="ryushi">
 
    <description url="http://code.google.com/p/werkzeugkasten/">
@@ -438,7 +438,7 @@ limitations under the License.
          id="werkzeugkasten.editor"
          download-size="0"
          install-size="0"
-         version="0.0.1"
+         version="0.0.2"
          unpack="false"/>
 
 </feature>
