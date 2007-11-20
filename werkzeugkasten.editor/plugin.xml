@@ -37,5 +37,11 @@
             name="Show Whitespace Characters">
       </command>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="werkzeugkasten.editor.startup.EventRegister">
+      </startup>
+   </extension>
 
 </plugin>

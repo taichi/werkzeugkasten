@@ -31,6 +31,10 @@ public class EventRegister implements IStartup {
 							// do nothing ...
 						}
 
+						public void partVisible(IWorkbenchPartReference partRef) {
+							// do nothing ...
+						}
+
 						public void partBroughtToTop(
 								IWorkbenchPartReference partRef) {
 							// do nothing ...
@@ -50,9 +54,6 @@ public class EventRegister implements IStartup {
 							// do nothing ...
 						}
 
-						public void partVisible(IWorkbenchPartReference partRef) {
-							// do nothing ...
-						}
 					});
 				}
 			}
