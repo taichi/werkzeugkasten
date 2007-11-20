@@ -17,7 +17,7 @@
          <action
                class="werkzeugkasten.editor.action.ShowWhitespaceCharactersAction"
                definitionId="werkzeugkasten.editor.command.showws"
-               icon="icons/lprio_tsk.gif"
+               icon="icons/enter.gif"
                id="werkzeugkasten.editor.action.whitespace"
                label="Show Whitespace Characters"
                style="toggle"
