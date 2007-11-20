@@ -1,4 +1,4 @@
-package werkzeugkasten.editor.common.ui;
+package werkzeugkasten.common.ui;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;

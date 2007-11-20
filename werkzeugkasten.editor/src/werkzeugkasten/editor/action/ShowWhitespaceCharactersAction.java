@@ -24,9 +24,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import werkzeugkasten.common.ui.WorkbenchUtil;
 import werkzeugkasten.editor.Activator;
 import werkzeugkasten.editor.Constants;
-import werkzeugkasten.editor.common.ui.WorkbenchUtil;
 import werkzeugkasten.editor.text.WhitespaceCharacterPainter;
 
 public class ShowWhitespaceCharactersAction extends Action implements
