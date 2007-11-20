@@ -32,18 +32,15 @@ import werkzeugkasten.editor.text.WhitespaceCharacterPainter;
 public class ShowWhitespaceCharactersAction extends Action implements
 		IWorkbenchWindowActionDelegate, IEditorActionDelegate {
 
-	protected Map<IWorkbenchPartReference, WhitespaceCharacterPainter> painters = new ConcurrentHashMap<IWorkbenchPartReference, WhitespaceCharacterPainter>();
-	protected Map<IWorkbenchPartReference, ITextViewer> viewers = new ConcurrentHashMap<IWorkbenchPartReference, ITextViewer>();
-
-	public void dispose() {
-		this.painters.clear();
-		this.viewers.clear();
-	}
+	protected static Map<IWorkbenchPartReference, WhitespaceCharacterPainter> painters = new ConcurrentHashMap<IWorkbenchPartReference, WhitespaceCharacterPainter>();
+	protected static Map<IWorkbenchPartReference, ITextViewer> viewers = new ConcurrentHashMap<IWorkbenchPartReference, ITextViewer>();
 
 	public ShowWhitespaceCharactersAction() {
+		setChecked(getCheckedFromPref());
 	}
 
 	public void init(IWorkbenchWindow window) {
+		setChecked(getCheckedFromPref());
 		window.getActivePage().addPartListener(new IPartListener2() {
 
 			public void partOpened(IWorkbenchPartReference partRef) {
@@ -68,9 +65,9 @@ public class ShowWhitespaceCharactersAction extends Action implements
 			public void partClosed(IWorkbenchPartReference partRef) {
 				WhitespaceCharacterPainter painter = painters.get(partRef);
 				ITextViewer viewer = viewers.get(partRef);
-				if (painter != null && viewer != null) {
-					((ITextViewerExtension2) viewer).removePainter(painter);
-				}
+				removePainter(painter, viewer);
+				painters.remove(partRef);
+				viewers.remove(partRef);
 			}
 
 			public void partActivated(IWorkbenchPartReference partRef) {
@@ -96,7 +93,6 @@ public class ShowWhitespaceCharactersAction extends Action implements
 			public void partVisible(IWorkbenchPartReference partRef) {
 				// do nothing ...
 			}
-
 		});
 	}
 
@@ -119,16 +115,20 @@ public class ShowWhitespaceCharactersAction extends Action implements
 	}
 
 	protected void synchronizeWithPreference(IAction action) {
+		boolean checked = getCheckedFromPref();
+		if (checked != action.isChecked()) {
+			setChecked(checked);
+		}
+	}
+
+	protected boolean getCheckedFromPref() {
 		boolean checked = false;
 
 		Preferences store = Activator.getDefault().getPluginPreferences();
 		if (store != null) {
 			checked = store.getBoolean(Constants.PREF_SHOW_WHITESPACE);
 		}
-
-		if (checked != action.isChecked()) {
-			setChecked(checked);
-		}
+		return checked;
 	}
 
 	protected void togglePainterState(boolean maybeInstall) {
@@ -158,11 +158,12 @@ public class ShowWhitespaceCharactersAction extends Action implements
 	protected void addPainter(IWorkbenchPartReference ref,
 			AbstractTextEditor ate) {
 		ITextViewer viewer = getTextViewer(ate);
-		if (viewer != null) {
+		if (viewer != null && painters.get(ref) == null) {
 			WhitespaceCharacterPainter painter = new WhitespaceCharacterPainter(
 					viewer);
 			((ITextViewerExtension2) viewer).addPainter(painter);
-			this.painters.put(ref, painter);
+			painters.put(ref, painter);
+			viewers.put(ref, viewer);
 		}
 	}
 
@@ -178,7 +179,7 @@ public class ShowWhitespaceCharactersAction extends Action implements
 					.getDeclaredMethod("getSourceViewer");
 			getSourceViewer.setAccessible(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Activator.log(e);
 		}
 	}
 
@@ -196,7 +197,7 @@ public class ShowWhitespaceCharactersAction extends Action implements
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Activator.log(e);
 		}
 		return null;
 	}
@@ -220,14 +221,23 @@ public class ShowWhitespaceCharactersAction extends Action implements
 	}
 
 	protected void removeFromAllEditors() {
-		for (WhitespaceCharacterPainter p : this.painters.values()) {
-			ITextViewer tv = p.getTextViewer();
-			if (tv instanceof ITextViewerExtension2) {
-				ITextViewerExtension2 tve2 = (ITextViewerExtension2) tv;
-				tve2.removePainter(p);
-			}
+		for (IWorkbenchPartReference ref : painters.keySet()) {
+			WhitespaceCharacterPainter painter = painters.get(ref);
+			ITextViewer viewer = viewers.get(ref);
+			removePainter(painter, viewer);
 		}
-		this.painters.clear();
+		painters.clear();
+		viewers.clear();
 	}
 
+	public void dispose() {
+		removeFromAllEditors();
+	}
+
+	private void removePainter(WhitespaceCharacterPainter painter,
+			ITextViewer viewer) {
+		if (painter != null && viewer != null) {
+			((ITextViewerExtension2) viewer).removePainter(painter);
+		}
+	}
 }
