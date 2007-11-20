@@ -42,7 +42,6 @@ public class ShowWhitespaceCharactersAction extends Action implements
 	public void init(IWorkbenchWindow window) {
 		setChecked(getCheckedFromPref());
 		window.getActivePage().addPartListener(new IPartListener2() {
-
 			public void partOpened(IWorkbenchPartReference partRef) {
 				if (isChecked()) {
 					IEditorPart editor = null;
