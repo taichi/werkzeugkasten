@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="werkzeugkasten.editor.actionSet"
+            label="Editor Charactors"
+            visible="true">
+         <menu
+               id="werkzeugkasten.editor.menu"
+               label="Editor Charactors">
+            <groupMarker
+                  name="werkzeugkasten.editor.groupMarker">
+            </groupMarker>
+         </menu>
+         <action
+               class="werkzeugkasten.editor.action.ShowWhitespaceCharactersAction"
+               definitionId="werkzeugkasten.editor.command.showws"
+               icon="icons/lprio_tsk.gif"
+               id="werkzeugkasten.editor.action.whitespace"
+               label="Show Whitespace Characters"
+               style="toggle"
+               toolbarPath="werkzeugkasten.editor.menu/werkzeugkasten.editor.groupMarker">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="werkzeugkasten.editor.category"
+            name="Editor Charactors">
+      </category>
+      <command
+            categoryId="werkzeugkasten.editor.category"
+            id="werkzeugkasten.editor.command.showws"
+            name="Show Whitespace Characters">
+      </command>
+   </extension>
+
+</plugin>
