@@ -45,6 +45,7 @@ public class Main {
 				this.webappDirPath = getWebAppDirPath();
 				this.webAppContextList = CollectionsUtil.newArrayList();
 				detectWebApps();
+				initWebAppContext();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
