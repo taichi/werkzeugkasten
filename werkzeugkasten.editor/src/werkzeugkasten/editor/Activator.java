@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -83,6 +84,10 @@ public class Activator extends AbstractUIPlugin {
 			store.setValue(Constants.PREF_SHOW_WHITESPACE, isChecked);
 		}
 		savePluginPreferences();
+	}
+
+	public void addPainter(IWorkbenchWindow window) {
+		this.holder.addPainter(window);
 	}
 
 	public void addPainter(IWorkbenchPartReference partRef) {

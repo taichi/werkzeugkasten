@@ -88,14 +88,18 @@ public class StateHolder {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 		for (IWorkbenchWindow window : windows) {
-			IWorkbenchPage[] pages = window.getPages();
-			for (IWorkbenchPage page : pages) {
-				IEditorReference[] references = page.getEditorReferences();
-				for (IEditorReference ref : references) {
-					IEditorPart ep = ref.getEditor(false);
-					AbstractTextEditor ate = to(to(ep));
-					addPainter(ref, ate);
-				}
+			addPainter(window);
+		}
+	}
+
+	protected void addPainter(IWorkbenchWindow window) {
+		IWorkbenchPage[] pages = window.getPages();
+		for (IWorkbenchPage page : pages) {
+			IEditorReference[] references = page.getEditorReferences();
+			for (IEditorReference ref : references) {
+				IEditorPart ep = ref.getEditor(false);
+				AbstractTextEditor ate = to(to(ep));
+				addPainter(ref, ate);
 			}
 		}
 	}
