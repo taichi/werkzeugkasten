@@ -6,6 +6,7 @@ import sdloader.SDLoader;
 import sdloader.javaee.WebAppManager;
 import sdloader.log.SDLoaderLog;
 import sdloader.log.SDLoaderLogFactory;
+import sdloader.util.CollectionsUtil;
 
 public class Main {
 
@@ -38,6 +39,17 @@ public class Main {
 		public EnhancedWebAppManager(SDLoader server) {
 			super(server);
 		}
+
+		public void init() {
+			try {
+				this.webappDirPath = getWebAppDirPath();
+				this.webAppContextList = CollectionsUtil.newArrayList();
+				detectWebApps();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+
 		protected void detectWebApps() throws Exception {
 			String contextfile = System.getProperty("dblauncher.ctx.loc");
 			if (contextfile == null || contextfile.length() < 1) {
