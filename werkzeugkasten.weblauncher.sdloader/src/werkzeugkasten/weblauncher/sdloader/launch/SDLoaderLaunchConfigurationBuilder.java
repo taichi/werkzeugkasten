@@ -61,11 +61,11 @@ public class SDLoaderLaunchConfigurationBuilder implements
 		stb.append("-Ddblauncher.port=");
 		stb.append(preferences.getWebPortNo());
 		stb.append(" -Ddblauncher.ctx.loc=\"");
-		stb.append(getProject().getLocation().append(CONTEXT_XML).toOSString());
-		stb.append(" -Ddblauncher.ctx.doc_base=\"");
-		IPath docBase = getProject().getLocation().removeLastSegments(1).append(
-				preferences.getBaseDir());
-		stb.append(docBase.toOSString());		
+		stb.append(getProject().getLocation().append(CONTEXT_XML).toString());
+		stb.append("\" -Ddblauncher.ctx.doc_base=\"");
+		IPath docBase = getProject().getLocation().removeLastSegments(1)
+				.append(preferences.getBaseDir());
+		stb.append(docBase.toString());
 		stb.append("\"");
 		return stb.toString();
 	}
@@ -129,9 +129,9 @@ public class SDLoaderLaunchConfigurationBuilder implements
 		StringBuilder stb = new StringBuilder();
 		stb.append("<Context ");
 		stb.append(" path=\"");
-		stb.append(preferences.getContextName());		
+		stb.append(preferences.getContextName());
 		stb.append("\" docBase=\"${dblauncher.ctx.doc_base}\" />");
-		
+
 		InputStream in = null;
 		try {
 			byte[] bytes = stb.toString().getBytes("UTF-8");
@@ -150,7 +150,8 @@ public class SDLoaderLaunchConfigurationBuilder implements
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME,
 				getProject().getName());
 
-		copy.setAttribute(
+		copy
+				.setAttribute(
 						IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH,
 						false);
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH,
