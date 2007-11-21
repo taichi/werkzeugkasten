@@ -5,6 +5,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import werkzeugkasten.editor.Activator;
 import werkzeugkasten.editor.listener.PainterDispatcher;
 
 public class EventRegister implements IStartup {
@@ -16,8 +17,8 @@ public class EventRegister implements IStartup {
 				IWorkbench workbench = PlatformUI.getWorkbench();
 				IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 				PainterDispatcher dispatcher = new PainterDispatcher();
-				workbench.addWindowListener(dispatcher);
 				for (IWorkbenchWindow w : windows) {
+					Activator.getDefault().addPainter(w);
 					w.getActivePage().addPartListener(dispatcher);
 				}
 			}

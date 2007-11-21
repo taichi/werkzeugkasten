@@ -4,13 +4,11 @@
 package werkzeugkasten.editor.listener;
 
 import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.IWorkbenchWindow;
 
 import werkzeugkasten.editor.Activator;
 
-public class PainterDispatcher implements IPartListener2, IWindowListener {
+public class PainterDispatcher implements IPartListener2 {
 	public void partOpened(IWorkbenchPartReference partRef) {
 		Activator.getDefault().addPainter(partRef);
 	}
@@ -42,20 +40,4 @@ public class PainterDispatcher implements IPartListener2, IWindowListener {
 	public void partInputChanged(IWorkbenchPartReference partRef) {
 		Activator.getDefault().addPainter(partRef);
 	}
-
-	public void windowOpened(IWorkbenchWindow window) {
-		Activator.getDefault().addPainter(window);
-	}
-
-	public void windowClosed(IWorkbenchWindow window) {
-
-	}
-
-	public void windowActivated(IWorkbenchWindow window) {
-		Activator.getDefault().addPainter(window);
-	}
-
-	public void windowDeactivated(IWorkbenchWindow window) {
-	}
-
 }
