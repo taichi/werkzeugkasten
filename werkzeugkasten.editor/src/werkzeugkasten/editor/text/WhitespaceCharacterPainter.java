@@ -36,7 +36,7 @@ import org.eclipse.swt.graphics.Point;
 public class WhitespaceCharacterPainter implements IPainter, PaintListener {
 
 	private static final char SPACE_SIGN = '\u2581';
-	private static final char IDEOGRAPHIC_SPACE_SIGN = '\u00b0';
+	private static final char IDEOGRAPHIC_SPACE_SIGN = '\u25A1';
 	private static final char TAB_SIGN = '\u00bb';
 	private static final char CARRIAGE_RETURN_SIGN = '\u21b4';
 	private static final char LINE_FEED_SIGN = '\u21b4';
@@ -194,7 +194,7 @@ public class WhitespaceCharacterPainter implements IPainter, PaintListener {
 				char c = text.charAt(textOffset);
 				switch (c) {
 				case ' ':
-					visibleChar.append(SPACE_SIGN);
+					// visibleChar.append(SPACE_SIGN);
 					// 'continue' would improve performance but may produce
 					// drawing errors
 					// for long runs of space if width of space and dot differ
