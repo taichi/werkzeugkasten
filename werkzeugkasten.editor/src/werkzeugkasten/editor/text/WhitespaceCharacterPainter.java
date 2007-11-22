@@ -38,7 +38,8 @@ public class WhitespaceCharacterPainter implements IPainter, PaintListener {
 	private static final char SPACE_SIGN = '\u2581';
 	private static final char IDEOGRAPHIC_SPACE_SIGN = '\u25A1';
 	private static final char TAB_SIGN = '\u00bb';
-	private static final char CARRIAGE_RETURN_SIGN = '\u21b4';
+	private static final char CARRIAGE_RETURN_SIGN = '\u00a4';
+	private static final char CR_LF = '\u21b5';
 	private static final char LINE_FEED_SIGN = '\u21b4';
 
 	/** Indicates whether this painter is active. */
@@ -209,15 +210,24 @@ public class WhitespaceCharacterPainter implements IPainter, PaintListener {
 					visibleChar.append(TAB_SIGN);
 					break;
 				case '\r':
-					// visibleChar.append(CARRIAGE_RETURN_SIGN);
 					if (textOffset >= length - 1
 							|| text.charAt(textOffset + 1) != '\n') {
+						visibleChar.append(CARRIAGE_RETURN_SIGN);
 						eol = true;
 						break;
+						// } else if (text.charAt(textOffset + 1) == '\n') {
+						// visibleChar.append(CR_LF);
+						// eol = true;
+						// break;
 					}
 					continue;
 				case '\n':
-					visibleChar.append(LINE_FEED_SIGN);
+					if (1 < text.length()
+							&& text.charAt(textOffset - 1) == '\r') {
+						visibleChar.append(CR_LF);
+					} else {
+						visibleChar.append(LINE_FEED_SIGN);
+					}
 					eol = true;
 					break;
 				default:
