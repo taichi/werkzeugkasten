@@ -6,7 +6,6 @@ import sdloader.SDLoader;
 import sdloader.javaee.WebAppManager;
 import sdloader.log.SDLoaderLog;
 import sdloader.log.SDLoaderLogFactory;
-import sdloader.util.CollectionsUtil;
 
 public class Main {
 
@@ -16,6 +15,10 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			String port = System.getProperty("dblauncher.port");
+			System.out.println(System.getProperty("dblauncher.port"));
+			System.out.println(System.getProperty("dblauncher.ctx.loc"));
+			System.out.println(System.getProperty("dblauncher.ctx.doc_base"));
+			
 			SDLoader server = new SDLoader(Integer.parseInt(port)) {
 				protected void initWebApp() {
 					try {
@@ -39,27 +42,19 @@ public class Main {
 		public EnhancedWebAppManager(SDLoader server) {
 			super(server);
 		}
-
-		public void init() {
-			try {
-				this.webappDirPath = getWebAppDirPath();
-				this.webAppContextList = CollectionsUtil.newArrayList();
-				detectWebApps();
-				initWebAppContext();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-
 		protected void detectWebApps() throws Exception {
 			String contextfile = System.getProperty("dblauncher.ctx.loc");
 			if (contextfile == null || contextfile.length() < 1) {
 				throw new IllegalArgumentException(
 						"context file path must be set.");
 			}
+			log.info(contextfile);
 			File file = new File(contextfile);
 			if (file.exists()) {
 				parseContextXMLs(new File[] { file });
+			}else{
+				throw new IllegalArgumentException(
+				"context file not found.file="+contextfile);
 			}
 		}
 	}

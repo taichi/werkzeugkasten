@@ -61,12 +61,11 @@ public class SDLoaderLaunchConfigurationBuilder implements
 		stb.append("-Ddblauncher.port=");
 		stb.append(preferences.getWebPortNo());
 		stb.append(" -Ddblauncher.ctx.loc=\"");
-		stb.append(getProject().getLocation().append(CONTEXT_XML).toString());
-		stb.append("\" -Ddblauncher.ctx.doc_base=\"");
+		stb.append(getProject().getLocation().append(CONTEXT_XML).toString()+"\"");
+		stb.append(" -Ddblauncher.ctx.doc_base=\"");
 		IPath docBase = getProject().getLocation().removeLastSegments(1)
 				.append(preferences.getBaseDir());
-		stb.append(docBase.toString());
-		stb.append("\"");
+		stb.append(docBase.toString()+"\"");
 		return stb.toString();
 	}
 
