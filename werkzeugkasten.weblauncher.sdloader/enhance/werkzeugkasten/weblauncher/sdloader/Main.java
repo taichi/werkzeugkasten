@@ -15,10 +15,6 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			String port = System.getProperty("dblauncher.port");
-			System.out.println(System.getProperty("dblauncher.port"));
-			System.out.println(System.getProperty("dblauncher.ctx.loc"));
-			System.out.println(System.getProperty("dblauncher.ctx.doc_base"));
-			
 			SDLoader server = new SDLoader(Integer.parseInt(port)) {
 				protected void initWebApp() {
 					try {
