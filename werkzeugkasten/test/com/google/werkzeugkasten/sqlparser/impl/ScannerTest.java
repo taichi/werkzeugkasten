@@ -19,23 +19,23 @@ public class ScannerTest {
 
 		TokenKind[] dataexp = new TokenKind[] {
 				// SELECT *
-				Text, Text, Text, Text, Text, Text, Text, Text, Whitespace,
-				Text, Whitespace,
+				Text, Text, Text, Text, Text, Text, Whitespace, Text,
+				Whitespace,
 				// FROM
 				Text, Text, Text, Text, Whitespace,
 				// HOGE
 				Text, Text, Text, Text, Whitespace,
 				// WHERE
 				Text, Text, Text, Text, Text, Whitespace,
-				// MOGE
-				Text, Text, Text, Text, Whitespace,
+				// MOGE =
+				Text, Text, Text, Text, Whitespace, Text, Whitespace,
 				// /*
 				BeginSemantic, BeginSemantic,
 				// BIND(
 				Identifier, Identifier, Identifier, Identifier,
 				BeginParenthesis,
 				// piro)
-				Text, Text, Text, Text, EndParenthesis,
+				Parameter, Parameter, Parameter, Parameter, EndParenthesis,
 				// */\t10
 				EndSemantic, EndSemantic, Whitespace, Text, Text };
 
@@ -45,18 +45,24 @@ public class ScannerTest {
 				+ "\r\nMOGE = 10 \r\n /* }*/";
 		dataexp = new TokenKind[] {
 				// SELECT *
-				Text, Text, Text, Text, Text, Text, Text,
+				Text,
+				Text,
+				Text,
+				Text,
+				Text,
 				Text,
 				Whitespace,
 				Text,
 				Whitespace,
 				// FROM
-				Text, Text,
+				Text,
+				Text,
 				Text,
 				Text,
 				Whitespace,
 				// HOGE
-				Text, Text,
+				Text,
+				Text,
 				Text,
 				Text,
 				Whitespace,
@@ -76,11 +82,12 @@ public class ScannerTest {
 				Identifier,
 				BeginParenthesis,
 				// 0 < piro.length
-				Text, Whitespace, Text, Whitespace, Text, Text, Text, Text,
-				Text, Text, Text, Text,
-				Text,
-				Text,
-				Text,
+				Parameter, Whitespace, Parameter, Whitespace, Parameter,
+				Parameter, Parameter, Parameter, Parameter, Parameter,
+				Parameter, Parameter,
+				Parameter,
+				Parameter,
+				Parameter,
 				// ) {
 				EndParenthesis,
 				Whitespace,
