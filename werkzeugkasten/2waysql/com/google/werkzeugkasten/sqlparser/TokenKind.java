@@ -5,6 +5,8 @@ public enum TokenKind {
 	Text,
 
 	// semantic comments
+	// Begin : /*
+	// End : */
 	BeginSemantic, EndSemantic,
 
 	// function identifier
