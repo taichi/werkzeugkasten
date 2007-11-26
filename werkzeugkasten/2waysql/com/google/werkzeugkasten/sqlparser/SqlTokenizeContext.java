@@ -2,7 +2,7 @@ package com.google.werkzeugkasten.sqlparser;
 
 import java.util.List;
 
-public interface SqlTokenizContext extends SqlParserContext {
+public interface SqlTokenizeContext extends SqlParserContext {
 
 	List<TokenKind> getTokens();
 
