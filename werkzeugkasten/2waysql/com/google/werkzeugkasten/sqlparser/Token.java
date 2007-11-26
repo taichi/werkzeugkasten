@@ -2,7 +2,7 @@ package com.google.werkzeugkasten.sqlparser;
 
 import com.google.werkzeugkasten.meta.Chain;
 
-public interface Token extends Chain<Status, SqlParserContext> {
+public interface Token extends Chain<Status, SqlExecutionContext> {
 
 	int getOffset();
 

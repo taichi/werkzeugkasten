@@ -1,6 +1,6 @@
 package com.google.werkzeugkasten.sqlparser.impl;
 
-import com.google.werkzeugkasten.sqlparser.SqlParserContext;
+import com.google.werkzeugkasten.sqlparser.SqlExecutionContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 import com.google.werkzeugkasten.sqlparser.Token;
 
@@ -16,7 +16,7 @@ public class Literal implements Token {
 	}
 
 	@Override
-	public Status execute(SqlParserContext parameter) {
+	public Status execute(SqlExecutionContext parameter) {
 		parameter.getBuffer().append(parameter.getFullText(), getOffset(),
 				getLength());
 		return Status.Success;

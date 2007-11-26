@@ -1,5 +1,7 @@
 package com.google.werkzeugkasten.sqlparser;
 
+import java.util.List;
+
 import com.google.werkzeugkasten.meta.ChainContext;
 
 public interface SqlParserContext extends ChainContext<Status> {
@@ -10,5 +12,11 @@ public interface SqlParserContext extends ChainContext<Status> {
 
 	void setCursor(int index);
 
-	StringBuilder getBuffer();
+	List<Status> getStatusCopy();
+
+	void setStatus(List<Status> status);
+
+	void addStatus(Status status);
+
+	void resetStatus();
 }
