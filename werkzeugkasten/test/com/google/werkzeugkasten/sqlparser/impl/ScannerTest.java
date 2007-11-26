@@ -41,9 +41,22 @@ public class ScannerTest {
 
 		test(data, Arrays.asList(dataexp));
 
-		data = "SELECT * FROM HOGE WHERE /* IF(0 < piro.length) {*/"
+	}
+
+	protected void test(String sql, List<TokenKind> expected) {
+		SqlTokenizeContextImplForUnitTest testdata = new SqlTokenizeContextImplForUnitTest(
+				sql);
+		Scanner scanner = new Scanner();
+
+		assertEquals(Status.Success, scanner.execute(testdata));
+		assertEquals(expected, testdata.getTokens());
+	}
+
+	@Test
+	public void testExecute2() {
+		String data = "SELECT * FROM HOGE WHERE /* IF(0 < piro.length) {*/"
 				+ "\r\nMOGE = 10 \r\n /* }*/";
-		dataexp = new TokenKind[] {
+		TokenKind[] dataexp = new TokenKind[] {
 				// SELECT *
 				Text,
 				Text,
@@ -103,14 +116,5 @@ public class ScannerTest {
 				BeginSemantic, BeginSemantic, Whitespace, EndBrace,
 				EndSemantic, EndSemantic };
 		test(data, Arrays.asList(dataexp));
-	}
-
-	protected void test(String sql, List<TokenKind> expected) {
-		SqlTokenizeContextImplForUnitTest testdata = new SqlTokenizeContextImplForUnitTest(
-				sql);
-		Scanner scanner = new Scanner();
-
-		assertEquals(Status.Success, scanner.execute(testdata));
-		assertEquals(expected, testdata.getTokens());
 	}
 }

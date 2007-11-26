@@ -7,4 +7,9 @@ public interface SqlTokenizeContext extends SqlParserContext {
 	List<TokenKind> getTokens();
 
 	void setToken(int index, TokenKind kind);
+
+	List<String> getMessages();
+
+	void addMessage(String msg);
+
 }

@@ -17,7 +17,7 @@ public enum TokenKind {
 	// parenthesis ()
 	BeginParenthesis, EndParenthesis,
 
-	//
+	// in parenthesis texts
 	Parameter,
 
 	// brace {}

@@ -9,8 +9,7 @@ import com.google.werkzeugkasten.sqlparser.Status;
 public class Scanner implements Chain<Status, SqlTokenizeContext> {
 
 	public Status execute(SqlTokenizeContext parameter) {
-		char[] texts = parameter.getFullText();
-		scan(parameter, texts);
+		scan(parameter, parameter.getFullText());
 		return parameter.execute();
 	}
 
@@ -35,13 +34,14 @@ public class Scanner implements Chain<Status, SqlTokenizeContext> {
 		}
 	}
 
-	protected boolean setWhitespace(char c, int i, SqlTokenizeContext parameter) {
+	protected boolean setWhitespace(char c, int index,
+			SqlTokenizeContext parameter) {
 		switch (c) {
 		case ' ':
 		case '\r':
 		case '\n':
 		case '\t': {
-			parameter.setToken(i, Whitespace);
+			parameter.setToken(index, Whitespace);
 			return true;
 		}
 		}
