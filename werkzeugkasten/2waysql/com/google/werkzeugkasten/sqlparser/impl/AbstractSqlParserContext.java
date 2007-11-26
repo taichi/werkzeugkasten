@@ -8,9 +8,8 @@ import com.google.werkzeugkasten.meta.impl.AbstractChainContext;
 import com.google.werkzeugkasten.sqlparser.SqlParserContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 
-public abstract class AbstractSqlParserContext extends
-		AbstractChainContext<Status, ChainContext<Status>> implements
-		SqlParserContext {
+public abstract class AbstractSqlParserContext<CTX extends ChainContext<Status>>
+		extends AbstractChainContext<Status, CTX> implements SqlParserContext {
 
 	protected char[] fullText;
 

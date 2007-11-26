@@ -8,6 +8,6 @@ public class Scanner implements Chain<Status, SqlTokenizeContext> {
 
 	public Status execute(SqlTokenizeContext parameter) {
 		// TODO Auto-generated method stub
-		return null;
+		return parameter.execute();
 	}
 }
