@@ -4,6 +4,8 @@ public enum TokenKind {
 
 	Text,
 
+	Whitespace,
+
 	// semantic comments
 	// Begin : /*
 	// End : */
@@ -14,9 +16,6 @@ public enum TokenKind {
 
 	// parenthesis ()
 	BeginParenthesis, EndParenthesis,
-
-	// 
-	Parameters,
 
 	// brace {}
 	BeginBrace, EndBrace
