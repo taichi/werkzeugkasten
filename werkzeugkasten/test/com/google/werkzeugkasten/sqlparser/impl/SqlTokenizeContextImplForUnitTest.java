@@ -9,10 +9,6 @@ public class SqlTokenizeContextImplForUnitTest extends SqlTokenizeContextImpl {
 		super(fulltext);
 	}
 
-	SqlTokenizeContextImplForUnitTest() {
-		super("");
-	}
-
 	public Status execute() {
 		return Status.Success;
 	}

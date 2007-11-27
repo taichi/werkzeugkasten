@@ -61,8 +61,4 @@ public class StringLoader {
 			final Field target) {
 		return clazz.isAssignableFrom(target.getType());
 	}
-
-	public static String format(String msg, Object... args) {
-		return String.format(msg, args);
-	}
 }
