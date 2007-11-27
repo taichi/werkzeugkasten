@@ -21,29 +21,29 @@ public class VerifierTest {
 	public void testExecute() {
 		String[] errordatas = {
 		// {が存在しない
-				"/* a(aaa)*/",
+				" /* a(aaa)*/",
 				// (が存在しない
-				"/* a{}*/",
+				" /* a{}*/",
 				// {が存在しない
-				"/* a(aaa)}*/",
+				" /* a(aaa)}*/",
 				// {が存在しない
-				"/* a(aaa){}}*/",
+				" /*a(aaa){}}*/",
 				// 識別子が存在しない
-				"/* (aaa){}*/",
+				" /*(aaa){}*/",
 				// {がアンマッチ
-				"/* a(aaa){*/",
+				" /* a(aaa){*/",
 				// (がアンマッチ
-				"/* a((aaa){}*/",
+				" /*a((aaa){}*/",
 				// (がアンマッチ
-				"/* a(aaa{}*/",
+				" /* a(aaa{}*/",
 				// /*がアンマッチ
-				"/* a(aaa){}",
+				" /* a(aaa){}",
 				// {の位置がオカシイ
-				"/* a(aaa)*/aaa/*{}*/",
+				" /* a(aaa)*/aaa/*{}*/",
 				// (の位置がオカシイ
-				"/* a(aaa)(){}*/",
+				" /* a(aaa)(){}*/",
 				// 識別子の場所がオカシイ
-				"/* a(aaa)){}*/", };
+				" /* a(aaa)){}*/", };
 
 		for (String s : errordatas) {
 			SqlTokenizeContextImplForUnitTest parameter = new SqlTokenizeContextImplForUnitTest(

@@ -1,7 +1,6 @@
 package com.google.werkzeugkasten.sqlparser.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.google.werkzeugkasten.sqlparser.SqlTokenizeContext;
@@ -20,8 +19,8 @@ public class SqlTokenizeContextImpl extends
 		tokens = new TokenKind[fulltext.length()];
 	}
 
-	public List<TokenKind> getTokens() {
-		return Arrays.asList(this.tokens);
+	public TokenKind[] getTokens() {
+		return this.tokens;
 	}
 
 	public void setToken(int index, TokenKind kind) {

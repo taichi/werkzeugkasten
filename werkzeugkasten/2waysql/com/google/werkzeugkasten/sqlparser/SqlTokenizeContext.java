@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface SqlTokenizeContext extends SqlParserContext {
 
-	List<TokenKind> getTokens();
+	TokenKind[] getTokens();
 
 	void setToken(int index, TokenKind kind);
 
