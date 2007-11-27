@@ -95,11 +95,21 @@ public class Scanner implements Chain<Status, SqlTokenizeContext> {
 		parameter.setToken(result++, BeginParenthesis);
 		for (int i = result; i < texts.length; i++) {
 			char c = texts[i];
-			if (')' == c) {
+			switch (c) {
+			case '(': {
+				i = inParenthesis(texts, i, parameter);
+				break;
+			}
+			case ')': {
 				parameter.setToken(i, EndParenthesis);
 				return i;
-			} else if (setWhitespace(c, i, parameter) == false) {
-				parameter.setToken(i, Parameter);
+			}
+			default: {
+				if (setWhitespace(c, i, parameter) == false) {
+					parameter.setToken(i, Parameter);
+				}
+				break;
+			}
 			}
 		}
 		return result;

@@ -117,4 +117,71 @@ public class ScannerTest {
 				EndSemantic, EndSemantic };
 		test(data, Arrays.asList(dataexp));
 	}
+
+	@Test
+	public void testExecute3() {
+		String data = "SELECT * FROM HOGE WHERE /* IF(0 < piro.size()) {*/"
+				+ "\r\nMOGE = 10 \r\n /* }*/";
+		TokenKind[] dataexp = new TokenKind[] {
+				// SELECT *
+				Text,
+				Text,
+				Text,
+				Text,
+				Text,
+				Text,
+				Whitespace,
+				Text,
+				Whitespace,
+				// FROM
+				Text,
+				Text,
+				Text,
+				Text,
+				Whitespace,
+				// HOGE
+				Text,
+				Text,
+				Text,
+				Text,
+				Whitespace,
+				// WHERE
+				Text,
+				Text,
+				Text,
+				Text,
+				Text,
+				Whitespace,
+				// /*
+				BeginSemantic,
+				BeginSemantic,
+				Whitespace,
+				// IF(
+				Identifier,
+				Identifier,
+				BeginParenthesis,
+				// 0 < piro.size()
+				Parameter, Whitespace, Parameter, Whitespace, Parameter,
+				Parameter, Parameter, Parameter, Parameter, Parameter,
+				Parameter,
+				Parameter,
+				Parameter,
+				BeginParenthesis,
+				EndParenthesis,
+				// ) {
+				EndParenthesis,
+				Whitespace,
+				BeginBrace,
+				// */
+				EndSemantic,
+				EndSemantic,
+				// \r\nMOGE = 10 \r\n
+				Whitespace, Whitespace, Text, Text, Text, Text, Whitespace,
+				Text, Whitespace, Text, Text, Whitespace, Whitespace,
+				Whitespace, Whitespace,
+				// /* }*/
+				BeginSemantic, BeginSemantic, Whitespace, EndBrace,
+				EndSemantic, EndSemantic };
+		test(data, Arrays.asList(dataexp));
+	}
 }
