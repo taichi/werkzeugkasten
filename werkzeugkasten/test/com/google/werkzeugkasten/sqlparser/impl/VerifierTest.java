@@ -64,4 +64,20 @@ public class VerifierTest {
 
 	}
 
+	@Test
+	public void testPickAround() throws Exception {
+		String data = "0123456789abc";
+		char[] fullText = new char[data.length()];
+		data.getChars(0, data.length(), fullText, 0);
+
+		for (int i = 0; i < data.length(); i++) {
+			String s = verifier.pickAround(i, fullText);
+			System.out.printf("%2d %s \n", i, s);
+			assertEquals(Verifier.PICK_LENGTH, s.length());
+		}
+
+		fullText = new char[] { '0', '1', '2' };
+		String s = verifier.pickAround(1, fullText);
+		assertEquals(fullText.length, s.length());
+	}
 }

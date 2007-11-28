@@ -1,6 +1,6 @@
 package com.google.werkzeugkasten.sqlparser;
 
-import java.util.List;
+import java.util.Set;
 
 public interface SqlTokenizeContext extends SqlParserContext {
 
@@ -8,7 +8,7 @@ public interface SqlTokenizeContext extends SqlParserContext {
 
 	void setToken(int index, TokenKind kind);
 
-	List<String> getMessages();
+	Set<String> getMessages();
 
 	void addMessage(String msg);
 

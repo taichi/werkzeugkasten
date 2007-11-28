@@ -1,6 +1,7 @@
 package com.google.werkzeugkasten.sqlparser.impl;
 
 import static com.google.werkzeugkasten.sqlparser.TwoWaySqlMessages.*;
+import static com.google.werkzeugkasten.sqlparser.TokenKind.*;
 
 import com.google.werkzeugkasten.meta.Chain;
 import com.google.werkzeugkasten.sqlparser.SqlTokenizeContext;
@@ -11,15 +12,19 @@ public class Verifier implements Chain<Status, SqlTokenizeContext> {
 
 	public Status execute(SqlTokenizeContext parameter) {
 		scan(parameter.getTokens(), parameter);
-		return parameter.execute();
+		return parameter.getMessages().size() < 1 ? parameter.execute()
+				: Status.Fail;
 	}
 
 	protected void scan(TokenKind[] tokens, SqlTokenizeContext parameter) {
 		for (int i = 0; i < tokens.length; i++) {
-			TokenKind t = tokens[i];
-			switch (t) {
+			switch (tokens[i]) {
 			case BeginSemantic: {
 				i = inSemantic(tokens, i, parameter);
+				break;
+			}
+			default: {
+				// do nothing...
 				break;
 			}
 			}
@@ -28,31 +33,127 @@ public class Verifier implements Chain<Status, SqlTokenizeContext> {
 
 	protected int inSemantic(TokenKind[] tokens, int current,
 			SqlTokenizeContext parameter) {
-		int result = current;
+		int result = ++current;
 		boolean found = false;
 		for (int i = result; i < tokens.length; i++) {
+			switch (tokens[i]) {
+			case BeginSemantic: {
+				parameter.addMessage(String.format(UNMATCH, SEMANTICCOMMENT,
+						current, pickAround(i, parameter)));
+				i = inSemantic(tokens, i, parameter);
+				break;
+			}
+			case EndSemantic: {
+				found = true;
+				break;
+			}
+			case Identifier: {
+				i = verifyIdentifier(tokens, i, parameter);
+				break;
+			}
+			case BeginParenthesis:
+			case EndParenthesis: {
+				illegalPosition(tokens[i], i, parameter);
+				break;
+			}
 
+			case Whitespace:
+			default: {
+				// do nothing ...
+				break;
+			}
+			}
 		}
 		if (found == false) {
-			parameter.addMessage(String.format(UNMATCH, SEMANTICCOMMENT,
-					current));
+			unmatch(SEMANTICCOMMENT, current, parameter);
 		}
 		return result;
 	}
 
+	protected int verifyIdentifier(TokenKind[] tokens, int current,
+			SqlTokenizeContext parameter) {
+		for (int i = current; -1 < i; i--) {
+			if (BeginSemantic.equals(tokens[i])) {
+				break;
+			} else if (Whitespace.equals(tokens[i]) == false) {
+				illegalPosition(tokens[i], i, parameter);
+			}
+		}
+
+		for (int i = current; i < tokens.length; i++) {
+			if (BeginParenthesis.equals(tokens[i])) {
+				return inParenthesis(tokens, i, parameter);
+			} else if (Identifier.equals(tokens[i]) == false) {
+				illegalPosition(tokens[i], i, parameter);
+			}
+		}
+		return current;
+	}
+
+	protected int inParenthesis(TokenKind[] tokens, int current,
+			SqlTokenizeContext parameter) {
+		for (int i = current; i < tokens.length; i++) {
+			if (EndParenthesis.equals(tokens[i])) {
+				return verifyBrace(tokens, i, parameter);
+			} else if (BeginParenthesis.equals(tokens[i])) {
+				i = inParenthesis(tokens, current, parameter);
+			} else if (Parameter.equals(tokens[i]) == false) {
+				illegalPosition(tokens[i], i, parameter);
+			}
+		}
+		unmatch(PARENTHESIS, current, parameter);
+		return current;
+	}
+
+	protected int verifyBrace(TokenKind[] tokens, int current,
+			SqlTokenizeContext parameter) {
+		for (int i = current + 1; i < tokens.length; i++) {
+			if (BeginBrace.equals(tokens[i])) {
+				return i;
+			} else if (Whitespace.equals(tokens[i]) == false) {
+				illegalPosition(tokens[i], i, parameter);
+				parameter.addMessage(String.format(NOTFOUND,
+						BeginBrace.label(), current, i));
+			}
+		}
+		return current;
+	}
+
+	protected void unmatch(String name, int beginOffset,
+			SqlTokenizeContext parameter) {
+		parameter.addMessage(String.format(UNMATCH, name, beginOffset,
+				pickAround(beginOffset, parameter)));
+	}
+
+	protected void illegalPosition(TokenKind t, int current,
+			SqlTokenizeContext parameter) {
+		parameter.addMessage(String.format(ILLEGALPOSITION, t.label(), current,
+				pickAround(current, parameter)));
+	}
+
 	protected String pickAround(int offset, SqlTokenizeContext parameter) {
+		return pickAround(offset, parameter.getFullText());
+	}
+
+	protected static final int PICK_LENGTH = 7;
+
+	protected String pickAround(int offset, char[] fullText) {
+		if (offset < 0 || fullText == null || fullText.length <= offset) {
+			return "";
+		}
 		StringBuilder stb = new StringBuilder();
-		char[] fullText = parameter.getFullText();
-		if (fullText.length < 6) {
+		if (fullText.length < PICK_LENGTH) {
 			stb.append(fullText);
 		} else if (offset < 3) {
-			stb.append(fullText, 0, 5);
+			stb.append(fullText, 0, PICK_LENGTH);
 		} else {
-			int start = offset - 3;
-			if (fullText.length < start + 6) {
-				// FIXME
+			int begin = offset - 3;
+			if (fullText.length < begin + PICK_LENGTH) {
+				stb
+						.append(fullText, fullText.length - PICK_LENGTH,
+								PICK_LENGTH);
 			} else {
-				stb.append(fullText, start, 6);
+				stb.append(fullText, begin, PICK_LENGTH);
 			}
 		}
 		return stb.toString();

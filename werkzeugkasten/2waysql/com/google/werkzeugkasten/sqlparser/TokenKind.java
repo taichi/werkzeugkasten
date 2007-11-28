@@ -1,25 +1,37 @@
 package com.google.werkzeugkasten.sqlparser;
 
+import static com.google.werkzeugkasten.sqlparser.TwoWaySqlMessages.*;
+
 public enum TokenKind {
 
-	Text,
+	Text(TEXT),
 
-	Whitespace,
+	Whitespace(WHITESPACE),
 
 	// semantic comments
 	// Begin : /*
 	// End : */
-	BeginSemantic, EndSemantic,
+	BeginSemantic(SEMANTICCOMMENT), EndSemantic(SEMANTICCOMMENT),
 
 	// function identifier
-	Identifier,
+	Identifier(IDENTIFIER),
 
 	// parenthesis ()
-	BeginParenthesis, EndParenthesis,
+	BeginParenthesis(PARENTHESIS), EndParenthesis(PARENTHESIS),
 
 	// in parenthesis texts
-	Parameter,
+	Parameter(PARAMETER),
 
 	// brace {}
-	BeginBrace, EndBrace
+	BeginBrace(BRACE), EndBrace(BRACE);
+
+	private String label;
+
+	private TokenKind(String s) {
+		this.label = s;
+	}
+
+	public String label() {
+		return this.label;
+	}
 }

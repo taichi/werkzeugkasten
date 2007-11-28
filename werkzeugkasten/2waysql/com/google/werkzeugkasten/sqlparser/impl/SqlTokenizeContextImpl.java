@@ -1,7 +1,7 @@
 package com.google.werkzeugkasten.sqlparser.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.google.werkzeugkasten.sqlparser.SqlTokenizeContext;
 import com.google.werkzeugkasten.sqlparser.TokenKind;
@@ -12,7 +12,7 @@ public class SqlTokenizeContextImpl extends
 
 	protected TokenKind[] tokens;
 
-	protected List<String> messages = new ArrayList<String>();
+	protected Set<String> messages = new TreeSet<String>();
 
 	public SqlTokenizeContextImpl(String fulltext) {
 		super(fulltext);
@@ -27,7 +27,7 @@ public class SqlTokenizeContextImpl extends
 		this.tokens[index] = kind;
 	}
 
-	public List<String> getMessages() {
+	public Set<String> getMessages() {
 		return this.messages;
 	}
 
