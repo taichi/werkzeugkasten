@@ -14,9 +14,13 @@ public class TwoWaySqlMessages {
 
 	public static String PARENTHESIS;
 
+	public static String BEGINPARENTHESIS;
+
 	public static String PARAMETER;
 
 	public static String BRACE;
+
+	public static String BEGINBRACE;
 
 	public static String UNMATCH;
 

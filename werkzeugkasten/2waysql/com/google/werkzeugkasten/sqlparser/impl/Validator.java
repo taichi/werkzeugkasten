@@ -39,33 +39,36 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 
 	protected int inSemantic(TokenKind[] tokens, int current,
 			SqlTokenizeContext parameter) {
-		int result = ++current;
-		boolean found = false;
-		for (int i = result; i < tokens.length; i++) {
-			switch (tokens[i]) {
+		int index = current + 2;
+		for (; index < tokens.length; index++) {
+			switch (tokens[index]) {
 			case BeginSemantic: {
 				parameter.addMessage(String.format(UNMATCH, SEMANTICCOMMENT,
-						current, pickAround(i, parameter)));
-				i = inSemantic(tokens, i, parameter);
+						current, pickAround(index, parameter)));
+				index = inSemantic(tokens, index, parameter);
 				break;
 			}
 			case EndSemantic: {
-				found = true;
+				return index + 2;
+			}
+			case BeginBrace: {
+				validateBrace(tokens, index, parameter);
 				break;
 			}
 			case EndBrace: {
 				if (parameter.endBrace() < 0) {
-					unmatch(BRACE, i, parameter);
+					unmatch(BRACE, index, parameter);
 				}
 				break;
 			}
 			case Identifier: {
-				i = verifyIdentifier(tokens, i, parameter);
+				index = validateIdentifier(tokens, index, parameter);
 				break;
 			}
-			case BeginParenthesis:
-			case EndParenthesis: {
-				illegalPosition(tokens[i], i, parameter);
+			case BeginParenthesis: {
+				parameter.addMessage(String.format(NOTFOUND,
+						Identifier.label(), current, index, pickAround(index,
+								parameter)));
 				break;
 			}
 
@@ -76,13 +79,11 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 			}
 			}
 		}
-		if (found == false) {
-			unmatch(SEMANTICCOMMENT, current, parameter);
-		}
-		return result;
+		unmatch(SEMANTICCOMMENT, current, parameter);
+		return index;
 	}
 
-	protected int verifyIdentifier(TokenKind[] tokens, int current,
+	protected int validateIdentifier(TokenKind[] tokens, int current,
 			SqlTokenizeContext parameter) {
 		for (int i = current - 1; -1 < i; i--) {
 			if (BeginSemantic.equals(tokens[i])) {
@@ -96,7 +97,9 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 			if (BeginParenthesis.equals(tokens[i])) {
 				return inParenthesis(tokens, i, parameter);
 			} else if (Identifier.equals(tokens[i]) == false) {
-				illegalPosition(tokens[i], i, parameter);
+				parameter.addMessage(String.format(NOTFOUND, BeginParenthesis
+						.label(), current, i, pickAround(i, parameter)));
+				return i - 1;
 			}
 		}
 		return current;
@@ -106,7 +109,7 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 			SqlTokenizeContext parameter) {
 		for (int i = current + 1; i < tokens.length; i++) {
 			if (EndParenthesis.equals(tokens[i])) {
-				return verifyBrace(tokens, i, parameter);
+				return validateBrace(tokens, i + 1, parameter);
 			} else if (BeginParenthesis.equals(tokens[i])) {
 				i = inParenthesis(tokens, i, parameter);
 			} else if (Parameter.equals(tokens[i]) == false) {
@@ -117,18 +120,19 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 		return current;
 	}
 
-	protected int verifyBrace(TokenKind[] tokens, int current,
+	protected int validateBrace(TokenKind[] tokens, int current,
 			SqlTokenizeContext parameter) {
-		for (int i = current + 1; i < tokens.length; i++) {
+		for (int i = current; i < tokens.length; i++) {
 			if (BeginBrace.equals(tokens[i])) {
 				parameter.beginBrace(i);
 				return i;
 			} else if (EndSemantic.equals(tokens[i])) {
+				parameter.addMessage(String.format(NOTFOUND,
+						BeginBrace.label(), current, i,
+						pickAround(i, parameter)));
 				return i - 1;
 			} else if (Whitespace.equals(tokens[i]) == false) {
 				illegalPosition(tokens[i], i, parameter);
-				parameter.addMessage(String.format(NOTFOUND,
-						BeginBrace.label(), current, i));
 			}
 		}
 		return current;

@@ -17,13 +17,13 @@ public enum TokenKind {
 	Identifier(IDENTIFIER),
 
 	// parenthesis ()
-	BeginParenthesis(PARENTHESIS), EndParenthesis(PARENTHESIS),
+	BeginParenthesis(BEGINPARENTHESIS), EndParenthesis(PARENTHESIS),
 
 	// in parenthesis texts
 	Parameter(PARAMETER),
 
 	// brace {}
-	BeginBrace(BRACE), EndBrace(BRACE);
+	BeginBrace(BEGINBRACE), EndBrace(BRACE);
 
 	private String label;
 
