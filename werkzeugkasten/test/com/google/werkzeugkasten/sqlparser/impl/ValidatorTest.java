@@ -56,11 +56,13 @@ public class ValidatorTest {
 				// /*がアンマッチ
 				" /* abc(aaa){}",
 				// {の位置がオカシイ
-				" /* abc(aaa)*/aaa/*{}*/",
+				" /* abc(aaa){*/aaa/*{}*/",
+				// }の位置がオカシイ
+				" /* abc(aaa){}*/",
 				// (の位置がオカシイ
-				" /* abc(aaa)(){}*/",
+				" /* abc(aaa)(){*/bbb/*}*/",
 				// 識別子の場所がオカシイ
-				" /* abc(aaa)){}*/", };
+				" /* abc(aaa)){*/bbb/*}*/", };
 
 		for (String s : errordatas) {
 			SqlTokenizeContextImplForUnitTest parameter = new SqlTokenizeContextImplForUnitTest(
