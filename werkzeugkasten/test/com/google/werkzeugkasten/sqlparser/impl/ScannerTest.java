@@ -3,9 +3,6 @@ package com.google.werkzeugkasten.sqlparser.impl;
 import static com.google.werkzeugkasten.sqlparser.TokenKind.*;
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Test;
 
 import com.google.werkzeugkasten.sqlparser.Status;
@@ -39,17 +36,17 @@ public class ScannerTest {
 				// */\t10
 				EndSemantic, EndSemantic, Whitespace, Text, Text };
 
-		test(data, Arrays.asList(dataexp));
+		test(data, dataexp);
 
 	}
 
-	protected void test(String sql, List<TokenKind> expected) {
+	protected void test(String sql, TokenKind[] expected) {
 		SqlTokenizeContextImplForUnitTest testdata = new SqlTokenizeContextImplForUnitTest(
 				sql);
 		Scanner scanner = new Scanner();
 
 		assertEquals(Status.Success, scanner.execute(testdata));
-		assertEquals(expected, testdata.getTokens());
+		assertArrayEquals(expected, testdata.getTokens());
 	}
 
 	@Test
@@ -115,7 +112,7 @@ public class ScannerTest {
 				// /* }*/
 				BeginSemantic, BeginSemantic, Whitespace, EndBrace,
 				EndSemantic, EndSemantic };
-		test(data, Arrays.asList(dataexp));
+		test(data, dataexp);
 	}
 
 	@Test
@@ -182,6 +179,22 @@ public class ScannerTest {
 				// /* }*/
 				BeginSemantic, BeginSemantic, Whitespace, EndBrace,
 				EndSemantic, EndSemantic };
-		test(data, Arrays.asList(dataexp));
+		test(data, dataexp);
+	}
+
+	@Test
+	public void testExecute4() throws Exception {
+		String data = " /*abc((aaa){}*/";
+		TokenKind[] dataexp = new TokenKind[] {
+				// /*
+				Whitespace, BeginSemantic, BeginSemantic,
+				// abc((
+				Identifier, Identifier, Identifier, BeginParenthesis,
+				BeginParenthesis,
+				// aaa)
+				Parameter, Parameter, Parameter, EndParenthesis,
+				// {}*/
+				BeginBrace, EndBrace, EndSemantic, EndSemantic };
+		test(data, dataexp);
 	}
 }

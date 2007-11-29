@@ -1,9 +1,9 @@
 package com.google.werkzeugkasten.sqlparser.impl;
 
 import java.util.Deque;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.TreeSet;
 
 import com.google.werkzeugkasten.sqlparser.SqlTokenizeContext;
 import com.google.werkzeugkasten.sqlparser.TokenKind;
@@ -16,7 +16,7 @@ public class SqlTokenizeContextImpl extends
 
 	protected Deque<Integer> braces = new LinkedList<Integer>();
 
-	protected Set<String> messages = new TreeSet<String>();
+	protected Set<String> messages = new LinkedHashSet<String>();
 
 	public SqlTokenizeContextImpl(String fulltext) {
 		super(fulltext);
