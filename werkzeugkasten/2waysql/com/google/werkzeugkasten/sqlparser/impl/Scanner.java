@@ -18,8 +18,7 @@ public class Scanner implements Chain<Status, SqlTokenizeContext> {
 			char c = texts[i];
 			switch (c) {
 			case '/': {
-				int next = i + 1;
-				if (next < texts.length && '*' == texts[next]) {
+				if (isBeginSemantic(i, texts)) {
 					i = inSemantic(texts, i, parameter);
 					break;
 				}
@@ -32,6 +31,16 @@ public class Scanner implements Chain<Status, SqlTokenizeContext> {
 			}
 			}
 		}
+	}
+
+	protected boolean isBeginSemantic(int index, char[] texts) {
+		int next = index + 1;
+		return next < texts.length && '*' == texts[next];
+	}
+
+	protected boolean isEndSemantic(int index, char[] texts) {
+		int next = index + 1;
+		return next < texts.length && '/' == texts[next];
 	}
 
 	protected boolean setWhitespace(char c, int index,
@@ -58,8 +67,8 @@ public class Scanner implements Chain<Status, SqlTokenizeContext> {
 			char c = texts[i];
 			switch (c) {
 			case '*': {
-				int next = i + 1;
-				if (next < texts.length && '/' == texts[next]) {
+				if (isEndSemantic(i, texts)) {
+					int next = i + 1;
 					parameter.setToken(i, EndSemantic);
 					parameter.setToken(next, EndSemantic);
 					return next;
@@ -103,6 +112,20 @@ public class Scanner implements Chain<Status, SqlTokenizeContext> {
 			case ')': {
 				parameter.setToken(i, EndParenthesis);
 				return i;
+			}
+			case '/': {
+				if (isBeginSemantic(i, texts)) {
+					return i - 1;
+				}
+			}
+			case '*': {
+				if (isEndSemantic(i, texts)) {
+					return i - 1;
+				}
+			}
+			case '{':
+			case '}': {
+				return i - 1;
 			}
 			default: {
 				if (setWhitespace(c, i, parameter) == false) {
