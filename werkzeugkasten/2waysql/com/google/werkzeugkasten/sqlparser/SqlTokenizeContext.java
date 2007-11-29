@@ -1,5 +1,6 @@
 package com.google.werkzeugkasten.sqlparser;
 
+import java.util.Deque;
 import java.util.Set;
 
 public interface SqlTokenizeContext extends SqlParserContext {
@@ -7,6 +8,12 @@ public interface SqlTokenizeContext extends SqlParserContext {
 	TokenKind[] getTokens();
 
 	void setToken(int index, TokenKind kind);
+
+	void beginBrace(int index);
+
+	int endBrace();
+
+	Deque<Integer> getBraces();
 
 	Set<String> getMessages();
 

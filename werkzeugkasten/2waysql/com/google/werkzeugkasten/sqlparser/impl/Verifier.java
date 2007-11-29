@@ -29,6 +29,12 @@ public class Verifier implements Chain<Status, SqlTokenizeContext> {
 			}
 			}
 		}
+		if (0 < parameter.getBraces().size()) {
+			for (Integer i : parameter.getBraces()) {
+				parameter.addMessage(String.format(UNMATCH, BRACE, i,
+						pickAround(i, parameter)));
+			}
+		}
 	}
 
 	protected int inSemantic(TokenKind[] tokens, int current,
@@ -45,6 +51,12 @@ public class Verifier implements Chain<Status, SqlTokenizeContext> {
 			}
 			case EndSemantic: {
 				found = true;
+				break;
+			}
+			case EndBrace: {
+				if (parameter.endBrace() < 0) {
+					unmatch(BRACE, i, parameter);
+				}
 				break;
 			}
 			case Identifier: {
@@ -109,6 +121,7 @@ public class Verifier implements Chain<Status, SqlTokenizeContext> {
 			SqlTokenizeContext parameter) {
 		for (int i = current + 1; i < tokens.length; i++) {
 			if (BeginBrace.equals(tokens[i])) {
+				parameter.beginBrace(i);
 				return i;
 			} else if (Whitespace.equals(tokens[i]) == false) {
 				illegalPosition(tokens[i], i, parameter);
