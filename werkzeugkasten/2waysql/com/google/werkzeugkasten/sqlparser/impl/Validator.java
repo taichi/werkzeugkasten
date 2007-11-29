@@ -31,7 +31,7 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 		}
 		if (0 < parameter.getBraces().size()) {
 			for (Integer i : parameter.getBraces()) {
-				parameter.addMessage(String.format(UNMATCH, BRACE, i,
+				parameter.addMessage(String.format(UNMATCH, BEGINBRACE, i,
 						pickAround(i, parameter)));
 			}
 		}
@@ -45,14 +45,15 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 			case BeginSemantic: {
 				parameter.addMessage(String.format(UNMATCH, SEMANTICCOMMENT,
 						current, pickAround(index, parameter)));
-				index = inSemantic(tokens, index, parameter);
+				index += 1;
 				break;
 			}
 			case EndSemantic: {
 				return index + 2;
 			}
 			case BeginBrace: {
-				validateBrace(tokens, index, parameter);
+				parameter.beginBrace(index);
+				index = validateBrace(tokens, index, parameter);
 				break;
 			}
 			case EndBrace: {
@@ -92,50 +93,83 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 				illegalPosition(tokens[i], i, parameter);
 			}
 		}
-
-		for (int i = current; i < tokens.length; i++) {
-			if (BeginParenthesis.equals(tokens[i])) {
-				return inParenthesis(tokens, i, parameter);
-			} else if (Identifier.equals(tokens[i]) == false) {
+		int result = current;
+		for (; result < tokens.length; result++) {
+			if (BeginParenthesis.equals(tokens[result])) {
+				return inParenthesis(tokens, result, parameter);
+			} else if (Identifier.equals(tokens[result]) == false) {
 				parameter.addMessage(String.format(NOTFOUND, BeginParenthesis
-						.label(), current, i, pickAround(i, parameter)));
-				return i - 1;
+						.label(), current, result,
+						pickAround(result, parameter)));
+				return result - 1;
 			}
 		}
-		return current;
+		return result;
 	}
 
 	protected int inParenthesis(TokenKind[] tokens, int current,
 			SqlTokenizeContext parameter) {
-		for (int i = current + 1; i < tokens.length; i++) {
-			if (EndParenthesis.equals(tokens[i])) {
-				return validateBrace(tokens, i + 1, parameter);
-			} else if (BeginParenthesis.equals(tokens[i])) {
-				i = inParenthesis(tokens, i, parameter);
-			} else if (Parameter.equals(tokens[i]) == false) {
-				illegalPosition(tokens[i], i, parameter);
+		int result = current + 1;
+		for (; result < tokens.length; result++) {
+			if (EndParenthesis.equals(tokens[result])) {
+				lookBrace(tokens, result, parameter);
+				return result;
+			} else if (BeginParenthesis.equals(tokens[result])) {
+				result = inParenthesis(tokens, result, parameter);
+			} else if (Parameter.equals(tokens[result]) == false) {
+				illegalPosition(tokens[result], result, parameter);
 			}
 		}
 		unmatch(PARENTHESIS, current, parameter);
-		return current;
+		return result;
+	}
+
+	protected void lookBrace(TokenKind[] tokens, int result,
+			SqlTokenizeContext parameter) {
+		boolean found = false;
+		int index = result + 1;
+		loop: for (; index < tokens.length; index++) {
+			switch (tokens[index]) {
+			case BeginBrace: {
+				found = true;
+			}
+			case EndSemantic: {
+				break loop;
+			}
+			case Whitespace: {
+				break;
+			}
+			default: {
+				illegalPosition(tokens[index], index, parameter);
+			}
+			}
+		}
+		if (found == false) {
+			parameter.addMessage(String.format(NOTFOUND, BeginBrace.label(),
+					result, index, pickAround(result, parameter)));
+		}
 	}
 
 	protected int validateBrace(TokenKind[] tokens, int current,
 			SqlTokenizeContext parameter) {
-		for (int i = current; i < tokens.length; i++) {
-			if (BeginBrace.equals(tokens[i])) {
-				parameter.beginBrace(i);
-				return i;
-			} else if (EndSemantic.equals(tokens[i])) {
-				parameter.addMessage(String.format(NOTFOUND,
-						BeginBrace.label(), current, i,
-						pickAround(i, parameter)));
-				return i - 1;
-			} else if (Whitespace.equals(tokens[i]) == false) {
-				illegalPosition(tokens[i], i, parameter);
+		// TODO backfire may be need?
+		// for (int i = current - 1; -1 < i; i--) {
+		// if (EndParenthesis.equals(tokens[i])) {
+		// break;
+		// } else if (Whitespace.equals(tokens[i]) == false) {
+		// illegalPosition(tokens[i], i, parameter);
+		// break;
+		// }
+		// }
+		int result = current + 1;
+		for (; result < tokens.length; result++) {
+			if (EndSemantic.equals(tokens[result])) {
+				return result - 1;
+			} else if (Whitespace.equals(tokens[result]) == false) {
+				illegalPosition(tokens[result], result, parameter);
 			}
 		}
-		return current;
+		return result;
 	}
 
 	protected void unmatch(String name, int beginOffset,
