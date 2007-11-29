@@ -6,15 +6,15 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class VerifierTest {
+public class ValidatorTest {
 
 	private Scanner scanner;
-	private Verifier verifier;
+	private Validator validator;
 
 	@Before
 	public void setUp() {
 		scanner = new Scanner();
-		verifier = new Verifier();
+		validator = new Validator();
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class VerifierTest {
 			SqlTokenizeContextImplForUnitTest parameter = new SqlTokenizeContextImplForUnitTest(
 					s);
 			assertEquals(Success, scanner.execute(parameter));
-			assertEquals(s, Fail, verifier.execute(parameter));
+			assertEquals(s, Fail, validator.execute(parameter));
 			System.out.println(parameter.getMessages());
 			assertEquals(s, 1, parameter.getMessages().size());
 		}
@@ -58,7 +58,7 @@ public class VerifierTest {
 			SqlTokenizeContextImplForUnitTest parameter = new SqlTokenizeContextImplForUnitTest(
 					s);
 			assertEquals(Success, scanner.execute(parameter));
-			assertEquals(s, Success, verifier.execute(parameter));
+			assertEquals(s, Success, validator.execute(parameter));
 			assertEquals(s, 0, parameter.getMessages().size());
 		}
 
@@ -71,13 +71,13 @@ public class VerifierTest {
 		data.getChars(0, data.length(), fullText, 0);
 
 		for (int i = 0; i < data.length(); i++) {
-			String s = verifier.pickAround(i, fullText);
+			String s = validator.pickAround(i, fullText);
 			System.out.printf("%2d %s \n", i, s);
-			assertEquals(Verifier.PICK_LENGTH, s.length());
+			assertEquals(Validator.PICK_LENGTH, s.length());
 		}
 
 		fullText = new char[] { '0', '1', '2' };
-		String s = verifier.pickAround(1, fullText);
+		String s = validator.pickAround(1, fullText);
 		assertEquals(fullText.length, s.length());
 	}
 }

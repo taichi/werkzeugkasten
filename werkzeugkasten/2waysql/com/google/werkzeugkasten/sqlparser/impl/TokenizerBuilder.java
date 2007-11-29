@@ -16,7 +16,7 @@ public class TokenizerBuilder implements
 	public SqlTokenizeContext build() {
 		SqlTokenizeContextImpl result = new SqlTokenizeContextImpl(this.sql);
 		result.add(new Scanner());
-		result.add(new Verifier());
+		result.add(new Validator());
 		result.add(new Tokenizer());
 		return result;
 	}

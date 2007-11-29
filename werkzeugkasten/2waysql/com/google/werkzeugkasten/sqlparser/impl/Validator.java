@@ -8,7 +8,7 @@ import com.google.werkzeugkasten.sqlparser.SqlTokenizeContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 import com.google.werkzeugkasten.sqlparser.TokenKind;
 
-public class Verifier implements Chain<Status, SqlTokenizeContext> {
+public class Validator implements Chain<Status, SqlTokenizeContext> {
 
 	public Status execute(SqlTokenizeContext parameter) {
 		scan(parameter.getTokens(), parameter);
