@@ -84,7 +84,7 @@ public class Verifier implements Chain<Status, SqlTokenizeContext> {
 
 	protected int verifyIdentifier(TokenKind[] tokens, int current,
 			SqlTokenizeContext parameter) {
-		for (int i = current; -1 < i; i--) {
+		for (int i = current - 1; -1 < i; i--) {
 			if (BeginSemantic.equals(tokens[i])) {
 				break;
 			} else if (Whitespace.equals(tokens[i]) == false) {
@@ -104,11 +104,11 @@ public class Verifier implements Chain<Status, SqlTokenizeContext> {
 
 	protected int inParenthesis(TokenKind[] tokens, int current,
 			SqlTokenizeContext parameter) {
-		for (int i = current; i < tokens.length; i++) {
+		for (int i = current + 1; i < tokens.length; i++) {
 			if (EndParenthesis.equals(tokens[i])) {
 				return verifyBrace(tokens, i, parameter);
 			} else if (BeginParenthesis.equals(tokens[i])) {
-				i = inParenthesis(tokens, current, parameter);
+				i = inParenthesis(tokens, i, parameter);
 			} else if (Parameter.equals(tokens[i]) == false) {
 				illegalPosition(tokens[i], i, parameter);
 			}
@@ -123,6 +123,8 @@ public class Verifier implements Chain<Status, SqlTokenizeContext> {
 			if (BeginBrace.equals(tokens[i])) {
 				parameter.beginBrace(i);
 				return i;
+			} else if (EndSemantic.equals(tokens[i])) {
+				return i - 1;
 			} else if (Whitespace.equals(tokens[i]) == false) {
 				illegalPosition(tokens[i], i, parameter);
 				parameter.addMessage(String.format(NOTFOUND,

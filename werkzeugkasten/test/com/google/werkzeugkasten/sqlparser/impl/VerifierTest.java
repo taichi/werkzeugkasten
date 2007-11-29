@@ -50,8 +50,8 @@ public class VerifierTest {
 					s);
 			assertEquals(Success, scanner.execute(parameter));
 			assertEquals(s, Fail, verifier.execute(parameter));
-			assertTrue(s, 1 == parameter.getMessages().size());
 			System.out.println(parameter.getMessages());
+			assertEquals(s, 1, parameter.getMessages().size());
 		}
 		String[] safedatas = { "/* a(aaa)*/*/", "/* a(aaa){*/aaa/*}*/", };
 		for (String s : safedatas) {
@@ -59,7 +59,7 @@ public class VerifierTest {
 					s);
 			assertEquals(Success, scanner.execute(parameter));
 			assertEquals(s, Success, verifier.execute(parameter));
-			assertTrue(s, 0 == parameter.getMessages().size());
+			assertEquals(s, 0, parameter.getMessages().size());
 		}
 
 	}
