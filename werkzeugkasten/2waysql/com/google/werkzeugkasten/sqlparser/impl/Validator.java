@@ -18,15 +18,8 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 
 	protected void scan(TokenKind[] tokens, SqlTokenizeContext parameter) {
 		for (int i = 0; i < tokens.length; i++) {
-			switch (tokens[i]) {
-			case BeginSemantic: {
+			if (BeginSemantic.equals(tokens[i])) {
 				i = inSemantic(tokens, i, parameter);
-				break;
-			}
-			default: {
-				// do nothing...
-				break;
-			}
 			}
 		}
 		if (0 < parameter.getBraces().size()) {
