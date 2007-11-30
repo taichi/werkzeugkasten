@@ -7,6 +7,9 @@ import com.google.werkzeugkasten.sqlparser.Status;
 public class Tokenizer implements Chain<Status, SqlTokenizeContext> {
 
 	public Status execute(SqlTokenizeContext parameter) {
+		RootNode root = new RootNode();
+
+		parameter.setRoot(root);
 		return Status.Success;
 	}
 }

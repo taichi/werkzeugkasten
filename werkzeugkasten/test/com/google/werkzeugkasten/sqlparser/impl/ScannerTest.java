@@ -12,7 +12,7 @@ public class ScannerTest {
 
 	@Test
 	public void testExecute() {
-		String data = "SELECT * FROM HOGE WHERE MOGE = /*BIND(piro)*/\t10";
+		String data = "SELECT * FROM HOGE WHERE MOGE = /*?BIND(piro)*/\t10";
 
 		TokenKind[] dataexp = new TokenKind[] {
 				// SELECT *
@@ -26,8 +26,8 @@ public class ScannerTest {
 				Text, Text, Text, Text, Text, Whitespace,
 				// MOGE =
 				Text, Text, Text, Text, Whitespace, Text, Whitespace,
-				// /*
-				BeginSemantic, BeginSemantic,
+				// /*?
+				BeginSemantic, BeginSemantic, BeginSemantic,
 				// BIND(
 				Identifier, Identifier, Identifier, Identifier,
 				BeginParenthesis,
@@ -51,12 +51,11 @@ public class ScannerTest {
 
 	@Test
 	public void testExecute2() {
-		String data = "SELECT * FROM HOGE WHERE /* IF(0 < piro.length) {*/"
-				+ "\r\nMOGE = 10 \r\n /* }*/";
+		String data = "SELECT * FROM HOGE WHERE /*? IF(0 < piro.length) {*/"
+				+ "\r\nMOGE = 10 \r\n /*? }*/";
 		TokenKind[] dataexp = new TokenKind[] {
 				// SELECT *
-				Text,
-				Text,
+				Text, Text,
 				Text,
 				Text,
 				Text,
@@ -83,7 +82,8 @@ public class ScannerTest {
 				Text,
 				Text,
 				Whitespace,
-				// /*
+				// /*?
+				BeginSemantic,
 				BeginSemantic,
 				BeginSemantic,
 				Whitespace,
@@ -109,16 +109,16 @@ public class ScannerTest {
 				Whitespace, Whitespace, Text, Text, Text, Text, Whitespace,
 				Text, Whitespace, Text, Text, Whitespace, Whitespace,
 				Whitespace, Whitespace,
-				// /* }*/
-				BeginSemantic, BeginSemantic, Whitespace, EndBrace,
-				EndSemantic, EndSemantic };
+				// /*? }*/
+				BeginSemantic, BeginSemantic, BeginSemantic, Whitespace,
+				EndBrace, EndSemantic, EndSemantic };
 		test(data, dataexp);
 	}
 
 	@Test
 	public void testExecute3() {
-		String data = "SELECT * FROM HOGE WHERE /* IF(0 < piro.size()) {*/"
-				+ "\r\nMOGE = 10 \r\n /* }*/";
+		String data = "SELECT * FROM HOGE WHERE /*? IF(0 < piro.size()) {*/"
+				+ "\r\nMOGE = 10 \r\n /*? }*/";
 		TokenKind[] dataexp = new TokenKind[] {
 				// SELECT *
 				Text,
@@ -149,7 +149,8 @@ public class ScannerTest {
 				Text,
 				Text,
 				Whitespace,
-				// /*
+				// /*?
+				BeginSemantic,
 				BeginSemantic,
 				BeginSemantic,
 				Whitespace,
@@ -176,18 +177,18 @@ public class ScannerTest {
 				Whitespace, Whitespace, Text, Text, Text, Text, Whitespace,
 				Text, Whitespace, Text, Text, Whitespace, Whitespace,
 				Whitespace, Whitespace,
-				// /* }*/
-				BeginSemantic, BeginSemantic, Whitespace, EndBrace,
-				EndSemantic, EndSemantic };
+				// /*? }*/
+				BeginSemantic, BeginSemantic, BeginSemantic, Whitespace,
+				EndBrace, EndSemantic, EndSemantic };
 		test(data, dataexp);
 	}
 
 	@Test
 	public void testExecute4() throws Exception {
-		String data = " /*abc((aaa){}*/";
+		String data = " /*?abc((aaa){}*/";
 		TokenKind[] dataexp = new TokenKind[] {
 				// /*
-				Whitespace, BeginSemantic, BeginSemantic,
+				Whitespace, BeginSemantic, BeginSemantic, BeginSemantic,
 				// abc((
 				Identifier, Identifier, Identifier, BeginParenthesis,
 				BeginParenthesis,
@@ -195,6 +196,15 @@ public class ScannerTest {
 				Parameter, Parameter, Parameter, EndParenthesis,
 				// {}*/
 				BeginBrace, EndBrace, EndSemantic, EndSemantic };
+		test(data, dataexp);
+	}
+
+	@Test
+	public void testExecute5() throws Exception {
+		String data = " /* zzzzdada */";
+		TokenKind[] dataexp = new TokenKind[] { Whitespace, Text, Text,
+				Whitespace, Text, Text, Text, Text, Text, Text, Text, Text,
+				Whitespace, Text, Text };
 		test(data, dataexp);
 	}
 }

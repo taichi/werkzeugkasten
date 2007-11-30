@@ -33,9 +33,9 @@ public class Scanner implements Chain<Status, SqlTokenizeContext> {
 		}
 	}
 
-	protected boolean isBeginSemantic(int index, char[] texts) {
-		int next = index + 1;
-		return next < texts.length && '*' == texts[next];
+	protected boolean isBeginSemantic(int i, char[] texts) {
+		int next = i + 2;
+		return next < texts.length && '*' == texts[i + 1] && '?' == texts[next];
 	}
 
 	protected boolean isEndSemantic(int index, char[] texts) {
@@ -60,6 +60,7 @@ public class Scanner implements Chain<Status, SqlTokenizeContext> {
 	protected int inSemantic(char[] texts, int current,
 			SqlTokenizeContext parameter) {
 		int result = current;
+		parameter.setToken(result++, BeginSemantic);
 		parameter.setToken(result++, BeginSemantic);
 		parameter.setToken(result++, BeginSemantic);
 

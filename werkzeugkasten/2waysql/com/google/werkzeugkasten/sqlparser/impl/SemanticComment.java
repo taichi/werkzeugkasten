@@ -10,8 +10,7 @@ public class SemanticComment extends AbstractToken {
 	}
 
 	public Status execute(SqlConstructionContext parameter) {
-		// TODO Auto-generated method stub
-		return null;
+		return parameter.execute();
 	}
 
 }

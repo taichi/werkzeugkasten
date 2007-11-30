@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.google.werkzeugkasten.sqlparser.SqlTokenizeContext;
 import com.google.werkzeugkasten.sqlparser.TokenKind;
+import com.google.werkzeugkasten.sqlparser.TokenLeaf;
 
 public class SqlTokenizeContextImpl extends
 		AbstractSqlParserContext<SqlTokenizeContext> implements
@@ -17,6 +18,8 @@ public class SqlTokenizeContextImpl extends
 	protected Deque<Integer> braces = new LinkedList<Integer>();
 
 	protected Set<String> messages = new LinkedHashSet<String>();
+
+	protected TokenLeaf root;
 
 	public SqlTokenizeContextImpl(String fulltext) {
 		super(fulltext);
@@ -50,6 +53,14 @@ public class SqlTokenizeContextImpl extends
 
 	public Deque<Integer> getBraces() {
 		return braces;
+	}
+
+	public void setRoot(TokenLeaf token) {
+		this.root = token;
+	}
+
+	public TokenLeaf getRoot() {
+		return this.root;
 	}
 
 }

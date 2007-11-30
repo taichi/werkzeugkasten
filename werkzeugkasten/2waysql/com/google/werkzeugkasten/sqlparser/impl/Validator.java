@@ -32,7 +32,7 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 
 	protected int inSemantic(TokenKind[] tokens, int current,
 			SqlTokenizeContext parameter) {
-		int index = current + 2;
+		int index = current + 3;
 		for (; index < tokens.length; index++) {
 			switch (tokens[index]) {
 			case BeginSemantic: {

@@ -38,29 +38,29 @@ public class ValidatorTest {
 	public void testExecute() {
 		String[] errordatas = {
 		// {が存在しない
-				" /* abc(aaa)   \r\t*/",
+				" /*? abc(aaa)   \r\t*/",
 				// (が存在しない
-				" /* abc{*/ bbb /* } */",
+				" /*? abc{*/ bbb /*? } */",
 				// {が存在しない
-				" /* abc(aaa)   */",
+				" /*? abc(aaa)   */",
 				// {が存在しない
-				" /*abc(aaa){*/bbb/*}}*/",
+				" /*?abc(aaa){*/bbb/*?}}*/",
 				// 識別子が存在しない
-				" /*(aaa){*/bbb/*}*/",
+				" /*?(aaa){*/bbb/*?}*/",
 				// {がアンマッチ
-				" /* abc(aaa){*/",
+				" /*? abc(aaa){*/",
 				// (がアンマッチ
-				" /*abc((aaa){*/bbb/*}*/",
+				" /*?abc((aaa){*/bbb/*?}*/",
 				// (がアンマッチ
-				" /* abc(aaa{*/bbb/*}*/",
+				" /*? abc(aaa{*/bbb/*?}*/",
 				// /*がアンマッチ
-				" /* abc(aaa){}",
+				" /*? abc(aaa){}",
 				// }の位置がオカシイ
-				" /* abc(aaa){}*/",
+				" /*? abc(aaa){}*/",
 				// (の位置がオカシイ
-				" /* abc(aaa)({*/bbb/*}*/",
+				" /*? abc(aaa)({*/bbb/*?}*/",
 				// 識別子の場所がオカシイ
-				" /* abc(aaa)){*/bbb/*}*/", };
+				" /*? abc(aaa)){*/bbb/*?}*/", };
 
 		for (String s : errordatas) {
 			SqlTokenizeContextImplForUnitTest parameter = new SqlTokenizeContextImplForUnitTest(
@@ -70,8 +70,9 @@ public class ValidatorTest {
 			System.out.println(parameter.getMessages());
 			assertEquals(s, 1, parameter.getMessages().size());
 		}
-		String[] safedatas = { "/* a(aaa)  { */bbb/*  }  */",
-				"/* a(aaa)\t{*/aaa/*}*/", "/* a(aaa()) {*/ddd/*}*/" };
+		String[] safedatas = { "/*? a(aaa)  { */bbb/*?  }  */",
+				"/*? a(aaa)\t{*/aaa/*?}*/", "/*? a(aaa()) {*/ddd/*?}*/",
+				"/*? BEGIN() {*/aaa/*?}*/", "/* comment comment */" };
 		for (String s : safedatas) {
 			SqlTokenizeContextImplForUnitTest parameter = new SqlTokenizeContextImplForUnitTest(
 					s);
@@ -85,7 +86,5 @@ public class ValidatorTest {
 				throw e;
 			}
 		}
-
 	}
-
 }
