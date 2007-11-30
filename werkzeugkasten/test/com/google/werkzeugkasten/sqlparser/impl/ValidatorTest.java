@@ -38,25 +38,25 @@ public class ValidatorTest {
 	public void testExecute() {
 		String[] errordatas = {
 		// {が存在しない
-				" /* abc(aaa)   \r\n*/",
+				" /* abc(aaa)   \r\t*/",
 				// (が存在しない
 				" /* abc{*/ bbb /* } */",
 				// {が存在しない
 				" /* abc(aaa)   */",
 				// {が存在しない
-				" /*abc(aaa){*/aaa/*}}*/",
+				" /*abc(aaa){*/bbb/*}}*/",
 				// 識別子が存在しない
-				" /*(aaa){*/aaa/*}*/",
+				" /*(aaa){*/bbb/*}*/",
 				// {がアンマッチ
 				" /* abc(aaa){*/",
 				// (がアンマッチ
-				" /*abc((aaa){*/aaa/*}*/",
+				" /*abc((aaa){*/bbb/*}*/",
 				// (がアンマッチ
-				" /* abc(aaa{}*/",
+				" /* abc(aaa{*/bbb/*}*/",
 				// /*がアンマッチ
 				" /* abc(aaa){}",
 				// {の位置がオカシイ
-				" /* abc(aaa){*/aaa/*{}*/",
+				" /* abc(aaa){*/bbb/*{}*/",
 				// }の位置がオカシイ
 				" /* abc(aaa){}*/",
 				// (の位置がオカシイ

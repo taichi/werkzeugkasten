@@ -45,8 +45,7 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 			case BeginSemantic: {
 				parameter.addMessage(String.format(UNMATCH, SEMANTICCOMMENT,
 						current, pickAround(index, parameter)));
-				index += 1;
-				break;
+				return index - 1;
 			}
 			case EndSemantic: {
 				return index + 2;
@@ -110,14 +109,25 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 	protected int inParenthesis(TokenKind[] tokens, int current,
 			SqlTokenizeContext parameter) {
 		int result = current + 1;
-		for (; result < tokens.length; result++) {
-			if (EndParenthesis.equals(tokens[result])) {
+		loop: for (; result < tokens.length; result++) {
+			switch (tokens[result]) {
+			case BeginParenthesis: {
+				result = inParenthesis(tokens, result, parameter);
+				break;
+			}
+			case EndParenthesis: {
 				lookBrace(tokens, result, parameter);
 				return result;
-			} else if (BeginParenthesis.equals(tokens[result])) {
-				result = inParenthesis(tokens, result, parameter);
-			} else if (Parameter.equals(tokens[result]) == false) {
+			}
+			case BeginBrace:
+			case EndSemantic:
+				result--;
+				break loop;
+			case Parameter:
+				break;
+			default: {
 				illegalPosition(tokens[result], result, parameter);
+			}
 			}
 		}
 		unmatch(PARENTHESIS, current, parameter);
