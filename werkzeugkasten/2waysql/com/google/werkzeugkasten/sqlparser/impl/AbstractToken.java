@@ -1,8 +1,8 @@
 package com.google.werkzeugkasten.sqlparser.impl;
 
-import com.google.werkzeugkasten.sqlparser.Token;
+import com.google.werkzeugkasten.sqlparser.TokenLeaf;
 
-public abstract class AbstractToken implements Token {
+public abstract class AbstractToken implements TokenLeaf {
 	protected int offset;
 
 	protected int length;
