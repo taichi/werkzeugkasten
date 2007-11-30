@@ -1,6 +1,6 @@
 package com.google.werkzeugkasten.sqlparser;
 
-public interface SqlExecutionContext extends SqlParserContext {
+public interface SqlConstructionContext extends SqlParserContext {
 
 	StringBuilder getBuffer();
 

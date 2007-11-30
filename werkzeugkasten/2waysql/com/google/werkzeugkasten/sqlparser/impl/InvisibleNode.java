@@ -3,15 +3,15 @@ package com.google.werkzeugkasten.sqlparser.impl;
 import com.google.werkzeugkasten.sqlparser.SqlConstructionContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 
-public class SemanticComment extends AbstractToken {
+public class InvisibleNode extends AbstractTokenNode {
 
-	public SemanticComment(int offset) {
-		super(offset);
+	public InvisibleNode() {
+		super(0);
 	}
 
 	public Status execute(SqlConstructionContext parameter) {
-		// TODO Auto-generated method stub
-		return null;
+		executeChildren(parameter);
+		return parameter.execute();
 	}
 
 }

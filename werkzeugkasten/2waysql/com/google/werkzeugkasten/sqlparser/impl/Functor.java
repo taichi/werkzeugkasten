@@ -1,6 +1,6 @@
 package com.google.werkzeugkasten.sqlparser.impl;
 
-import com.google.werkzeugkasten.sqlparser.SqlExecutionContext;
+import com.google.werkzeugkasten.sqlparser.SqlConstructionContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 
 public class Functor extends AbstractToken {
@@ -13,7 +13,7 @@ public class Functor extends AbstractToken {
 		super(offset);
 	}
 
-	public Status execute(SqlExecutionContext parameter) {
+	public Status execute(SqlConstructionContext parameter) {
 		// TODO Auto-generated method stub
 		return parameter.execute();
 	}
