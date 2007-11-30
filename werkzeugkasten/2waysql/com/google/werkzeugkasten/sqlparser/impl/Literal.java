@@ -10,8 +10,9 @@ public class Literal extends AbstractToken {
 	}
 
 	public Status execute(SqlExecutionContext parameter) {
-		parameter.getBuffer().append(parameter.getFullText(), getOffset(),
-				getLength());
+		parameter.getBuffer().append(parameter.getFullText(),
+				parameter.getCursor(),
+				getLength() - (parameter.getCursor() - getOffset()));
 		return Status.Success;
 	}
 
