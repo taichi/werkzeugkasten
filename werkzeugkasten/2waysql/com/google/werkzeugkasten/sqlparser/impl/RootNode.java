@@ -3,9 +3,9 @@ package com.google.werkzeugkasten.sqlparser.impl;
 import com.google.werkzeugkasten.sqlparser.SqlConstructionContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 
-public class InvisibleNode extends AbstractTokenNode {
+public class RootNode extends AbstractTokenNode {
 
-	public InvisibleNode() {
+	public RootNode() {
 		super(0);
 	}
 
