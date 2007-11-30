@@ -55,12 +55,10 @@ public class ValidatorTest {
 				" /* abc(aaa{*/bbb/*}*/",
 				// /*がアンマッチ
 				" /* abc(aaa){}",
-				// {の位置がオカシイ
-				" /* abc(aaa){*/bbb/*{}*/",
 				// }の位置がオカシイ
 				" /* abc(aaa){}*/",
 				// (の位置がオカシイ
-				" /* abc(aaa)(){*/bbb/*}*/",
+				" /* abc(aaa)({*/bbb/*}*/",
 				// 識別子の場所がオカシイ
 				" /* abc(aaa)){*/bbb/*}*/", };
 
@@ -72,14 +70,20 @@ public class ValidatorTest {
 			System.out.println(parameter.getMessages());
 			assertEquals(s, 1, parameter.getMessages().size());
 		}
-		String[] safedatas = { "/* a(aaa)*/*/", "/* a(aaa){*/aaa/*}*/",
-				"/* a(aaa())*/" };
+		String[] safedatas = { "/* a(aaa)  { */bbb/*  }  */",
+				"/* a(aaa)\t{*/aaa/*}*/", "/* a(aaa()) {*/ddd/*}*/" };
 		for (String s : safedatas) {
 			SqlTokenizeContextImplForUnitTest parameter = new SqlTokenizeContextImplForUnitTest(
 					s);
-			assertEquals(Success, scanner.execute(parameter));
-			assertEquals(s, Success, validator.execute(parameter));
-			assertEquals(s, 0, parameter.getMessages().size());
+			try {
+				assertEquals(Success, scanner.execute(parameter));
+				assertEquals(s, Success, validator.execute(parameter));
+				assertEquals(s, 0, parameter.getMessages().size());
+			} catch (AssertionError e) {
+				System.out.printf("[ERR!] %1$s", parameter.getMessages()
+						.toString());
+				throw e;
+			}
 		}
 
 	}

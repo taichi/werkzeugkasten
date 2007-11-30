@@ -16,11 +16,15 @@ public class TwoWaySqlMessages {
 
 	public static String BEGINPARENTHESIS;
 
+	public static String ENDPARENTHESIS;
+
 	public static String PARAMETER;
 
 	public static String BRACE;
 
 	public static String BEGINBRACE;
+
+	public static String ENDBRACE;
 
 	public static String UNMATCH;
 

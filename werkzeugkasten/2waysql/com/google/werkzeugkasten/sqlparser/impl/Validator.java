@@ -51,7 +51,6 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 				return index + 2;
 			}
 			case BeginBrace: {
-				parameter.beginBrace(index);
 				index = validateBrace(tokens, index, parameter);
 				break;
 			}
@@ -95,7 +94,7 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 		int result = current;
 		for (; result < tokens.length; result++) {
 			if (BeginParenthesis.equals(tokens[result])) {
-				return inParenthesis(tokens, result, parameter);
+				return inParenthesis(tokens, result, false, parameter);
 			} else if (Identifier.equals(tokens[result]) == false) {
 				parameter.addMessage(String.format(NOTFOUND, BeginParenthesis
 						.label(), current, result,
@@ -107,16 +106,18 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 	}
 
 	protected int inParenthesis(TokenKind[] tokens, int current,
-			SqlTokenizeContext parameter) {
+			boolean inline, SqlTokenizeContext parameter) {
 		int result = current + 1;
 		loop: for (; result < tokens.length; result++) {
 			switch (tokens[result]) {
 			case BeginParenthesis: {
-				result = inParenthesis(tokens, result, parameter);
+				result = inParenthesis(tokens, result, true, parameter);
 				break;
 			}
 			case EndParenthesis: {
-				lookBrace(tokens, result, parameter);
+				if (inline == false) {
+					result = lookBrace(tokens, result, parameter);
+				}
 				return result;
 			}
 			case BeginBrace:
@@ -134,7 +135,7 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 		return result;
 	}
 
-	protected void lookBrace(TokenKind[] tokens, int result,
+	protected int lookBrace(TokenKind[] tokens, int result,
 			SqlTokenizeContext parameter) {
 		boolean found = false;
 		int index = result + 1;
@@ -142,6 +143,7 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 			switch (tokens[index]) {
 			case BeginBrace: {
 				found = true;
+				index = validateBrace(tokens, index, parameter);
 			}
 			case EndSemantic: {
 				break loop;
@@ -158,6 +160,7 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 			parameter.addMessage(String.format(NOTFOUND, BeginBrace.label(),
 					result, index, pickAround(result, parameter)));
 		}
+		return index;
 	}
 
 	protected int validateBrace(TokenKind[] tokens, int current,
@@ -171,12 +174,22 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 		// break;
 		// }
 		// }
+		parameter.beginBrace(current);
 		int result = current + 1;
 		for (; result < tokens.length; result++) {
-			if (EndSemantic.equals(tokens[result])) {
+			switch (tokens[result]) {
+			case Whitespace:
+				break;
+			case EndSemantic: {
 				return result - 1;
-			} else if (Whitespace.equals(tokens[result]) == false) {
+			}
+			case EndBrace: {
+				parameter.endBrace();
+			}
+			default: {
 				illegalPosition(tokens[result], result, parameter);
+				break;
+			}
 			}
 		}
 		return result;
