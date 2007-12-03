@@ -3,7 +3,7 @@ package com.google.werkzeugkasten.sqlparser.impl;
 import com.google.werkzeugkasten.sqlparser.SqlConstructionContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 
-public class Functor extends AbstractToken {
+public class Functor extends AbstractTokenNode {
 
 	protected String name;
 

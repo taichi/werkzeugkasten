@@ -10,6 +10,7 @@ public class Literal extends AbstractToken {
 	}
 
 	public Status execute(SqlConstructionContext parameter) {
+		// TODO AND ,OR processing ...
 		parameter.getBuffer().append(parameter.getFullText(),
 				parameter.getCursor(),
 				getLength() - (parameter.getCursor() - getOffset()));
