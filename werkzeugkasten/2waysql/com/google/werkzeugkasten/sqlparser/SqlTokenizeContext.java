@@ -3,7 +3,7 @@ package com.google.werkzeugkasten.sqlparser;
 import java.util.Deque;
 import java.util.Set;
 
-public interface SqlTokenizeContext extends SqlParserContext {
+public interface SqlTokenizeContext extends SqlContext {
 
 	TokenKind[] getTokens();
 

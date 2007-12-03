@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.werkzeugkasten.meta.ChainContext;
 
-public interface SqlParserContext extends ChainContext<Status> {
+public interface SqlContext extends ChainContext<Status> {
 
 	char[] getFullText();
 

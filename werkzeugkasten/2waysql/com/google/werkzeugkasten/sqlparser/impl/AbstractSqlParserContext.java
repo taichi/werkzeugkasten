@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.google.werkzeugkasten.meta.ChainContext;
 import com.google.werkzeugkasten.meta.impl.AbstractChainContext;
-import com.google.werkzeugkasten.sqlparser.SqlParserContext;
+import com.google.werkzeugkasten.sqlparser.SqlContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 
 public abstract class AbstractSqlParserContext<CTX extends ChainContext<Status>>
-		extends AbstractChainContext<Status, CTX> implements SqlParserContext {
+		extends AbstractChainContext<Status, CTX> implements SqlContext {
 
 	protected char[] fullText;
 
