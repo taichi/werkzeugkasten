@@ -1,6 +1,9 @@
 package com.google.werkzeugkasten.sqlparser.expression;
 
-public interface ExpressionRegistry {
+import com.google.werkzeugkasten.sqlparser.SqlConstructionContext;
+import com.google.werkzeugkasten.sqlparser.SqlInvocationContext;
 
-	Expression find(String name);
+public interface ExpressionRegistry<C extends SqlConstructionContext, I extends SqlInvocationContext> {
+
+	Expression<C, I> find(String name);
 }
