@@ -72,7 +72,8 @@ public class ValidatorTest {
 		}
 		String[] safedatas = { "/*? a(aaa)  { */bbb/*?  }  */",
 				"/*? a(aaa)\t{*/aaa/*?}*/", "/*? a(aaa()) {*/ddd/*?}*/",
-				"/*? BEGIN() {*/aaa/*?}*/", "/* comment comment */" };
+				"/*? BEGIN() {*/aaa/*?}*/", "/* comment comment */",
+				"/*? aaa() {*/bbb/*? } ccc() {*/ddd/*? }*/" };
 		for (String s : safedatas) {
 			SqlTokenizeContextImplForUnitTest parameter = new SqlTokenizeContextImplForUnitTest(
 					s);

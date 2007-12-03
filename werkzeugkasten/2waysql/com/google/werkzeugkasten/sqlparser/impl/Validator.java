@@ -77,11 +77,18 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 
 	protected int validateIdentifier(TokenKind[] tokens, int current,
 			SqlTokenizeContext parameter) {
-		for (int i = current - 1; -1 < i; i--) {
-			if (BeginSemantic.equals(tokens[i])) {
+		loop: for (int i = current - 1; -1 < i; i--) {
+			switch (tokens[i]) {
+			case BeginSemantic: {
+				break loop;
+			}
+			case EndBrace:
+			case Whitespace: {
 				break;
-			} else if (Whitespace.equals(tokens[i]) == false) {
+			}
+			default: {
 				illegalPosition(tokens[i], i, parameter);
+			}
 			}
 		}
 		int result = current;
