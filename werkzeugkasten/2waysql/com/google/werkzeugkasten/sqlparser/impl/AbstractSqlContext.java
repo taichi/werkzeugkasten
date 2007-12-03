@@ -11,7 +11,7 @@ import com.google.werkzeugkasten.sqlparser.SqlContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 import com.google.werkzeugkasten.sqlparser.TokenNode;
 
-public abstract class AbstractSqlParserContext<CTX extends ChainContext<Status>>
+public abstract class AbstractSqlContext<CTX extends ChainContext<Status>>
 		extends AbstractChainContext<Status, CTX> implements SqlContext {
 
 	protected char[] fullText;
@@ -24,9 +24,13 @@ public abstract class AbstractSqlParserContext<CTX extends ChainContext<Status>>
 
 	protected Map<Object, Object> ctxparam = new HashMap<Object, Object>();
 
-	public AbstractSqlParserContext(String fulltext) {
+	public AbstractSqlContext(String fulltext) {
 		this.fullText = new char[fulltext.length()];
 		fulltext.getChars(0, fulltext.length(), this.fullText, 0);
+	}
+
+	public AbstractSqlContext(char[] fulltext) {
+		this.fullText = fulltext;
 	}
 
 	public char[] getFullText() {

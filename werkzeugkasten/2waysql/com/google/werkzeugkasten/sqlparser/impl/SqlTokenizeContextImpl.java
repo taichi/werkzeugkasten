@@ -9,7 +9,7 @@ import com.google.werkzeugkasten.sqlparser.SqlTokenizeContext;
 import com.google.werkzeugkasten.sqlparser.TokenKind;
 
 public class SqlTokenizeContextImpl extends
-		AbstractSqlParserContext<SqlTokenizeContext> implements
+		AbstractSqlContext<SqlTokenizeContext> implements
 		SqlTokenizeContext {
 
 	protected TokenKind[] tokens;
