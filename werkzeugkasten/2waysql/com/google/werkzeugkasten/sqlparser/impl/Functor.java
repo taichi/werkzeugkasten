@@ -14,7 +14,9 @@ public class Functor extends AbstractTokenNode {
 	}
 
 	public Status execute(SqlConstructionContext parameter) {
-		// TODO Auto-generated method stub
+		if (parameter.execute(getName(), getExpression())) {
+			executeChildren(parameter);
+		}
 		return parameter.execute();
 	}
 

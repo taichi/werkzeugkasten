@@ -3,9 +3,9 @@ package com.google.werkzeugkasten.sqlparser.expression;
 import com.google.werkzeugkasten.sqlparser.SqlConstructionContext;
 import com.google.werkzeugkasten.sqlparser.SqlInvocationContext;
 
-public interface Expression<C extends SqlConstructionContext, I extends SqlInvocationContext> {
+public interface Expression {
 
-	void construct(String expression, C context);
+	boolean construct(String expression, SqlConstructionContext context);
 
-	void invoke(String expression, I context);
+	boolean invoke(String expression, SqlInvocationContext context);
 }

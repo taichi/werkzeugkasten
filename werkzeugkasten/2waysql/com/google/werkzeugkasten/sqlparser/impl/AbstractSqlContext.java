@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.werkzeugkasten.meta.ChainContext;
 import com.google.werkzeugkasten.meta.impl.AbstractChainContext;
@@ -22,7 +23,7 @@ public abstract class AbstractSqlContext<CTX extends ChainContext<Status>>
 
 	protected List<Status> statusList = new ArrayList<Status>();
 
-	protected Map<Object, Object> ctxparam = new HashMap<Object, Object>();
+	protected Map<String, Object> ctxparam = new HashMap<String, Object>();
 
 	public AbstractSqlContext(String fulltext) {
 		this.fullText = new char[fulltext.length()];
@@ -69,11 +70,15 @@ public abstract class AbstractSqlContext<CTX extends ChainContext<Status>>
 		return this.root;
 	}
 
-	public Object get(Object key) {
+	public Object get(String key) {
 		return this.ctxparam.get(key);
 	}
 
-	public void set(Object key, Object value) {
+	public void set(String key, Object value) {
 		this.ctxparam.put(key, value);
+	}
+
+	public Set<String> keys() {
+		return this.ctxparam.keySet();
 	}
 }

@@ -1,6 +1,7 @@
 package com.google.werkzeugkasten.sqlparser;
 
 import java.util.List;
+import java.util.Set;
 
 import com.google.werkzeugkasten.meta.ChainContext;
 
@@ -24,7 +25,10 @@ public interface SqlContext extends ChainContext<Status> {
 
 	void resetStatus();
 
-	Object get(Object key);
+	Object get(String key);
 
-	void set(Object key, Object value);
+	void set(String key, Object value);
+
+	Set<String> keys();
+
 }
