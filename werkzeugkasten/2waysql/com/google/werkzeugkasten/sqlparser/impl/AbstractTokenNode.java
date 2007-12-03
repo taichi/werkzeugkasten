@@ -41,7 +41,7 @@ public abstract class AbstractTokenNode extends AbstractToken implements
 	public String toString() {
 		StringBuilder stb = new StringBuilder();
 		stb.append(super.toString());
-		stb.append(' ');
+		stb.append(" ");
 		stb.append(getChildren());
 		return stb.toString();
 	}

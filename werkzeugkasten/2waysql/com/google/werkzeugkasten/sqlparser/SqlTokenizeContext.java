@@ -19,8 +19,4 @@ public interface SqlTokenizeContext extends SqlContext {
 
 	void addMessage(String msg);
 
-	void setRoot(TokenNode token);
-
-	TokenNode getRoot();
-
 }

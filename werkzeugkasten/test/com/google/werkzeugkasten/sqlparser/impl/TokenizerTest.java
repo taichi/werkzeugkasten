@@ -45,6 +45,7 @@ public class TokenizerTest {
 		Functor ccc = (Functor) kids.get(2);
 		assertEquals("ccc", ccc.getName());
 		assertEquals("43<hoge.size()", ccc.getExpression());
+		System.out.println(root);
 	}
 
 	@Test

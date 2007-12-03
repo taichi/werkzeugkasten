@@ -7,14 +7,15 @@ import com.google.werkzeugkasten.sqlparser.Status;
 public class TokenizerBuilder implements
 		ChainBuilder<Status, SqlTokenizeContext> {
 
-	protected String sql;
+	protected String twowaysql;
 
 	public TokenizerBuilder(String sql) {
-		this.sql = sql;
+		this.twowaysql = sql;
 	}
 
 	public SqlTokenizeContext build() {
-		SqlTokenizeContextImpl result = new SqlTokenizeContextImpl(this.sql);
+		SqlTokenizeContextImpl result = new SqlTokenizeContextImpl(
+				this.twowaysql);
 		result.add(new Scanner());
 		result.add(new Validator());
 		result.add(new Tokenizer());

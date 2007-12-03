@@ -12,6 +12,10 @@ public interface SqlContext extends ChainContext<Status> {
 
 	void setCursor(int index);
 
+	void setRoot(TokenNode token);
+
+	TokenNode getRoot();
+
 	List<Status> getStatusCopy();
 
 	void setStatus(List<Status> status);
@@ -19,4 +23,8 @@ public interface SqlContext extends ChainContext<Status> {
 	void addStatus(Status status);
 
 	void resetStatus();
+
+	Object get(Object key);
+
+	void set(Object key, Object value);
 }
