@@ -21,17 +21,37 @@ public class Tokenizer implements Chain<Status, SqlTokenizeContext> {
 	protected int tokenize(TokenNode parent, TokenKind[] tokens,
 			SqlTokenizeContext parameter) {
 		int index = parameter.getCursor();
-		for (; index < tokens.length; index++) {
+		loop: for (; index < tokens.length; index++) {
 			switch (tokens[index]) {
-			case BeginSemantic:
-				index = inSemantic(parent, tokens, index, parameter);
+			case BeginSemantic: {
+				index += 3;
+				for (; index < tokens.length; index++) {
+					switch (tokens[index]) {
+					case Identifier: {
+						index = tokenizeFunctor(parent, tokens, index,
+								parameter);
+						break;
+					}
+					case EndSemantic: {
+						index += 2;
+						continue loop;
+					}
+					case EndBrace:
+						return index;
+					case Whitespace:
+					default: {
+						// do nothing ...
+						break;
+					}
+					}
+				}
 				break;
+			}
+			case Whitespace:
 			case Text: {
 				index = tokenizeText(parent, tokens, index, parameter);
 				break;
 			}
-			case EndBrace:
-				return index;
 			default: {
 				// do nothing ...
 				break;
@@ -45,9 +65,38 @@ public class Tokenizer implements Chain<Status, SqlTokenizeContext> {
 			int current, SqlTokenizeContext parameter) {
 		int index = current;
 		Literal text = new Literal(index);
-		index = read(tokens, index, Text);
+		loop: for (; index < tokens.length; index++) {
+			switch (tokens[index]) {
+			case Whitespace:
+			case Text: {
+				break;
+			}
+			default:
+				break loop;
+			}
+		}
 		text.setLength(index - current);
 		parent.addChild(text);
+		return index - 1;
+	}
+
+	protected int tokenizeFunctor(TokenNode parent, TokenKind[] tokens,
+			int current, SqlTokenizeContext parameter) {
+		Functor functor = new Functor(current);
+		int index = read(tokens, current, Identifier);
+		functor.setName(String.copyValueOf(parameter.getFullText(), current,
+				index - current));
+
+		int brace = read(tokens, index, BeginBrace, false);
+		int endparenthesis = back(tokens, brace - 1, Whitespace);
+		functor.setExpression(String.copyValueOf(parameter.getFullText(),
+				index + 1, endparenthesis - index - 1));
+
+		int endsemantic = read(tokens, index, EndSemantic, false) + 2;
+		parameter.setCursor(endsemantic);
+		index = tokenize(functor, tokens, parameter);
+
+		parent.addChild(functor);
 		return index;
 	}
 
@@ -71,42 +120,4 @@ public class Tokenizer implements Chain<Status, SqlTokenizeContext> {
 		return index;
 	}
 
-	protected int inSemantic(TokenNode parent, TokenKind[] tokens, int current,
-			SqlTokenizeContext parameter) {
-		int index = current + 3;
-		for (; index < tokens.length; index++) {
-			switch (tokens[index]) {
-			case Identifier: {
-				index = tokenizeFunctor(parent, tokens, index, parameter);
-				break;
-			}
-			case Whitespace:
-			default: {
-				// do nothing ...
-				break;
-			}
-			}
-		}
-		return index;
-	}
-
-	protected int tokenizeFunctor(TokenNode parent, TokenKind[] tokens,
-			int current, SqlTokenizeContext parameter) {
-		Functor functor = new Functor(current);
-		int index = read(tokens, current, Identifier);
-		functor.setName(String.copyValueOf(parameter.getFullText(), current,
-				index - current));
-
-		int brace = read(tokens, index, BeginBrace, false);
-		int endparenthesis = back(tokens, brace - 1, Whitespace) + 1;
-		functor.setExpression(String.copyValueOf(parameter.getFullText(),
-				index, endparenthesis));
-
-		int endsemantic = read(tokens, index, EndSemantic, false) + 2;
-		parameter.setCursor(endsemantic);
-		index = tokenize(functor, tokens, parameter);
-
-		parent.addChild(functor);
-		return index;
-	}
 }

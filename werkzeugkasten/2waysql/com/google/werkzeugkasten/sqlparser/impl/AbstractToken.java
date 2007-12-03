@@ -27,4 +27,8 @@ public abstract class AbstractToken implements TokenLeaf {
 		this.length = length;
 	}
 
+	public String toString() {
+		return String.format("offset [%1$d] length[%2$d]", getOffset(),
+				getLength());
+	}
 }

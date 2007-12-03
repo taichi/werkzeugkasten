@@ -7,7 +7,7 @@ import java.util.Set;
 
 import com.google.werkzeugkasten.sqlparser.SqlTokenizeContext;
 import com.google.werkzeugkasten.sqlparser.TokenKind;
-import com.google.werkzeugkasten.sqlparser.TokenLeaf;
+import com.google.werkzeugkasten.sqlparser.TokenNode;
 
 public class SqlTokenizeContextImpl extends
 		AbstractSqlParserContext<SqlTokenizeContext> implements
@@ -19,7 +19,7 @@ public class SqlTokenizeContextImpl extends
 
 	protected Set<String> messages = new LinkedHashSet<String>();
 
-	protected TokenLeaf root;
+	protected TokenNode root;
 
 	public SqlTokenizeContextImpl(String fulltext) {
 		super(fulltext);
@@ -55,11 +55,11 @@ public class SqlTokenizeContextImpl extends
 		return braces;
 	}
 
-	public void setRoot(TokenLeaf token) {
+	public void setRoot(TokenNode token) {
 		this.root = token;
 	}
 
-	public TokenLeaf getRoot() {
+	public TokenNode getRoot() {
 		return this.root;
 	}
 

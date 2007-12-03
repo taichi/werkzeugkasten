@@ -34,7 +34,15 @@ public abstract class AbstractTokenNode extends AbstractToken implements
 		children.add(token);
 	}
 
-	protected List<TokenLeaf> getChildren() {
+	public List<TokenLeaf> getChildren() {
 		return this.children;
+	}
+
+	public String toString() {
+		StringBuilder stb = new StringBuilder();
+		stb.append(super.toString());
+		stb.append(' ');
+		stb.append(getChildren());
+		return stb.toString();
 	}
 }

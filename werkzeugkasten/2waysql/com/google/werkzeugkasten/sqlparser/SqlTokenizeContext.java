@@ -19,8 +19,8 @@ public interface SqlTokenizeContext extends SqlParserContext {
 
 	void addMessage(String msg);
 
-	void setRoot(TokenLeaf token);
+	void setRoot(TokenNode token);
 
-	TokenLeaf getRoot();
+	TokenNode getRoot();
 
 }
