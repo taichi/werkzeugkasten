@@ -18,6 +18,7 @@ public class SqlConstructionContextImpl extends
 	protected static ExpressionRegistry registry;
 	static {
 		registry = loader.iterator().next();
+		registry.initialize();
 	}
 
 	protected StringBuilder buffer = new StringBuilder(1024);
