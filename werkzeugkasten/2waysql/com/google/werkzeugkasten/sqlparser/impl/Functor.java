@@ -17,7 +17,7 @@ public class Functor extends AbstractTokenNode {
 		if (parameter.execute(getName(), getExpression())) {
 			executeChildren(parameter);
 		}
-		return Status.Success;
+		return parameter.execute();
 	}
 
 	public String getName() {
