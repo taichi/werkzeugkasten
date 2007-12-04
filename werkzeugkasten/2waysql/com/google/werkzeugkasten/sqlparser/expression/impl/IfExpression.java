@@ -1,10 +1,15 @@
-package com.google.werkzeugkasten.sqlparser.expression.js;
+package com.google.werkzeugkasten.sqlparser.expression.impl;
 
 import com.google.werkzeugkasten.sqlparser.SqlConstructionContext;
 import com.google.werkzeugkasten.sqlparser.Status;
+import com.google.werkzeugkasten.sqlparser.expression.ScriptEvaluator;
 import com.google.werkzeugkasten.util.ClassUtil;
 
-public class IfExpression extends DefaultJsExpression {
+public class IfExpression extends DefaultExpression {
+
+	public IfExpression(ScriptEvaluator evaluator) {
+		super(evaluator);
+	}
 
 	public boolean construct(String expression, SqlConstructionContext context) {
 		Boolean is = ClassUtil.as(Boolean.class, eval(expression, context));

@@ -1,4 +1,4 @@
-package com.google.werkzeugkasten.sqlparser.expression.js;
+package com.google.werkzeugkasten.sqlparser.expression.impl;
 
 import java.util.List;
 
@@ -6,9 +6,14 @@ import com.google.werkzeugkasten.sqlparser.SqlConstructionContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 import com.google.werkzeugkasten.sqlparser.TokenLeaf;
 import com.google.werkzeugkasten.sqlparser.TokenNode;
+import com.google.werkzeugkasten.sqlparser.expression.ScriptEvaluator;
 import com.google.werkzeugkasten.util.ClassUtil;
 
-public class WithExpression extends DefaultJsExpression {
+public class WithExpression extends DefaultExpression {
+
+	public WithExpression(ScriptEvaluator evaluator) {
+		super(evaluator);
+	}
 
 	public boolean construct(String expression, SqlConstructionContext context) {
 		String current = context.getBuffer().toString();
