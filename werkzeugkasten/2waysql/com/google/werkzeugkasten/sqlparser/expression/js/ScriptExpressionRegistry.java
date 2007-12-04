@@ -14,6 +14,7 @@ public class ScriptExpressionRegistry implements ExpressionRegistry {
 	public ScriptExpressionRegistry() {
 		expressions.put("if", new IfExpression());
 		expressions.put("bind", new BindExpression());
+		expressions.put("with", new WithExpression());
 	}
 
 	public Expression find(String name) {

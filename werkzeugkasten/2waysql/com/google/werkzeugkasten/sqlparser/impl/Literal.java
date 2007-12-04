@@ -37,7 +37,6 @@ public class Literal extends AbstractToken {
 		int length = getLength() - (current - getOffset());
 		parameter.getBuffer().append(parameter.getFullText(), current, length);
 		parameter.setCursor(current + length);
-		parameter.addStatus(Status.Success);
 		return parameter.execute();
 	}
 

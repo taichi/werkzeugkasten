@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.werkzeugkasten.sqlparser.SqlConstructionContext;
-import com.google.werkzeugkasten.sqlparser.Status;
 import com.google.werkzeugkasten.sqlparser.TokenLeaf;
 import com.google.werkzeugkasten.sqlparser.TokenNode;
 import com.google.werkzeugkasten.util.ClassUtil;
@@ -19,20 +18,13 @@ public abstract class AbstractTokenNode extends AbstractToken implements
 	}
 
 	protected void executeChildren(SqlConstructionContext parameter) {
-		List<Status> tmp = parameter.getStatusCopy();
-		try {
-			parameter.resetStatus();
-			parameter.setSiblings(getChildren());
-			for (TokenLeaf t : getChildren()) {
-				TokenNode node = ClassUtil.as(TokenNode.class, t);
-				if (node != null) {
-					parameter.setChildren(node.getChildren());
-				}
-				t.execute(parameter);
+		parameter.setSiblings(getChildren());
+		for (TokenLeaf t : getChildren()) {
+			TokenNode node = ClassUtil.as(TokenNode.class, t);
+			if (node != null) {
+				parameter.setChildren(node.getChildren());
 			}
-		} finally {
-			tmp.addAll(parameter.getStatusCopy());
-			parameter.setStatus(tmp);
+			t.execute(parameter);
 		}
 	}
 
