@@ -7,7 +7,6 @@ import com.google.werkzeugkasten.sqlparser.TokenKind;
 import com.google.werkzeugkasten.sqlparser.expression.Expression;
 import com.google.werkzeugkasten.sqlparser.expression.ExpressionRegistry;
 
-@SuppressWarnings("unchecked")
 public class SqlConstructionContextImpl extends
 		AbstractSqlContext<SqlConstructionContext> implements
 		SqlConstructionContext {
@@ -32,6 +31,9 @@ public class SqlConstructionContextImpl extends
 
 	public boolean execute(String name, String expression) {
 		Expression exp = registry.find(name);
-		return exp.construct(expression, this);
+		if (exp != null) {
+			return exp.construct(expression, this);
+		}
+		return false;
 	}
 }

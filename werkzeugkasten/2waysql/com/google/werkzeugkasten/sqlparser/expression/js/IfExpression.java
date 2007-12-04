@@ -9,7 +9,6 @@ public class IfExpression extends DefaultJsExpression {
 	public boolean construct(String expression, SqlConstructionContext context) {
 		Boolean is = ClassUtil.as(Boolean.class, eval(expression, context));
 		if (is != null && is) {
-
 			context.addStatus(Status.Success);
 			return true;
 		}
