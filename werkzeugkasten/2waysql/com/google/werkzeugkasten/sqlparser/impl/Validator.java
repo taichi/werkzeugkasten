@@ -124,6 +124,7 @@ public class Validator implements Chain<Status, SqlTokenizeContext> {
 			case EndSemantic:
 				result--;
 				break loop;
+			case Whitespace:
 			case Parameter:
 				break;
 			default: {

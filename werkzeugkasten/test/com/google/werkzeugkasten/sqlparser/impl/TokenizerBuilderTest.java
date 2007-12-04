@@ -11,22 +11,33 @@ import com.google.werkzeugkasten.sqlparser.TokenNode;
 
 public class TokenizerBuilderTest {
 
-	String data = "SELECT * FROM HOGE WHERE MOGE = /*BIND(piro) {*/10/*}*/";
-	String data2 = "SELECT * FROM HOGE WHERE /* IF(0 < piro.length) {*/\r\n"
-			+ "MOGE = 10 \r\n /* }*/";
+	String data = "SELECT * FROM HOGE WHERE MOGE = /*? BIND(piro) {*/10/*?}*/";
+	String data2 = "SELECT * FROM HOGE WHERE /*? IF(0 < piro) {*/\r\n"
+			+ "MOGE = 10 \r\n /*? } IF(0 < fuga){*/\t AND MOGE = 22/*?}*/";
 
 	@Test
 	public void testBuild() {
+		assertEquals("SELECT * FROM HOGE WHERE MOGE = ?", construct(data));
+		assertEquals("SELECT * FROM HOGE WHERE  MOGE = 22", construct(data2));
+	}
+
+	protected String construct(String data) {
 		TokenizerBuilder builder = new TokenizerBuilder(data);
 		SqlTokenizeContext result = builder.build();
-		assertEquals(Success, result.execute());
+		try {
+			assertEquals(Success, result.execute());
+		} catch (AssertionError e) {
+			System.out.println(result.getMessages());
+			throw e;
+		}
 
 		SqlConstructionContext parameter = new SqlConstructionContextImpl(
 				result.getFullText(), result.getTokens());
+		parameter.set("piro", -5);
+		parameter.set("fuga", 10);
 		TokenNode root = result.getRoot();
 		assertEquals(Success, root.execute(parameter));
-		assertEquals("SELECT * FROM HOGE WHERE MOGE = ?", parameter.getBuffer()
-				.toString());
+		return parameter.getBuffer().toString();
 	}
 
 }
