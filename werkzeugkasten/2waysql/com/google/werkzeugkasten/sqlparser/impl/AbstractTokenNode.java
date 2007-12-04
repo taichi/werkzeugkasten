@@ -7,6 +7,7 @@ import com.google.werkzeugkasten.sqlparser.SqlConstructionContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 import com.google.werkzeugkasten.sqlparser.TokenLeaf;
 import com.google.werkzeugkasten.sqlparser.TokenNode;
+import com.google.werkzeugkasten.util.ClassUtil;
 
 public abstract class AbstractTokenNode extends AbstractToken implements
 		TokenNode {
@@ -21,7 +22,12 @@ public abstract class AbstractTokenNode extends AbstractToken implements
 		List<Status> tmp = parameter.getStatusCopy();
 		try {
 			parameter.resetStatus();
+			parameter.setSiblings(getChildren());
 			for (TokenLeaf t : getChildren()) {
+				TokenNode node = ClassUtil.as(TokenNode.class, t);
+				if (node != null) {
+					parameter.setChildren(node.getChildren());
+				}
 				t.execute(parameter);
 			}
 		} finally {

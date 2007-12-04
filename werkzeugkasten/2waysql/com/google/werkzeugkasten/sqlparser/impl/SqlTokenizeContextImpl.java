@@ -9,10 +9,7 @@ import com.google.werkzeugkasten.sqlparser.SqlTokenizeContext;
 import com.google.werkzeugkasten.sqlparser.TokenKind;
 
 public class SqlTokenizeContextImpl extends
-		AbstractSqlContext<SqlTokenizeContext> implements
-		SqlTokenizeContext {
-
-	protected TokenKind[] tokens;
+		AbstractSqlContext<SqlTokenizeContext> implements SqlTokenizeContext {
 
 	protected Deque<Integer> braces = new LinkedList<Integer>();
 
@@ -21,10 +18,6 @@ public class SqlTokenizeContextImpl extends
 	public SqlTokenizeContextImpl(String fulltext) {
 		super(fulltext);
 		tokens = new TokenKind[fulltext.length()];
-	}
-
-	public TokenKind[] getTokens() {
-		return this.tokens;
 	}
 
 	public void setToken(int index, TokenKind kind) {

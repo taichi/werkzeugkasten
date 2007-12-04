@@ -5,8 +5,6 @@ import java.util.Set;
 
 public interface SqlTokenizeContext extends SqlContext {
 
-	TokenKind[] getTokens();
-
 	void setToken(int index, TokenKind kind);
 
 	void beginBrace(int index);

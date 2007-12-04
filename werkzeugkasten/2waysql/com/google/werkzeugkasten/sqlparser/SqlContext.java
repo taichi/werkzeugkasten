@@ -9,6 +9,8 @@ public interface SqlContext extends ChainContext<Status> {
 
 	char[] getFullText();
 
+	TokenKind[] getTokens();
+
 	int getCursor();
 
 	void setCursor(int index);
@@ -16,6 +18,14 @@ public interface SqlContext extends ChainContext<Status> {
 	void setRoot(TokenNode token);
 
 	TokenNode getRoot();
+
+	List<TokenLeaf> getSiblings();
+
+	void setSiblings(List<TokenLeaf> siblings);
+
+	List<TokenLeaf> getChildren();
+
+	void setChildren(List<TokenLeaf> children);
 
 	List<Status> getStatusCopy();
 

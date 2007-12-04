@@ -10,16 +10,23 @@ import com.google.werkzeugkasten.meta.ChainContext;
 import com.google.werkzeugkasten.meta.impl.AbstractChainContext;
 import com.google.werkzeugkasten.sqlparser.SqlContext;
 import com.google.werkzeugkasten.sqlparser.Status;
+import com.google.werkzeugkasten.sqlparser.TokenKind;
+import com.google.werkzeugkasten.sqlparser.TokenLeaf;
 import com.google.werkzeugkasten.sqlparser.TokenNode;
 
 public abstract class AbstractSqlContext<CTX extends ChainContext<Status>>
 		extends AbstractChainContext<Status, CTX> implements SqlContext {
 
 	protected char[] fullText;
+	protected TokenKind[] tokens;
 
 	protected int cursor;
 
 	protected TokenNode root;
+
+	protected List<TokenLeaf> siblings;
+
+	protected List<TokenLeaf> children;
 
 	protected List<Status> statusList = new ArrayList<Status>();
 
@@ -30,12 +37,17 @@ public abstract class AbstractSqlContext<CTX extends ChainContext<Status>>
 		fulltext.getChars(0, fulltext.length(), this.fullText, 0);
 	}
 
-	public AbstractSqlContext(char[] fulltext) {
+	public AbstractSqlContext(char[] fulltext, TokenKind[] tokens) {
 		this.fullText = fulltext;
+		this.tokens = tokens;
 	}
 
 	public char[] getFullText() {
 		return this.fullText;
+	}
+
+	public TokenKind[] getTokens() {
+		return this.tokens;
 	}
 
 	public void addStatus(Status status) {
@@ -68,6 +80,22 @@ public abstract class AbstractSqlContext<CTX extends ChainContext<Status>>
 
 	public TokenNode getRoot() {
 		return this.root;
+	}
+
+	public List<TokenLeaf> getSiblings() {
+		return this.siblings;
+	}
+
+	public void setSiblings(List<TokenLeaf> siblings) {
+		this.siblings = siblings;
+	}
+
+	public List<TokenLeaf> getChildren() {
+		return this.children;
+	}
+
+	public void setChildren(List<TokenLeaf> children) {
+		this.children = children;
 	}
 
 	public Object get(String key) {
