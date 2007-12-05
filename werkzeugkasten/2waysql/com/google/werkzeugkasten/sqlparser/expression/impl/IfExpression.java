@@ -1,6 +1,7 @@
 package com.google.werkzeugkasten.sqlparser.expression.impl;
 
 import com.google.werkzeugkasten.sqlparser.SqlConstructionContext;
+import com.google.werkzeugkasten.sqlparser.SqlInvocationContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 import com.google.werkzeugkasten.sqlparser.expression.ScriptEvaluator;
 import com.google.werkzeugkasten.util.ClassUtil;
@@ -21,4 +22,7 @@ public class IfExpression extends DefaultExpression {
 		return false;
 	}
 
+	public boolean invoke(String expression, SqlInvocationContext context) {
+		return true;
+	}
 }

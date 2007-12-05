@@ -3,6 +3,7 @@ package com.google.werkzeugkasten.sqlparser.expression.impl;
 import java.util.List;
 
 import com.google.werkzeugkasten.sqlparser.SqlConstructionContext;
+import com.google.werkzeugkasten.sqlparser.SqlInvocationContext;
 import com.google.werkzeugkasten.sqlparser.Status;
 import com.google.werkzeugkasten.sqlparser.TokenLeaf;
 import com.google.werkzeugkasten.sqlparser.TokenNode;
@@ -44,5 +45,9 @@ public class WithExpression extends DefaultExpression {
 			context.setStatus(tmp);
 		}
 		return false;
+	}
+
+	public boolean invoke(String expression, SqlInvocationContext context) {
+		return true;
 	}
 }
