@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: WebLauncher SDLoader
+Bundle-Name: WebLauncher SDLoader Support
 Bundle-SymbolicName: werkzeugkasten.weblauncher.sdloader;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: werkzeugkasten.weblauncher.sdloader.Activator
