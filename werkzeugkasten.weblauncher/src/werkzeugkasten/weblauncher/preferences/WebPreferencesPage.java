@@ -305,15 +305,13 @@ public class WebPreferencesPage extends PropertyPage {
 
 	private void processLibraryConfig(IPreferenceStore store)
 			throws CoreException {
-		String oldone = store.getString(PREF_LIBRARY_TYPE);
 		String newone = this.libType.getText();
+		String oldone = store.getString(PREF_LIBRARY_TYPE);
 
 		if (this.addLibraryToBuildPath.getSelection()) {
-			if (oldone.equals(newone) == false) {
-				processLibraryConfig(oldone, false);
-				processLibraryConfig(newone, true);
-				store.setValue(PREF_LIBRARY_TYPE, newone);
-			}
+			processLibraryConfig(oldone, false);
+			processLibraryConfig(newone, true);
+			store.setValue(PREF_LIBRARY_TYPE, newone);
 		} else {
 			processLibraryConfig(oldone, false);
 		}

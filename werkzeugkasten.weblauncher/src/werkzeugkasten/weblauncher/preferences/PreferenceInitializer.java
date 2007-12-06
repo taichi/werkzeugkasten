@@ -20,6 +20,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IEclipsePreferences pref = new DefaultScope().getNode(ID_PLUGIN);
 		pref.put(PREF_WEB_PORTNO, "8080");
+		pref.put(PREF_LIBRARY_TYPE, "Servlet 2.5 + JSP 2.1");
 		pref.putBoolean(PREF_IS_DEBUG, true);
 		pref.putBoolean(PREF_CHECK_SERVER, false);
 		pref.putBoolean(PREF_USE_INTERNAL_WEBBROWSER, false);
