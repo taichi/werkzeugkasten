@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: WebLauncher Tomcat
+Bundle-Name: WebLauncher Tomcat6 Support
 Bundle-SymbolicName: werkzeugkasten.weblauncher.tomcat;singleton:=true
 Bundle-Version: 0.0.3
 Bundle-Activator: werkzeugkasten.weblauncher.tomcat.Activator
