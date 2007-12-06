@@ -24,7 +24,7 @@ import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
 import werkzeugkasten.dblauncher.nls.Images;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
 import werkzeugkasten.dblauncher.preferences.impl.DbPreferencesImpl;
-import werkzeugkasten.launcher.LaunchConfigurationFacetRegistry;
+import werkzeugkasten.launcher.ConfigurationFacetRegistry;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -50,7 +50,7 @@ public class Activator extends AbstractUIPlugin {
 		}
 	};
 
-	private LaunchConfigurationFacetRegistry facetRegistry = new LaunchConfigurationFacetRegistry(
+	private ConfigurationFacetRegistry facetRegistry = new ConfigurationFacetRegistry(
 			ID_PLUGIN, EXT_LAUNCHCONFIG_FACET);
 
 	/**
@@ -158,7 +158,7 @@ public class Activator extends AbstractUIPlugin {
 		}
 	}
 
-	public static LaunchConfigurationFacetRegistry getFacetRegistry() {
+	public static ConfigurationFacetRegistry getFacetRegistry() {
 		return getDefault().facetRegistry;
 	}
 }

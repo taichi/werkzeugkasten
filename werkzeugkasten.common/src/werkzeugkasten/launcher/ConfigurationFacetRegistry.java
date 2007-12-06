@@ -13,16 +13,16 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import werkzeugkasten.common.resource.LogUtil;
 import werkzeugkasten.common.runtime.ExtensionAcceptor;
 
-public class LaunchConfigurationFacetRegistry {
+public class ConfigurationFacetRegistry {
 
 	protected final AtomicBoolean initialized = new AtomicBoolean(false);
 
-	protected Map<String, LaunchConfigurationFacet> facets = new HashMap<String, LaunchConfigurationFacet>();
+	protected Map<String, ConfigurationFacet> facets = new HashMap<String, ConfigurationFacet>();
 
 	protected final String namespace;
 	protected final String extensionPointName;
 
-	public LaunchConfigurationFacetRegistry(String namespace,
+	public ConfigurationFacetRegistry(String namespace,
 			String extensionPointName) {
 		if (namespace == null) {
 			throw new IllegalArgumentException("namespace is null");
@@ -34,7 +34,7 @@ public class LaunchConfigurationFacetRegistry {
 		this.extensionPointName = extensionPointName;
 	}
 
-	public LaunchConfigurationFacet find(String key) {
+	public ConfigurationFacet find(String key) {
 		synchronized (initialized) {
 			if (initialized.compareAndSet(false, true)) {
 				initialize();
@@ -59,8 +59,8 @@ public class LaunchConfigurationFacetRegistry {
 						if (extensionPointName.equals(e.getName())) {
 							try {
 								Object o = e.createExecutableExtension("class");
-								if (o instanceof LaunchConfigurationFacet) {
-									LaunchConfigurationFacet facet = (LaunchConfigurationFacet) o;
+								if (o instanceof ConfigurationFacet) {
+									ConfigurationFacet facet = (ConfigurationFacet) o;
 									facets.put(facet.getType(), facet);
 								}
 							} catch (CoreException ex) {

@@ -9,10 +9,12 @@ import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.dblauncher.launch.H2ConfigurationBuilder;
 import werkzeugkasten.dblauncher.variable.Variable;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
-import werkzeugkasten.launcher.impl.AbstractLaunchConfigurationFacet;
+import werkzeugkasten.launcher.LaunchConfigurationFacet;
+import werkzeugkasten.launcher.LibraryConfigurator;
+import werkzeugkasten.launcher.impl.AbstractConfigurationFacet;
 
-public class H2LaunchConfigurationFacet extends
-		AbstractLaunchConfigurationFacet {
+public class H2LaunchConfigurationFacet extends AbstractConfigurationFacet
+		implements LibraryConfigurator, LaunchConfigurationFacet {
 
 	public boolean hasLibrary(IJavaProject project) throws CoreException {
 		return ClasspathEntryUtil.hasClasspathEntry(project, Variable.LIB);

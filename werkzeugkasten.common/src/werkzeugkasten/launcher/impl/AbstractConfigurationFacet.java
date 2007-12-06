@@ -4,10 +4,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 
-import werkzeugkasten.launcher.LaunchConfigurationFacet;
+import werkzeugkasten.launcher.ConfigurationFacet;
 
-public abstract class AbstractLaunchConfigurationFacet implements
-		LaunchConfigurationFacet, IExecutableExtension {
+public abstract class AbstractConfigurationFacet implements
+		ConfigurationFacet, IExecutableExtension {
 
 	protected String type;
 

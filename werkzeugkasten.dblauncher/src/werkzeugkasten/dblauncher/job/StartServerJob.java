@@ -15,6 +15,7 @@ import org.eclipse.debug.core.ILaunchManager;
 import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.nls.Strings;
 import werkzeugkasten.dblauncher.preferences.DbPreferences;
+import werkzeugkasten.launcher.ConfigurationFacet;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.launcher.LaunchConfigurationFacet;
 
@@ -48,10 +49,11 @@ public class StartServerJob extends WorkspaceJob {
 			try {
 				project.setSessionProperty(KEY_JOB_PROCESSING, "");
 				DbPreferences pref = Activator.getPreferences(project);
-				LaunchConfigurationFacet facet = Activator.getFacetRegistry()
-						.find(pref.getDbType());
-				if (facet != null) {
-					LaunchConfigurationBuilder builder = facet.getBuilder();
+				ConfigurationFacet facet = Activator.getFacetRegistry().find(
+						pref.getDbType());
+				if (facet instanceof LaunchConfigurationFacet) {
+					LaunchConfigurationBuilder builder = ((LaunchConfigurationFacet) facet)
+							.getBuilder();
 					builder.setProject(project);
 					ILaunchConfiguration config = builder.build();
 					config.launch(pref.isDebug() ? ILaunchManager.DEBUG_MODE

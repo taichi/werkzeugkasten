@@ -44,7 +44,8 @@ import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
 import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.nls.Strings;
 import werkzeugkasten.dblauncher.preferences.impl.DbPreferencesImpl;
-import werkzeugkasten.launcher.LaunchConfigurationFacet;
+import werkzeugkasten.launcher.ConfigurationFacet;
+import werkzeugkasten.launcher.LibraryConfigurator;
 
 /**
  * @author taichi
@@ -177,9 +178,9 @@ public class DbPreferencesPage extends PropertyPage implements
 		this.isDebug.setSelection(store.getBoolean(PREF_IS_DEBUG));
 		this.useInternalWebBrowser.setSelection(store
 				.getBoolean(PREF_USE_INTERNAL_WEBBROWSER));
-		LaunchConfigurationFacet facet = getCurrentFacet();
-		if (facet != null) {
-			setDriverExists(facet);
+		ConfigurationFacet facet = getCurrentFacet();
+		if (facet instanceof LibraryConfigurator) {
+			setDriverExists((LibraryConfigurator) facet);
 			this.dbDesc.setText(facet.getDescription());
 		}
 
@@ -190,17 +191,17 @@ public class DbPreferencesPage extends PropertyPage implements
 		this.password.setText(store.getString(PREF_PASSWORD));
 	}
 
-	protected void setDriverExists(LaunchConfigurationFacet facet) {
+	protected void setDriverExists(LibraryConfigurator facet) {
 		this.addDriverToBuildPath.setSelection(hasDriver(facet));
 	}
 
-	protected LaunchConfigurationFacet getCurrentFacet() {
-		LaunchConfigurationFacet facet = Activator.getFacetRegistry().find(
+	protected ConfigurationFacet getCurrentFacet() {
+		ConfigurationFacet facet = Activator.getFacetRegistry().find(
 				this.dbType.getText());
 		return facet;
 	}
 
-	protected boolean hasDriver(LaunchConfigurationFacet facet) {
+	protected boolean hasDriver(LibraryConfigurator facet) {
 		boolean result = false;
 		try {
 			IJavaProject p = getJavaProject();
@@ -257,9 +258,9 @@ public class DbPreferencesPage extends PropertyPage implements
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				LaunchConfigurationFacet facet = getCurrentFacet();
-				if (facet != null) {
-					setDriverExists(facet);
+				ConfigurationFacet facet = getCurrentFacet();
+				if (facet instanceof LibraryConfigurator) {
+					setDriverExists((LibraryConfigurator) facet);
 					dbDesc.setText(facet.getDescription());
 					dbDesc.getParent().layout();
 				}
@@ -394,13 +395,14 @@ public class DbPreferencesPage extends PropertyPage implements
 					store.setValue(PREF_WEB_PORTNO, no);
 				}
 				IJavaProject jp = getJavaProject();
-				LaunchConfigurationFacet facet = Activator.getFacetRegistry()
-						.find(this.dbType.getText());
-				if (facet != null) {
+				ConfigurationFacet facet = Activator.getFacetRegistry().find(
+						this.dbType.getText());
+				if (facet instanceof LibraryConfigurator) {
+					LibraryConfigurator lc = (LibraryConfigurator) facet;
 					if (this.addDriverToBuildPath.getSelection()) {
-						facet.addLibrary(jp);
+						lc.addLibrary(jp);
 					} else {
-						facet.removeLibrary(jp);
+						lc.removeLibrary(jp);
 					}
 				}
 
