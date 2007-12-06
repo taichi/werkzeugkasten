@@ -21,7 +21,7 @@ import werkzeugkasten.common.resource.LogUtil;
 import werkzeugkasten.common.ui.ImageLoader;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
-import werkzeugkasten.launcher.LaunchConfigurationFacetRegistry;
+import werkzeugkasten.launcher.ConfigurationFacetRegistry;
 import werkzeugkasten.weblauncher.nls.Images;
 import werkzeugkasten.weblauncher.preferences.WebPreferences;
 import werkzeugkasten.weblauncher.preferences.impl.WebPreferencesImpl;
@@ -50,8 +50,11 @@ public class Activator extends AbstractUIPlugin {
 		}
 	};
 
-	private LaunchConfigurationFacetRegistry facetRegistry = new LaunchConfigurationFacetRegistry(
+	private ConfigurationFacetRegistry launchRegistry = new ConfigurationFacetRegistry(
 			ID_PLUGIN, EXT_LAUNCHCONFIG_FACET);
+
+	private ConfigurationFacetRegistry libraryRegistry = new ConfigurationFacetRegistry(
+			ID_PLUGIN, EXT_LIBRARYCONFIGURATOR);
 
 	/**
 	 * The constructor
@@ -83,7 +86,7 @@ public class Activator extends AbstractUIPlugin {
 		DebugPlugin.getDefault().removeDebugEventListener(terminateListener);
 		urlToProjectCache.clear();
 		urlToProjectCache = null;
-		facetRegistry.dispose();
+		launchRegistry.dispose();
 		ImageLoader.unload(plugin, Images.class);
 		plugin = null;
 		super.stop(context);
@@ -162,7 +165,11 @@ public class Activator extends AbstractUIPlugin {
 		urlToProjectCache.remove(url);
 	}
 
-	public static LaunchConfigurationFacetRegistry getFacetRegistry() {
-		return getDefault().facetRegistry;
+	public static ConfigurationFacetRegistry getLaunchRegistry() {
+		return getDefault().launchRegistry;
+	}
+
+	public static ConfigurationFacetRegistry getLibraryRegistry() {
+		return getDefault().libraryRegistry;
 	}
 }

@@ -9,6 +9,10 @@ public interface WebPreferences {
 
 	void setWebServerType(String type);
 
+	String getLibraryType();
+
+	void setLibraryType(String type);
+
 	String getContextName();
 
 	void setContextName(String name);

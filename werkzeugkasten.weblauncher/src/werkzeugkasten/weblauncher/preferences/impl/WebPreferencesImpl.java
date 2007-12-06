@@ -119,4 +119,12 @@ public class WebPreferencesImpl implements WebPreferences {
 		store.setValue(PREF_WEB_SERVER_TYPE, type);
 	}
 
+	public String getLibraryType() {
+		return store.getString(PREF_LIBRARY_TYPE);
+	}
+
+	public void setLibraryType(String type) {
+		store.setValue(PREF_LIBRARY_TYPE, type);
+	}
+
 }

@@ -12,6 +12,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 
+import werkzeugkasten.launcher.ConfigurationFacet;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.launcher.LaunchConfigurationFacet;
 import werkzeugkasten.weblauncher.Activator;
@@ -48,10 +49,11 @@ public class StartServerJob extends WorkspaceJob {
 			try {
 				project.setSessionProperty(KEY_JOB_PROCESSING, "");
 				WebPreferences pref = Activator.getPreferences(project);
-				LaunchConfigurationFacet facet = Activator.getFacetRegistry()
-						.find(pref.getWebServerType());
-				if (facet != null) {
-					LaunchConfigurationBuilder builder = facet.getBuilder();
+				ConfigurationFacet facet = Activator.getLaunchRegistry().find(
+						pref.getWebServerType());
+				if (facet instanceof LaunchConfigurationFacet) {
+					LaunchConfigurationBuilder builder = ((LaunchConfigurationFacet) facet)
+							.getBuilder();
 					builder.setProject(project);
 					ILaunchConfiguration config = builder.build();
 					config.launch(pref.isDebug() ? ILaunchManager.DEBUG_MODE

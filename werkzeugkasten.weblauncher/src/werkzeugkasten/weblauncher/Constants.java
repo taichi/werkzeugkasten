@@ -47,11 +47,15 @@ public final class Constants {
 
 	public static final String PREF_WEB_SERVER_TYPE = "webType";
 
+	public static final String PREF_LIBRARY_TYPE = "libraryType";
+
 	/* ---------------------------------------------------------------------- */
 	public static final String CTX_HELP_PREF = ID_PLUGIN
 			+ ".preferences_page_context";
 
 	/* ---------------------------------------------------------------------- */
 	public static final String EXT_LAUNCHCONFIG_FACET = "launchConfigurationFacet";
+
+	public static final String EXT_LIBRARYCONFIGURATOR = "libraryConfigurator";
 
 }

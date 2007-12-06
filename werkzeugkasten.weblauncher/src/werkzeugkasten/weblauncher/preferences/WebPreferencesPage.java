@@ -38,7 +38,8 @@ import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.ui.WorkbenchUtil;
 import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
-import werkzeugkasten.launcher.LaunchConfigurationFacet;
+import werkzeugkasten.launcher.ConfigurationFacet;
+import werkzeugkasten.launcher.LibraryConfigurator;
 import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.preferences.impl.WebPreferencesImpl;
 
@@ -53,6 +54,8 @@ public class WebPreferencesPage extends PropertyPage {
 	private Button useWebLauncher;
 
 	private Button addLibraryToBuildPath;
+
+	private Combo libType;
 
 	private Combo webType;
 
@@ -93,8 +96,7 @@ public class WebPreferencesPage extends PropertyPage {
 
 		this.useWebLauncher = createCheckBox(composite, LABEL_USE_WEB_LAUNCHER);
 
-		this.addLibraryToBuildPath = createCheckBox(composite,
-				LABEL_ADD_LIBRARY_TO_BUILDPATH);
+		this.libType = createPartOfLibType(composite);
 
 		this.webType = createPartOfDbType(composite, LABEL_SERVER_TYPE);
 
@@ -134,22 +136,31 @@ public class WebPreferencesPage extends PropertyPage {
 		return b;
 	}
 
-	protected void setDriverExists(LaunchConfigurationFacet facet) {
+	protected void setLibraryExists(LibraryConfigurator facet) {
 		this.addLibraryToBuildPath.setSelection(hasLibrary(facet));
 	}
 
-	protected LaunchConfigurationFacet getCurrentFacet() {
-		LaunchConfigurationFacet facet = Activator.getFacetRegistry().find(
+	protected LibraryConfigurator getCurrentLibrary() {
+		ConfigurationFacet facet = Activator.getLibraryRegistry().find(
+				this.libType.getText());
+		if (facet instanceof LibraryConfigurator) {
+			return (LibraryConfigurator) facet;
+		}
+		return null;
+	}
+
+	protected ConfigurationFacet getCurrentFacet() {
+		ConfigurationFacet facet = Activator.getLaunchRegistry().find(
 				this.webType.getText());
 		return facet;
 	}
 
-	protected boolean hasLibrary(LaunchConfigurationFacet facet) {
+	protected boolean hasLibrary(LibraryConfigurator lib) {
 		boolean result = false;
 		try {
 			IJavaProject p = getJavaProject();
-			if (facet != null) {
-				result = facet.hasLibrary(p);
+			if (lib != null) {
+				result = lib.hasLibrary(p);
 			}
 		} catch (CoreException e) {
 			Activator.log(e);
@@ -177,14 +188,20 @@ public class WebPreferencesPage extends PropertyPage {
 		this.useWebLauncher.setSelection(ProjectUtil.hasNature(getProject(),
 				ID_NATURE));
 
-		int index = this.webType.indexOf(wp.getWebServerType());
-		this.webType.select(-1 < index ? index : 0);
+		int index = this.libType.indexOf(wp.getLibraryType());
+		this.libType.select(-1 < index ? index : 0);
+		LibraryConfigurator lib = getCurrentLibrary();
+		if (lib != null) {
+			setLibraryExists(lib);
+		}
 
-		LaunchConfigurationFacet facet = getCurrentFacet();
+		index = this.webType.indexOf(wp.getWebServerType());
+		this.webType.select(-1 < index ? index : 0);
+		ConfigurationFacet facet = getCurrentFacet();
 		if (facet != null) {
-			setDriverExists(facet);
 			this.webDesc.setText(facet.getDescription());
 		}
+
 		this.contextName.setText(wp.getContextName());
 		this.baseDir.setText(wp.getBaseDir());
 		this.webPortNo.setText(wp.getWebPortNo());
@@ -219,6 +236,7 @@ public class WebPreferencesPage extends PropertyPage {
 	protected void performDefaults() {
 		IPreferenceStore store = getPreferenceStore();
 		this.useWebLauncher.setSelection(false);
+		this.libType.select(0);
 		this.webType.select(0);
 		this.addLibraryToBuildPath.setSelection(false);
 		this.contextName.setText(store.getDefaultString(PREF_CONTEXT_NAME));
@@ -250,6 +268,7 @@ public class WebPreferencesPage extends PropertyPage {
 					ProjectUtil.removeNature(project, ID_NATURE);
 				}
 
+				store.setValue(PREF_LIBRARY_TYPE, this.libType.getText());
 				store.setValue(PREF_WEB_SERVER_TYPE, this.webType.getText());
 				store.setValue(PREF_CONTEXT_NAME, this.contextName.getText());
 				store.setValue(PREF_BASE_DIR, this.baseDir.getText());
@@ -270,13 +289,14 @@ public class WebPreferencesPage extends PropertyPage {
 						this.useInternalWebBrowser.getSelection());
 
 				IJavaProject jp = getJavaProject();
-				LaunchConfigurationFacet facet = Activator.getFacetRegistry()
-						.find(this.webType.getText());
-				if (facet != null) {
+				ConfigurationFacet facet = Activator.getLibraryRegistry().find(
+						this.libType.getText());
+				if (facet instanceof LibraryConfigurator) {
+					LibraryConfigurator lc = (LibraryConfigurator) facet;
 					if (this.addLibraryToBuildPath.getSelection()) {
-						facet.addLibrary(jp);
+						lc.addLibrary(jp);
 					} else {
-						facet.removeLibrary(jp);
+						lc.removeLibrary(jp);
 					}
 				}
 
@@ -383,6 +403,48 @@ public class WebPreferencesPage extends PropertyPage {
 		return t;
 	}
 
+	private Combo createPartOfLibType(Composite parent) {
+
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		data.grabExcessHorizontalSpace = true;
+		data.horizontalSpan = 2;
+		composite.setLayoutData(data);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		composite.setLayout(layout);
+
+		Combo c = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
+		c.setLayoutData(new GridData(GridData.BEGINNING));
+		Set<String> keys = Activator.getLibraryRegistry().keys();
+		c.setItems(keys.toArray(new String[keys.size()]));
+		c.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				LibraryConfigurator lib = getCurrentLibrary();
+				if (lib != null) {
+					setLibraryExists(lib);
+				}
+			}
+		});
+
+		data = new GridData();
+		data.horizontalSpan = 0;
+		data.horizontalIndent = 0;
+		data.verticalIndent = 0;
+
+		this.addLibraryToBuildPath = new Button(composite, SWT.CHECK);
+		this.addLibraryToBuildPath.setText(LABEL_ADD_LIBRARY_TO_BUILDPATH);
+		this.addLibraryToBuildPath.setLayoutData(data);
+
+		return c;
+	}
+
 	private Combo createPartOfDbType(Composite parent, String label) {
 		Label l = new Label(parent, SWT.NONE);
 		l.setText(label);
@@ -400,7 +462,7 @@ public class WebPreferencesPage extends PropertyPage {
 
 		Combo c = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		c.setLayoutData(new GridData(GridData.BEGINNING));
-		Set<String> keys = Activator.getFacetRegistry().keys();
+		Set<String> keys = Activator.getLaunchRegistry().keys();
 		c.setItems(keys.toArray(new String[keys.size()]));
 		this.webDesc = new Label(composite, SWT.NONE);
 		c.addSelectionListener(new SelectionListener() {
@@ -409,9 +471,8 @@ public class WebPreferencesPage extends PropertyPage {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				LaunchConfigurationFacet facet = getCurrentFacet();
+				ConfigurationFacet facet = getCurrentFacet();
 				if (facet != null) {
-					setDriverExists(facet);
 					webDesc.setText(facet.getDescription());
 					webDesc.getParent().layout();
 				}

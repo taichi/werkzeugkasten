@@ -2,6 +2,7 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension-point id="launchConfigurationFacet" name="launchConfigurationFacet" schema="schema/launchConfigurationFacet.exsd"/>
+   <extension-point id="libraryConfigurator" name="libraryConfigurator" schema="schema/libraryConfigurator.exsd"/>
    <extension
          point="org.eclipse.jdt.core.classpathVariableInitializer">
       <classpathVariableInitializer
@@ -13,6 +14,16 @@
             class="werkzeugkasten.weblauncher.variable.Variable"
             readOnly="true"
             variable="JSP_API_2_1">
+      </classpathVariableInitializer>
+      <classpathVariableInitializer
+            class="werkzeugkasten.weblauncher.variable.Variable"
+            readOnly="true"
+            variable="SERVLET_API_2_4">
+      </classpathVariableInitializer>
+      <classpathVariableInitializer
+            class="werkzeugkasten.weblauncher.variable.Variable"
+            readOnly="true"
+            variable="JSP_API_2_0">
       </classpathVariableInitializer>
    </extension>
    <extension
@@ -221,6 +232,17 @@
             id="werkzeugkasten.weblauncher.command.view"
             name="%view">
       </command>
+   </extension>
+   <extension
+         point="werkzeugkasten.weblauncher.libraryConfigurator">
+      <libraryConfigurator
+            class="werkzeugkasten.weblauncher.launch.Servlet25Jsp21"
+            type="Servlet 2.5 + JSP 2.1">
+      </libraryConfigurator>
+      <libraryConfigurator
+            class="werkzeugkasten.weblauncher.launch.Servlet24Jsp20"
+            type="Servlet 2.4 + JSP 2.0">
+      </libraryConfigurator>
    </extension>
 
 </plugin>
