@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IJavaProject;
 import org.junit.Test;
 
 public class LaunchConfigurationFacetRegistryTest {
@@ -70,7 +68,7 @@ public class LaunchConfigurationFacetRegistryTest {
 		String msg = "";
 	}
 
-	private class Tester extends LaunchConfigurationFacetRegistry {
+	private class Tester extends ConfigurationFacetRegistry {
 		volatile boolean called = false;
 
 		String name = null;
@@ -83,9 +81,6 @@ public class LaunchConfigurationFacetRegistryTest {
 		public LaunchConfigurationFacet find(final String key) {
 			super.find(key);
 			return new LaunchConfigurationFacet() {
-				@Override
-				public void addLibrary(IJavaProject project) {
-				}
 
 				public LaunchConfigurationBuilder getBuilder() {
 					return null;
@@ -103,17 +98,6 @@ public class LaunchConfigurationFacetRegistryTest {
 					return key + " " + name;
 				}
 
-				@Override
-				public void removeLibrary(IJavaProject project) {
-
-				}
-
-				@Override
-				public boolean hasLibrary(IJavaProject project)
-						throws CoreException {
-					// TODO Auto-generated method stub
-					return false;
-				}
 			};
 		}
 
