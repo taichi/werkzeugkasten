@@ -39,6 +39,7 @@ import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.ui.WorkbenchUtil;
 import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
 import werkzeugkasten.launcher.ConfigurationFacet;
+import werkzeugkasten.launcher.ConfigurationFacetRegistry;
 import werkzeugkasten.launcher.LibraryConfigurator;
 import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.preferences.impl.WebPreferencesImpl;
@@ -268,7 +269,6 @@ public class WebPreferencesPage extends PropertyPage {
 					ProjectUtil.removeNature(project, ID_NATURE);
 				}
 
-				store.setValue(PREF_LIBRARY_TYPE, this.libType.getText());
 				store.setValue(PREF_WEB_SERVER_TYPE, this.webType.getText());
 				store.setValue(PREF_CONTEXT_NAME, this.contextName.getText());
 				store.setValue(PREF_BASE_DIR, this.baseDir.getText());
@@ -288,17 +288,7 @@ public class WebPreferencesPage extends PropertyPage {
 				store.setValue(PREF_USE_INTERNAL_WEBBROWSER,
 						this.useInternalWebBrowser.getSelection());
 
-				IJavaProject jp = getJavaProject();
-				ConfigurationFacet facet = Activator.getLibraryRegistry().find(
-						this.libType.getText());
-				if (facet instanceof LibraryConfigurator) {
-					LibraryConfigurator lc = (LibraryConfigurator) facet;
-					if (this.addLibraryToBuildPath.getSelection()) {
-						lc.addLibrary(jp);
-					} else {
-						lc.removeLibrary(jp);
-					}
-				}
+				processLibraryConfig(store);
 
 				if (store instanceof IPersistentPreferenceStore) {
 					IPersistentPreferenceStore pps = (IPersistentPreferenceStore) store;
@@ -311,6 +301,37 @@ public class WebPreferencesPage extends PropertyPage {
 		}
 
 		return result;
+	}
+
+	private void processLibraryConfig(IPreferenceStore store)
+			throws CoreException {
+		String oldone = store.getString(PREF_LIBRARY_TYPE);
+		String newone = this.libType.getText();
+
+		if (this.addLibraryToBuildPath.getSelection()) {
+			if (oldone.equals(newone) == false) {
+				processLibraryConfig(oldone, false);
+				processLibraryConfig(newone, true);
+				store.setValue(PREF_LIBRARY_TYPE, newone);
+			}
+		} else {
+			processLibraryConfig(oldone, false);
+		}
+	}
+
+	private void processLibraryConfig(String type, boolean add)
+			throws CoreException {
+		ConfigurationFacetRegistry registry = Activator.getLibraryRegistry();
+		ConfigurationFacet facet = registry.find(type);
+		if (facet instanceof LibraryConfigurator) {
+			LibraryConfigurator lc = (LibraryConfigurator) facet;
+			IJavaProject jp = getJavaProject();
+			if (add) {
+				lc.addLibrary(jp);
+			} else {
+				lc.removeLibrary(jp);
+			}
+		}
 	}
 
 	private Composite createDefaultComposite(Composite parent) {
