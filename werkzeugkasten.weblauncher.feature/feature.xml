@@ -462,14 +462,12 @@ limitations under the License.
          id="werkzeugkasten.weblauncher.sdloader"
          download-size="0"
          install-size="0"
-         version="0.0.1"
-         unpack="false"/>
+         version="0.0.1"/>
 
    <plugin
          id="werkzeugkasten.weblauncher.tomcat55"
          download-size="0"
          install-size="0"
-         version="0.0.1"
-         unpack="false"/>
+         version="0.0.1"/>
 
 </feature>
