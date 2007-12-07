@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
 Bundle-SymbolicName: werkzeugkasten.docs; singleton:=true
-Bundle-Version: 0.0.2
+Bundle-Version: 0.0.3
 Bundle-Vendor: %plugin.author
 Require-Bundle: org.eclipse.help
 Bundle-Localization: plugin
