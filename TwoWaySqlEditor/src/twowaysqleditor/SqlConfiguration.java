@@ -85,8 +85,10 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 		}
 
 		NonRuleBasedDamagerRepairer ndr = getCommentScanner();
-		reconciler.setDamager(ndr, SQL_COMMENT);
-		reconciler.setRepairer(ndr, SQL_COMMENT);
+		for (String type : new String[] { SQL_LINE_COMMENT, SQL_COMMENT }) {
+			reconciler.setDamager(ndr, type);
+			reconciler.setRepairer(ndr, type);
+		}
 
 		return reconciler;
 	}

@@ -13,25 +13,25 @@ public class SqlPartitionScanner extends RuleBasedPartitionScanner {
 	public static final String SQL_BEGIN = "__sql_begin";
 	public static final String SQL_END = "__sql_end";
 	public static final String SQL_BIND = "__sql_bind";
+	public static final String SQL_LINE_COMMENT = "__sql_line_comment";
 	public static final String SQL_COMMENT = "__sql_comment";
 
 	public static final String[] PARTITIONS = { SQL_IF, SQL_ELSE, SQL_BEGIN,
-			SQL_END, SQL_BIND, SQL_COMMENT };
+			SQL_END, SQL_BIND, SQL_LINE_COMMENT, SQL_COMMENT };
 
 	public SqlPartitionScanner() {
 		IToken sqlIf = new Token(SQL_IF);
 		IToken sqlElse = new Token(SQL_ELSE);
 		IToken sqlBegin = new Token(SQL_BEGIN);
 		IToken sqlEnd = new Token(SQL_END);
-		IToken sqlBind = new Token(SQL_BIND);
+		IToken sqlLineComment = new Token(SQL_LINE_COMMENT);
 		IToken sqlComment = new Token(SQL_COMMENT);
 
 		IPredicateRule[] rules = { new SingleLineRule("/*IF", "*/", sqlIf),
 				new SingleLineRule("-- ELSE", null, sqlElse),
 				new SingleLineRule("/*END", "*/", sqlEnd),
 				new SingleLineRule("/*BEGIN", "*/", sqlBegin),
-				// TODO 作り直し。new BindRule(sqlBind),
-				new SingleLineRule("--", null, sqlComment),
+				new SingleLineRule("--", null, sqlLineComment),
 				new MultiLineRule("/* ", "*/", sqlComment) };
 
 		setPredicateRules(rules);
