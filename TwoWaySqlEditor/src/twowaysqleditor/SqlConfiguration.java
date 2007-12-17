@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
@@ -18,6 +19,7 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
+import twowaysqleditor.formatter.OneShotContentFormatter;
 import twowaysqleditor.rules.KeywordScanner;
 import twowaysqleditor.rules.NonRuleBasedDamagerRepairer;
 import twowaysqleditor.rules.SqlPartitionScanner;
@@ -27,6 +29,7 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 	protected ColorManager colorManager;
 	protected KeywordScanner keywordScanner;
 	protected NonRuleBasedDamagerRepairer commentScanner;
+	protected IContentFormatter contentFormatter;
 
 	public SqlConfiguration(ColorManager manager) {
 		this.colorManager = manager;
@@ -43,10 +46,17 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 
 	protected NonRuleBasedDamagerRepairer getCommentScanner() {
 		if (commentScanner == null) {
-			this.commentScanner = new NonRuleBasedDamagerRepairer(
-					new TextAttribute(colorManager.getColor(GREEN)));
+			commentScanner = new NonRuleBasedDamagerRepairer(new TextAttribute(
+					colorManager.getColor(GREEN)));
 		}
 		return commentScanner;
+	}
+
+	protected IContentFormatter getContentFormatter() {
+		if (contentFormatter == null) {
+			contentFormatter = new OneShotContentFormatter();
+		}
+		return contentFormatter;
 	}
 
 	protected static final String[] CONTENT_TYPES;
@@ -82,13 +92,13 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 
 	@Override
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		// TODO Auto-generated method stub
-		return super.getContentFormatter(sourceViewer);
+		return getContentFormatter();
 	}
 
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		// TODO Auto-generated method stub
-		return super.getContentAssistant(sourceViewer);
+		ContentAssistant assistant = new ContentAssistant();
+
+		return assistant;
 	}
 }
