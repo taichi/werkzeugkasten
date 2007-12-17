@@ -1,7 +1,11 @@
 package twowaysqleditor;
 
-import static twowaysqleditor.rules.SqlPartitionScanner.*;
 import static twowaysqleditor.Constants.*;
+import static twowaysqleditor.rules.SqlPartitionScanner.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
@@ -16,6 +20,7 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 import twowaysqleditor.rules.KeywordScanner;
 import twowaysqleditor.rules.NonRuleBasedDamagerRepairer;
+import twowaysqleditor.rules.SqlPartitionScanner;
 
 public class SqlConfiguration extends SourceViewerConfiguration {
 
@@ -31,7 +36,7 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 		if (keywordScanner == null) {
 			keywordScanner = new KeywordScanner(this.colorManager);
 			keywordScanner.setDefaultReturnToken(new Token(new TextAttribute(
-					colorManager.getColor(BLACK))));
+					colorManager.getColor(GREEN))));
 		}
 		return keywordScanner;
 	}
@@ -44,10 +49,17 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 		return commentScanner;
 	}
 
+	protected static final String[] CONTENT_TYPES;
+	static {
+		List<String> list = new ArrayList<String>();
+		list.add(IDocument.DEFAULT_CONTENT_TYPE);
+		list.addAll(Arrays.asList(SqlPartitionScanner.PARTITIONS));
+		CONTENT_TYPES = list.toArray(new String[list.size()]);
+	}
+
 	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
-		return new String[] { IDocument.DEFAULT_CONTENT_TYPE, SQL_IF, SQL_ELSE,
-				SQL_BEGIN, SQL_END, SQL_BIND, SQL_COMMENT };
+		return CONTENT_TYPES;
 	}
 
 	@Override
@@ -56,14 +68,10 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 		PresentationReconciler reconciler = new PresentationReconciler();
 		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(
 				getKeywordScanner());
-		reconciler.setDamager(dr, SQL_IF);
-		reconciler.setRepairer(dr, SQL_IF);
-		reconciler.setDamager(dr, SQL_ELSE);
-		reconciler.setRepairer(dr, SQL_ELSE);
-		reconciler.setDamager(dr, SQL_BEGIN);
-		reconciler.setRepairer(dr, SQL_BEGIN);
-		reconciler.setDamager(dr, SQL_END);
-		reconciler.setRepairer(dr, SQL_END);
+		for (String type : new String[] { SQL_IF, SQL_ELSE, SQL_BEGIN, SQL_END }) {
+			reconciler.setDamager(dr, type);
+			reconciler.setRepairer(dr, type);
+		}
 
 		NonRuleBasedDamagerRepairer ndr = getCommentScanner();
 		reconciler.setDamager(ndr, SQL_COMMENT);

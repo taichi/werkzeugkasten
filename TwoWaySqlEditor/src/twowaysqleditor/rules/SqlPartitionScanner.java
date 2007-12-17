@@ -15,6 +15,9 @@ public class SqlPartitionScanner extends RuleBasedPartitionScanner {
 	public static final String SQL_BIND = "__sql_bind";
 	public static final String SQL_COMMENT = "__sql_comment";
 
+	public static final String[] PARTITIONS = { SQL_IF, SQL_ELSE, SQL_BEGIN,
+			SQL_END, SQL_BIND, SQL_COMMENT };
+
 	public SqlPartitionScanner() {
 		IToken sqlIf = new Token(SQL_IF);
 		IToken sqlElse = new Token(SQL_ELSE);
@@ -26,7 +29,8 @@ public class SqlPartitionScanner extends RuleBasedPartitionScanner {
 		IPredicateRule[] rules = { new SingleLineRule("/*IF", "*/", sqlIf),
 				new SingleLineRule("-- ELSE", null, sqlElse),
 				new SingleLineRule("/*END", "*/", sqlEnd),
-				new BeginRule(sqlBegin), new BindRule(sqlBind),
+				new SingleLineRule("/*BEGIN", "*/", sqlBegin),
+				new BindRule(sqlBind),
 				new MultiLineRule("/*", "*/", sqlComment) };
 
 		setPredicateRules(rules);

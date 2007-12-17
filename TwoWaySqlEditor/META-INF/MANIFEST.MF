@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: TwoWaySqlEditor Plug-in
-Bundle-SymbolicName: TwoWaySqlEditor
+Bundle-SymbolicName: TwoWaySqlEditor;singleton:=true
 Bundle-Version: 0.0.0
 Bundle-Activator: twowaysqleditor.Activator
 Require-Bundle: org.eclipse.ui,
