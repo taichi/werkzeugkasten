@@ -30,9 +30,9 @@ public class SqlPartitionScanner extends RuleBasedPartitionScanner {
 				new SingleLineRule("-- ELSE", null, sqlElse),
 				new SingleLineRule("/*END", "*/", sqlEnd),
 				new SingleLineRule("/*BEGIN", "*/", sqlBegin),
-				new BindRule(sqlBind),
+				// TODO 作り直し。new BindRule(sqlBind),
 				new SingleLineRule("--", null, sqlComment),
-				new MultiLineRule("/*", "*/", sqlComment) };
+				new MultiLineRule("/* ", "*/", sqlComment) };
 
 		setPredicateRules(rules);
 	}

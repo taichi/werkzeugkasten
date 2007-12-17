@@ -19,6 +19,7 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
+import twowaysqleditor.contentassist.DefaultContentAssistProcessor;
 import twowaysqleditor.formatter.OneShotContentFormatter;
 import twowaysqleditor.rules.KeywordScanner;
 import twowaysqleditor.rules.NonRuleBasedDamagerRepairer;
@@ -98,7 +99,9 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 		ContentAssistant assistant = new ContentAssistant();
-
+		assistant.setContentAssistProcessor(
+				new DefaultContentAssistProcessor(),
+				IDocument.DEFAULT_CONTENT_TYPE);
 		return assistant;
 	}
 }

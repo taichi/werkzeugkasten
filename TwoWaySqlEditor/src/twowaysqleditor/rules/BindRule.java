@@ -15,7 +15,17 @@ public class BindRule extends SingleLineRule {
 	@Override
 	protected boolean sequenceDetected(ICharacterScanner scanner,
 			char[] sequence, boolean eofAllowed) {
-		for (int i = 1, c = scanner.read(); c != ICharacterScanner.EOF; i++) {
+		char[][] delims = scanner.getLegalLineDelimiters();
+		for (int i = 1, c = scanner.read(); c != ICharacterScanner.EOF; i++, c = scanner
+				.read()) {
+			for (int j = 0; j < delims.length; j++) {
+				for (int k = 0; k < delims[j].length; k++) {
+					if (c == delims[j][k]) {
+						CharacterScannerUtil.rewind(i, scanner);
+						return false;
+					}
+				}
+			}
 			if (c == '*') {
 				if (i < 2) {
 					CharacterScannerUtil.rewind(i, scanner);
