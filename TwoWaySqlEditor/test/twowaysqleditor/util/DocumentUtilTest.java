@@ -38,4 +38,12 @@ public class DocumentUtilTest extends TestCase {
 				DocumentUtil.whitespace));
 	}
 
+	public void testBacktoLineDelims() {
+		IDocument doc = new Document();
+		String s = "  /*END*/\r\n  /*\r\n/*END*/";
+		doc.set(s);
+		assertEquals("/*", DocumentUtil.backto(doc, 14,
+				DocumentUtil.whitespaceOrLineDelims));
+	}
+
 }

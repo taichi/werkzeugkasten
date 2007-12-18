@@ -114,6 +114,8 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 		ContentAssistant assistant = new ContentAssistant();
 		assistant.setContentAssistProcessor(getDefaultContentAssistProcessor(),
 				IDocument.DEFAULT_CONTENT_TYPE);
+		assistant.setContentAssistProcessor(getDefaultContentAssistProcessor(),
+				SQL_COMMENT);
 		return assistant;
 	}
 }
