@@ -66,7 +66,6 @@ public class EditorContext {
 	}
 
 	private static IMethod calcMethod(IFile sqlFile) throws CoreException {
-		IMethod result = null;
 		// TODO load from persistant property
 		if (sqlFile != null && sqlFile.exists()) {
 			IPath sqlPkg = sqlFile.getFullPath().removeLastSegments(1);
@@ -102,6 +101,6 @@ public class EditorContext {
 				}
 			}
 		}
-		return result;
+		return null;
 	}
 }
