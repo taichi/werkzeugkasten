@@ -16,19 +16,15 @@ import twowaysqleditor.util.DocumentUtil;
 public class DefaultContentAssistProcessor implements IContentAssistProcessor {
 
 	protected static final String[] PROPOSALS = new String[] { "/* ", "/*IF ",
-			"-- ELSE ", "/*BEGIN*/", "/*END*/" };
-	protected static final int[] PROPOSAL_CURSOR = new int[] { 2, 5, 8, 9, 7 };
+			"-- ELSE ", "/*BEGIN*/", "/*END*/", "*/" };
+	protected static final int[] PROPOSAL_CURSOR = new int[] { 2, 5, 8, 9, 7, 2 };
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
 		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 		IDocument document = viewer.getDocument();
-
 		String backto = DocumentUtil.backto(document, offset - 1,
-				DocumentUtil.whitespaceOrLineDelims);
-
-		System.out.printf("[%1$s][%2$d]\n", backto, offset);
-
+				DocumentUtil.whitespace);
 		for (int i = 0; i < PROPOSALS.length; i++) {
 			String s = PROPOSALS[i];
 			if (s.startsWith(backto) && s.equals(backto) == false) {

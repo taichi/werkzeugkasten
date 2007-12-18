@@ -42,8 +42,26 @@ public class DocumentUtilTest extends TestCase {
 		IDocument doc = new Document();
 		String s = "  /*END*/\r\n  /*\r\n/*END*/";
 		doc.set(s);
-		assertEquals("/*", DocumentUtil.backto(doc, 14,
-				DocumentUtil.whitespaceOrLineDelims));
+		assertEquals("/*", DocumentUtil
+				.backto(doc, 14, DocumentUtil.whitespace));
+	}
+
+	public void testSkip() throws Exception {
+		IDocument doc = new Document();
+		String s = " \t \r\n*/ ";
+		skip(doc, s);
+		s = " \t \r\n*/";
+		skip(doc, s);
+	}
+
+	private void skip(IDocument doc, String s) throws BadLocationException {
+		doc.set(s);
+		int index = DocumentUtil.skip(doc, 0, DocumentUtil.whitespace);
+		assertEquals(5, index);
+		int end = DocumentUtil.skip(doc, index, DocumentUtil.ignoreWhitespace);
+		assertEquals(7, end);
+		assertEquals("*/", doc.get(index, end - index));
+		assertEquals('*', doc.getChar(index));
 	}
 
 }
