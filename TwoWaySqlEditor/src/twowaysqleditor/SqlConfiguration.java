@@ -68,7 +68,8 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 
 	protected DefaultContentAssistProcessor getDefaultContentAssistProcessor() {
 		if (defaultContentAssistProcessor == null) {
-			defaultContentAssistProcessor = new DefaultContentAssistProcessor();
+			defaultContentAssistProcessor = new DefaultContentAssistProcessor(
+					context);
 		}
 		return defaultContentAssistProcessor;
 	}

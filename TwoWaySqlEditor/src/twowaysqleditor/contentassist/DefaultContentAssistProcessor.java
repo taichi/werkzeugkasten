@@ -1,6 +1,7 @@
 package twowaysqleditor.contentassist;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.text.IDocument;
@@ -11,6 +12,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 
+import twowaysqleditor.EditorContext;
 import twowaysqleditor.util.DocumentUtil;
 
 public class DefaultContentAssistProcessor implements IContentAssistProcessor {
@@ -18,6 +20,15 @@ public class DefaultContentAssistProcessor implements IContentAssistProcessor {
 	protected static final String[] PROPOSALS = new String[] { "/* ", "/*IF ",
 			"-- ELSE ", "/*BEGIN*/", "/*END*/", "*/" };
 	protected static final int[] PROPOSAL_CURSOR = new int[] { 2, 5, 8, 9, 7, 2 };
+
+	protected EditorContext context;
+
+	protected IfContentAssistProcessor innerProcesser;
+
+	public DefaultContentAssistProcessor(EditorContext context) {
+		this.context = context;
+		this.innerProcesser = new IfContentAssistProcessor(context);
+	}
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
@@ -32,6 +43,8 @@ public class DefaultContentAssistProcessor implements IContentAssistProcessor {
 						backto.length(), PROPOSAL_CURSOR[i]));
 			}
 		}
+		result.addAll(Arrays.asList(innerProcesser.computeCompletionProposals(
+				viewer, offset)));
 		return result.toArray(new ICompletionProposal[result.size()]);
 	}
 

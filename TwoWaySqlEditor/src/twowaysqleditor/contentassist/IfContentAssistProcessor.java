@@ -34,6 +34,12 @@ public class IfContentAssistProcessor implements IContentAssistProcessor {
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
 		try {
+			IDocument document = viewer.getDocument();
+			String backto = DocumentUtil.backto(document, offset - 1,
+					DocumentUtil.whitespace);
+			if (backto.endsWith("/*")) {
+				backto = "";
+			}
 			IFile sql = context.getSqlFile();
 			if (sql == null) {
 				return null;
@@ -43,9 +49,6 @@ public class IfContentAssistProcessor implements IContentAssistProcessor {
 				return null;
 			}
 
-			IDocument document = viewer.getDocument();
-			String backto = DocumentUtil.backto(document, offset - 1,
-					DocumentUtil.whitespace);
 			DummyCompilationUnit dummy = DummyCompilationUnit.create(backto,
 					context.getMethod());
 			if (dummy == null) {
