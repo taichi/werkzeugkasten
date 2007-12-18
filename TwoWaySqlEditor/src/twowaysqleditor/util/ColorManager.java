@@ -1,4 +1,4 @@
-package twowaysqleditor;
+package twowaysqleditor.util;
 
 import java.util.HashMap;
 import java.util.Iterator;

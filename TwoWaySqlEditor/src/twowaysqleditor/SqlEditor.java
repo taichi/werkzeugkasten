@@ -2,12 +2,18 @@ package twowaysqleditor;
 
 import java.util.ResourceBundle;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
+
+import twowaysqleditor.util.AdaptableUtil;
+import twowaysqleditor.util.ColorManager;
 
 public class SqlEditor extends TextEditor {
 
@@ -20,10 +26,13 @@ public class SqlEditor extends TextEditor {
 	}
 
 	protected ColorManager colorManager;
+	protected EditorContext context;
 
 	public SqlEditor() {
 		this.colorManager = new ColorManager();
-		setSourceViewerConfiguration(new SqlConfiguration(this.colorManager));
+		this.context = new EditorContext();
+		setSourceViewerConfiguration(new SqlConfiguration(this.colorManager,
+				context));
 		setDocumentProvider(new SqlDocumentProvider());
 	}
 
@@ -48,6 +57,13 @@ public class SqlEditor extends TextEditor {
 		super.editorContextMenuAboutToShow(menu);
 		menu.add(new Separator());
 		addAction(menu, ACTION_ID_FORMAT);
+	}
+
+	@Override
+	protected void doSetInput(IEditorInput input) throws CoreException {
+		IFile file = AdaptableUtil.to(input, IFile.class);
+		this.context.setSqlFile(file);
+		super.doSetInput(input);
 	}
 
 	@Override

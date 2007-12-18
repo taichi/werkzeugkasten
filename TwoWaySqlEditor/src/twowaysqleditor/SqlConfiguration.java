@@ -24,16 +24,20 @@ import twowaysqleditor.formatter.OneShotContentFormatter;
 import twowaysqleditor.rules.KeywordScanner;
 import twowaysqleditor.rules.NonRuleBasedDamagerRepairer;
 import twowaysqleditor.rules.SqlPartitionScanner;
+import twowaysqleditor.util.ColorManager;
 
 public class SqlConfiguration extends SourceViewerConfiguration {
 
 	protected ColorManager colorManager;
+	protected EditorContext context;
 	protected KeywordScanner keywordScanner;
 	protected NonRuleBasedDamagerRepairer commentScanner;
 	protected IContentFormatter contentFormatter;
+	protected DefaultContentAssistProcessor defaultContentAssistProcessor;
 
-	public SqlConfiguration(ColorManager manager) {
+	public SqlConfiguration(ColorManager manager, EditorContext context) {
 		this.colorManager = manager;
+		this.context = context;
 	}
 
 	protected KeywordScanner getKeywordScanner() {
@@ -58,6 +62,13 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 			contentFormatter = new OneShotContentFormatter();
 		}
 		return contentFormatter;
+	}
+
+	protected DefaultContentAssistProcessor getDefaultContentAssistProcessor() {
+		if (defaultContentAssistProcessor == null) {
+			defaultContentAssistProcessor = new DefaultContentAssistProcessor();
+		}
+		return defaultContentAssistProcessor;
 	}
 
 	protected static final String[] CONTENT_TYPES;
@@ -101,8 +112,7 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 		ContentAssistant assistant = new ContentAssistant();
-		assistant.setContentAssistProcessor(
-				new DefaultContentAssistProcessor(),
+		assistant.setContentAssistProcessor(getDefaultContentAssistProcessor(),
 				IDocument.DEFAULT_CONTENT_TYPE);
 		return assistant;
 	}

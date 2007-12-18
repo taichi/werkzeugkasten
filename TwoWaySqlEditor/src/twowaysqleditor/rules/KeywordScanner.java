@@ -11,7 +11,7 @@ import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
 
-import twowaysqleditor.ColorManager;
+import twowaysqleditor.util.ColorManager;
 
 public class KeywordScanner extends RuleBasedScanner {
 

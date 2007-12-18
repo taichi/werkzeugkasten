@@ -22,7 +22,10 @@ public class EditorContext {
 
 	protected IMethod method;
 
-	public EditorContext(IFile sqlFile) {
+	public EditorContext() {
+	}
+
+	public void setSqlFile(IFile sqlFile) {
 		this.sqlFile = sqlFile;
 		try {
 			this.method = calcMethod(sqlFile);
@@ -70,19 +73,29 @@ public class EditorContext {
 			String pkgName = sqlPkg.toString().replace(Path.SEPARATOR, '.');
 			String filename = sqlFile.getName();
 			int atFirst = filename.indexOf('_');
-			String unitname = filename.substring(0, atFirst) + ".java";
-			String methodname = filename.substring(atFirst + 1, filename
-					.indexOf('_', atFirst + 1));
-			IJavaProject javap = JavaCore.create(sqlFile.getProject());
-			for (IPackageFragmentRoot root : javap.getAllPackageFragmentRoots()) {
-				IPackageFragment pkg = root.getPackageFragment(pkgName);
-				if (pkg != null && pkg.exists()) {
-					ICompilationUnit unit = pkg.getCompilationUnit(unitname);
-					if (unit != null && unit.exists()) {
-						IType type = unit.findPrimaryType();
-						for (IMethod m : type.getMethods()) {
-							if (methodname.equalsIgnoreCase(m.getElementName())) {
-								return m;
+			if (-1 < atFirst) {
+				String unitname = filename.substring(0, atFirst) + ".java";
+				int dbtype = filename.indexOf('_', atFirst + 1);
+				if (dbtype < atFirst) {
+					dbtype = filename.indexOf('.', atFirst + 1);
+				}
+				if (atFirst < dbtype) {
+					String methodname = filename.substring(atFirst + 1, dbtype);
+					IJavaProject javap = JavaCore.create(sqlFile.getProject());
+					for (IPackageFragmentRoot root : javap
+							.getAllPackageFragmentRoots()) {
+						IPackageFragment pkg = root.getPackageFragment(pkgName);
+						if (pkg != null && pkg.exists()) {
+							ICompilationUnit unit = pkg
+									.getCompilationUnit(unitname);
+							if (unit != null && unit.exists()) {
+								IType type = unit.findPrimaryType();
+								for (IMethod m : type.getMethods()) {
+									if (methodname.equalsIgnoreCase(m
+											.getElementName())) {
+										return m;
+									}
+								}
 							}
 						}
 					}
