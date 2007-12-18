@@ -5,12 +5,14 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.text.java.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -19,6 +21,7 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 
 import twowaysqleditor.Activator;
 import twowaysqleditor.EditorContext;
+import twowaysqleditor.util.DocumentUtil;
 
 public class IfContentAssistProcessor implements IContentAssistProcessor {
 
@@ -39,25 +42,39 @@ public class IfContentAssistProcessor implements IContentAssistProcessor {
 			if (project == null) {
 				return null;
 			}
-			DummyCompilationUnit dummy = DummyCompilationUnit.get(context
-					.getMethod());
+
+			IDocument document = viewer.getDocument();
+			String backto = DocumentUtil.backto(document, offset - 1,
+					DocumentUtil.whitespace);
+			DummyCompilationUnit dummy = DummyCompilationUnit.create(backto,
+					context.getMethod());
 			if (dummy == null) {
 				return null;
 			}
 			CompletionProposalCollector collector = new CompletionProposalCollector(
 					project);
+			collector.setIgnored(CompletionProposal.TYPE_REF, true);
+			collector.setIgnored(CompletionProposal.PACKAGE_REF, true);
+			collector.setIgnored(CompletionProposal.KEYWORD, true);
+
 			int before = dummy.getBefore();
 			ICompilationUnit unit = dummy.getUnit();
 			unit.codeComplete(before, collector);
 			IJavaCompletionProposal[] proposals = collector
 					.getJavaCompletionProposals();
 			List<IJavaCompletionProposal> list = new ArrayList<IJavaCompletionProposal>();
+			String typename = DummyCompilationUnit.toDummyType(context
+					.getMethod());
 			for (IJavaCompletionProposal p : proposals) {
 				if (p instanceof AbstractJavaCompletionProposal) {
 					AbstractJavaCompletionProposal ajcp = (AbstractJavaCompletionProposal) p;
-					ajcp.setReplacementOffset(ajcp.getReplacementOffset()
-							- before + offset);
-					list.add(ajcp);
+					String display = p.getDisplayString();
+					if (display.endsWith(typename) == false
+							&& display.endsWith("- Object") == false) {
+						ajcp.setReplacementOffset(ajcp.getReplacementOffset()
+								- before + offset);
+						list.add(ajcp);
+					}
 				}
 			}
 			return list.toArray(new IJavaCompletionProposal[list.size()]);

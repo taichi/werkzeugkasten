@@ -1,11 +1,10 @@
 package twowaysqleditor.contentassist;
 
-import java.util.WeakHashMap;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -17,7 +16,6 @@ import twowaysqleditor.util.AdaptableUtil;
 public class DummyCompilationUnit {
 
 	public static final String PREFIX_DUMMY_TYPE = "TwoWaySqlXxx_";
-	protected static WeakHashMap<IMethod, DummyCompilationUnit> cache = new WeakHashMap<IMethod, DummyCompilationUnit>();
 
 	protected ICompilationUnit unit;
 
@@ -27,30 +25,11 @@ public class DummyCompilationUnit {
 		this.unit = unit;
 	}
 
-	public static synchronized DummyCompilationUnit get(IMethod method) {
-		if (method != null) {
-			DummyCompilationUnit unit = cache.get(method);
-			if (unit == null) {
-				if (method.exists()) {
-					unit = create(method);
-					cache.put(method, unit);
-					return unit;
-				}
-			} else {
-				if (method.exists()) {
-					return unit;
-				} else {
-					cache.remove(method);
-				}
-			}
-		}
-		return null;
-	}
-
-	public static DummyCompilationUnit create(IMethod method) {
+	public static DummyCompilationUnit create(String prefix, IMethod method) {
 		try {
-			IJavaElement element = method.getDeclaringType()
-					.getCompilationUnit().getParent();
+			ICompilationUnit declaringUnit = method.getDeclaringType()
+					.getCompilationUnit();
+			IJavaElement element = declaringUnit.getParent();
 			IPackageFragment fragment = AdaptableUtil.to(element,
 					IPackageFragment.class);
 			if (fragment != null) {
@@ -58,7 +37,7 @@ public class DummyCompilationUnit {
 						.getCompilationUnit(toDummyType(method) + ".java");
 				unit = unit.getWorkingCopy(null);
 				DummyCompilationUnit dummy = new DummyCompilationUnit(unit);
-				dummy.implement(method);
+				dummy.implement(prefix, declaringUnit, method);
 				return dummy;
 			}
 		} catch (CoreException e) {
@@ -79,8 +58,16 @@ public class DummyCompilationUnit {
 		return this.unit;
 	}
 
-	protected void implement(IMethod method) throws CoreException {
+	protected void implement(String prefix, ICompilationUnit declaringUnit,
+			IMethod method) throws CoreException {
 		StringBuilder bef = new StringBuilder();
+		for (IImportDeclaration id : declaringUnit.getImports()) {
+			if (Flags.isStatic(id.getFlags()) == false) {
+				bef.append("import ");
+				bef.append(id.getElementName());
+				bef.append(";\r\n");
+			}
+		}
 		bef.append("public class ");
 		bef.append(toDummyType(method));
 		bef.append("{\r\n");
@@ -103,6 +90,9 @@ public class DummyCompilationUnit {
 			bef.setLength(bef.length() - 1);
 		}
 		bef.append(") throws Exception{\r\n");
+		if (prefix != null && 0 < prefix.length()) {
+			bef.append(prefix);
+		}
 		this.before = bef.length();
 
 		bef.append("}}");
