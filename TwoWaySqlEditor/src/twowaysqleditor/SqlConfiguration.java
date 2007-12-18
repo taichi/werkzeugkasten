@@ -20,6 +20,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 import twowaysqleditor.contentassist.DefaultContentAssistProcessor;
+import twowaysqleditor.contentassist.IfContentAssistProcessor;
 import twowaysqleditor.formatter.OneShotContentFormatter;
 import twowaysqleditor.rules.KeywordScanner;
 import twowaysqleditor.rules.NonRuleBasedDamagerRepairer;
@@ -34,6 +35,7 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 	protected NonRuleBasedDamagerRepairer commentScanner;
 	protected IContentFormatter contentFormatter;
 	protected DefaultContentAssistProcessor defaultContentAssistProcessor;
+	protected IfContentAssistProcessor ifContentAssistProcessor;
 
 	public SqlConfiguration(ColorManager manager, EditorContext context) {
 		this.colorManager = manager;
@@ -69,6 +71,13 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 			defaultContentAssistProcessor = new DefaultContentAssistProcessor();
 		}
 		return defaultContentAssistProcessor;
+	}
+
+	protected IfContentAssistProcessor getIfContentAssistProcessor() {
+		if (ifContentAssistProcessor == null) {
+			ifContentAssistProcessor = new IfContentAssistProcessor(context);
+		}
+		return ifContentAssistProcessor;
 	}
 
 	protected static final String[] CONTENT_TYPES;
@@ -118,6 +127,8 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 				SQL_COMMENT }) {
 			assistant.setContentAssistProcessor(def, type);
 		}
+		assistant.setContentAssistProcessor(getIfContentAssistProcessor(),
+				SQL_IF);
 		return assistant;
 	}
 }

@@ -7,7 +7,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
@@ -69,30 +68,35 @@ public class EditorContext {
 		// TODO load from persistant property
 		if (sqlFile != null && sqlFile.exists()) {
 			IPath sqlPkg = sqlFile.getFullPath().removeLastSegments(1);
-			String pkgName = sqlPkg.toString().replace(Path.SEPARATOR, '.');
-			String filename = sqlFile.getName();
-			int atFirst = filename.indexOf('_');
-			if (-1 < atFirst) {
-				String unitname = filename.substring(0, atFirst) + ".java";
-				int dbtype = filename.indexOf('_', atFirst + 1);
-				if (dbtype < atFirst) {
-					dbtype = filename.indexOf('.', atFirst + 1);
-				}
-				if (atFirst < dbtype) {
-					String methodname = filename.substring(atFirst + 1, dbtype);
-					IJavaProject javap = JavaCore.create(sqlFile.getProject());
-					for (IPackageFragmentRoot root : javap
-							.getAllPackageFragmentRoots()) {
-						IPackageFragment pkg = root.getPackageFragment(pkgName);
-						if (pkg != null && pkg.exists()) {
-							ICompilationUnit unit = pkg
-									.getCompilationUnit(unitname);
-							if (unit != null && unit.exists()) {
-								IType type = unit.findPrimaryType();
-								for (IMethod m : type.getMethods()) {
-									if (methodname.equalsIgnoreCase(m
-											.getElementName())) {
-										return m;
+			IJavaProject javap = JavaCore.create(sqlFile.getProject());
+			IPackageFragment fragment = javap.findPackageFragment(sqlPkg);
+			if (fragment != null && fragment.exists()) {
+				String filename = sqlFile.getName();
+				int atFirst = filename.indexOf('_');
+				if (-1 < atFirst) {
+					String unitname = filename.substring(0, atFirst) + ".java";
+					int dbtype = filename.indexOf('_', atFirst + 1);
+					if (dbtype < atFirst) {
+						dbtype = filename.indexOf('.', atFirst + 1);
+					}
+					if (atFirst < dbtype) {
+						String methodname = filename.substring(atFirst + 1,
+								dbtype);
+						for (IPackageFragmentRoot root : javap
+								.getAllPackageFragmentRoots()) {
+							IPackageFragment pkg = root
+									.getPackageFragment(fragment
+											.getElementName());
+							if (pkg != null && pkg.exists()) {
+								ICompilationUnit unit = pkg
+										.getCompilationUnit(unitname);
+								if (unit != null && unit.exists()) {
+									IType type = unit.findPrimaryType();
+									for (IMethod m : type.getMethods()) {
+										if (methodname.equalsIgnoreCase(m
+												.getElementName())) {
+											return m;
+										}
 									}
 								}
 							}

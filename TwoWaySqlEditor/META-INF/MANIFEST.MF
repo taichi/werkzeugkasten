@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jface.text,
  org.eclipse.ui.editors,
- org.eclipse.jdt.core
+ org.eclipse.jdt.core,
+ org.eclipse.jdt.ui
 Eclipse-LazyStart: true
 Bundle-ClassPath: .,
  lib/blancosqlformatter-0.1.0.jar
