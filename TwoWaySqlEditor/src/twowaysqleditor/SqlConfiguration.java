@@ -112,10 +112,12 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 		ContentAssistant assistant = new ContentAssistant();
-		assistant.setContentAssistProcessor(getDefaultContentAssistProcessor(),
-				IDocument.DEFAULT_CONTENT_TYPE);
-		assistant.setContentAssistProcessor(getDefaultContentAssistProcessor(),
-				SQL_COMMENT);
+
+		DefaultContentAssistProcessor def = getDefaultContentAssistProcessor();
+		for (String type : new String[] { IDocument.DEFAULT_CONTENT_TYPE,
+				SQL_COMMENT }) {
+			assistant.setContentAssistProcessor(def, type);
+		}
 		return assistant;
 	}
 }
