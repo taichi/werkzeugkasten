@@ -27,7 +27,7 @@ public class EditorContext {
 		try {
 			this.method = calcMethod(sqlFile);
 		} catch (CoreException e) {
-			e.printStackTrace(); // TODO logging exception
+			Activator.log(e);
 		}
 	}
 
@@ -48,7 +48,7 @@ public class EditorContext {
 				result = doGetArgNames();
 			}
 		} catch (CoreException e) {
-			e.printStackTrace(); // TODO logging exception
+			Activator.log(e);
 		}
 		return result;
 	}
@@ -64,6 +64,7 @@ public class EditorContext {
 
 	private static IMethod calcMethod(IFile sqlFile) throws CoreException {
 		IMethod result = null;
+		// TODO load from persistant property
 		if (sqlFile != null && sqlFile.exists()) {
 			IPath sqlPkg = sqlFile.getFullPath().removeLastSegments(1);
 			String pkgName = sqlPkg.toString().replace(Path.SEPARATOR, '.');

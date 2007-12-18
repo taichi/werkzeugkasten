@@ -12,9 +12,9 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 
 public class DefaultContentAssistProcessor implements IContentAssistProcessor {
 
-	protected static final String[] PROPOSALS = new String[] { "/*IF ",
+	protected static final String[] PROPOSALS = new String[] { "/*", "/*IF ",
 			"-- ELSE ", "/*BEGIN*/\r\n/*END*/", "/*END*/" };
-	protected static final int[] PROPOSAL_CURSOR = new int[] { 5, 8, 9, 7 };
+	protected static final int[] PROPOSAL_CURSOR = new int[] { 2, 5, 8, 9, 7 };
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {

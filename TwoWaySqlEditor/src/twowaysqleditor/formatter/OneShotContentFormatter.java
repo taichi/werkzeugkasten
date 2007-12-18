@@ -5,6 +5,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 
+import twowaysqleditor.Activator;
 import blanco.commons.sql.format.BlancoSqlFormatter;
 import blanco.commons.sql.format.BlancoSqlRule;
 
@@ -18,7 +19,7 @@ public class OneShotContentFormatter implements IContentFormatter {
 			String text = formatter.format(sql);
 			document.set(text);
 		} catch (Exception e) {
-			e.printStackTrace(); // TODO logging exceptions
+			Activator.log(e);
 		}
 	}
 

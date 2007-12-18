@@ -12,4 +12,11 @@
             name="2waySqlEditor">
       </editor>
    </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="twowaysqleditor.format"
+            name="%label.format">
+      </command>
+   </extension>
 </plugin>
