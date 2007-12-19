@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.Signature;
+import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
 
 import twowaysqleditor.Activator;
 import twowaysqleditor.util.AdaptableUtil;
@@ -20,6 +21,8 @@ public class DummyCompilationUnit {
 	protected ICompilationUnit unit;
 
 	protected int before = 0;
+
+	protected String dummyClassName;
 
 	protected DummyCompilationUnit(ICompilationUnit unit) {
 		this.unit = unit;
@@ -33,10 +36,12 @@ public class DummyCompilationUnit {
 			IPackageFragment fragment = AdaptableUtil.to(element,
 					IPackageFragment.class);
 			if (fragment != null) {
-				ICompilationUnit unit = fragment
-						.getCompilationUnit(toDummyType(method) + ".java");
+				String type = toDummyType(method);
+				ICompilationUnit unit = fragment.getCompilationUnit(type
+						+ ".java");
 				unit = unit.getWorkingCopy(null);
 				DummyCompilationUnit dummy = new DummyCompilationUnit(unit);
+				dummy.dummyClassName = fragment.getElementName() + "." + type;
 				dummy.implement(prefix, declaringUnit, method);
 				return dummy;
 			}
@@ -46,7 +51,7 @@ public class DummyCompilationUnit {
 		return null;
 	}
 
-	public static String toDummyType(IMethod method) {
+	protected static String toDummyType(IMethod method) {
 		return PREFIX_DUMMY_TYPE + method.getElementName();
 	}
 
@@ -54,7 +59,11 @@ public class DummyCompilationUnit {
 		return this.before;
 	}
 
-	public ICompilationUnit getUnit() {
+	public String getDummyClassName() {
+		return this.dummyClassName;
+	}
+
+	protected ICompilationUnit getUnit() {
 		return this.unit;
 	}
 
@@ -101,6 +110,11 @@ public class DummyCompilationUnit {
 		if (buffer != null) {
 			buffer.setContents(bef.toString());
 		}
+	}
+
+	public void codeComplete(CompletionProposalCollector collector)
+			throws CoreException {
+		this.unit.codeComplete(this.before, collector);
 	}
 
 }

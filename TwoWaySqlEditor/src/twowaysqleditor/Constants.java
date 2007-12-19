@@ -1,5 +1,7 @@
 package twowaysqleditor;
 
+import org.eclipse.jface.text.contentassist.CompletionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.RGB;
 
 public class Constants {
@@ -16,4 +18,7 @@ public class Constants {
 
 	/* ---------------------------------------------- */
 	public static final String DEFID_FORMAT = "twowaysqleditor.format";
+
+	/* ---------------------------------------------- */
+	public static final ICompletionProposal[] EMPTY_PROPOSAL = new CompletionProposal[0];
 }
