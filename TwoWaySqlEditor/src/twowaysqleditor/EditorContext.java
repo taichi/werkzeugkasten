@@ -38,6 +38,13 @@ public class EditorContext {
 	}
 
 	public IMethod getMethod() {
+		try {
+			if (method == null || method.exists() == false) {
+				this.method = calcMethod(sqlFile);
+			}
+		} catch (CoreException e) {
+			Activator.log(e);
+		}
 		return this.method;
 	}
 

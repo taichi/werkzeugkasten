@@ -1,8 +1,10 @@
 package twowaysqleditor.contentassist;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
@@ -14,31 +16,41 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import twowaysqleditor.EditorContext;
 import twowaysqleditor.util.DocumentUtil;
 
-public class DefaultContentAssistProcessor implements IContentAssistProcessor {
-
-	protected static final String[] PROPOSALS = new String[] { "/* ", "/*IF ",
-			"-- ELSE ", "/*BEGIN*/", "/*END*/", "*/" };
-	protected static final int[] PROPOSAL_CURSOR = new int[] { 2, 5, 8, 9, 7, 2 };
+public class CommentContentAssistProcessor implements IContentAssistProcessor {
 
 	protected EditorContext context;
 
-	public DefaultContentAssistProcessor(EditorContext context) {
+	protected DefaultContentAssistProcessor inner;
+
+	public CommentContentAssistProcessor(EditorContext context) {
 		this.context = context;
+		this.inner = new DefaultContentAssistProcessor(context);
 	}
+
+	protected static final DocumentUtil.Detector commentOrWhitespace = new DocumentUtil.Detector() {
+		public boolean detect(IDocument d, int index)
+				throws BadLocationException {
+			int ch = d.getChar(index);
+			return Character.isWhitespace(ch)
+					|| (1 < index && ch == '*' && d.getChar(index - 1) == '/');
+		}
+	};
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
 		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 		IDocument document = viewer.getDocument();
 		String backto = DocumentUtil.backto(document, offset - 1,
-				DocumentUtil.whitespace);
-		for (int i = 0; i < PROPOSALS.length; i++) {
-			String s = PROPOSALS[i];
+				commentOrWhitespace);
+
+		for (String s : context.getArgNames()) {
 			if (s.startsWith(backto) && backto.endsWith(s) == false) {
 				result.add(new CompletionProposal(s, offset - backto.length(),
-						backto.length(), PROPOSAL_CURSOR[i]));
+						backto.length(), s.length()));
 			}
 		}
+		result.addAll(Arrays.asList(inner.computeCompletionProposals(viewer,
+				offset)));
 		return result.toArray(new ICompletionProposal[result.size()]);
 	}
 

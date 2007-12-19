@@ -19,6 +19,7 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
+import twowaysqleditor.contentassist.CommentContentAssistProcessor;
 import twowaysqleditor.contentassist.DefaultContentAssistProcessor;
 import twowaysqleditor.contentassist.IfContentAssistProcessor;
 import twowaysqleditor.formatter.OneShotContentFormatter;
@@ -34,8 +35,9 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 	protected KeywordScanner keywordScanner;
 	protected NonRuleBasedDamagerRepairer commentScanner;
 	protected IContentFormatter contentFormatter;
-	protected DefaultContentAssistProcessor defaultContentAssistProcessor;
-	protected IfContentAssistProcessor ifContentAssistProcessor;
+	protected DefaultContentAssistProcessor defaultAssist;
+	protected CommentContentAssistProcessor commentAssist;
+	protected IfContentAssistProcessor ifAssist;
 
 	public SqlConfiguration(ColorManager manager, EditorContext context) {
 		this.colorManager = manager;
@@ -66,19 +68,25 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 		return contentFormatter;
 	}
 
-	protected DefaultContentAssistProcessor getDefaultContentAssistProcessor() {
-		if (defaultContentAssistProcessor == null) {
-			defaultContentAssistProcessor = new DefaultContentAssistProcessor(
-					context);
+	protected DefaultContentAssistProcessor getDefaultAssist() {
+		if (defaultAssist == null) {
+			defaultAssist = new DefaultContentAssistProcessor(context);
 		}
-		return defaultContentAssistProcessor;
+		return defaultAssist;
 	}
 
-	protected IfContentAssistProcessor getIfContentAssistProcessor() {
-		if (ifContentAssistProcessor == null) {
-			ifContentAssistProcessor = new IfContentAssistProcessor(context);
+	protected CommentContentAssistProcessor getCommentAssist() {
+		if (commentAssist == null) {
+			commentAssist = new CommentContentAssistProcessor(context);
 		}
-		return ifContentAssistProcessor;
+		return commentAssist;
+	}
+
+	protected IfContentAssistProcessor getIfAssist() {
+		if (ifAssist == null) {
+			ifAssist = new IfContentAssistProcessor(context);
+		}
+		return ifAssist;
 	}
 
 	protected static final String[] CONTENT_TYPES;
@@ -123,13 +131,10 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 		ContentAssistant assistant = new ContentAssistant();
 
-		DefaultContentAssistProcessor def = getDefaultContentAssistProcessor();
-		for (String type : new String[] { IDocument.DEFAULT_CONTENT_TYPE,
-				SQL_COMMENT }) {
-			assistant.setContentAssistProcessor(def, type);
-		}
-		assistant.setContentAssistProcessor(getIfContentAssistProcessor(),
-				SQL_IF);
+		assistant.setContentAssistProcessor(getDefaultAssist(),
+				IDocument.DEFAULT_CONTENT_TYPE);
+		assistant.setContentAssistProcessor(getCommentAssist(), SQL_COMMENT);
+		assistant.setContentAssistProcessor(getIfAssist(), SQL_IF);
 		return assistant;
 	}
 }

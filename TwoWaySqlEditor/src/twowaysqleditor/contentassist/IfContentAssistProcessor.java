@@ -37,9 +37,7 @@ public class IfContentAssistProcessor implements IContentAssistProcessor {
 			IDocument document = viewer.getDocument();
 			String backto = DocumentUtil.backto(document, offset - 1,
 					DocumentUtil.whitespace);
-			if (backto.endsWith("/*")) {
-				backto = "";
-			}
+
 			IFile sql = context.getSqlFile();
 			if (sql == null) {
 				return null;
@@ -65,7 +63,7 @@ public class IfContentAssistProcessor implements IContentAssistProcessor {
 			unit.codeComplete(before, collector);
 			IJavaCompletionProposal[] proposals = collector
 					.getJavaCompletionProposals();
-			List<IJavaCompletionProposal> list = new ArrayList<IJavaCompletionProposal>();
+			List<ICompletionProposal> list = new ArrayList<ICompletionProposal>();
 			String typename = DummyCompilationUnit.toDummyType(context
 					.getMethod());
 			for (IJavaCompletionProposal p : proposals) {
@@ -80,7 +78,7 @@ public class IfContentAssistProcessor implements IContentAssistProcessor {
 					}
 				}
 			}
-			return list.toArray(new IJavaCompletionProposal[list.size()]);
+			return list.toArray(new ICompletionProposal[list.size()]);
 		} catch (CoreException e) {
 			Activator.log(e);
 		}
