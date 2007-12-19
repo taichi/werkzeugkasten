@@ -1,8 +1,12 @@
 package twowaysqleditor;
 
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.RGB;
+
+import twowaysqleditor.util.DocumentUtil;
 
 public class Constants {
 
@@ -21,4 +25,27 @@ public class Constants {
 
 	/* ---------------------------------------------- */
 	public static final ICompletionProposal[] EMPTY_PROPOSAL = new CompletionProposal[0];
+
+	/* ---------------------------------------------- */
+	public static final char[] DOT = new char[] { '.' };
+
+	public static final DocumentUtil.Detector commentOrWhitespace = new DocumentUtil.Detector() {
+		public boolean detect(IDocument d, int index)
+				throws BadLocationException {
+			int ch = d.getChar(index);
+			return Character.isWhitespace(ch)
+					|| (1 < index && ch == '*' && d.getChar(index - 1) == '/');
+		}
+	};
+
+	public static final DocumentUtil.Detector commentEndOrWhitespace = new DocumentUtil.Detector() {
+		public boolean detect(IDocument d, int index)
+				throws BadLocationException {
+			int ch = d.getChar(index);
+			return Character.isWhitespace(ch)
+					|| (++index < d.getLength() && ch == '*' && d
+							.getChar(index) == '/');
+		}
+	};
+
 }

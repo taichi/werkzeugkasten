@@ -12,6 +12,8 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.eclipse.jface.text.hyperlink.URLHyperlinkDetector;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
@@ -23,6 +25,7 @@ import twowaysqleditor.contentassist.CommentContentAssistProcessor;
 import twowaysqleditor.contentassist.DefaultContentAssistProcessor;
 import twowaysqleditor.contentassist.IfContentAssistProcessor;
 import twowaysqleditor.formatter.OneShotContentFormatter;
+import twowaysqleditor.hyperlink.ELHyperlinkDetector;
 import twowaysqleditor.rules.KeywordScanner;
 import twowaysqleditor.rules.NonRuleBasedDamagerRepairer;
 import twowaysqleditor.rules.SqlPartitionScanner;
@@ -135,6 +138,17 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 				IDocument.DEFAULT_CONTENT_TYPE);
 		assistant.setContentAssistProcessor(getCommentAssist(), SQL_COMMENT);
 		assistant.setContentAssistProcessor(getIfAssist(), SQL_IF);
+		assistant.enableAutoActivation(true);
+
 		return assistant;
+	}
+
+	@Override
+	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+		if (sourceViewer != null) {
+			return new IHyperlinkDetector[] { new URLHyperlinkDetector(),
+					new ELHyperlinkDetector() };
+		}
+		return null;
 	}
 }

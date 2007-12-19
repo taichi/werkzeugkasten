@@ -68,7 +68,7 @@ public class IfContentAssistProcessor implements IContentAssistProcessor {
 	}
 
 	public char[] getCompletionProposalAutoActivationCharacters() {
-		return null;
+		return Constants.DOT;
 	}
 
 	public char[] getContextInformationAutoActivationCharacters() {
