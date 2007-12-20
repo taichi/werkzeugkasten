@@ -147,7 +147,7 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		if (sourceViewer != null) {
 			return new IHyperlinkDetector[] { new URLHyperlinkDetector(),
-					new ELHyperlinkDetector() };
+					new ELHyperlinkDetector(context) };
 		}
 		return null;
 	}

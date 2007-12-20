@@ -48,4 +48,11 @@ public class Constants {
 		}
 	};
 
+	public static final DocumentUtil.Detector ignoreCommentEndOrWhitespace = new DocumentUtil.Detector() {
+		public boolean detect(IDocument d, int index)
+				throws BadLocationException {
+			return commentEndOrWhitespace.detect(d, index) == false;
+		}
+	};
+
 }
