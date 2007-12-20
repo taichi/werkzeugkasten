@@ -40,7 +40,8 @@ public class ELHyperlinkDetector extends AbstractHyperlinkDetector {
 
 			String partition = document.getDocumentPartitioner()
 					.getContentType(offset);
-			if (SqlPartitionScanner.SQL_COMMENT.equals(partition)) {
+			if (SqlPartitionScanner.SQL_COMMENT.equals(partition)
+					|| SqlPartitionScanner.SQL_IF.equals(partition)) {
 				int end = DocumentUtil.skip(document, offset,
 						Constants.ignoreCommentEndOrWhitespace) - 1;
 				String maybeEL = DocumentUtil.backto(document, end,
