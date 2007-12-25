@@ -91,18 +91,21 @@ public class ELHyperlinkDetector extends AbstractHyperlinkDetector {
 					type));
 			if (found != null && found.exists()) {
 				String membername = maybeEL.substring(dot + 1);
-				if (found.isBinary()) {
-					return found;
-				}
-				for (IField f : found.getFields()) {
-					if (f.getElementName().equals(membername)) {
-						return f;
+				int index = membername.indexOf('(');
+				String methodname = null;
+				if (index < 1) {
+					for (IField f : found.getFields()) {
+						if (f.getElementName().equals(membername)) {
+							return f;
+						}
 					}
+					methodname = "get" + membername;
+				} else {
+					methodname = membername.substring(0, index);
 				}
-				String getter = "get" + membername;
 				for (IMethod m : found.getMethods()) {
 					if (m.getNumberOfParameters() < 1
-							&& m.getElementName().equalsIgnoreCase(getter)) {
+							&& m.getElementName().equalsIgnoreCase(methodname)) {
 						return m;
 					}
 				}
