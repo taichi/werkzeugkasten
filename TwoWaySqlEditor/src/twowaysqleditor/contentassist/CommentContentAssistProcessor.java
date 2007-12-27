@@ -1,17 +1,18 @@
 package twowaysqleditor.contentassist;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 
+import twowaysqleditor.Activator;
 import twowaysqleditor.Constants;
 import twowaysqleditor.EditorContext;
 import twowaysqleditor.util.DocumentUtil;
@@ -29,20 +30,37 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor {
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
-		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
-		IDocument document = viewer.getDocument();
-		String backto = DocumentUtil.backto(document, offset - 1,
-				Constants.commentOrWhitespace);
+		try {
+			IDocument document = viewer.getDocument();
+			String backto = DocumentUtil.backto(document, offset - 1,
+					DocumentUtil.whitespace);
 
-		for (String s : context.getArgNames()) {
-			if (s.startsWith(backto) && backto.endsWith(s) == false) {
-				result.add(new CompletionProposal(s, offset - backto.length(),
-						backto.length(), s.length()));
+			IFile sql = context.getSqlFile();
+			if (sql == null) {
+				return Constants.EMPTY_PROPOSAL;
 			}
+			IJavaProject project = JavaCore.create(sql.getProject());
+			if (project == null) {
+				return Constants.EMPTY_PROPOSAL;
+			}
+
+			DummyCompilationUnit dummy = DummyCompilationUnit.create(backto,
+					context.getMethod());
+			if (dummy == null) {
+				return Constants.EMPTY_PROPOSAL;
+			}
+
+			CompletionProposalCollector collector = new PropertyAccessCompletionProposalCollector(
+					project, dummy.getDummyClassName(), -dummy.getBefore()
+							+ offset);
+			dummy.codeComplete(collector);
+
+			return collector.getJavaCompletionProposals();
+		} catch (CoreException e) {
+			Activator.log(e);
 		}
-		result.addAll(Arrays.asList(inner.computeCompletionProposals(viewer,
-				offset)));
-		return result.toArray(new ICompletionProposal[result.size()]);
+		return Constants.EMPTY_PROPOSAL;
+
 	}
 
 	public IContextInformation[] computeContextInformation(ITextViewer viewer,
@@ -65,5 +83,4 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor {
 	public String getErrorMessage() {
 		return null;
 	}
-
 }
