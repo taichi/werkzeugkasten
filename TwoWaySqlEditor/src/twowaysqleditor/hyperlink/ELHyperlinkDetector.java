@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.text.IDocument;
@@ -48,24 +49,24 @@ public class ELHyperlinkDetector extends AbstractHyperlinkDetector {
 						Constants.commentOrWhitespace);
 				int begin = end - maybeEL.length() + 1;
 				int dot = maybeEL.indexOf('.');
-				IRegion newone = null;
 				IJavaElement element = context.getMethod();
+				IHyperlink result = null;
 				if (0 < dot) {
 					if (offset < begin + dot) {
-						newone = new Region(begin, dot);
+						result = createLink(begin, dot, element);
 						// ILocalVariable is not Children of IMethod.
-						// if use IMethod#getSource , i can calc target variable
-						// offset
+						// if use IMethod#getSource , may be calc target
+						// variable offset
 					} else {
-						newone = new Region(begin + dot + 1, maybeEL.length()
-								- dot - 1);
-						element = findParameterType(context.getMethod(),
-								maybeEL, dot);
+						result = detectEL(context.getMethod(), maybeEL, offset,
+								begin, dot);
 					}
 				} else {
-					newone = new Region(begin, end - begin);
+					result = createLink(begin, end - begin, element);
 				}
-				return new IHyperlink[] { new ELHyperlink(newone, element) };
+				if (result != null) {
+					return new IHyperlink[] { result };
+				}
 			}
 		} catch (Exception e) {
 			Activator.log(e);
@@ -73,10 +74,11 @@ public class ELHyperlinkDetector extends AbstractHyperlinkDetector {
 		return null;
 	}
 
-	public IJavaElement findParameterType(IMethod method, String maybeEL,
-			int dot) throws CoreException {
+	public IHyperlink detectEL(IMethod method, String maybeEL, int cursor,
+			int begin, int dot) throws CoreException {
 		IType type = method.getDeclaringType();
-		String arg = maybeEL.substring(0, dot);
+		String[] split = maybeEL.split("\\.");
+		String arg = split[0];
 		String ptype = null;
 		String[] argnames = method.getParameterNames();
 		for (int i = 0; i < argnames.length; i++) {
@@ -89,28 +91,69 @@ public class ELHyperlinkDetector extends AbstractHyperlinkDetector {
 			IJavaProject project = type.getJavaProject();
 			IType found = project.findType(TypeUtil.getResolvedTypeName(ptype,
 					type));
-			if (found != null && found.exists()) {
-				String membername = maybeEL.substring(dot + 1);
-				int index = membername.indexOf('(');
-				String methodname = null;
-				if (index < 1) {
-					for (IField f : found.getFields()) {
-						if (f.getElementName().equals(membername)) {
-							return f;
+			int proceed = arg.length() + 1;
+			int start = begin + proceed;
+			for (int i = 1; i < split.length; i++) {
+				String membername = split[i];
+				String signature = null;
+				if (found != null && found.exists()) {
+					int paren = membername.indexOf('(');
+					IMember element = null;
+					if (paren < 1) {
+						IField field = found.getField(membername);
+						if (field == null || field.exists() == false) {
+							StringBuilder stb = new StringBuilder(membername);
+							char ch = Character.toUpperCase(stb.charAt(0));
+							stb.setCharAt(0, ch);
+							String methodname = "get" + stb.toString();
+							IMethod mtd = find(found, methodname);
+							if (mtd != null && mtd.exists()) {
+								signature = mtd.getReturnType();
+								element = mtd;
+							}
+						} else {
+							signature = field.getTypeSignature();
+							element = field;
+						}
+					} else {
+						String methodname = membername.substring(0, paren);
+						IMethod mtd = find(found, methodname);
+						if (mtd != null && mtd.exists()) {
+							signature = mtd.getReturnType();
+							element = mtd;
 						}
 					}
-					methodname = "get" + membername;
-				} else {
-					methodname = membername.substring(0, index);
-				}
-				for (IMethod m : found.getMethods()) {
-					if (m.getNumberOfParameters() < 1
-							&& m.getElementName().equalsIgnoreCase(methodname)) {
-						return m;
+					proceed += membername.length();
+					if (cursor < begin + proceed) {
+						if (element != null) {
+							return createLink(start, membername.length(),
+									element);
+						}
+					}
+					start += membername.length() + 1;
+					if (signature != null && 0 < signature.length()) {
+						found = project.findType(TypeUtil.getResolvedTypeName(
+								signature, type));
+					} else {
+						break;
 					}
 				}
 			}
 		}
-		return method;
+		IRegion region = new Region(begin + dot + 1, maybeEL.length() - dot - 1);
+		return new ELHyperlink(region, method);
+	}
+
+	protected IMethod find(IType found, String name) throws CoreException {
+		for (IMethod m : found.getMethods()) {
+			if (m.getElementName().equals(name)) {
+				return m;
+			}
+		}
+		return null;
+	}
+
+	protected IHyperlink createLink(int offset, int length, IJavaElement element) {
+		return new ELHyperlink(new Region(offset, length), element);
 	}
 }
