@@ -72,7 +72,7 @@ public class IfContentAssistProcessor implements IContentAssistProcessor {
 	}
 
 	public char[] getContextInformationAutoActivationCharacters() {
-		return null;
+		return Constants.DOT;
 	}
 
 	public IContextInformationValidator getContextInformationValidator() {

@@ -2,7 +2,6 @@ package twowaysqleditor;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.RGB;
 
@@ -24,7 +23,7 @@ public class Constants {
 	public static final String DEFID_FORMAT = "twowaysqleditor.format";
 
 	/* ---------------------------------------------- */
-	public static final ICompletionProposal[] EMPTY_PROPOSAL = new CompletionProposal[0];
+	public static final ICompletionProposal[] EMPTY_PROPOSAL = new ICompletionProposal[0];
 
 	/* ---------------------------------------------- */
 	public static final char[] DOT = new char[] { '.' };
