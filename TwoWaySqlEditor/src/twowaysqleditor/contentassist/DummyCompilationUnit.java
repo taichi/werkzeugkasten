@@ -69,46 +69,46 @@ public class DummyCompilationUnit {
 
 	protected void implement(String prefix, ICompilationUnit declaringUnit,
 			IMethod method) throws CoreException {
-		StringBuilder bef = new StringBuilder();
+		StringBuilder stb = new StringBuilder();
 		for (IImportDeclaration id : declaringUnit.getImports()) {
 			if (Flags.isStatic(id.getFlags()) == false) {
-				bef.append("import ");
-				bef.append(id.getElementName());
-				bef.append(";\r\n");
+				stb.append("import ");
+				stb.append(id.getElementName());
+				stb.append(";\r\n");
 			}
 		}
-		bef.append("public class ");
-		bef.append(toDummyType(method));
-		bef.append("{\r\n");
-		bef.append(Flags.toString(method.getFlags()));
-		bef.append(" ");
-		bef.append(Signature.toString(method.getReturnType()));
-		bef.append(" ");
-		bef.append(method.getElementName());
-		bef.append("(");
+		stb.append("public class ");
+		stb.append(toDummyType(method));
+		stb.append("{\r\n");
+		stb.append(Flags.toString(method.getFlags()));
+		stb.append(" ");
+		stb.append(Signature.toString(method.getReturnType()));
+		stb.append(" ");
+		stb.append(method.getElementName());
+		stb.append("(");
 		String[] types = method.getParameterTypes();
 		String[] names = method.getParameterNames();
 		if (types != null && names != null && 0 < types.length
-				&& 0 < names.length && types.length == names.length) {
+				&& 0 < names.length) {
 			for (int i = 0; i < types.length; i++) {
-				bef.append(Signature.toString(types[i]));
-				bef.append(" ");
-				bef.append(names[i]);
-				bef.append(",");
+				stb.append(Signature.toString(types[i]));
+				stb.append(" ");
+				stb.append(names[i]);
+				stb.append(",");
 			}
-			bef.setLength(bef.length() - 1);
+			stb.setLength(stb.length() - 1);
 		}
-		bef.append(") throws Exception{\r\n");
+		stb.append(") throws Exception{\r\n");
 		if (prefix != null && 0 < prefix.length()) {
-			bef.append(prefix);
+			stb.append(prefix);
 		}
-		this.before = bef.length();
+		this.before = stb.length();
 
-		bef.append("}}");
+		stb.append("}}");
 
 		IBuffer buffer = unit.getBuffer();
 		if (buffer != null) {
-			buffer.setContents(bef.toString());
+			buffer.setContents(stb.toString());
 		}
 	}
 

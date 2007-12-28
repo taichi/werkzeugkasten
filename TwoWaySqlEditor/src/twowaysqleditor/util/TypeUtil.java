@@ -1,6 +1,7 @@
 package twowaysqleditor.util;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
@@ -96,5 +97,16 @@ public class TypeUtil {
 
 	public static String resolveType(String shortname, IType type) {
 		return resolveType(type, 0, shortname);
+	}
+
+	public static IMethod getAccesserMethod(IType found, String name)
+			throws CoreException {
+		for (IMethod m : found.getMethods()) {
+			if (m.getElementName().equals(name)
+					&& m.getNumberOfParameters() < 1) {
+				return m;
+			}
+		}
+		return null;
 	}
 }

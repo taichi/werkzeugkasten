@@ -18,7 +18,8 @@ public class PropertyAccessCompletionProposalCollector extends
 		if (CompletionProposal.METHOD_REF == proposal.getKind()) {
 			char[] comp = proposal.getCompletion();
 			if (comp.length < 3 || comp[0] != 'g' || comp[1] != 'e'
-					|| comp[2] != 't') {
+					|| comp[2] != 't'
+					|| 0 < proposal.findParameterNames(null).length) {
 				return true;
 			}
 		}
@@ -50,7 +51,8 @@ public class PropertyAccessCompletionProposalCollector extends
 			newone.setRelevance(proposal.getRelevance());
 			newone.setRequiredProposals(proposal.getRequiredProposals());
 			old = Signature.getSignatureSimpleName(proposal.getSignature());
-			char[] sig = new char[String.valueOf(old).indexOf('(')];
+			int index = String.valueOf(old).indexOf('(');
+			char[] sig = new char[0 < index ? index : old.length];
 			System.arraycopy(old, 0, sig, 0, sig.length);
 			newone.setSignature(Signature.createCharArrayTypeSignature(sig,
 					true));

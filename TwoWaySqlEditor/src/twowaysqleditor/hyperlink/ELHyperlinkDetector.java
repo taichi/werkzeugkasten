@@ -105,8 +105,9 @@ public class ELHyperlinkDetector extends AbstractHyperlinkDetector {
 							StringBuilder stb = new StringBuilder(membername);
 							char ch = Character.toUpperCase(stb.charAt(0));
 							stb.setCharAt(0, ch);
-							String methodname = "get" + stb.toString();
-							IMethod mtd = find(found, methodname);
+							stb.insert(0, "get");
+							IMethod mtd = TypeUtil.getAccesserMethod(found, stb
+									.toString());
 							if (mtd != null && mtd.exists()) {
 								signature = mtd.getReturnType();
 								element = mtd;
@@ -117,7 +118,7 @@ public class ELHyperlinkDetector extends AbstractHyperlinkDetector {
 						}
 					} else {
 						String methodname = membername.substring(0, paren);
-						IMethod mtd = find(found, methodname);
+						IMethod mtd = TypeUtil.getAccesserMethod(found, methodname);
 						if (mtd != null && mtd.exists()) {
 							signature = mtd.getReturnType();
 							element = mtd;
@@ -142,15 +143,6 @@ public class ELHyperlinkDetector extends AbstractHyperlinkDetector {
 		}
 		IRegion region = new Region(begin + dot + 1, maybeEL.length() - dot - 1);
 		return new ELHyperlink(region, method);
-	}
-
-	protected IMethod find(IType found, String name) throws CoreException {
-		for (IMethod m : found.getMethods()) {
-			if (m.getElementName().equals(name)) {
-				return m;
-			}
-		}
-		return null;
 	}
 
 	protected IHyperlink createLink(int offset, int length, IJavaElement element) {
