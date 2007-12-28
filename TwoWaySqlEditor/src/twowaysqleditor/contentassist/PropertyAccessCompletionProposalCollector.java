@@ -2,6 +2,7 @@ package twowaysqleditor.contentassist;
 
 import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
 
 public class PropertyAccessCompletionProposalCollector extends
@@ -33,25 +34,30 @@ public class PropertyAccessCompletionProposalCollector extends
 							.getCompletionLocation());
 			newone.setAdditionalFlags(proposal.getAdditionalFlags());
 			char[] old = proposal.getCompletion();
-			char[] comp = new char[old.length - 3];
+			char[] comp = new char[String.valueOf(old).indexOf('(') - 3];
 			System.arraycopy(old, 3, comp, 0, comp.length);
 			comp[0] = Character.toLowerCase(comp[0]);
-
-			System.out.println(String.valueOf(comp));
-
 			newone.setCompletion(comp);
 			newone.setDeclarationKey(proposal.getDeclarationKey());
 			newone.setDeclarationSignature(proposal.getDeclarationSignature());
 			newone.setFlags(proposal.getFlags());
 			newone.setKey(proposal.getKey());
-			newone.setName(proposal.getName());
+			old = proposal.getName();
+			char[] name = new char[old.length - 3];
+			System.arraycopy(old, 3, name, 0, name.length);
+			name[0] = Character.toLowerCase(name[0]);
+			newone.setName(name);
 			newone.setRelevance(proposal.getRelevance());
 			newone.setRequiredProposals(proposal.getRequiredProposals());
-			newone.setSignature(proposal.getSignature());
+			old = Signature.getSignatureSimpleName(proposal.getSignature());
+			char[] sig = new char[String.valueOf(old).indexOf('(')];
+			System.arraycopy(old, 0, sig, 0, sig.length);
+			newone.setSignature(Signature.createCharArrayTypeSignature(sig,
+					true));
 			newone.setTokenRange(proposal.getTokenStart(), proposal
 					.getTokenEnd());
-			int startIndex = proposal.getReplaceStart() + baseOffset - 3;
-			newone.setReplaceRange(startIndex, proposal.getReplaceEnd() - 3);
+			newone.setReplaceRange(proposal.getReplaceStart(), proposal
+					.getReplaceEnd());
 			proposal = newone;
 		}
 		return super.createJavaCompletionProposal(proposal);
