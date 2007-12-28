@@ -109,7 +109,7 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor {
 				}
 			}
 		}
-		if (backto.charAt(backto.length() - 1) == '.') {
+		if (0 < backto.length() && backto.charAt(backto.length() - 1) == '.') {
 			stb.append('.');
 		}
 		return stb.toString();
