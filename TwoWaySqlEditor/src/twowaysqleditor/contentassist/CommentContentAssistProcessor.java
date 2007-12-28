@@ -2,6 +2,7 @@ package twowaysqleditor.contentassist;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
@@ -49,7 +50,6 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor {
 			}
 
 			String prefix = createPrefix(backto);
-			System.out.println(prefix);
 			DummyCompilationUnit dummy = DummyCompilationUnit.create(prefix,
 					context.getMethod());
 			if (dummy == null) {
@@ -88,9 +88,11 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor {
 		stb.append(split[0]);
 		for (int i = 1; i < split.length; i++) {
 			IField f = type.getField(split[i]);
-			if (f != null && f.exists()) {
+			if (f != null && f.exists() && Flags.isPublic(f.getFlags())) {
 				stb.append('.');
 				stb.append(split[i]);
+				type = project.findType(TypeUtil.getResolvedTypeName(f
+						.getTypeSignature(), type));
 			} else {
 				StringBuilder sb = new StringBuilder(split[i]);
 				char ch = Character.toUpperCase(sb.charAt(0));
