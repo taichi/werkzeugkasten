@@ -13,7 +13,6 @@ import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.hyperlink.URLHyperlinkDetector;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
@@ -146,8 +145,7 @@ public class SqlConfiguration extends SourceViewerConfiguration {
 	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		if (sourceViewer != null) {
-			return new IHyperlinkDetector[] { new URLHyperlinkDetector(),
-					new ELHyperlinkDetector(context) };
+			return new IHyperlinkDetector[] { new ELHyperlinkDetector(context) };
 		}
 		return null;
 	}
