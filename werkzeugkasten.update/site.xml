@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/werkzeugkasten.dblauncher.feature_0.0.6.jar" id="werkzeugkasten.dblauncher.feature" version="0.0.6">
+   <feature url="features/werkzeugkasten.dblauncher.feature_0.0.7.jar" id="werkzeugkasten.dblauncher.feature" version="0.0.7">
       <category name="DbLauncher"/>
    </feature>
    <feature url="features/werkzeugkasten.weblauncher.feature_0.0.6.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.6">
