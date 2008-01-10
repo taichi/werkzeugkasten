@@ -5,6 +5,8 @@ import java.io.File;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import werkzeugkasten.common.ui.ImageLoader;
+import werkzeugkasten.synchronizer.nls.Images;
 import werkzeugkasten.synchronizer.server.JettyLauncher;
 
 /**
@@ -34,6 +36,7 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		ImageLoader.load(this, Images.class);
 		File file = new File(context.getDataFile(""), "workdir");
 		this.launcher = new JettyLauncher(file);
 	}
@@ -45,8 +48,9 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
-		super.stop(context);
+		ImageLoader.unload(this, Images.class);
 		this.launcher.stop();
+		super.stop(context);
 	}
 
 	/**
