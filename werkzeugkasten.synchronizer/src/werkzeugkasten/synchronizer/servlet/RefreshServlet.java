@@ -53,6 +53,7 @@ public class RefreshServlet extends HttpServlet {
 			}
 			if (i < 1) {
 				list.add(new RefreshTask(root, IResource.DEPTH_INFINITE));
+				w.println("workspace all refresh");
 			}
 			new WorkspaceJob(Strings.MSG_REFRESH_RESOURCE) {
 				@Override

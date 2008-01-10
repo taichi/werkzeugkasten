@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
+import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.synchronizer.Activator;
 
 public class ListServlet extends HttpServlet {
@@ -36,8 +37,9 @@ public class ListServlet extends HttpServlet {
 				String s = e.nextElement().toString();
 				IResource r = root.findMember(s);
 				if (r != null && r.exists()) {
-					if (r.getType() == IResource.FOLDER) {
-						println(w, (IContainer) r);
+					IContainer c = AdaptableUtil.to(r, IContainer.class);
+					if (c != null) {
+						println(w, c);
 					} else {
 						w.println(r.getFullPath());
 					}

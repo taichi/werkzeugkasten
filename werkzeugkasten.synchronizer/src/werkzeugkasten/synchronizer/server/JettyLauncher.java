@@ -13,7 +13,7 @@ import werkzeugkasten.synchronizer.servlet.RefreshServlet;
 
 public class JettyLauncher {
 
-	public static final int DEFAULT_HTTP_PORT = 80386;
+	public static final int DEFAULT_HTTP_PORT = 8386;
 
 	protected File workDir;
 
