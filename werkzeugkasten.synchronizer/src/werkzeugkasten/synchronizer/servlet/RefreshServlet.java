@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -53,7 +54,9 @@ public class RefreshServlet extends HttpServlet {
 			}
 			if (i < 1) {
 				list.add(new RefreshTask(root, IResource.DEPTH_INFINITE));
-				w.println("workspace all refresh");
+				for (IProject p : root.getProjects()) {
+					w.println(p.getName());
+				}
 			}
 			new WorkspaceJob(Strings.MSG_REFRESH_RESOURCE) {
 				@Override

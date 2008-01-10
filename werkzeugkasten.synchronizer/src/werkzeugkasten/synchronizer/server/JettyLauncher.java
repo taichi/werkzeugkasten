@@ -29,9 +29,9 @@ public class JettyLauncher {
 			ContextHandlerCollection contexts = new ContextHandlerCollection();
 			server.setHandler(contexts);
 			Context root = new Context(contexts, "/", Context.NO_SESSIONS);
-			root
-					.addServlet(new ServletHolder(new RefreshServlet()),
-							"/refresh");
+			ServletHolder refresh = new ServletHolder(new RefreshServlet());
+			root.addServlet(refresh, "/");
+			root.addServlet(refresh, "/refresh");
 			root.addServlet(new ServletHolder(new ListServlet()), "/list");
 			try {
 				server.start();
