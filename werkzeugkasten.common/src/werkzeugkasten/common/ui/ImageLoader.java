@@ -37,14 +37,15 @@ public class ImageLoader {
 				continue;
 			}
 			String key = field.getName();
-			if (rb.containsKey(key) == false) {
+			String path = rb.getString(key);
+			if (path == null || path.length() < 1) {
 				log(plugin, key + " not found in " + name);
 				continue;
 			}
 			ImageDescriptor id = registry.getDescriptor(key);
 			if (id == null) {
 				id = ImageDescriptor.createFromURL(FileLocator.find(plugin
-						.getBundle(), new Path(rb.getString(key)), null));
+						.getBundle(), new Path(path), null));
 				registry.put(key, id);
 			} else {
 				log(plugin, key + " is already registered [" + holder + "]");
