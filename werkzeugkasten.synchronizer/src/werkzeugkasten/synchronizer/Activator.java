@@ -5,6 +5,7 @@ import java.io.File;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import werkzeugkasten.common.resource.LogUtil;
 import werkzeugkasten.common.ui.ImageLoader;
 import werkzeugkasten.synchronizer.nls.Images;
 import werkzeugkasten.synchronizer.server.JettyLauncher;
@@ -63,7 +64,7 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public static void log(Throwable throwable) {
-
+		LogUtil.log(getDefault(), throwable);
 	}
 
 	public static void startServer() {
