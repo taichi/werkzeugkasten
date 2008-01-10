@@ -5,6 +5,7 @@ Bundle-SymbolicName: werkzeugkasten.synchronizer
 Bundle-Version: 1.0.0
 Bundle-Activator: werkzeugkasten.synchronizer.Activator
 Require-Bundle: org.eclipse.ui,
+ org.eclipse.ui.ide,
  org.eclipse.core.runtime,
  org.eclipse.core.resources
 Eclipse-LazyStart: true
