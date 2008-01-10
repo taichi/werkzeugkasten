@@ -5,7 +5,8 @@
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="werkzeugkasten.synchronizer.actionSet1"
-            label="%plugin.label">
+            label="%plugin.label"
+            visible="true">
          <menu
                id="werkzeugkasten.synchronizer.menu"
                label="%plugin.label">
@@ -22,6 +23,12 @@
                toolbarPath="werkzeugkasten.synchronizer.menu/werkzeugkasten.synchronizer.groupMarker">
          </action>
       </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="werkzeugkasten.synchronizer.startup.ServerStartup">
+      </startup>
    </extension>
 
 </plugin>

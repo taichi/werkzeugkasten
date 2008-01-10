@@ -7,7 +7,8 @@ Bundle-Activator: werkzeugkasten.synchronizer.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.core.runtime,
- org.eclipse.core.resources
+ org.eclipse.core.resources,
+ org.eclipse.debug.core
 Eclipse-LazyStart: true
 Bundle-Localization: plugin
 Bundle-Vendor: %plugin.author

@@ -3,17 +3,16 @@ package werkzeugkasten.synchronizer.action;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
+import werkzeugkasten.common.action.EnablerAction;
 import werkzeugkasten.synchronizer.Activator;
 import werkzeugkasten.synchronizer.job.StartServerJob;
 import werkzeugkasten.synchronizer.job.StopServerJob;
 import werkzeugkasten.synchronizer.nls.Images;
 import werkzeugkasten.synchronizer.nls.Strings;
 
-public class ToggleServerAction implements IWorkbenchWindowActionDelegate {
+public class ToggleServerAction extends EnablerAction {
 
 	private interface Strategy {
 
@@ -67,12 +66,22 @@ public class ToggleServerAction implements IWorkbenchWindowActionDelegate {
 		current = start;
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
-
+		super.init(window);
+		Activator.setToggleAction(this);
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
-
+	@Override
+	public synchronized boolean checkEnabled() {
+		if (Activator.isRunning()) {
+			current = stop;
+		} else {
+			current = start;
+		}
+		delegate.setText(current.getText());
+		delegate.setImageDescriptor(current.getImage());
+		return true;
 	}
 
 	public void run(IAction action) {
@@ -88,10 +97,6 @@ public class ToggleServerAction implements IWorkbenchWindowActionDelegate {
 		} catch (CoreException e) {
 			Activator.log(e);
 		}
-	}
-
-	public void dispose() {
-
 	}
 
 }

@@ -41,6 +41,10 @@ public class JettyLauncher {
 		}
 	}
 
+	public boolean isRunning() {
+		return this.server != null && this.server.isRunning();
+	}
+
 	public void stop() {
 		if (this.server != null && this.server.isRunning()) {
 			try {

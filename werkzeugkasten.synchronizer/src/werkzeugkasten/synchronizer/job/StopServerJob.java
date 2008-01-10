@@ -18,10 +18,12 @@ public class StopServerJob extends WorkspaceJob {
 	@Override
 	public IStatus runInWorkspace(IProgressMonitor monitor)
 			throws CoreException {
-		monitor.beginTask(Strings.MSG_STOP_SERVER, 2);
+		monitor.beginTask(Strings.MSG_STOP_SERVER, 3);
 		monitor.worked(1);
 		try {
 			Activator.stopServer();
+			monitor.worked(1);
+			Activator.refreshToggleAction();
 		} finally {
 			monitor.worked(1);
 			monitor.done();

@@ -7,6 +7,7 @@ import org.osgi.framework.BundleContext;
 
 import werkzeugkasten.common.resource.LogUtil;
 import werkzeugkasten.common.ui.ImageLoader;
+import werkzeugkasten.synchronizer.action.ToggleServerAction;
 import werkzeugkasten.synchronizer.nls.Images;
 import werkzeugkasten.synchronizer.server.JettyLauncher;
 
@@ -23,6 +24,8 @@ public class Activator extends AbstractUIPlugin {
 
 	private JettyLauncher launcher;
 
+	private ToggleServerAction toggleaction;
+
 	/**
 	 * The constructor
 	 */
@@ -34,6 +37,7 @@ public class Activator extends AbstractUIPlugin {
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
@@ -47,6 +51,7 @@ public class Activator extends AbstractUIPlugin {
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		ImageLoader.unload(this, Images.class);
@@ -71,7 +76,22 @@ public class Activator extends AbstractUIPlugin {
 		getDefault().launcher.start();
 	}
 
+	public static boolean isRunning() {
+		return getDefault().launcher.isRunning();
+	}
+
 	public static void stopServer() {
 		getDefault().launcher.stop();
+	}
+
+	public static void setToggleAction(ToggleServerAction action) {
+		getDefault().toggleaction = action;
+	}
+
+	public static void refreshToggleAction() {
+		ToggleServerAction action = getDefault().toggleaction;
+		if (action != null) {
+			action.checkEnabled();
+		}
 	}
 }
