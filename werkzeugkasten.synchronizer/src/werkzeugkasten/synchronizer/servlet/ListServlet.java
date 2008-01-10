@@ -22,6 +22,12 @@ public class ListServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 7952653999813317193L;
 
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		this.doGet(req, resp);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void doGet(HttpServletRequest request,

@@ -30,6 +30,12 @@ public class RefreshServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -7685837059141908646L;
 
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		this.doGet(req, resp);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void doGet(HttpServletRequest request,
