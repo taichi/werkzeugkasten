@@ -10,6 +10,7 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import werkzeugkasten.synchronizer.Activator;
 import werkzeugkasten.synchronizer.servlet.ListServlet;
 import werkzeugkasten.synchronizer.servlet.RefreshServlet;
+import werkzeugkasten.synchronizer.servlet.SrcLocationServlet;
 
 public class JettyLauncher {
 
@@ -33,6 +34,9 @@ public class JettyLauncher {
 			root.addServlet(refresh, "/");
 			root.addServlet(refresh, "/refresh");
 			root.addServlet(new ServletHolder(new ListServlet()), "/list");
+			root
+					.addServlet(new ServletHolder(new SrcLocationServlet()),
+							"/src");
 			try {
 				server.start();
 			} catch (Exception e) {
