@@ -43,6 +43,9 @@ public class Activator extends AbstractUIPlugin {
 		plugin = this;
 		ImageLoader.load(this, Images.class);
 		File file = new File(context.getDataFile(""), "workdir");
+		if (file.exists() == false) {
+			file.mkdirs();
+		}
 		this.launcher = new JettyLauncher(file);
 	}
 

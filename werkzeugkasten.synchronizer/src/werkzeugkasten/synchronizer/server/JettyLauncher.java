@@ -34,9 +34,8 @@ public class JettyLauncher {
 			root.addServlet(refresh, "/");
 			root.addServlet(refresh, "/refresh");
 			root.addServlet(new ServletHolder(new ListServlet()), "/list");
-			root
-					.addServlet(new ServletHolder(new SrcLocationServlet()),
-							"/src");
+			root.addServlet(new ServletHolder(new SrcLocationServlet()),
+					"/srcloc");
 			try {
 				server.start();
 			} catch (Exception e) {
