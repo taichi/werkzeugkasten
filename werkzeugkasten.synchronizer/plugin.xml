@@ -16,7 +16,7 @@
          </menu>
          <action
                class="werkzeugkasten.synchronizer.action.ToggleServerAction"
-               icon="icons/start.gif"
+               icon="icons/refresh_start.gif"
                id="werkzeugkasten.synchronizer.action.toggle"
                label="%start"
                menubarPath="werkzeugkasten.synchronizer.menu/werkzeugkasten.synchronizer.groupMarker"
