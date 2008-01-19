@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.werkzeugkasten.core.web.RequestCoordinator;
 
-public abstract class ServletRequestCoordinator
-		implements
-		RequestCoordinator<ServletContext, HttpServletRequest, HttpServletResponse, ServletWebContext<Void>, ServletAction> {
+public interface ServletRequestCoordinator<CTL>
+		extends
+		RequestCoordinator<ServletContext, HttpServletRequest, HttpServletResponse, ServletWebContext<Void>, CTL, ServletAction> {
 
 }

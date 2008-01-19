@@ -5,7 +5,7 @@ import java.io.OutputStream;
 
 public interface Finder<APP, REQ, RES, CTX extends WebContext<APP, REQ, RES, Void>> {
 
-	Renderer<APP, REQ, RES, CTX> json();
+	Renderer<APP, REQ, RES, CTX> json(Object obj);
 
 	Renderer<APP, REQ, RES, CTX> xml();
 

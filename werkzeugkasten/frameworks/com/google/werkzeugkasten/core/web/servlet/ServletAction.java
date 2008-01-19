@@ -5,12 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.werkzeugkasten.core.web.Action;
-import com.google.werkzeugkasten.core.web.Renderer;
 
-public class ServletAction
+public interface ServletAction
 		extends
-		ServletWebContext<Renderer<ServletContext, HttpServletRequest, HttpServletResponse, ServletWebContext<Void>>>
-		implements
 		Action<ServletContext, HttpServletRequest, HttpServletResponse, ServletWebContext<Void>> {
 
 }

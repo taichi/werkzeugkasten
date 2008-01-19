@@ -1,6 +1,8 @@
 package com.google.werkzeugkasten.core.web;
 
-public interface Renderer<APP, REQ, RES, CTX extends WebContext<APP, REQ, RES, Void>> {
+import com.google.werkzeugkasten.meta.Chain;
 
-	void render(CTX context);
+public interface Renderer<APP, REQ, RES, CTX extends WebContext<APP, REQ, RES, Void>>
+		extends Chain<Void, CTX> {
+
 }
