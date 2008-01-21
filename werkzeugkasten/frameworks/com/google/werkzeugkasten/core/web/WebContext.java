@@ -1,8 +1,9 @@
 package com.google.werkzeugkasten.core.web;
 
+import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.meta.ChainContext;
 
-public interface WebContext<APP, REQ, RES> extends ChainContext<Void> {
+public interface WebContext<APP, REQ, RES> extends ChainContext<_> {
 
 	APP getApplication();
 
