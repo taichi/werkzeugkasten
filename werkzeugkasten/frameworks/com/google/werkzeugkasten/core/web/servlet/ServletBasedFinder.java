@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.werkzeugkasten.core.web.Finder;
 
-public interface ServletBasedFinder extends
-		Finder<ServletContext, HttpServletRequest, HttpServletResponse> {
+public interface ServletBasedFinder<CTX extends ServletWebContext> extends
+		Finder<ServletContext, HttpServletRequest, HttpServletResponse, CTX> {
 
 }
