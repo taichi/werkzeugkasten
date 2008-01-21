@@ -13,7 +13,7 @@ import com.google.werkzeugkasten.core.web.servlet.ServletBasedFinder;
 import com.google.werkzeugkasten.core.web.servlet.ServletBasedRenderer;
 import com.google.werkzeugkasten.core.web.servlet.ServletWebContext;
 
-@WebController
+@WebController(context = ServletWebContext.class)
 public class HogeController {
 
 	@ActivateUrl("/hoge/get")
