@@ -1,11 +1,10 @@
 package com.google.werkzeugkasten.core.web;
 
-import com.google.werkzeugkasten.meta.Chain;
+import com.google.werkzeugkasten.meta.Executable;
 import com.google.werkzeugkasten.meta.Initializable.Initialize;
 
-public interface Action<APP, REQ, RES, CTX extends WebContext<APP, REQ, RES, Void>>
-		extends
-		Chain<Renderer<APP, REQ, RES, CTX>, WebContext<APP, REQ, RES, Renderer<APP, REQ, RES, CTX>>> {
+public interface Action<APP, REQ, RES> extends
+		Executable<Renderer<APP, REQ, RES>, WebContext<APP, REQ, RES>> {
 
 	@Initialize
 	void initialize(String pattern, RequestMethod[] methods);

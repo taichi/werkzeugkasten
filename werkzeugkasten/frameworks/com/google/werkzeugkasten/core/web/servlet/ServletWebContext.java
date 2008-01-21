@@ -9,9 +9,9 @@ import com.google.werkzeugkasten.meta.Disposable;
 import com.google.werkzeugkasten.meta.Initializable.Initialize;
 import com.google.werkzeugkasten.meta.impl.AbstractChainContext;
 
-public class ServletWebContext<R> extends
-		AbstractChainContext<R, ServletWebContext<R>> implements
-		WebContext<ServletContext, HttpServletRequest, HttpServletResponse, R>,
+public class ServletWebContext extends
+		AbstractChainContext<Void, ServletWebContext> implements
+		WebContext<ServletContext, HttpServletRequest, HttpServletResponse>,
 		Disposable {
 
 	protected ServletContext application;

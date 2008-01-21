@@ -17,7 +17,7 @@ import com.google.werkzeugkasten.core.web.servlet.ServletWebContext;
 public class HogeController {
 
 	@ActivateUrl("/hoge/get")
-	public String get(ServletWebContext<String> ctx, ServletBasedFinder finder) {
+	public String get(ServletWebContext ctx, ServletBasedFinder finder) {
 		return null;
 	}
 

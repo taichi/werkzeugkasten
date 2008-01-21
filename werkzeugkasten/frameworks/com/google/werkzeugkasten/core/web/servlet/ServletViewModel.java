@@ -4,9 +4,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.werkzeugkasten.core.web.Finder;
+import com.google.werkzeugkasten.core.web.ViewModel;
 
-public interface ServletBasedFinder extends
-		Finder<ServletContext, HttpServletRequest, HttpServletResponse> {
+public interface ServletViewModel
+		extends
+		ViewModel<ServletContext, HttpServletRequest, HttpServletResponse, ServletWebContext> {
 
 }

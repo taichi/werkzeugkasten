@@ -1,10 +1,14 @@
 package aa.bb.cc.web.hoge.autogen;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import aa.bb.cc.web.hoge.HogeController;
 
-import com.google.werkzeugkasten.core.web.servlet.ServletAction;
+import com.google.werkzeugkasten.core.web.Action;
+import com.google.werkzeugkasten.core.web.WebContext;
 import com.google.werkzeugkasten.core.web.servlet.ServletRequestCoordinator;
-import com.google.werkzeugkasten.core.web.servlet.ServletWebContext;
 
 public class HogeRequestCoordinator implements
 		ServletRequestCoordinator<HogeController> {
@@ -14,7 +18,9 @@ public class HogeRequestCoordinator implements
 
 	}
 
-	public ServletAction coordinate(ServletWebContext<Void> context) {
+	public Action<ServletContext, HttpServletRequest, HttpServletResponse> execute(
+			WebContext<ServletContext, HttpServletRequest, HttpServletResponse> parameter) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

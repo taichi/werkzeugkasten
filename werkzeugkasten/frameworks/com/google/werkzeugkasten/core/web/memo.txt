@@ -1,0 +1,6 @@
+URLによるルーティング
+ViewModel生成
+Validation
+Controllerインスタンス生成
+Actionへのディスパッチ
+Rendererによる結果のレンダリング

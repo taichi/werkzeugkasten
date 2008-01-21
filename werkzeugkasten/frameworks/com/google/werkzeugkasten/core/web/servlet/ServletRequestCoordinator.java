@@ -8,6 +8,6 @@ import com.google.werkzeugkasten.core.web.RequestCoordinator;
 
 public interface ServletRequestCoordinator<CTL>
 		extends
-		RequestCoordinator<ServletContext, HttpServletRequest, HttpServletResponse, ServletWebContext<Void>, CTL, ServletAction> {
+		RequestCoordinator<ServletContext, HttpServletRequest, HttpServletResponse, CTL> {
 
 }

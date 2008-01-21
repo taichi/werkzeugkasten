@@ -5,7 +5,7 @@ import com.google.werkzeugkasten.core.dao.jdbc.DataSourceChain.DataSource;
 @DataSource
 public interface EmpDao {
 
-	void insert(Emp e);
+	int insert(Emp e);
 
 	Emp select(int id);
 }

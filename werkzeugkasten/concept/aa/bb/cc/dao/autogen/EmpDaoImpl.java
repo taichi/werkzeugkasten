@@ -14,7 +14,7 @@ public class EmpDaoImpl implements EmpDao {
 		return null;
 	}
 
-	public void insert(Emp e) {
+	public int insert(Emp e) {
 		EmpDao_insertBuilder builder = new EmpDao_insertBuilder();
 		EmpDaoContext<Integer> ctx = builder.build();
 		ctx.initialize(e);
@@ -24,6 +24,6 @@ public class EmpDaoImpl implements EmpDao {
 		// bind
 		// executeQuery
 		// mapping
-		ctx.execute();
+		return ctx.execute();
 	}
 }
