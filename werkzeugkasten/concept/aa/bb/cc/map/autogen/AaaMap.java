@@ -10,17 +10,17 @@ import com.google.werkzeugkasten.core.map.MapDescriptor;
 
 public class AaaMap extends BeansMap<Aaa> {
 
-	private static Map<String, MapDescriptor<Aaa>> descriptors;
+	private static Map<String, MapDescriptor<Aaa>> sharedDescriptors;
 
 	static {
-		descriptors = new HashMap<String, MapDescriptor<Aaa>>(3);
-		descriptors.put("bbb", new Bbb());
-		descriptors.put("ccc", new Ccc());
-		descriptors.put("ddd", new Ddd());
+		sharedDescriptors = new HashMap<String, MapDescriptor<Aaa>>(3);
+		sharedDescriptors.put("bbb", new Bbb());
+		sharedDescriptors.put("ccc", new Ccc());
+		sharedDescriptors.put("ddd", new Ddd());
 	}
 
 	public AaaMap(Aaa t) {
-		super(t, descriptors);
+		super(t, sharedDescriptors);
 	}
 
 	private static class Bbb implements MapDescriptor<Aaa> {
@@ -56,6 +56,7 @@ public class AaaMap extends BeansMap<Aaa> {
 			return target.getDdd();
 		}
 
+		@SuppressWarnings("unchecked")
 		public void set(Aaa target, Object value) {
 			if (value instanceof Map) {
 				target.setDdd((Map) value);
