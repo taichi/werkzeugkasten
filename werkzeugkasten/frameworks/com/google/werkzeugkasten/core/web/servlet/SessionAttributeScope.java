@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.google.werkzeugkasten.core.web.ScopeProvider;
+import com.google.werkzeugkasten.meta.ScopeProvider;
 
 public class SessionAttributeScope<CTX extends ServletWebContext>
 		implements

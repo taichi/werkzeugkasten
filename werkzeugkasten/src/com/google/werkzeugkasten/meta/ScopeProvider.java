@@ -1,4 +1,6 @@
-package com.google.werkzeugkasten.core.web;
+package com.google.werkzeugkasten.meta;
+
+import com.google.werkzeugkasten.core.web.WebContext;
 
 public interface ScopeProvider<APP, REQ, RES, CTX extends WebContext<APP, REQ, RES>> {
 

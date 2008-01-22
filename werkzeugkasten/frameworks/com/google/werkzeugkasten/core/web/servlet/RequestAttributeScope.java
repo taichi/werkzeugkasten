@@ -4,7 +4,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.werkzeugkasten.core.web.ScopeProvider;
+import com.google.werkzeugkasten.meta.ScopeProvider;
 
 public class RequestAttributeScope<CTX extends ServletWebContext>
 		implements

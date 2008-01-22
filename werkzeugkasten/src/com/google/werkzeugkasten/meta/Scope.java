@@ -1,4 +1,4 @@
-package com.google.werkzeugkasten.core.web;
+package com.google.werkzeugkasten.meta;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
