@@ -9,7 +9,7 @@ public interface Executable<R, P> {
 
 	R execute(P parameter);
 
-	@Retention(RetentionPolicy.CLASS)
+	@Retention(RetentionPolicy.SOURCE)
 	@Target(ElementType.METHOD)
 	public @interface Execute {
 	}

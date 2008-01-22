@@ -9,7 +9,7 @@ public interface Initializable {
 
 	void initialize();
 
-	@Retention(RetentionPolicy.CLASS)
+	@Retention(RetentionPolicy.SOURCE)
 	@Target(ElementType.METHOD)
 	public @interface Initialize {
 	}

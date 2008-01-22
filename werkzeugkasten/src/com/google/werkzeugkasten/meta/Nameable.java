@@ -9,7 +9,7 @@ public interface Nameable {
 
 	String getName();
 
-	@Retention(RetentionPolicy.CLASS)
+	@Retention(RetentionPolicy.SOURCE)
 	@Target(ElementType.TYPE)
 	public @interface Name {
 		String value();

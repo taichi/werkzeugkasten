@@ -9,7 +9,7 @@ public interface Disposable {
 
 	void dispose();
 
-	@Retention(RetentionPolicy.CLASS)
+	@Retention(RetentionPolicy.SOURCE)
 	@Target(ElementType.METHOD)
 	public @interface Dispose {
 	}

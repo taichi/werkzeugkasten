@@ -11,7 +11,7 @@ public interface Container {
 
 	<T> void put(Object key, T component);
 
-	@Retention(RetentionPolicy.CLASS)
+	@Retention(RetentionPolicy.SOURCE)
 	@Target(ElementType.PARAMETER)
 	public @interface Query {
 		boolean failOnError() default false;
