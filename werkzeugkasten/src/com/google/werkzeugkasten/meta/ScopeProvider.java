@@ -1,13 +1,12 @@
 package com.google.werkzeugkasten.meta;
 
-import com.google.werkzeugkasten.core.web.WebContext;
 
-public interface ScopeProvider<APP, REQ, RES, CTX extends WebContext<APP, REQ, RES>> {
+public interface ScopeProvider<R, CTX extends ChainContext<R>> {
 
 	Object get(CTX context, String key);
 
-	interface Writable<APP, REQ, RES, CTX extends WebContext<APP, REQ, RES>>
-			extends ScopeProvider<APP, REQ, RES, CTX> {
+	interface Writable<R, CTX extends ChainContext<R>> extends
+			ScopeProvider<R, CTX> {
 		void set(CTX context, String key, Object value);
 	}
 }

@@ -1,14 +1,12 @@
 package com.google.werkzeugkasten.core.web.servlet;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.meta.ScopeProvider;
 
-public class RequestAttributeScope<CTX extends ServletWebContext>
-		implements
-		ScopeProvider.Writable<ServletContext, HttpServletRequest, HttpServletResponse, CTX> {
+public class RequestAttributeScope<CTX extends ServletWebContext> implements
+		ScopeProvider.Writable<_, CTX> {
 
 	public Object get(CTX context, String key) {
 		HttpServletRequest req = context.getRequest();
