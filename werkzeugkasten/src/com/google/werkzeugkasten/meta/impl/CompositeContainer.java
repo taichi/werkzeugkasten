@@ -3,7 +3,11 @@ package com.google.werkzeugkasten.meta.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompositeContainer extends AbstractContainer {
+import com.google.werkzeugkasten.meta.Container;
+import com.google.werkzeugkasten.meta.Disposable;
+import com.google.werkzeugkasten.meta.Initializable;
+
+public class CompositeContainer implements Container, Initializable, Disposable {
 
 	protected List<AbstractContainer> containers = new ArrayList<AbstractContainer>();
 
@@ -21,5 +25,15 @@ public class CompositeContainer extends AbstractContainer {
 
 	public void add(AbstractContainer container) {
 		this.containers.add(container);
+	}
+
+	public <T> T get(Object key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public <T> void put(Object key, T component) {
+		// TODO Auto-generated method stub
+
 	}
 }
