@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 public @interface Scope {
 
 	@SuppressWarnings("unchecked")
-	Class<? extends ScopeProvider> value();
+	Class<? extends ScopeProvider>[] value();
 }

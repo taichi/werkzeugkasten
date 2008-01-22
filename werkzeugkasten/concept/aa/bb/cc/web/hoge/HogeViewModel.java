@@ -8,7 +8,7 @@ import com.google.werkzeugkasten.core.web.servlet.SessionAttributeScope;
 @Scope(RequestAttributeScope.class)
 public interface HogeViewModel {
 
-	@Scope(RequestParameterScope.class)
+	@Scope( { RequestParameterScope.class, SessionAttributeScope.class })
 	int getId();
 
 	@Scope(SessionAttributeScope.class)
