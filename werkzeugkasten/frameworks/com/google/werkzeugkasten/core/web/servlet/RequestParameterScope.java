@@ -6,11 +6,10 @@ import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.meta.ScopeProvider;
 
 public class RequestParameterScope<CTX extends ServletWebContext> implements
-		ScopeProvider<_, CTX> {
+		ScopeProvider<Object, _, CTX> {
 
 	public Object get(CTX context, String key) {
 		HttpServletRequest req = context.getRequest();
 		return req.getParameter(key);
 	}
-
 }

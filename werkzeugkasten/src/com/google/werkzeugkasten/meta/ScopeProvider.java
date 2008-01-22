@@ -1,12 +1,11 @@
 package com.google.werkzeugkasten.meta;
 
+public interface ScopeProvider<T, R, CTX extends ChainContext<R>> {
 
-public interface ScopeProvider<R, CTX extends ChainContext<R>> {
+	T get(CTX context, String key);
 
-	Object get(CTX context, String key);
-
-	interface Writable<R, CTX extends ChainContext<R>> extends
-			ScopeProvider<R, CTX> {
-		void set(CTX context, String key, Object value);
+	interface Writable<T, R, CTX extends ChainContext<R>> extends
+			ScopeProvider<T, R, CTX> {
+		void set(CTX context, String key, T value);
 	}
 }

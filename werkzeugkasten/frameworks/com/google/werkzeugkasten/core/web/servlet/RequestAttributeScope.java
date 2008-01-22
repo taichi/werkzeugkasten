@@ -6,7 +6,7 @@ import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.meta.ScopeProvider;
 
 public class RequestAttributeScope<CTX extends ServletWebContext> implements
-		ScopeProvider.Writable<_, CTX> {
+		ScopeProvider.Writable<Object, _, CTX> {
 
 	public Object get(CTX context, String key) {
 		HttpServletRequest req = context.getRequest();
@@ -17,5 +17,4 @@ public class RequestAttributeScope<CTX extends ServletWebContext> implements
 		HttpServletRequest req = context.getRequest();
 		req.setAttribute(key, value);
 	}
-
 }

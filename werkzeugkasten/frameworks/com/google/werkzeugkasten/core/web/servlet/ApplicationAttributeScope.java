@@ -6,7 +6,7 @@ import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.meta.ScopeProvider;
 
 public class ApplicationAttributeScope<CTX extends ServletWebContext>
-		implements ScopeProvider.Writable<_, CTX> {
+		implements ScopeProvider.Writable<Object, _, CTX> {
 
 	public Object get(CTX context, String key) {
 		ServletContext sc = context.getApplication();
@@ -17,5 +17,4 @@ public class ApplicationAttributeScope<CTX extends ServletWebContext>
 		ServletContext sc = context.getApplication();
 		sc.setAttribute(key, value);
 	}
-
 }

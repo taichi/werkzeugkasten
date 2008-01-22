@@ -7,7 +7,7 @@ import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.meta.ScopeProvider;
 
 public class SessionAttributeScope<CTX extends ServletWebContext> implements
-		ScopeProvider.Writable<_, CTX> {
+		ScopeProvider.Writable<Object, _, CTX> {
 
 	public Object get(CTX context, String key) {
 		HttpServletRequest req = context.getRequest();
@@ -20,5 +20,4 @@ public class SessionAttributeScope<CTX extends ServletWebContext> implements
 		HttpSession session = req.getSession();
 		session.setAttribute(key, value);
 	}
-
 }
