@@ -2,6 +2,9 @@ package aa.bb.cc.map;
 
 import java.util.Map;
 
+import com.google.werkzeugkasten.core.map.MapAdaptor;
+
+@MapAdaptor
 public class Aaa {
 
 	private int bbb;
