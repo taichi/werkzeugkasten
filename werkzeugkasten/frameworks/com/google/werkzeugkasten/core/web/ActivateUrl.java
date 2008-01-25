@@ -12,4 +12,7 @@ public @interface ActivateUrl {
 	String value();
 
 	RequestMethod[] method() default { RequestMethod.GET, RequestMethod.POST };
+
+	@SuppressWarnings("unchecked")
+	Class<? extends UriMatcher> matcher() default UriMatcher.class;
 }
