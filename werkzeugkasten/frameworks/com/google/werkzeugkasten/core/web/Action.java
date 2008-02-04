@@ -7,7 +7,7 @@ public interface Action<APP, REQ, RES, CTX extends WebContext<APP, REQ, RES>>
 		extends Executable<Renderer<APP, REQ, RES, CTX>, CTX> {
 
 	@Initialize
-	void initialize(String pattern, RequestMethod[] methods);
+	void initialize(String pattern, RequestMethod... methods);
 
 	boolean match(CTX context);
 }
