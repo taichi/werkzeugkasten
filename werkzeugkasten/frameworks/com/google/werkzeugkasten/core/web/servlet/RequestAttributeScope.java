@@ -5,15 +5,15 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.meta.ScopeProvider;
 
-public class RequestAttributeScope<CTX extends ServletWebContext> implements
-		ScopeProvider.Writable<Object, _, CTX> {
+public class RequestAttributeScope implements
+		ScopeProvider.Writable<Object, _, ServletWebContext> {
 
-	public Object get(CTX context, String key) {
+	public Object get(ServletWebContext context, String key) {
 		HttpServletRequest req = context.getRequest();
 		return req.getAttribute(key);
 	}
 
-	public void set(CTX context, String key, Object value) {
+	public void set(ServletWebContext context, String key, Object value) {
 		HttpServletRequest req = context.getRequest();
 		req.setAttribute(key, value);
 	}

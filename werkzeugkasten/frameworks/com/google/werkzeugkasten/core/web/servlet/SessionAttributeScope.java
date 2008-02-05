@@ -6,16 +6,16 @@ import javax.servlet.http.HttpSession;
 import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.meta.ScopeProvider;
 
-public class SessionAttributeScope<CTX extends ServletWebContext> implements
-		ScopeProvider.Writable<Object, _, CTX> {
+public class SessionAttributeScope implements
+		ScopeProvider.Writable<Object, _, ServletWebContext> {
 
-	public Object get(CTX context, String key) {
+	public Object get(ServletWebContext context, String key) {
 		HttpServletRequest req = context.getRequest();
 		HttpSession session = req.getSession(false);
 		return session != null ? session.getAttribute(key) : null;
 	}
 
-	public void set(CTX context, String key, Object value) {
+	public void set(ServletWebContext context, String key, Object value) {
 		HttpServletRequest req = context.getRequest();
 		HttpSession session = req.getSession();
 		session.setAttribute(key, value);

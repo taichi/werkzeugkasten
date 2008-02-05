@@ -17,25 +17,38 @@ import com.google.werkzeugkasten.meta.Initializable.Initialize;
 public class HogeControllerContext extends ServletWebContext implements
 		HogeViewModel {
 
-	protected HogeController controller;
-	protected RequestAttributeScope<HogeControllerContext> requestAttributeScope;
-	protected RequestParameterScope<HogeControllerContext> requestParameterScope;
-	protected SessionAttributeScope<HogeControllerContext> sessionAttributeScope;
+	protected RequestAttributeScope requestAttributeScope;
+	protected RequestParameterScope requestParameterScope;
+	protected SessionAttributeScope sessionAttributeScope;
 
 	@Initialize
 	void initialize(HogeController controller) {
-		this.controller = controller;
-		this.requestAttributeScope = new RequestAttributeScope<HogeControllerContext>();
-		this.requestParameterScope = new RequestParameterScope<HogeControllerContext>();
-		this.sessionAttributeScope = new SessionAttributeScope<HogeControllerContext>();
+		this.requestAttributeScope = new RequestAttributeScope();
+		this.requestParameterScope = new RequestParameterScope();
+		this.sessionAttributeScope = new SessionAttributeScope();
 	}
 
 	public int getId() {
+		String key = "id";
+		Object o = this.requestParameterScope.get(this, key);
+		if (o == null) {
+			o = this.requestAttributeScope.get(this, key);
+		}
+		if (o instanceof Integer) {
+			return (Integer) o;
+		}
+		if (o instanceof Number) {
+			return ((Number) o).intValue();
+		}
+		if (o instanceof String) {
+			return Integer.parseInt((String) o);
+		}
 		return 0;
 	}
 
 	public void setId(int id) {
-
+		String key = "id";
+		this.sessionAttributeScope.set(this, key, id);
 	}
 
 	public <CTX extends WebContext<ServletContext, HttpServletRequest, HttpServletResponse>> void validate(

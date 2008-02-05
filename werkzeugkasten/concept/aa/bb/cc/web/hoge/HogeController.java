@@ -18,8 +18,7 @@ import com.google.werkzeugkasten.core.web.servlet.ServletBasedRenderer;
 public class HogeController {
 
 	@ActivateUrl("/hoge/get")
-	public String get(HogeControllerContext ctx, ServletBasedFinder finder) {
-		ctx.validate(ctx);
+	public String get(HogeViewModel model) {
 		return null;
 	}
 
@@ -36,7 +35,7 @@ public class HogeController {
 	@ActivateUrl("/hoge/.*")
 	@Welcome
 	public ServletBasedRenderer index(HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response, ServletBasedFinder finder) {
 		return null;
 	}
 
