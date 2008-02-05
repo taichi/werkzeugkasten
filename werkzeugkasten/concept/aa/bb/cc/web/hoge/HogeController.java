@@ -13,14 +13,12 @@ import com.google.werkzeugkasten.core.web.WebController;
 import com.google.werkzeugkasten.core.web.Welcome;
 import com.google.werkzeugkasten.core.web.servlet.ServletBasedFinder;
 import com.google.werkzeugkasten.core.web.servlet.ServletBasedRenderer;
-import com.google.werkzeugkasten.core.web.servlet.ServletWebContext;
 
 @WebController(context = HogeControllerContext.class)
 public class HogeController {
 
 	@ActivateUrl("/hoge/get")
-	public String get(HogeControllerContext ctx,
-			ServletBasedFinder<HogeControllerContext> finder) {
+	public String get(HogeControllerContext ctx, ServletBasedFinder finder) {
 		ctx.validate(ctx);
 		return null;
 	}
@@ -37,8 +35,8 @@ public class HogeController {
 
 	@ActivateUrl("/hoge/.*")
 	@Welcome
-	public ServletBasedRenderer<ServletWebContext> index(
-			HttpServletRequest request, HttpServletResponse response) {
+	public ServletBasedRenderer index(HttpServletRequest request,
+			HttpServletResponse response) {
 		return null;
 	}
 

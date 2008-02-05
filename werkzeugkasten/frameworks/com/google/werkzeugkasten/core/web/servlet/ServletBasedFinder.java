@@ -9,19 +9,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.werkzeugkasten.core.web.Finder;
 
-public interface ServletBasedFinder<CTX extends ServletWebContext> extends
-		Finder<ServletContext, HttpServletRequest, HttpServletResponse, CTX> {
+public interface ServletBasedFinder extends
+		Finder<ServletContext, HttpServletRequest, HttpServletResponse> {
 
-	ServletBasedRenderer<CTX> json(Object obj);
+	ServletBasedRenderer json(Object obj);
 
-	ServletBasedRenderer<CTX> xml();
+	ServletBasedRenderer xml();
 
-	ServletBasedRenderer<CTX> file(File file);
+	ServletBasedRenderer file(File file);
 
-	ServletBasedRenderer<CTX> forward(String path);
+	ServletBasedRenderer forward(String path);
 
-	ServletBasedRenderer<CTX> redirect(String path);
+	ServletBasedRenderer redirect(String path);
 
-	ServletBasedRenderer<CTX> stream(OutputStream out);
+	ServletBasedRenderer stream(OutputStream out);
 
 }

@@ -7,7 +7,7 @@ public interface Action<APP, REQ, RES> {
 	@Initialize
 	void initialize(String pattern, RequestMethod... methods);
 
-	<CTX extends WebContext<APP, REQ, RES>> Renderer<APP, REQ, RES, CTX> execute(
+	<CTX extends WebContext<APP, REQ, RES>> Renderer<APP, REQ, RES> execute(
 			CTX context);
 
 	<CTX extends WebContext<APP, REQ, RES>> boolean match(CTX context);

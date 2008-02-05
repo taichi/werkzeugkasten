@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.werkzeugkasten.core.web.Renderer;
 
-public interface ServletBasedRenderer<CTX extends ServletWebContext> extends
-		Renderer<ServletContext, HttpServletRequest, HttpServletResponse, CTX> {
-
+public interface ServletBasedRenderer extends
+		Renderer<ServletContext, HttpServletRequest, HttpServletResponse> {
 }
