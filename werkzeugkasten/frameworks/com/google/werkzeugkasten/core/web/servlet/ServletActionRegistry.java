@@ -8,10 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.werkzeugkasten.core.web.ActionRegistry;
+import com.google.werkzeugkasten.core.web.WebContext;
 
-public class ServletActionRegistry<CTX extends ServletWebContext>
+public class ServletActionRegistry
 		implements
-		ActionRegistry<ServletContext, HttpServletRequest, HttpServletResponse, CTX, ServletAction> {
+		ActionRegistry<ServletContext, HttpServletRequest, HttpServletResponse, ServletAction> {
 
 	protected List<ServletAction> actions = new ArrayList<ServletAction>();
 
@@ -27,7 +28,8 @@ public class ServletActionRegistry<CTX extends ServletWebContext>
 		}
 	}
 
-	public ServletAction find(CTX context) {
+	public <CTX extends WebContext<ServletContext, HttpServletRequest, HttpServletResponse>> ServletAction find(
+			CTX context) {
 		for (ServletAction a : this.actions) {
 			if (a.match(context)) {
 				return a;
