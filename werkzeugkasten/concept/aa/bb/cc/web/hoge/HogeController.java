@@ -14,7 +14,7 @@ import com.google.werkzeugkasten.core.web.WebController;
 import com.google.werkzeugkasten.core.web.Welcome;
 import com.google.werkzeugkasten.core.web.servlet.ServletBasedFinder;
 import com.google.werkzeugkasten.core.web.servlet.ServletBasedRenderer;
-import com.google.werkzeugkasten.core.web.servlet.ServletBasedUriMatcher.RegEx;
+import com.google.werkzeugkasten.core.web.servlet.RequestPathMatcher.RegEx;
 
 @WebController(context = HogeControllerContext.class)
 public class HogeController {

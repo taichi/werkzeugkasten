@@ -12,7 +12,9 @@ import com.google.werkzeugkasten.core.web.WebContext;
 import com.google.werkzeugkasten.core.web.servlet.ServletAction;
 import com.google.werkzeugkasten.core.web.servlet.ServletActionRegistry;
 import com.google.werkzeugkasten.core.web.servlet.ServletBasedRenderer;
-import com.google.werkzeugkasten.core.web.servlet.ServletBasedUriMatcher;
+import com.google.werkzeugkasten.core.web.servlet.RequestPathMatcher.RegEx;
+
+;
 
 public class HogeControllerActions {
 
@@ -26,7 +28,7 @@ public class HogeControllerActions {
 
 		protected String$get$HogeViewModel() {
 			super();
-			matchers.add(new ServletBasedUriMatcher.RegEx("/hoge/get"));
+			matchers.add(new RegEx("/hoge/get"));
 			matchers.add(TRUE);
 		}
 
