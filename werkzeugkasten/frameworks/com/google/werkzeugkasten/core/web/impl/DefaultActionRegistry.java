@@ -3,6 +3,7 @@ package com.google.werkzeugkasten.core.web.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.core.web.Action;
 import com.google.werkzeugkasten.core.web.ActionRegistry;
 import com.google.werkzeugkasten.core.web.WebContext;
@@ -24,7 +25,7 @@ public class DefaultActionRegistry<APP, REQ, RES, ACT extends Action<APP, REQ, R
 		}
 	}
 
-	public <CTX extends WebContext<APP, REQ, RES>> ACT find(CTX context) {
+	public <CTX extends WebContext<APP, REQ, RES, _>> ACT find(CTX context) {
 		for (ACT a : this.actions) {
 			if (a.match(context)) {
 				return a;

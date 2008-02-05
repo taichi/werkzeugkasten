@@ -7,15 +7,15 @@ import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.meta.ScopeProvider;
 
 public class SessionAttributeScope implements
-		ScopeProvider.Writable<Object, _, ServletWebContext> {
+		ScopeProvider.Writable<Object, _, ServletWebContext<_>> {
 
-	public Object get(ServletWebContext context, String key) {
+	public Object get(ServletWebContext<_> context, String key) {
 		HttpServletRequest req = context.getRequest();
 		HttpSession session = req.getSession(false);
 		return session != null ? session.getAttribute(key) : null;
 	}
 
-	public void set(ServletWebContext context, String key, Object value) {
+	public void set(ServletWebContext<_> context, String key, Object value) {
 		HttpServletRequest req = context.getRequest();
 		HttpSession session = req.getSession();
 		session.setAttribute(key, value);

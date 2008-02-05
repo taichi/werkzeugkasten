@@ -4,15 +4,14 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.core.web.WebContext;
 import com.google.werkzeugkasten.meta.Disposable;
 import com.google.werkzeugkasten.meta.Initializable.Initialize;
 import com.google.werkzeugkasten.meta.impl.AbstractChainContext;
 
-public class ServletWebContext extends
-		AbstractChainContext<_, ServletWebContext> implements
-		WebContext<ServletContext, HttpServletRequest, HttpServletResponse>,
+public class ServletWebContext<R> extends
+		AbstractChainContext<R, ServletWebContext<R>> implements
+		WebContext<ServletContext, HttpServletRequest, HttpServletResponse, R>,
 		Disposable {
 
 	protected ServletContext application;

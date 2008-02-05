@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import aa.bb.cc.web.hoge.HogeController;
 import aa.bb.cc.web.hoge.HogeViewModel;
 
+import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.core.web.WebContext;
 import com.google.werkzeugkasten.core.web.servlet.RequestAttributeScope;
 import com.google.werkzeugkasten.core.web.servlet.RequestParameterScope;
@@ -14,7 +15,7 @@ import com.google.werkzeugkasten.core.web.servlet.ServletWebContext;
 import com.google.werkzeugkasten.core.web.servlet.SessionAttributeScope;
 import com.google.werkzeugkasten.meta.Initializable.Initialize;
 
-public class HogeControllerContext extends ServletWebContext implements
+public class HogeControllerContext extends ServletWebContext<_> implements
 		HogeViewModel {
 
 	protected RequestAttributeScope requestAttributeScope;
@@ -51,7 +52,7 @@ public class HogeControllerContext extends ServletWebContext implements
 		this.sessionAttributeScope.set(this, key, id);
 	}
 
-	public <CTX extends WebContext<ServletContext, HttpServletRequest, HttpServletResponse>> void validate(
+	public <CTX extends WebContext<ServletContext, HttpServletRequest, HttpServletResponse, _>> void validate(
 			CTX context) {
 
 	}

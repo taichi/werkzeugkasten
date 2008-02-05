@@ -14,5 +14,5 @@ public @interface ActivateUrl {
 	RequestMethod[] method() default { RequestMethod.GET, RequestMethod.POST };
 
 	@SuppressWarnings("unchecked")
-	Class<? extends UriMatcher> matcher() default UriMatcher.class;
+	Class<? extends RequestMatcher> matcher() default RequestMatcher.class;
 }
