@@ -21,6 +21,10 @@ public class ServletWebContext extends
 
 	protected HttpServletResponse response;
 
+	protected ServletViewModel model;
+
+	protected ServletAction action;
+
 	public ServletWebContext() {
 	}
 
@@ -48,5 +52,21 @@ public class ServletWebContext extends
 
 	public HttpServletResponse getResponse() {
 		return this.response;
+	}
+
+	public ServletViewModel getModel() {
+		return model;
+	}
+
+	public void setModel(ServletViewModel model) {
+		this.model = model;
+	}
+
+	public ServletAction getAction() {
+		return action;
+	}
+
+	public void setAction(ServletAction action) {
+		this.action = action;
 	}
 }

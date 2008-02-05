@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.werkzeugkasten.core.web.Action;
 
-public interface ServletAction<CTX extends ServletWebContext> extends
-		Action<ServletContext, HttpServletRequest, HttpServletResponse, CTX> {
+public interface ServletAction extends
+		Action<ServletContext, HttpServletRequest, HttpServletResponse> {
 
 }

@@ -1,8 +1,13 @@
 package aa.bb.cc.web.hoge.autogen;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import aa.bb.cc.web.hoge.HogeController;
 import aa.bb.cc.web.hoge.HogeViewModel;
 
+import com.google.werkzeugkasten.core.web.WebContext;
 import com.google.werkzeugkasten.core.web.servlet.RequestAttributeScope;
 import com.google.werkzeugkasten.core.web.servlet.RequestParameterScope;
 import com.google.werkzeugkasten.core.web.servlet.ServletWebContext;
@@ -32,4 +37,10 @@ public class HogeControllerContext extends ServletWebContext implements
 	public void setId(int id) {
 
 	}
+
+	public <CTX extends WebContext<ServletContext, HttpServletRequest, HttpServletResponse>> void validate(
+			CTX context) {
+
+	}
+
 }

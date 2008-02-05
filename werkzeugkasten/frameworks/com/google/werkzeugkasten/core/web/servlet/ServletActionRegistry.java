@@ -11,24 +11,24 @@ import com.google.werkzeugkasten.core.web.ActionRegistry;
 
 public class ServletActionRegistry<CTX extends ServletWebContext>
 		implements
-		ActionRegistry<ServletContext, HttpServletRequest, HttpServletResponse, CTX, ServletAction<CTX>> {
+		ActionRegistry<ServletContext, HttpServletRequest, HttpServletResponse, CTX, ServletAction> {
 
-	protected List<ServletAction<CTX>> actions = new ArrayList<ServletAction<CTX>>();
+	protected List<ServletAction> actions = new ArrayList<ServletAction>();
 
-	public void add(ServletAction<CTX>... actions) {
-		for (ServletAction<CTX> a : actions) {
+	public void add(ServletAction... actions) {
+		for (ServletAction a : actions) {
 			this.actions.add(a);
 		}
 	}
 
-	public void remove(ServletAction<CTX>... actions) {
-		for (ServletAction<CTX> a : actions) {
+	public void remove(ServletAction... actions) {
+		for (ServletAction a : actions) {
 			this.actions.remove(a);
 		}
 	}
 
-	public ServletAction<CTX> find(CTX context) {
-		for (ServletAction<CTX> a : this.actions) {
+	public ServletAction find(CTX context) {
+		for (ServletAction a : this.actions) {
 			if (a.match(context)) {
 				return a;
 			}

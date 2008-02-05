@@ -10,4 +10,9 @@ public interface WebContext<APP, REQ, RES> extends ChainContext<_> {
 	REQ getRequest();
 
 	RES getResponse();
+
+	ViewModel<APP, REQ, RES> getModel();
+
+	Action<APP, REQ, RES> getAction();
+
 }

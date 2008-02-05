@@ -1,6 +1,6 @@
 package com.google.werkzeugkasten.core.web;
 
-public interface ActionRegistry<APP, REQ, RES, CTX extends WebContext<APP, REQ, RES>, ACT extends Action<APP, REQ, RES, CTX>> {
+public interface ActionRegistry<APP, REQ, RES, CTX extends WebContext<APP, REQ, RES>, ACT extends Action<APP, REQ, RES>> {
 
 	void add(ACT... actions);
 
