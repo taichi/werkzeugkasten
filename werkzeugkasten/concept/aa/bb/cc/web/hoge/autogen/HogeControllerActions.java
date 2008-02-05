@@ -12,7 +12,7 @@ import com.google.werkzeugkasten.core.web.WebContext;
 import com.google.werkzeugkasten.core.web.servlet.ServletAction;
 import com.google.werkzeugkasten.core.web.servlet.ServletActionRegistry;
 import com.google.werkzeugkasten.core.web.servlet.ServletBasedRenderer;
-import com.google.werkzeugkasten.core.web.servlet.RequestPathMatcher.RegEx;
+import com.google.werkzeugkasten.core.web.servlet.ServletRequestPathMatcher.RegEx;
 
 ;
 

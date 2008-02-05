@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.werkzeugkasten.core.web.RequestMatcher;
 import com.google.werkzeugkasten.core.web.servlet.util.ServletUtil;
 
-public interface RequestPathMatcher
+public interface ServletRequestPathMatcher
 		extends
 		RequestMatcher<ServletContext, HttpServletRequest, HttpServletResponse, ServletWebContext<Boolean>> {
 
-	class RegEx implements RequestPathMatcher {
+	class RegEx implements ServletRequestPathMatcher {
 		protected Pattern pattern;
 
 		public RegEx(String path) {
@@ -29,7 +29,7 @@ public interface RequestPathMatcher
 		}
 	}
 
-	class Prefix implements RequestPathMatcher {
+	class Prefix implements ServletRequestPathMatcher {
 		protected String prefix = null;
 
 		public Prefix(String path) {
@@ -45,7 +45,7 @@ public interface RequestPathMatcher
 		}
 	}
 
-	class Suffix implements RequestPathMatcher {
+	class Suffix implements ServletRequestPathMatcher {
 		protected String suffix = null;
 
 		public Suffix(String path) {
