@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -84,12 +85,26 @@ public class Activator extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		DebugPlugin.getDefault().removeDebugEventListener(terminateListener);
+		terminateAll();
 		urlToProjectCache.clear();
 		urlToProjectCache = null;
 		launchRegistry.dispose();
 		ImageLoader.unload(plugin, Images.class);
 		plugin = null;
 		super.stop(context);
+	}
+
+	protected void terminateAll() {
+		for (IProject p : urlToProjectCache.values()) {
+			ILaunch l = getLaunch(p);
+			if (l != null && l.canTerminate()) {
+				try {
+					l.terminate();
+				} catch (DebugException e) {
+					log(e);
+				}
+			}
+		}
 	}
 
 	/**
