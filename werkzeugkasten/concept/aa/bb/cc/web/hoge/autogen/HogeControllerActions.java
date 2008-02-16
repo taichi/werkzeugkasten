@@ -8,10 +8,12 @@ import aa.bb.cc.web.hoge.HogeController;
 
 import com.google.werkzeugkasten._;
 import com.google.werkzeugkasten.core.web.Renderer;
+import com.google.werkzeugkasten.core.web.RequestMethod;
 import com.google.werkzeugkasten.core.web.WebContext;
 import com.google.werkzeugkasten.core.web.servlet.ServletAction;
 import com.google.werkzeugkasten.core.web.servlet.ServletActionRegistry;
 import com.google.werkzeugkasten.core.web.servlet.ServletBasedRenderer;
+import com.google.werkzeugkasten.core.web.servlet.ServletRequestMethodMatcher;
 import com.google.werkzeugkasten.core.web.servlet.ServletRequestPathMatcher.RegEx;
 
 ;
@@ -28,6 +30,8 @@ public class HogeControllerActions {
 
 		protected String$get$HogeViewModel() {
 			super();
+			matchers.add(new ServletRequestMethodMatcher(RequestMethod.GET,
+					RequestMethod.POST));
 			matchers.add(new RegEx("/hoge/get"));
 			matchers.add(TRUE);
 		}
