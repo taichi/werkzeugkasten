@@ -26,6 +26,21 @@ public class LocalRepository implements Repository, Destination {
 
 	@Override
 	public void copyFrom(Context context, Artifact artifact) {
+		DestinationUtil.copy(context, artifact, new DestinationUtil.Handler() {
+			@Override
+			public File toDestination(Artifact artifact) {
+				String ps = File.pathSeparator;
+				StringBuilder stb = new StringBuilder();
+				stb.append(root.getAbsolutePath());
+				stb.append(ps);
+				stb.append(artifact.getGroupId());
+				stb.append(ps);
+				stb.append(artifact.getArtifactId());
+				stb.append(ps);
+				stb.append(artifact.getFileName());
+				return new File(stb.toString());
+			}
+		});
 	}
 
 }

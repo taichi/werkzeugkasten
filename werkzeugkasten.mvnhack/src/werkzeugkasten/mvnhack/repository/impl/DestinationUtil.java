@@ -6,21 +6,22 @@ import java.io.InputStream;
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Context;
-import werkzeugkasten.mvnhack.repository.Destination;
 
-public abstract class AbstractDestinationTemplate implements Destination {
+public class DestinationUtil {
 
-	@Override
-	public void copyFrom(Context context, Artifact artifact) {
+	public static void copy(Context context, Artifact artifact, Handler handler) {
 		InputStream in = null;
 		try {
-			File lib = toDestination(artifact);
+			File lib = handler.toDestination(artifact);
 			in = context.open(artifact);
 			StreamUtil.copy(in, lib);
 		} finally {
 			StreamUtil.close(in);
 		}
+
 	}
 
-	protected abstract File toDestination(Artifact artifact);
+	interface Handler {
+		File toDestination(Artifact artifact);
+	}
 }
