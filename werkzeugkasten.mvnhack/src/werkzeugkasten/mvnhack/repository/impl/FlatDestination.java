@@ -1,17 +1,19 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
-import java.net.URL;
+import java.io.File;
 
-import werkzeugkasten.mvnhack.repository.Context;
-import werkzeugkasten.mvnhack.repository.Destination;
+import werkzeugkasten.mvnhack.repository.Artifact;
 
+public class FlatDestination extends AbstractDestinationTemplate {
 
-public class FlatDestination implements Destination {
+	protected File dest;
 
-	@Override
-	public void copyFrom(Context context, URL url) {
-		// TODO Auto-generated method stub
-
+	public FlatDestination(File dest) {
+		this.dest = dest;
 	}
 
+	@Override
+	protected File toDestination(Artifact artifact) {
+		return new File(dest, artifact.getFileName());
+	}
 }

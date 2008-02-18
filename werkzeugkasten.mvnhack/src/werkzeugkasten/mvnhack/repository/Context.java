@@ -1,7 +1,6 @@
 package werkzeugkasten.mvnhack.repository;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 public interface Context {
@@ -21,7 +20,7 @@ public interface Context {
 
 	boolean isResolvedArtifact(String groupId, String artifactId, String version);
 
-	InputStream open(URL url);
+	InputStream open(Artifact artifact);
 
 	void close(InputStream stream);
 }

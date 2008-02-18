@@ -11,6 +11,8 @@ public interface Artifact extends Comparable<Artifact> {
 
 	String getVersion();
 
+	String getFileName();
+
 	List<Dependency> getDependencies();
 
 	URL toURL(Context context);

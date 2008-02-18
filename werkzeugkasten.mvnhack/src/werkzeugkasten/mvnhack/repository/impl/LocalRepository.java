@@ -1,14 +1,19 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
-import java.net.URL;
+import java.io.File;
 
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Context;
 import werkzeugkasten.mvnhack.repository.Destination;
 import werkzeugkasten.mvnhack.repository.Repository;
 
-
 public class LocalRepository implements Repository, Destination {
+
+	protected File root;
+
+	public LocalRepository(File root) {
+		this.root = root;
+	}
 
 	@Override
 	public Artifact get(Context context, String groupId, String artifactId,
@@ -20,12 +25,7 @@ public class LocalRepository implements Repository, Destination {
 	}
 
 	@Override
-	public void copyFrom(Context context, URL url) {
-		try {
-
-		} finally {
-
-		}
+	public void copyFrom(Context context, Artifact artifact) {
 	}
 
 }
