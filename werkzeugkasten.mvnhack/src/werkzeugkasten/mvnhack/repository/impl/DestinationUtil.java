@@ -13,10 +13,12 @@ public class DestinationUtil {
 		InputStream in = null;
 		try {
 			File lib = handler.toDestination(artifact);
-			in = context.open(artifact);
-			StreamUtil.copy(in, lib);
+			if (lib.exists() == false) {
+				in = context.open(artifact);
+				StreamUtil.copy(in, lib);
+			}
 		} finally {
-			StreamUtil.close(in);
+			context.close(in);
 		}
 
 	}

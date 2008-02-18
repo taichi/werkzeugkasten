@@ -15,7 +15,7 @@ public interface Context {
 
 	void addResolvedArtifact(Artifact artifact);
 
-	Artifact getResolvedArtivact(String groupId, String artifactId,
+	Artifact getResolvedArtifact(String groupId, String artifactId,
 			String version);
 
 	boolean isResolvedArtifact(String groupId, String artifactId, String version);

@@ -10,8 +10,8 @@ public class FlatDestination implements Destination {
 
 	protected File dest;
 
-	public FlatDestination(File dest) {
-		this.dest = dest;
+	public FlatDestination(File dir) {
+		this.dest = dir;
 	}
 
 	@Override

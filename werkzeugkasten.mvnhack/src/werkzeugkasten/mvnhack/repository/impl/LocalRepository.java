@@ -19,7 +19,7 @@ public class LocalRepository implements Repository, Destination {
 	public Artifact get(Context context, String groupId, String artifactId,
 			String version) {
 		if (context.isResolvedArtifact(groupId, artifactId, version)) {
-			return context.getResolvedArtivact(groupId, artifactId, version);
+			return context.getResolvedArtifact(groupId, artifactId, version);
 		}
 		return null;
 	}
