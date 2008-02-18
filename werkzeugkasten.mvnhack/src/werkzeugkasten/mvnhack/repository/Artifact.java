@@ -1,7 +1,6 @@
 package werkzeugkasten.mvnhack.repository;
 
-import java.net.URL;
-import java.util.List;
+import java.util.Set;
 
 public interface Artifact extends Comparable<Artifact> {
 
@@ -13,7 +12,6 @@ public interface Artifact extends Comparable<Artifact> {
 
 	String getFileName();
 
-	List<Dependency> getDependencies();
+	Set<Dependency> getDependencies();
 
-	URL toURL(Context context);
 }

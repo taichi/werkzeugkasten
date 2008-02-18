@@ -1,17 +1,8 @@
 package werkzeugkasten.mvnhack.repository;
 
 import java.io.InputStream;
-import java.util.List;
 
 public interface Context {
-
-	List<Repository> getRepositories();
-
-	void addRepository(Repository repository);
-
-	List<Destination> getDestinations();
-
-	void addDestination(Destination destination);
 
 	void addResolvedArtifact(Artifact artifact);
 
