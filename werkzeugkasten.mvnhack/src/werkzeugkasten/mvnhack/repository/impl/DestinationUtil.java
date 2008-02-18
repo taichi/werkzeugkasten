@@ -14,7 +14,6 @@ public class DestinationUtil {
 		try {
 			File lib = handler.toDestination(artifact);
 			if (lib.exists() == false) {
-				in = context.open(artifact);
 				StreamUtil.copy(in, lib);
 			}
 		} finally {

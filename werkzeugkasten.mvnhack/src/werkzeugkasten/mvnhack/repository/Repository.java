@@ -1,7 +1,8 @@
 package werkzeugkasten.mvnhack.repository;
 
+import java.net.URL;
+
 public interface Repository {
 
-	Artifact get(Context context, String groupId, String artifactId,
-			String version);
+	URL getLocation(Artifact artifact);
 }
