@@ -52,8 +52,7 @@ public class DefaultConfiguration implements Configuration {
 	protected void load(Properties properties) {
 		String rs = properties.getProperty(Constants.PROP_REPOSITORY);
 		if (StringUtil.isEmpty(rs) == false) {
-			String[] ary = rs.split(",");
-			for (String s : ary) {
+			for (String s : rs.split(",")) {
 				if (validateURL(s)) {
 					addRepository(new RemoteRepository(s));
 				}

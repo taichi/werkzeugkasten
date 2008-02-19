@@ -2,7 +2,6 @@ package werkzeugkasten.mvnhack.repository.impl;
 
 import java.util.Set;
 
-import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Dependency;
 
@@ -18,14 +17,7 @@ public class DefaultArtifact implements Artifact {
 
 	protected Set<Dependency> dependencies;
 
-	public DefaultArtifact(String groupId, String artifactId, String version,
-			String type) {
-		this.groupId = groupId;
-		this.artifactId = artifactId;
-		this.version = version;
-		if (StringUtil.isEmpty(type) == false) {
-			this.type = type;
-		}
+	public DefaultArtifact() {
 	}
 
 	@Override
@@ -33,9 +25,17 @@ public class DefaultArtifact implements Artifact {
 		return this.groupId;
 	}
 
+	protected void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
+
 	@Override
 	public String getArtifactId() {
 		return this.artifactId;
+	}
+
+	protected void setArtifactId(String artifactId) {
+		this.artifactId = artifactId;
 	}
 
 	@Override
@@ -43,9 +43,17 @@ public class DefaultArtifact implements Artifact {
 		return this.version;
 	}
 
+	protected void setVersion(String version) {
+		this.version = version;
+	}
+
 	@Override
 	public String getType() {
 		return this.type;
+	}
+
+	protected void setType(String type) {
+		this.type = type;
 	}
 
 	@Override

@@ -5,9 +5,7 @@ import werkzeugkasten.mvnhack.repository.Dependency;
 
 public class DefaultDependency extends DefaultArtifact implements Dependency {
 
-	public DefaultDependency(String groupId, String artifactId, String version,
-			String type) {
-		super(groupId, artifactId, version, type);
+	public DefaultDependency() {
 	}
 
 	@Override
