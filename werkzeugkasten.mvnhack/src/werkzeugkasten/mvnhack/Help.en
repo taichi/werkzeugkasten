@@ -10,6 +10,7 @@ java -jar mvnhack.jar [groupId] [artifactId] [version] flat=[on/off] dest=[path]
   default is on.
   if you want to get own your local repository only. switch to off.
 - dest
+  set destination directry.
   default is . it means current directory.
 
 exmaples ...

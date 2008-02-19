@@ -1,20 +1,21 @@
-Get Libraries from maven2 remote/local repositories.
+リモート及びローカルにあるmaven2のリポジトリからライブラリを取得します。
 
 java -jar mvnhack.jar [groupId] [artifactId] [version] flat=[on/off] dest=[path]
 
 - groupId
-  if groupId and artifactId has same id, you skip this.
+  groupId と artifactId が同じなら省略する事が出来ます。
 - artifactId
 - version
 - flat 
-  default is on.
-  if you want to get own your local repository only. switch to off.
+  デフォルトは on です。
+  ローカルのリポジトリにのみ、ファイルを展開する場合には、offにして下さい。
 - dest
-  default is . it means current directory.
+  出力先ディレクトリを設定して下さい。
+  デフォルトでは、コマンドの実行ディレクトリが出力先ディレクトリとして設定されます。
 
-exmaples ...
+サンプル ...
 java -jar mvnhack.jar commons-httpclient commons-httpclient 2.0.2
- you can get commons-httpclient-2.0.2.jar and commons-logging-1.0.3.jar into this directory.
+ このコマンドでは、commons-httpclient-2.0.2.jar 及び commons-logging-1.0.3.jar を取得する事が出来ます。
 
-see more information 
+より詳しい情報は、 
   http://code.google.com/p/werkzeugkasten/
