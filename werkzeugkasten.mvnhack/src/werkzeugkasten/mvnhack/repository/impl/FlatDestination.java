@@ -1,6 +1,7 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
 import java.io.File;
+import java.net.URL;
 
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Context;
@@ -22,7 +23,9 @@ public class FlatDestination implements Destination, DestinationUtil.Handler {
 	}
 
 	@Override
-	public File toDestination(Artifact artifact) {
-		return new File(dest, artifact.getFileName());
+	public File toDestination(URL url) {
+		String path = url.getPath();
+		path = path.substring(path.lastIndexOf('/') + 1);
+		return new File(dest, path);
 	}
 }

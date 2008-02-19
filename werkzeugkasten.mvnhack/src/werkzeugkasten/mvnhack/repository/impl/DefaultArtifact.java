@@ -49,17 +49,6 @@ public class DefaultArtifact implements Artifact {
 	}
 
 	@Override
-	public String getFileName() {
-		StringBuilder stb = new StringBuilder();
-		stb.append(getArtifactId());
-		stb.append('-');
-		stb.append(getVersion());
-		stb.append('.');
-		stb.append(getType());
-		return stb.toString();
-	}
-
-	@Override
 	public String toPath() {
 		char ps = '/';
 		StringBuilder stb = new StringBuilder();
@@ -68,7 +57,13 @@ public class DefaultArtifact implements Artifact {
 		stb.append(ps);
 		stb.append(getArtifactId());
 		stb.append(ps);
-		stb.append(getFileName());
+		stb.append(getVersion());
+		stb.append(ps);
+		stb.append(getArtifactId());
+		stb.append('-');
+		stb.append(getVersion());
+		stb.append('.');
+		stb.append(getType());
 		return stb.toString();
 	}
 

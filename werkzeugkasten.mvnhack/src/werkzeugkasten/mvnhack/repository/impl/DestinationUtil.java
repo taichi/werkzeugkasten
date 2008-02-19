@@ -13,21 +13,22 @@ public class DestinationUtil {
 
 	public static void copy(Context context, Repository repository,
 			Artifact artifact, Handler handler) {
-		InputStream in = null;
-		try {
-			File lib = handler.toDestination(artifact);
-			if (lib.exists() == false) {
-				URL url = repository.getLocation(artifact);
-				in = context.open(url);
-				StreamUtil.copy(in, lib);
+		for (URL url : repository.getLocation(artifact)) {
+			InputStream in = null;
+			try {
+				File dest = handler.toDestination(url);
+				if (dest != null && dest.exists() == false) {
+					in = context.open(url);
+					StreamUtil.copy(in, dest);
+				}
+			} catch (IllegalStateException e) {
+			} finally {
+				context.close(in);
 			}
-		} finally {
-			context.close(in);
 		}
-
 	}
 
 	interface Handler {
-		File toDestination(Artifact artifact);
+		File toDestination(URL url);
 	}
 }
