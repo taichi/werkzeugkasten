@@ -1,11 +1,13 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.stream.StreamFilter;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import werkzeugkasten.common.util.StringUtil;
@@ -19,7 +21,7 @@ public class ArtifactBuilder implements StreamFilter {
 		try {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
-			InputStream stream = pom;
+			InputStream stream = new BufferedInputStream(pom);
 			XMLStreamReader reader = factory.createXMLStreamReader(stream,
 					"UTF-8");
 			reader = factory.createFilteredReader(reader, this);
@@ -46,9 +48,9 @@ public class ArtifactBuilder implements StreamFilter {
 			}
 
 			if (validate(a)) {
-				return null;
+				return a;
 			}
-			return a;
+			return null;
 		} catch (Exception e) {
 			logger.log(Level.WARNING, e.getMessage(), e);
 		}
@@ -65,14 +67,15 @@ public class ArtifactBuilder implements StreamFilter {
 		return true;
 	}
 
-	protected void setValue(XMLStreamReader reader, String e, DefaultArtifact a) {
-		if (reader.isStartElement() && reader.hasText()) {
+	protected void setValue(XMLStreamReader reader, String e, DefaultArtifact a)
+			throws XMLStreamException {
+		if (reader.isStartElement()) {
 			if ("groupId".equalsIgnoreCase(e)) {
-				a.setGroupId(reader.getText());
+				a.setGroupId(reader.getElementText());
 			} else if ("artifactId".equalsIgnoreCase(e)) {
-				a.setArtifactId(reader.getText());
+				a.setArtifactId(reader.getElementText());
 			} else if ("version".equalsIgnoreCase(e)) {
-				a.setVersion(reader.getText());
+				a.setVersion(reader.getElementText());
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import werkzeugkasten.mvnhack.repository.Artifact;
@@ -15,7 +16,7 @@ public class DefaultArtifact implements Artifact {
 
 	protected String type = "jar";
 
-	protected Set<Dependency> dependencies;
+	protected Set<Dependency> dependencies = new LinkedHashSet<Dependency>();
 
 	public DefaultArtifact() {
 	}
