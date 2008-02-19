@@ -20,15 +20,13 @@ public class DestinationUtil {
 			InputStream in = null;
 			try {
 				File dest = handler.toDestination(url);
-				if (dest != null) {
+				if (dest != null && dest.exists() == false) {
 					File dir = dest.getParentFile();
 					if (dir.exists() == false) {
 						dir.mkdirs();
 					}
-					if (dest.exists() == false) {
-						in = context.open(url);
-						StreamUtil.copy(in, dest);
-					}
+					in = context.open(url);
+					StreamUtil.copy(in, dest);
 				}
 			} catch (FileNotFoundRuntimeException e) {
 			} catch (IllegalStateException e) {

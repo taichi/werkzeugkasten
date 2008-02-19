@@ -10,10 +10,23 @@ import werkzeugkasten.mvnhack.repository.Repository;
 
 public class FlatDestination implements Destination, DestinationUtil.Handler {
 
+	protected static final Filter DEFAULT_FILTER = new Filter() {
+		public boolean filter(String path) {
+			return path.endsWith("jar") || path.endsWith("zip");
+		}
+	};
+
 	protected File dest;
 
+	protected Filter filter;
+
 	public FlatDestination(File dir) {
+		this(dir, DEFAULT_FILTER);
+	}
+
+	public FlatDestination(File dir, Filter filter) {
 		this.dest = dir;
+		this.filter = filter;
 	}
 
 	@Override
@@ -26,6 +39,13 @@ public class FlatDestination implements Destination, DestinationUtil.Handler {
 	public File toDestination(URL url) {
 		String path = url.getPath();
 		path = path.substring(path.lastIndexOf('/') + 1);
-		return new File(dest, path);
+		if (this.filter.filter(path)) {
+			return new File(dest, path);
+		}
+		return null;
+	}
+
+	public interface Filter {
+		boolean filter(String path);
 	}
 }

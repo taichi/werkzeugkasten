@@ -63,8 +63,7 @@ public class DefaultContext implements Context {
 					}
 					addResolved(a);
 					for (Dependency d : a.getDependencies()) {
-						d.resolve(new DefaultContext(this.configuration,
-								this.resolved));
+						d.resolve(this);
 					}
 				}
 			}
@@ -73,6 +72,8 @@ public class DefaultContext implements Context {
 
 	@Override
 	public InputStream open(URL url) {
+		// FIXME RemoteRepositoryにアクセスすると、
+		// Destinationの数だけHTTPリクエストを投げてしまうのは、イマイチ。
 		return UrlUtil.open(url);
 	}
 

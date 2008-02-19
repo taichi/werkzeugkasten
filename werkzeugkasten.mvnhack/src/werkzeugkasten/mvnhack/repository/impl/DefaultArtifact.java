@@ -102,4 +102,28 @@ public class DefaultArtifact implements Artifact {
 		return 0;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Artifact) {
+			Artifact a = (Artifact) obj;
+			return equals(a);
+		}
+		return super.equals(obj);
+	}
+
+	public boolean equals(Artifact a) {
+		return getGroupId().equals(a.getGroupId())
+				&& getArtifactId().equals(a.getArtifactId())
+				&& getVersion().equals(a.getVersion());
+	}
+
+	@Override
+	public int hashCode() {
+		StringBuilder stb = new StringBuilder();
+		stb.append(getGroupId());
+		stb.append(getArtifactId());
+		stb.append(getVersion());
+		return stb.toString().hashCode();
+	}
+
 }

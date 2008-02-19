@@ -46,6 +46,7 @@ public class ArtifactBuilder {
 
 			NodeList list = (NodeList) path.evaluate("dependencies/dependency",
 					elem, XPathConstants.NODESET);
+			// TODO dependencyManagement
 			for (int i = 0; i < list.getLength(); i++) {
 				Node n = list.item(i);
 				String scope = path.evaluate("scope", n);
@@ -54,7 +55,9 @@ public class ArtifactBuilder {
 					DefaultDependency d = new DefaultDependency();
 					setValue(path, d, n);
 					a.setType(path.evaluate("type", n));
-					a.add(d);
+					if (validate(d)) {
+						a.add(d);
+					}
 				}
 			}
 
