@@ -27,7 +27,6 @@ public class RemoteRepositoryTest {
 	@Before
 	public void setUp() throws Exception {
 		builder = new ArtifactBuilder();
-
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		URL url = cl.getResource(".");
 		localRoot = new File(url.getPath(), "local");

@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Context;
+import werkzeugkasten.mvnhack.repository.FileNotFoundRuntimeException;
 import werkzeugkasten.mvnhack.repository.Repository;
 
 public class DestinationUtil {
@@ -29,6 +30,7 @@ public class DestinationUtil {
 						StreamUtil.copy(in, dest);
 					}
 				}
+			} catch (FileNotFoundRuntimeException e) {
 			} catch (IllegalStateException e) {
 				Throwable t = e.getCause();
 				if (t == null) {
