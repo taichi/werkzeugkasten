@@ -50,7 +50,9 @@ public class LocalRepository implements Repository, Destination,
 				.getParentFile();
 		if (dir.exists()) {
 			for (File f : dir.listFiles()) {
-				urls.add(UrlUtil.toURL(f));
+				if (f.getName().startsWith(".") == false) {
+					urls.add(UrlUtil.toURL(f));
+				}
 			}
 		}
 		return urls;
