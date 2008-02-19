@@ -3,6 +3,8 @@ package werkzeugkasten.mvnhack.repository.impl;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
@@ -17,11 +19,21 @@ public class DestinationUtil {
 			InputStream in = null;
 			try {
 				File dest = handler.toDestination(url);
+				File dir = dest.getParentFile();
+				if (dir.exists() == false) {
+					dir.mkdirs();
+				}
 				if (dest != null && dest.exists() == false) {
 					in = context.open(url);
 					StreamUtil.copy(in, dest);
 				}
 			} catch (IllegalStateException e) {
+				Throwable t = e.getCause();
+				if (t == null) {
+					t = e;
+				}
+				Logger.getLogger(DestinationUtil.class.getName()).log(
+						Level.WARNING, t.getMessage(), t);
 			} finally {
 				context.close(in);
 			}

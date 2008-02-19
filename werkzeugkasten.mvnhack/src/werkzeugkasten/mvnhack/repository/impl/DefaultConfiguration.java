@@ -20,6 +20,8 @@ public class DefaultConfiguration implements Configuration {
 
 	protected Set<Destination> destinations = new LinkedHashSet<Destination>();
 
+	protected ArtifactBuilder builder = new ArtifactBuilder();
+
 	public DefaultConfiguration() {
 	}
 
@@ -44,7 +46,7 @@ public class DefaultConfiguration implements Configuration {
 	}
 
 	protected void addLocalRepository(File rep) {
-		LocalRepository lr = new LocalRepository(rep);
+		LocalRepository lr = new LocalRepository(rep, builder);
 		addRepository(lr);
 		addDestination(lr);
 	}
@@ -54,7 +56,7 @@ public class DefaultConfiguration implements Configuration {
 		if (StringUtil.isEmpty(rs) == false) {
 			for (String s : rs.split(",")) {
 				if (validateURL(s)) {
-					addRepository(new RemoteRepository(s));
+					addRepository(new RemoteRepository(s, builder));
 				}
 			}
 		}

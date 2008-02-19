@@ -13,11 +13,14 @@ public class RemoteRepository implements Repository {
 
 	protected String baseUrl;
 
-	public RemoteRepository(String url) {
+	protected ArtifactBuilder builder;
+
+	public RemoteRepository(String url, ArtifactBuilder builder) {
 		if (url.endsWith("/")) {
 			url = url.substring(0, url.length() - 1);
 		}
 		this.baseUrl = url;
+		this.builder = builder;
 	}
 
 	@Override

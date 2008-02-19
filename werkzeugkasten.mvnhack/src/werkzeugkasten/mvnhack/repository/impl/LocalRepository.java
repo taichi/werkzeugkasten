@@ -1,6 +1,8 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,8 +20,11 @@ public class LocalRepository implements Repository, Destination,
 
 	protected File root;
 
-	public LocalRepository(File root) {
+	protected ArtifactBuilder builder;
+
+	public LocalRepository(File root, ArtifactBuilder builder) {
 		this.root = root;
+		this.builder = builder;
 	}
 
 	@Override
@@ -27,18 +32,14 @@ public class LocalRepository implements Repository, Destination,
 		if (StringUtil.isEmpty(groupId)) {
 			groupId = artifactId;
 		}
-		char ps = '/';
-		StringBuilder stb = new StringBuilder();
-		stb.append(groupId.replace('.', '/'));
-		stb.append(ps);
-		stb.append(artifactId);
-		stb.append(ps);
-		stb.append(version);
-		stb.append(ps);
-		stb.append(artifactId);
-		stb.append('-');
-		stb.append(version);
-		stb.append(Constants.POM);
+		try {
+			File pom = new File(root, ArtifactUtil.toPom(groupId, artifactId,
+					version));
+			if (pom.exists()) {
+				return builder.build(new FileInputStream(pom));
+			}
+		} catch (FileNotFoundException e) {
+		}
 		return null;
 	}
 
@@ -47,8 +48,10 @@ public class LocalRepository implements Repository, Destination,
 		Set<URL> urls = new HashSet<URL>();
 		File dir = new File(root.getAbsolutePath(), artifact.toPath())
 				.getParentFile();
-		for (File f : dir.listFiles()) {
-			urls.add(UrlUtil.toURL(f));
+		if (dir.exists()) {
+			for (File f : dir.listFiles()) {
+				urls.add(UrlUtil.toURL(f));
+			}
 		}
 		return urls;
 	}

@@ -10,6 +10,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 
@@ -53,6 +54,8 @@ public class ArtifactBuilder implements StreamFilter {
 			return null;
 		} catch (Exception e) {
 			logger.log(Level.WARNING, e.getMessage(), e);
+		} finally {
+			StreamUtil.close(pom);
 		}
 		return null;
 	}
@@ -76,6 +79,9 @@ public class ArtifactBuilder implements StreamFilter {
 				a.setArtifactId(reader.getElementText());
 			} else if ("version".equalsIgnoreCase(e)) {
 				a.setVersion(reader.getElementText());
+			} else if ("packaging".equalsIgnoreCase(e)
+					|| "type".equalsIgnoreCase(e)) {
+				a.setType(reader.getElementText());
 			}
 		}
 	}
