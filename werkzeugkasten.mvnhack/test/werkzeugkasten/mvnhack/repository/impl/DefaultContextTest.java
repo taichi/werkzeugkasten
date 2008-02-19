@@ -34,10 +34,8 @@ public class DefaultContextTest {
 		File repo = new File(repository.getParentFile(), "repo");
 		config.addRepository(new LocalRepository(repo, builder));
 
-		destDir = new File(repository.getParentFile(), "dest");
-		if (destDir.exists()) {
-			destDir.delete();
-		}
+		url = cl.getResource(".");
+		destDir = new File(url.getPath(), "dest");
 		destDir.deleteOnExit();
 		FlatDestination flat = new FlatDestination(destDir);
 		config.addDestination(flat);
