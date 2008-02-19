@@ -5,10 +5,12 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.net.URL;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import werkzeugkasten.common.util.FileUtil;
 import werkzeugkasten.common.util.UrlUtil;
 
 public class DefaultContextTest {
@@ -36,11 +38,20 @@ public class DefaultContextTest {
 
 		url = cl.getResource(".");
 		destDir = new File(url.getPath(), "dest");
-		destDir.deleteOnExit();
+		if (destDir.exists()) {
+			FileUtil.delete(destDir);
+		}
 		FlatDestination flat = new FlatDestination(destDir);
 		config.addDestination(flat);
 
 		this.target = new DefaultContext(config);
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		if (destDir.exists()) {
+			FileUtil.delete(destDir);
+		}
 	}
 
 	@Test

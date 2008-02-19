@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import werkzeugkasten.common.util.FileUtil;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
@@ -38,7 +39,7 @@ public class RemoteRepositoryTest {
 		URL url = cl.getResource(".");
 		localRoot = new File(url.getPath(), "local");
 		if (localRoot.exists()) {
-			localRoot.delete();
+			FileUtil.delete(localRoot);
 		}
 		flat = new FlatDestination(localRoot);
 		target = new RemoteRepository(Constants.CENTRAL_REPOSITORY, builder);
@@ -46,7 +47,7 @@ public class RemoteRepositoryTest {
 
 	@After
 	public void tearDown() throws Exception {
-		localRoot.delete();
+		FileUtil.delete(localRoot);
 	}
 
 	@Test

@@ -7,10 +7,12 @@ import java.io.File;
 import java.net.URL;
 import java.util.Set;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import werkzeugkasten.common.util.FileUtil;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 
@@ -19,6 +21,7 @@ public class LocalRepositoryTest {
 	LocalRepository target;
 
 	File root;
+	File another;
 
 	ArtifactBuilder builder;
 
@@ -33,8 +36,16 @@ public class LocalRepositoryTest {
 		URL url = cl.getResource("repository");
 		File kid = new File(url.getPath());
 		root = kid.getParentFile();
+		another = new File(root, "another");
 		builder = new ArtifactBuilder();
 		target = new LocalRepository(kid, builder);
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		if (another.exists()) {
+			FileUtil.delete(another);
+		}
 	}
 
 	@Test
@@ -47,8 +58,9 @@ public class LocalRepositoryTest {
 
 		File another = new File(root, "another");
 		try {
-			another.delete();
-			another.mkdirs();
+			if (another.exists()) {
+				FileUtil.delete(another);
+			}
 			LocalRepository lr = new LocalRepository(another, builder);
 			lr.copyFrom(new DefaultContext(null), target, a);
 			assertNotNull(lr.load("net.sourceforge.jexcelapi", "jxl", "2.6.6"));
