@@ -1,0 +1,20 @@
+Get Libraries from maven2 remote/local repositories.
+
+java -jar mvnhack.jar [groupId] [artifactId] [version] flat=[on/off] dest=[path]
+
+- groupId
+  if groupId and artifactId has same id, you skip this.
+- artifactId
+- version
+- flat 
+  default is on.
+  if you want to get own your local repository only. switch to off.
+- dest
+  default is . it means current directory.
+
+exmaples ...
+java -jar mvnhack.jar commons-httpclient commons-httpclient 2.0.2
+ you can get commons-httpclient-2.0.2.jar and commons-logging-1.0.3.jar into this directory.
+
+see more information 
+  http://code.google.com/p/werkzeugkasten/
