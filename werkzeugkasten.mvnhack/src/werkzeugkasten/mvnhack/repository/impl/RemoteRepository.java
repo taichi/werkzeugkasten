@@ -17,8 +17,8 @@ public class RemoteRepository implements Repository {
 	protected ArtifactBuilder builder;
 
 	public RemoteRepository(String url, ArtifactBuilder builder) {
-		if (url.endsWith("/")) {
-			url = url.substring(0, url.length() - 1);
+		if (url.endsWith("/") == false) {
+			url += "/";
 		}
 		this.baseUrl = url;
 		this.builder = builder;
@@ -28,7 +28,6 @@ public class RemoteRepository implements Repository {
 	public Artifact load(String groupId, String artifactId, String version) {
 		StringBuilder stb = new StringBuilder();
 		stb.append(baseUrl);
-		stb.append('/');
 		stb.append(ArtifactUtil.toPom(groupId, artifactId, version));
 		URL url = UrlUtil.toURL(stb.toString());
 		try {
@@ -52,7 +51,6 @@ public class RemoteRepository implements Repository {
 	protected URL toURL(String suffix) {
 		StringBuilder stb = new StringBuilder();
 		stb.append(this.baseUrl);
-		stb.append('/');
 		stb.append(suffix);
 		return UrlUtil.toURL(stb.toString());
 	}

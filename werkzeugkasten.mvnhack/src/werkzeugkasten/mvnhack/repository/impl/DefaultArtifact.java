@@ -64,7 +64,6 @@ public class DefaultArtifact implements Artifact {
 	public String toPath() {
 		char ps = '/';
 		StringBuilder stb = new StringBuilder();
-		stb.append(ps);
 		stb.append(getGroupId().replace('.', '/'));
 		stb.append(ps);
 		stb.append(getArtifactId());
