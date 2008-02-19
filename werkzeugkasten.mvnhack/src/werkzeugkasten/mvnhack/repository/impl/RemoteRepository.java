@@ -1,5 +1,6 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +26,15 @@ public class RemoteRepository implements Repository {
 
 	@Override
 	public Artifact load(String groupId, String artifactId, String version) {
-		// TODO Auto-generated method stub
+		StringBuilder stb = new StringBuilder();
+		stb.append(baseUrl);
+		stb.append('/');
+		stb.append(ArtifactUtil.toPom(groupId, artifactId, version));
+		URL url = UrlUtil.toURL(stb.toString());
+		try {
+			return builder.build(url.openStream());
+		} catch (IOException e) {
+		}
 		return null;
 	}
 
@@ -34,7 +43,7 @@ public class RemoteRepository implements Repository {
 		Set<URL> urls = new HashSet<URL>();
 		String path = artifact.toPath();
 		urls.add(toURL(path));
-		path = path.substring(0, path.lastIndexOf('.') - 1);
+		path = path.substring(0, path.lastIndexOf('.'));
 		urls.add(toURL(path + Constants.POM));
 		urls.add(toURL(path + "-sources." + artifact.getType()));
 		return urls;

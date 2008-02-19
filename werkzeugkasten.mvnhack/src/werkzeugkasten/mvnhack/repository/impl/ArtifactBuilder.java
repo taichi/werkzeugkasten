@@ -3,6 +3,8 @@ package werkzeugkasten.mvnhack.repository.impl;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +31,8 @@ public class ArtifactBuilder {
 
 	Logger logger = Logger.getLogger(ArtifactBuilder.class.getName());
 
+	protected static Set<String> legalScopes = new HashSet<String>();
+
 	public Artifact build(InputStream pom) {
 		try {
 			Document doc = toDocument(pom);
@@ -40,15 +44,18 @@ public class ArtifactBuilder {
 			setValue(path, a, elem);
 			a.setType(path.evaluate("packaging", elem));
 
-			NodeList list = (NodeList) path.evaluate(
-					"project/dependencies/dependency", doc,
-					XPathConstants.NODESET);
+			NodeList list = (NodeList) path.evaluate("dependencies/dependency",
+					elem, XPathConstants.NODESET);
 			for (int i = 0; i < list.getLength(); i++) {
 				Node n = list.item(i);
-				DefaultDependency d = new DefaultDependency();
-				setValue(path, d, n);
-				a.setType(path.evaluate("type", n));
-				a.add(d);
+				String scope = path.evaluate("scope", n);
+				if (StringUtil.isEmpty(scope)
+						|| "test".equalsIgnoreCase(scope) == false) {
+					DefaultDependency d = new DefaultDependency();
+					setValue(path, d, n);
+					a.setType(path.evaluate("type", n));
+					a.add(d);
+				}
 			}
 
 			if (validate(a)) {

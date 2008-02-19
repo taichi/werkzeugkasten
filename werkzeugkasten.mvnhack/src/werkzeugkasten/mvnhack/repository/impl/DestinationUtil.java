@@ -19,13 +19,15 @@ public class DestinationUtil {
 			InputStream in = null;
 			try {
 				File dest = handler.toDestination(url);
-				File dir = dest.getParentFile();
-				if (dir.exists() == false) {
-					dir.mkdirs();
-				}
-				if (dest != null && dest.exists() == false) {
-					in = context.open(url);
-					StreamUtil.copy(in, dest);
+				if (dest != null) {
+					File dir = dest.getParentFile();
+					if (dir.exists() == false) {
+						dir.mkdirs();
+					}
+					if (dest.exists() == false) {
+						in = context.open(url);
+						StreamUtil.copy(in, dest);
+					}
 				}
 			} catch (IllegalStateException e) {
 				Throwable t = e.getCause();

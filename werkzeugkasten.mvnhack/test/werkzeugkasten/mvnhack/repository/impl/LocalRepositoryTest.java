@@ -14,11 +14,11 @@ import werkzeugkasten.mvnhack.repository.Artifact;
 
 public class LocalRepositoryTest {
 
-	protected LocalRepository target;
+	LocalRepository target;
 
-	protected File root;
+	File root;
 
-	protected ArtifactBuilder builder;
+	ArtifactBuilder builder;
 
 	@Before
 	public void setUp() throws Exception {

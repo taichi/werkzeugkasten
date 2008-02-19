@@ -43,6 +43,9 @@ public class DefaultConfiguration implements Configuration {
 		if (usr.exists()) {
 			addLocalRepository(usr);
 		}
+
+		addRepository(new RemoteRepository(Constants.CENTRAL_REPOSITORY,
+				builder));
 	}
 
 	protected void addLocalRepository(File rep) {
