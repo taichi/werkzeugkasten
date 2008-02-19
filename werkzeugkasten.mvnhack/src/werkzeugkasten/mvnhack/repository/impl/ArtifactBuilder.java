@@ -73,7 +73,8 @@ public class ArtifactBuilder {
 	}
 
 	protected boolean isNotOptional(String optional) {
-		return StringUtil.isEmpty(optional) || Boolean.parseBoolean(optional);
+		return StringUtil.isEmpty(optional)
+				|| Boolean.parseBoolean(optional) == false;
 	}
 
 	protected boolean isNotTest(String scope) {

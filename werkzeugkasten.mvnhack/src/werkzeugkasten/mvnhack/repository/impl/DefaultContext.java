@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.UrlUtil;
@@ -70,10 +72,14 @@ public class DefaultContext implements Context {
 		}
 	}
 
+	protected static Logger logger = Logger.getLogger(DefaultContext.class
+			.getName());
+
 	@Override
 	public InputStream open(URL url) {
 		// FIXME RemoteRepositoryにアクセスすると、
 		// Destinationの数だけHTTPリクエストを投げてしまうのは、イマイチ。
+		logger.log(Level.INFO, url.toString());
 		return UrlUtil.open(url);
 	}
 
