@@ -1,14 +1,14 @@
 package werkzeugkasten.mvnhack.repository;
 
-import java.util.List;
+import java.util.Set;
 
 public interface Configuration {
 
-	List<Repository> getRepositories();
+	Set<Repository> getRepositories();
 
 	void addRepository(Repository repository);
 
-	List<Destination> getDestinations();
+	Set<Destination> getDestinations();
 
 	void addDestination(Destination destination);
 
