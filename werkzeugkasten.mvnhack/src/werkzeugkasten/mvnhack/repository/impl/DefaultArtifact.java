@@ -18,10 +18,10 @@ public class DefaultArtifact implements Artifact {
 
 	protected Set<Dependency> dependencies;
 
-	public DefaultArtifact(String groupId, String artivactId, String version,
+	public DefaultArtifact(String groupId, String artifactId, String version,
 			String type) {
 		this.groupId = groupId;
-		this.artifactId = artivactId;
+		this.artifactId = artifactId;
 		this.version = version;
 		if (StringUtil.isEmpty(type) == false) {
 			this.type = type;
@@ -53,7 +53,7 @@ public class DefaultArtifact implements Artifact {
 		char ps = '/';
 		StringBuilder stb = new StringBuilder();
 		stb.append(ps);
-		stb.append(getGroupId());
+		stb.append(getGroupId().replace('.', '/'));
 		stb.append(ps);
 		stb.append(getArtifactId());
 		stb.append(ps);

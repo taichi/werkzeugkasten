@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
+import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
@@ -19,6 +20,26 @@ public class LocalRepository implements Repository, Destination,
 
 	public LocalRepository(File root) {
 		this.root = root;
+	}
+
+	@Override
+	public Artifact load(String groupId, String artifactId, String version) {
+		if (StringUtil.isEmpty(groupId)) {
+			groupId = artifactId;
+		}
+		char ps = '/';
+		StringBuilder stb = new StringBuilder();
+		stb.append(groupId.replace('.', '/'));
+		stb.append(ps);
+		stb.append(artifactId);
+		stb.append(ps);
+		stb.append(version);
+		stb.append(ps);
+		stb.append(artifactId);
+		stb.append('-');
+		stb.append(version);
+		stb.append(Constants.POM);
+		return null;
 	}
 
 	@Override

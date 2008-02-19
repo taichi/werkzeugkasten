@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import werkzeugkasten.common.util.UrlUtil;
+import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Repository;
 
@@ -20,12 +21,18 @@ public class RemoteRepository implements Repository {
 	}
 
 	@Override
+	public Artifact load(String groupId, String artifactId, String version) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public Set<URL> getLocation(Artifact artifact) {
 		Set<URL> urls = new HashSet<URL>();
 		String path = artifact.toPath();
 		urls.add(toURL(path));
 		path = path.substring(0, path.lastIndexOf('.') - 1);
-		urls.add(toURL(path + ".pom"));
+		urls.add(toURL(path + Constants.POM));
 		urls.add(toURL(path + "-sources." + artifact.getType()));
 		return urls;
 	}
