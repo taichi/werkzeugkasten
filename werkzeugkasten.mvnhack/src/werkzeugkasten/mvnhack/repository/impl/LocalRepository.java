@@ -9,7 +9,8 @@ import werkzeugkasten.mvnhack.repository.Context;
 import werkzeugkasten.mvnhack.repository.Destination;
 import werkzeugkasten.mvnhack.repository.Repository;
 
-public class LocalRepository implements Repository, Destination {
+public class LocalRepository implements Repository, Destination,
+		DestinationUtil.Handler {
 
 	protected File root;
 
@@ -36,13 +37,14 @@ public class LocalRepository implements Repository, Destination {
 	}
 
 	@Override
-	public void copyFrom(Context context, Artifact artifact) {
-		DestinationUtil.copy(context, artifact, new DestinationUtil.Handler() {
-			@Override
-			public File toDestination(Artifact artifact) {
-				return toFile(artifact);
-			}
-		});
+	public void copyFrom(Context context, Repository repository,
+			Artifact artifact) {
+		DestinationUtil.copy(context, repository, artifact, this);
+	}
+
+	@Override
+	public File toDestination(Artifact artifact) {
+		return toFile(artifact);
 	}
 
 }
