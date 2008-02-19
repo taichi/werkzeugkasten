@@ -16,10 +16,7 @@ public class FileUtil {
 			return;
 		}
 		for (File file : files) {
-			if (file.isDirectory()) {
-				deleteAll(file.listFiles());
-			}
-			file.delete();
+			delete(file);
 		}
 	}
 }
