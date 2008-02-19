@@ -9,8 +9,10 @@ import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 
@@ -23,6 +25,11 @@ public class RemoteRepositoryTest {
 	FlatDestination flat;
 
 	File localRoot;
+
+	@BeforeClass
+	public static void setUpClass() {
+		UrlUtil.setDefaultUseCaches();
+	}
 
 	@Before
 	public void setUp() throws Exception {

@@ -36,8 +36,7 @@ public class ArtifactBuilder {
 	public Artifact build(InputStream pom) {
 		try {
 			Document doc = toDocument(pom);
-			XPathFactory xf = XPathFactory.newInstance();
-			XPath path = xf.newXPath();
+			XPath path = XPathFactory.newInstance().newXPath();
 
 			DefaultArtifact a = new DefaultArtifact();
 			Element elem = doc.getDocumentElement();
@@ -49,9 +48,9 @@ public class ArtifactBuilder {
 			// TODO dependencyManagement
 			for (int i = 0; i < list.getLength(); i++) {
 				Node n = list.item(i);
+				String optional = path.evaluate("optional", n);
 				String scope = path.evaluate("scope", n);
-				if (StringUtil.isEmpty(scope)
-						|| "test".equalsIgnoreCase(scope) == false) {
+				if (isNotOptional(optional) && isNotTest(scope)) {
 					DefaultDependency d = new DefaultDependency();
 					setValue(path, d, n);
 					a.setType(path.evaluate("type", n));
@@ -71,6 +70,15 @@ public class ArtifactBuilder {
 			StreamUtil.close(pom);
 		}
 		return null;
+	}
+
+	protected boolean isNotOptional(String optional) {
+		return StringUtil.isEmpty(optional) || Boolean.parseBoolean(optional);
+	}
+
+	protected boolean isNotTest(String scope) {
+		return StringUtil.isEmpty(scope)
+				|| "test".equalsIgnoreCase(scope) == false;
 	}
 
 	private void setValue(XPath path, DefaultArtifact a, Node elem)

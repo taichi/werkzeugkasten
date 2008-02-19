@@ -8,8 +8,10 @@ import java.net.URL;
 import java.util.Set;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 
 public class LocalRepositoryTest {
@@ -19,6 +21,11 @@ public class LocalRepositoryTest {
 	File root;
 
 	ArtifactBuilder builder;
+
+	@BeforeClass
+	public static void setUpClass() {
+		UrlUtil.setDefaultUseCaches();
+	}
 
 	@Before
 	public void setUp() throws Exception {

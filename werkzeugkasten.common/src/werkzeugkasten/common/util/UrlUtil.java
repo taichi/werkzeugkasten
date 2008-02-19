@@ -55,4 +55,12 @@ public class UrlUtil {
 			}
 		}
 	}
+
+	public static void setDefaultUseCaches() {
+		try {
+			new URL("http://example.com").openConnection().setDefaultUseCaches(
+					false);
+		} catch (Exception e) {
+		}
+	}
 }

@@ -8,15 +8,22 @@ import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Dependency;
 
 public class ArtifactBuilderTest {
 
 	InputStream in;
+
+	@BeforeClass
+	public static void setUpClass() {
+		UrlUtil.setDefaultUseCaches();
+	}
 
 	@Before
 	public void setUp() throws Exception {
