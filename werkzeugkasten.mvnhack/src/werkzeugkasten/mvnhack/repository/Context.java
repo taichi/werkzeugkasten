@@ -5,7 +5,7 @@ import java.net.URL;
 
 public interface Context {
 
-	void addResolvedArtifact(Artifact artifact);
+	void resolve(String groupId, String artifactId, String version);
 
 	boolean isResolvedArtifact(String groupId, String artifactId, String version);
 

@@ -4,14 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.Proxy;
 import java.net.URL;
 
 public class UrlUtil {
 
-	public static InputStream open(URL url, Proxy proxy) {
+	public static InputStream open(URL url) {
 		try {
-			return url.openConnection(proxy).getInputStream();
+			return url.openConnection().getInputStream();
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		}
@@ -30,6 +29,25 @@ public class UrlUtil {
 			return new URL(url);
 		} catch (MalformedURLException e) {
 			throw new IllegalStateException(e);
+		}
+	}
+
+	public static void setUpProxy(String proxyUrl) {
+		if (StringUtil.isEmpty(proxyUrl) == false) {
+			URL url = UrlUtil.toURL(proxyUrl);
+			if ("http".equalsIgnoreCase(url.getProtocol())) {
+				System.setProperty("http.proxyHost", url.getHost());
+				int port = url.getPort();
+				if (0 < port) {
+					System.setProperty("http.proxyPort", String.valueOf(port));
+				}
+			} else if ("socks".equalsIgnoreCase(url.getProtocol())) {
+				System.setProperty("socksProxyHost", url.getHost());
+				int port = url.getPort();
+				if (0 < port) {
+					System.setProperty("socksProxyPort", String.valueOf(port));
+				}
+			}
 		}
 	}
 }

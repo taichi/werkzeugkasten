@@ -43,7 +43,8 @@ public class DefaultArtifact implements Artifact {
 		return this.version;
 	}
 
-	protected String getType() {
+	@Override
+	public String getType() {
 		return this.type;
 	}
 
@@ -55,6 +56,19 @@ public class DefaultArtifact implements Artifact {
 		stb.append(getVersion());
 		stb.append('.');
 		stb.append(getType());
+		return stb.toString();
+	}
+
+	@Override
+	public String toPath() {
+		char ps = '/';
+		StringBuilder stb = new StringBuilder();
+		stb.append(ps);
+		stb.append(getGroupId());
+		stb.append(ps);
+		stb.append(getArtifactId());
+		stb.append(ps);
+		stb.append(getFileName());
 		return stb.toString();
 	}
 

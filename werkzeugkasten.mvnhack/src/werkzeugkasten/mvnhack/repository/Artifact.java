@@ -10,7 +10,11 @@ public interface Artifact extends Comparable<Artifact> {
 
 	String getVersion();
 
+	String getType();
+
 	String getFileName();
+
+	String toPath();
 
 	Set<Dependency> getDependencies();
 

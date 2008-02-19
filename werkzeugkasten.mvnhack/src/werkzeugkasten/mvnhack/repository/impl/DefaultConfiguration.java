@@ -2,6 +2,7 @@ package werkzeugkasten.mvnhack.repository.impl;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.LinkedHashSet;
 import java.util.Properties;
@@ -9,6 +10,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import werkzeugkasten.common.util.StringUtil;
+import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Configuration;
 import werkzeugkasten.mvnhack.repository.Destination;
@@ -19,6 +21,8 @@ public class DefaultConfiguration implements Configuration {
 	protected Set<Repository> repositories = new LinkedHashSet<Repository>();
 
 	protected Set<Destination> destinations = new LinkedHashSet<Destination>();
+
+	protected Proxy proxy = Proxy.NO_PROXY;
 
 	protected static final Pattern isRemote = Pattern.compile("http://.*",
 			Pattern.CASE_INSENSITIVE);
@@ -62,6 +66,7 @@ public class DefaultConfiguration implements Configuration {
 				}
 			}
 		}
+		UrlUtil.setUpProxy(properties.getProperty(Constants.PROP_PROXY));
 	}
 
 	protected boolean validateURL(String url) {
@@ -92,5 +97,4 @@ public class DefaultConfiguration implements Configuration {
 	public Set<Repository> getRepositories() {
 		return this.repositories;
 	}
-
 }

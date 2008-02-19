@@ -24,15 +24,9 @@ public class LocalRepository implements Repository, Destination,
 	}
 
 	protected File toFile(Artifact artifact) {
-		String ps = File.pathSeparator;
 		StringBuilder stb = new StringBuilder();
 		stb.append(root.getAbsolutePath());
-		stb.append(ps);
-		stb.append(artifact.getGroupId());
-		stb.append(ps);
-		stb.append(artifact.getArtifactId());
-		stb.append(ps);
-		stb.append(artifact.getFileName());
+		stb.append(artifact.toPath());
 		return new File(stb.toString());
 	}
 

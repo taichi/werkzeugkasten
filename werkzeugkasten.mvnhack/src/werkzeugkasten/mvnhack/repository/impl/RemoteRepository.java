@@ -16,15 +16,9 @@ public class RemoteRepository implements Repository {
 
 	@Override
 	public URL getLocation(Artifact artifact) {
-		char ps = '/';
 		StringBuilder stb = new StringBuilder();
 		stb.append(baseUrl);
-		stb.append(ps);
-		stb.append(artifact.getGroupId());
-		stb.append(ps);
-		stb.append(artifact.getArtifactId());
-		stb.append(ps);
-		stb.append(artifact.getFileName());
+		stb.append(artifact.toPath());
 		return UrlUtil.toURL(stb.toString());
 	}
 
