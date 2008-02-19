@@ -1,16 +1,21 @@
 package werkzeugkasten.common.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import werkzeugkasten.mvnhack.repository.FileNotFoundRuntimeException;
 
 public class UrlUtil {
 
 	public static InputStream open(URL url) {
 		try {
 			return url.openConnection().getInputStream();
+		} catch (FileNotFoundException e) {
+			throw new FileNotFoundRuntimeException(e);
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		}
