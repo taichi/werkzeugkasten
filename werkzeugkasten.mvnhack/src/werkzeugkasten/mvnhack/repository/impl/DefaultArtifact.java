@@ -3,6 +3,7 @@ package werkzeugkasten.mvnhack.repository.impl;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Dependency;
 
@@ -54,7 +55,9 @@ public class DefaultArtifact implements Artifact {
 	}
 
 	protected void setType(String type) {
-		this.type = type;
+		if (StringUtil.isEmpty(type) == false) {
+			this.type = type;
+		}
 	}
 
 	@Override

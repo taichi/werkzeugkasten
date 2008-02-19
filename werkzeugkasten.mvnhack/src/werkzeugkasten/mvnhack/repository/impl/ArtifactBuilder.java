@@ -1,51 +1,54 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.stream.StreamFilter;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 
-public class ArtifactBuilder implements StreamFilter {
+public class ArtifactBuilder {
 
 	Logger logger = Logger.getLogger(ArtifactBuilder.class.getName());
 
 	public Artifact build(InputStream pom) {
 		try {
-			XMLInputFactory factory = XMLInputFactory.newInstance();
-			factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
-			InputStream stream = new BufferedInputStream(pom);
-			XMLStreamReader reader = factory.createXMLStreamReader(stream,
-					"UTF-8");
-			reader = factory.createFilteredReader(reader, this);
+			Document doc = toDocument(pom);
+			XPathFactory xf = XPathFactory.newInstance();
+			XPath path = xf.newXPath();
 
 			DefaultArtifact a = new DefaultArtifact();
-			for (; reader.hasNext(); reader.next()) {
-				String local = reader.getLocalName();
-				if ("dependency".equalsIgnoreCase(local)) {
-					DefaultDependency d = new DefaultDependency();
-					for (; reader.hasNext(); reader.next()) {
-						String e = reader.getLocalName();
-						setValue(reader, e, d);
-						if (reader.isEndElement()
-								&& "dependency".equalsIgnoreCase(e)) {
-							if (validate(d)) {
-								a.add(d);
-							}
-							break;
-						}
-					}
-				} else {
-					setValue(reader, local, a);
-				}
+			Element elem = doc.getDocumentElement();
+			setValue(path, a, elem);
+			a.setType(path.evaluate("packaging", elem));
+
+			NodeList list = (NodeList) path.evaluate(
+					"project/dependencies/dependency", doc,
+					XPathConstants.NODESET);
+			for (int i = 0; i < list.getLength(); i++) {
+				Node n = list.item(i);
+				DefaultDependency d = new DefaultDependency();
+				setValue(path, d, n);
+				a.setType(path.evaluate("type", n));
+				a.add(d);
 			}
 
 			if (validate(a)) {
@@ -60,6 +63,24 @@ public class ArtifactBuilder implements StreamFilter {
 		return null;
 	}
 
+	private void setValue(XPath path, DefaultArtifact a, Node elem)
+			throws XPathExpressionException {
+		a.setGroupId(path.evaluate("groupId", elem));
+		a.setArtifactId(path.evaluate("artifactId", elem));
+		a.setVersion(path.evaluate("version", elem));
+	}
+
+	private Document toDocument(InputStream pom)
+			throws ParserConfigurationException, SAXException, IOException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setValidating(false);
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		InputSource src = new InputSource(new BufferedInputStream(pom));
+		src.setEncoding("UTF-8");
+
+		return builder.parse(src);
+	}
+
 	protected boolean validate(Artifact a) {
 		for (String s : new String[] { a.getGroupId(), a.getArtifactId(),
 				a.getVersion() }) {
@@ -70,24 +91,4 @@ public class ArtifactBuilder implements StreamFilter {
 		return true;
 	}
 
-	protected void setValue(XMLStreamReader reader, String e, DefaultArtifact a)
-			throws XMLStreamException {
-		if (reader.isStartElement()) {
-			if ("groupId".equalsIgnoreCase(e)) {
-				a.setGroupId(reader.getElementText());
-			} else if ("artifactId".equalsIgnoreCase(e)) {
-				a.setArtifactId(reader.getElementText());
-			} else if ("version".equalsIgnoreCase(e)) {
-				a.setVersion(reader.getElementText());
-			} else if ("packaging".equalsIgnoreCase(e)
-					|| "type".equalsIgnoreCase(e)) {
-				a.setType(reader.getElementText());
-			}
-		}
-	}
-
-	@Override
-	public boolean accept(XMLStreamReader reader) {
-		return reader.isStartElement() || reader.isEndElement();
-	}
 }
