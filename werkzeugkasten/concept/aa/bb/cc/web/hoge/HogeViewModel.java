@@ -14,4 +14,9 @@ public interface HogeViewModel extends ServletViewModel {
 
 	@Scope(SessionAttributeScope.class)
 	void setId(int id);
+
+	// String なら変換かからない。
+	String getName();
+
+	void setName(String name);
 }

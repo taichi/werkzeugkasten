@@ -52,6 +52,22 @@ public class HogeControllerContext extends ServletWebContext<_> implements
 		this.sessionAttributeScope.set(this, key, id);
 	}
 
+	public String getName() {
+		String key = "name";
+		Object o = this.requestAttributeScope.get(this, key);
+		if (o instanceof String) {
+			return (String) o;
+		} else if (o != null) {
+			return o.toString();
+		}
+		return null;
+	}
+
+	public void setName(String name) {
+		String key = "name";
+		this.requestAttributeScope.set(this, key, name);
+	}
+
 	public <CTX extends WebContext<ServletContext, HttpServletRequest, HttpServletResponse, _>> void validate(
 			CTX context) {
 
