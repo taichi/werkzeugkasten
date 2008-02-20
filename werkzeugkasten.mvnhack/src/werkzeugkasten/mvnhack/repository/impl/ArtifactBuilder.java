@@ -97,7 +97,6 @@ public class ArtifactBuilder {
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		InputSource src = new InputSource(new BufferedInputStream(pom));
 		src.setEncoding("UTF-8");
-
 		return builder.parse(src);
 	}
 
