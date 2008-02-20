@@ -5,8 +5,18 @@ import java.net.URL;
 
 public interface Destination {
 
-	void copyFrom(Context context, Repository repository, Artifact artifact);
+	/**
+	 * @notnull context
+	 * @notnull from
+	 * @notnull artifact
+	 */
+	void copyFrom(Context context, Repository from, Artifact artifact);
 
+	/**
+	 * @param artifact
+	 * @param from
+	 * @return
+	 */
 	File toDestination(Artifact artifact, URL from);
 
 }
