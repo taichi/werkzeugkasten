@@ -7,7 +7,6 @@ import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.util.UrlUtil;
@@ -17,8 +16,6 @@ import werkzeugkasten.mvnhack.repository.Destination;
 import werkzeugkasten.mvnhack.repository.Repository;
 
 public class DefaultConfiguration implements Configuration {
-
-	protected static Logger logger = Logger.getLogger(Constants.NAME_LOGGER);
 
 	protected Set<Repository> repositories = new LinkedHashSet<Repository>();
 
@@ -53,7 +50,7 @@ public class DefaultConfiguration implements Configuration {
 	}
 
 	protected void addLocalRepository(File rep) {
-		logger.log(Level.INFO, "LocalRepository :{0}", rep.toString());
+		Constants.LOG.log(Level.INFO, "LocalRepository :{0}", rep.toString());
 		LocalRepository lr = new LocalRepository(rep, builder);
 		addRepository(lr);
 		addDestination(lr);

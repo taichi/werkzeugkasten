@@ -1,8 +1,12 @@
 package werkzeugkasten.mvnhack;
 
+import java.util.logging.Logger;
+
 public class Constants {
 
 	public static final String NAME_LOGGER = "werkzeugkasten.mvnhack";
+
+	public static final Logger LOG = Logger.getLogger(NAME_LOGGER);
 
 	public static final String PROP_REPOSITORY = "repository";
 

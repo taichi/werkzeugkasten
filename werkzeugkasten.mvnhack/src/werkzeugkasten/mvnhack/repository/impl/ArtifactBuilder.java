@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,8 +28,6 @@ import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 
 public class ArtifactBuilder {
-
-	Logger logger = Logger.getLogger(Constants.NAME_LOGGER);
 
 	protected static Set<String> legalScopes = new HashSet<String>();
 
@@ -66,7 +63,7 @@ public class ArtifactBuilder {
 			}
 			return null;
 		} catch (Exception e) {
-			logger.log(Level.WARNING, e.getMessage(), e);
+			Constants.LOG.log(Level.WARNING, e.getMessage(), e);
 		} finally {
 			StreamUtil.close(pom);
 		}

@@ -15,8 +15,6 @@ import werkzeugkasten.mvnhack.repository.Repository;
 
 public class DestinationUtil {
 
-	protected static Logger logger = Logger.getLogger(Constants.NAME_LOGGER);
-
 	public static void copy(Context context, Repository repository,
 			Artifact artifact, Handler handler) {
 		for (URL url : repository.getLocation(artifact)) {
@@ -29,7 +27,7 @@ public class DestinationUtil {
 						dir.mkdirs();
 					}
 					in = context.open(url);
-					logger.log(Level.INFO, "copy to {0}", dest);
+					Constants.LOG.log(Level.INFO, "copy to {0}", dest);
 					StreamUtil.copy(in, dest);
 				}
 			} catch (FileNotFoundRuntimeException e) {

@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.UrlUtil;
@@ -18,8 +17,6 @@ import werkzeugkasten.mvnhack.repository.Destination;
 import werkzeugkasten.mvnhack.repository.Repository;
 
 public class DefaultContext implements Context {
-
-	protected static Logger logger = Logger.getLogger(Constants.NAME_LOGGER);
 
 	protected Map<String, Artifact> resolved;
 
@@ -79,7 +76,7 @@ public class DefaultContext implements Context {
 	public InputStream open(URL url) {
 		// FIXME RemoteRepositoryにアクセスすると、
 		// Destinationの数だけHTTPリクエストを投げてしまうのは、イマイチ。
-		logger.log(Level.INFO, url.toString());
+		Constants.LOG.log(Level.INFO, url.toString());
 		return UrlUtil.open(url);
 	}
 
