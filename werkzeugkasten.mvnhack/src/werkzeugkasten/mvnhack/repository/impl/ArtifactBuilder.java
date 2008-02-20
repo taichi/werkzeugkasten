@@ -3,8 +3,8 @@ package werkzeugkasten.mvnhack.repository.impl;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -29,16 +29,20 @@ import werkzeugkasten.mvnhack.repository.Artifact;
 
 public class ArtifactBuilder {
 
-	protected static Set<String> legalScopes = new HashSet<String>();
-
 	public Artifact build(InputStream pom) {
 		try {
 			Document doc = toDocument(pom);
 			XPath path = XPathFactory.newInstance().newXPath();
+			Element elem = doc.getDocumentElement();
+
+			Map<String, String> parent = new HashMap<String, String>();
+			put(parent, "parent.groupId", path.evaluate("parent/groupId", elem));
+			put(parent, "parent.artifactId", path.evaluate("parent/artifactId",
+					elem));
+			put(parent, "parent.version", path.evaluate("parent/version", elem));
 
 			DefaultArtifact a = new DefaultArtifact();
-			Element elem = doc.getDocumentElement();
-			setValue(path, a, elem);
+			setValue(path, a, elem, parent);
 			a.setType(path.evaluate("packaging", elem));
 
 			NodeList list = (NodeList) path.evaluate("dependencies/dependency",
@@ -50,7 +54,7 @@ public class ArtifactBuilder {
 				String scope = path.evaluate("scope", n);
 				if (isNotOptional(optional) && isNotTest(scope)) {
 					DefaultDependency d = new DefaultDependency();
-					setValue(path, d, n);
+					setValue(path, d, n, parent);
 					a.setType(path.evaluate("type", n));
 					if (validate(d)) {
 						a.add(d);
@@ -70,6 +74,12 @@ public class ArtifactBuilder {
 		return null;
 	}
 
+	protected void put(Map<String, String> m, String key, String value) {
+		if (StringUtil.isEmpty(value) == false) {
+			m.put(key, value);
+		}
+	}
+
 	protected boolean isNotOptional(String optional) {
 		return StringUtil.isEmpty(optional)
 				|| Boolean.parseBoolean(optional) == false;
@@ -80,14 +90,25 @@ public class ArtifactBuilder {
 				|| "test".equalsIgnoreCase(scope) == false;
 	}
 
-	private void setValue(XPath path, DefaultArtifact a, Node elem)
-			throws XPathExpressionException {
-		a.setGroupId(path.evaluate("groupId", elem));
+	protected void setValue(XPath path, DefaultArtifact a, Node elem,
+			Map<String, String> parent) throws XPathExpressionException {
+		a.setGroupId(toValue(path, elem, "groupId", parent));
 		a.setArtifactId(path.evaluate("artifactId", elem));
-		a.setVersion(path.evaluate("version", elem));
+		a.setVersion(toValue(path, elem, "version", parent));
 	}
 
-	private Document toDocument(InputStream pom)
+	protected String toValue(XPath path, Node elem, String name,
+			Map<String, String> parent) throws XPathExpressionException {
+		String v = path.evaluate(name, elem);
+		if (StringUtil.isEmpty(v)) {
+			v = parent.get("parent." + name);
+		} else {
+			v = StringUtil.replace(v, parent);
+		}
+		return v;
+	}
+
+	protected Document toDocument(InputStream pom)
 			throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setValidating(false);

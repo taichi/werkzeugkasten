@@ -52,7 +52,7 @@ public class RemoteRepositoryTest {
 
 	@Test
 	public void testLoad() {
-		Artifact a = target.load("net.sourceforge.jexcelapi", "jxl", "2.6.3");
+		Artifact a = target.load("org.slf4j", "slf4j-simple", "1.4.3");
 		assertNotNull(a);
 		Set<URL> set = target.getLocation(a);
 		assertNotNull(set);
@@ -61,7 +61,7 @@ public class RemoteRepositoryTest {
 		flat
 				.copyFrom(new DefaultContext(new DefaultConfiguration()),
 						target, a);
-		assertEquals(1, localRoot.list().length);
+		assertEquals(2, localRoot.list().length);
 	}
 
 }
