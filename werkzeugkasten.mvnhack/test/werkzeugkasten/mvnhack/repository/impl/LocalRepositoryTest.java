@@ -62,11 +62,11 @@ public class LocalRepositoryTest {
 				FileUtil.delete(another);
 			}
 			LocalRepository lr = new LocalRepository(another, builder);
-			lr.copyFrom(new DefaultContext(null), target, a);
+			lr.copyFrom(new DefaultContext(new DefaultConfiguration()), target,
+					a);
 			assertNotNull(lr.load("net.sourceforge.jexcelapi", "jxl", "2.6.6"));
 		} finally {
 			another.delete();
 		}
 	}
-
 }

@@ -58,7 +58,9 @@ public class RemoteRepositoryTest {
 		assertNotNull(set);
 		assertEquals(3, set.size());
 
-		flat.copyFrom(new DefaultContext(null), target, a);
+		flat
+				.copyFrom(new DefaultContext(new DefaultConfiguration()),
+						target, a);
 		assertEquals(1, localRoot.list().length);
 	}
 
