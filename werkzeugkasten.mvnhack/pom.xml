@@ -8,7 +8,7 @@
 	<version>0.0.1</version>
 	<packaging>jar</packaging>
 	<name>mvnhack</name>
-	<url></url>
+	<url>http://code.google.com/p/werkzeugkasten/</url>
 	<issueManagement>
 		<system></system>
 		<url></url>
@@ -175,16 +175,6 @@
 	</reporting>
 	<distributionManagement></distributionManagement>
 	<dependencies>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.4.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.4.3</version>
-		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
