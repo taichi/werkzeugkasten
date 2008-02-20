@@ -9,7 +9,7 @@ public interface Context {
 
 	boolean isResolvedArtifact(String groupId, String artifactId, String version);
 
-	InputStream open(URL url);
+	InputStream open(Artifact artifact, URL url);
 
 	void close(InputStream stream);
 }

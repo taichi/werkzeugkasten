@@ -8,7 +8,7 @@ import werkzeugkasten.mvnhack.repository.Context;
 import werkzeugkasten.mvnhack.repository.Destination;
 import werkzeugkasten.mvnhack.repository.Repository;
 
-public class FlatDestination implements Destination, DestinationUtil.Handler {
+public class FlatDestination implements Destination {
 
 	protected static final Filter DEFAULT_FILTER = new Filter() {
 		public boolean filter(String path) {

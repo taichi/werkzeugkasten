@@ -1,11 +1,13 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+import werkzeugkasten.common.util.FileUtil;
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.Constants;
@@ -73,11 +75,22 @@ public class DefaultContext implements Context {
 	}
 
 	@Override
-	public InputStream open(URL url) {
-		// FIXME RemoteRepositoryにアクセスすると、
-		// Destinationの数だけHTTPリクエストを投げてしまうのは、イマイチ。
-		Constants.LOG.log(Level.INFO, url.toString());
-		return UrlUtil.open(url);
+	public InputStream open(Artifact artifact, URL url) {
+		InputStream result = null;
+		Object from = null;
+		for (Destination d : configuration.getDestinations()) {
+			File f = d.toDestination(artifact, url);
+			if (f != null && f.exists()) {
+				result = FileUtil.open(f);
+				from = f;
+			}
+		}
+		if (result == null) {
+			result = UrlUtil.open(url);
+			from = url;
+		}
+		Constants.LOG.log(Level.INFO, "copy from {0}", from);
+		return result;
 	}
 
 	@Override

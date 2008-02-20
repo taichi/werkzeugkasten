@@ -14,8 +14,7 @@ import werkzeugkasten.mvnhack.repository.Context;
 import werkzeugkasten.mvnhack.repository.Destination;
 import werkzeugkasten.mvnhack.repository.Repository;
 
-public class LocalRepository implements Repository, Destination,
-		DestinationUtil.Handler {
+public class LocalRepository implements Repository, Destination {
 
 	protected File root;
 
