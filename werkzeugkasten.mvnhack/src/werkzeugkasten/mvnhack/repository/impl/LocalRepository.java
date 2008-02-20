@@ -44,8 +44,8 @@ public class LocalRepository implements Repository, Destination {
 	@Override
 	public Set<URL> getLocation(Artifact artifact) {
 		Set<URL> urls = new HashSet<URL>();
-		File dir = new File(root.getAbsolutePath(), artifact.toPath())
-				.getParentFile();
+		File dir = new File(root.getAbsolutePath(), ArtifactUtil
+				.toPath(artifact)).getParentFile();
 		if (dir.exists()) {
 			for (File f : dir.listFiles()) {
 				if (f.getName().startsWith(".") == false) {
@@ -64,7 +64,7 @@ public class LocalRepository implements Repository, Destination {
 
 	@Override
 	public File toDestination(Artifact artifact, URL from) {
-		String a = artifact.toPath();
+		String a = ArtifactUtil.toPath(artifact);
 		String f = from.getPath();
 		String path = a.substring(0, a.lastIndexOf('/'));
 		path += f.substring(f.lastIndexOf('/'));

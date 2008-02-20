@@ -40,11 +40,10 @@ public class RemoteRepository implements Repository {
 	@Override
 	public Set<URL> getLocation(Artifact artifact) {
 		Set<URL> urls = new HashSet<URL>();
-		String path = artifact.toPath();
-		urls.add(toURL(path));
-		path = path.substring(0, path.lastIndexOf('.'));
-		urls.add(toURL(path + Constants.POM));
-		urls.add(toURL(path + "-sources." + artifact.getType()));
+		urls.add(toURL(ArtifactUtil.toPath(artifact)));
+		urls.add(toURL(ArtifactUtil.toPath(artifact, Constants.POM)));
+		urls.add(toURL(ArtifactUtil.toPath(artifact, "-sources."
+				+ artifact.getType())));
 		return urls;
 	}
 

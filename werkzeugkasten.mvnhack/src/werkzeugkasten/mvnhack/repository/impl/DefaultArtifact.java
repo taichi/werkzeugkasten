@@ -61,24 +61,6 @@ public class DefaultArtifact implements Artifact {
 	}
 
 	@Override
-	public String toPath() {
-		char ps = '/';
-		StringBuilder stb = new StringBuilder();
-		stb.append(getGroupId().replace('.', '/'));
-		stb.append(ps);
-		stb.append(getArtifactId());
-		stb.append(ps);
-		stb.append(getVersion());
-		stb.append(ps);
-		stb.append(getArtifactId());
-		stb.append('-');
-		stb.append(getVersion());
-		stb.append('.');
-		stb.append(getType());
-		return stb.toString();
-	}
-
-	@Override
 	public Set<Dependency> getDependencies() {
 		return this.dependencies;
 	}

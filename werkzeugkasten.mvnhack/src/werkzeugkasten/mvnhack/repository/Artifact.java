@@ -12,8 +12,6 @@ public interface Artifact extends Comparable<Artifact> {
 
 	String getType();
 
-	String toPath();
-
 	Set<Dependency> getDependencies();
 
 }

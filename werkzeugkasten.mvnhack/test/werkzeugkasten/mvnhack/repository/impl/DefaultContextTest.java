@@ -67,7 +67,7 @@ public class DefaultContextTest {
 
 	@Test
 	public void testResolve() {
-		this.target.resolve(null, "commons-httpclient", "2.0.2");
+		this.target.resolve("", "commons-httpclient", "2.0.2");
 
 		File[] files = destDir.listFiles();
 		assertEquals(2, files.length);

@@ -46,14 +46,7 @@ public class DefaultContext implements Context {
 	}
 
 	protected String toId(String groupId, String artifactId, String version) {
-		char ps = '/';
-		StringBuilder stb = new StringBuilder();
-		stb.append(groupId);
-		stb.append(ps);
-		stb.append(artifactId);
-		stb.append(ps);
-		stb.append(version);
-		return stb.toString();
+		return ArtifactUtil.toPath(groupId, artifactId, version, "");
 	}
 
 	@Override
