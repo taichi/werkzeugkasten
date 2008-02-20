@@ -45,6 +45,7 @@ public class DefaultContextTest {
 		}
 		FlatDestination flat = new FlatDestination(destDir);
 		config.addDestination(flat);
+
 		destRepo = new File(url.getPath(), "destrepo");
 		if (destRepo.exists()) {
 			FileUtil.delete(destRepo);
@@ -67,7 +68,7 @@ public class DefaultContextTest {
 
 	@Test
 	public void testResolve() {
-		this.target.resolve("", "commons-httpclient", "2.0.2");
+		target.resolve("commons-httpclient", "commons-httpclient", "2.0.2");
 
 		File[] files = destDir.listFiles();
 		assertEquals(2, files.length);
