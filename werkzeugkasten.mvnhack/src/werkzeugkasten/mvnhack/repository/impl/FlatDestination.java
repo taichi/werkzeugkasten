@@ -30,9 +30,8 @@ public class FlatDestination implements Destination {
 	}
 
 	@Override
-	public void copyFrom(Context context, Repository repository,
-			Artifact artifact) {
-		DestinationUtil.copy(context, repository, artifact, this);
+	public void copyFrom(Context context, Repository from, Artifact artifact) {
+		DestinationUtil.copy(context, from, artifact, this);
 	}
 
 	@Override
