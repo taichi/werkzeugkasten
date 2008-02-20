@@ -11,11 +11,11 @@ java -jar mvnhack.jar [groupId] [artifactId] [version] flat=[on/off] dest=[path]
   if you want to get own your local repository only. switch to off.
 - dest
   set destination directry.
-  default is . it means current directory.
+  default is execution directory.
 
 exmaples ...
 java -jar mvnhack.jar commons-httpclient commons-httpclient 2.0.2
- you can get commons-httpclient-2.0.2.jar and commons-logging-1.0.3.jar into this directory.
+ you get commons-httpclient-2.0.2.jar and commons-logging-1.0.3.jar into execution directory.
 
 see more information 
   http://code.google.com/p/werkzeugkasten/

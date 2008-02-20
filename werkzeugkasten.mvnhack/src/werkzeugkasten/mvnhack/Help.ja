@@ -18,4 +18,4 @@ java -jar mvnhack.jar commons-httpclient commons-httpclient 2.0.2
  このコマンドでは、commons-httpclient-2.0.2.jar 及び commons-logging-1.0.3.jar を取得する事が出来ます。
 
 より詳しい情報は、 
-  http://code.google.com/p/werkzeugkasten/
+  http://code.google.com/p/werkzeugkasten/wiki/mvnhack
