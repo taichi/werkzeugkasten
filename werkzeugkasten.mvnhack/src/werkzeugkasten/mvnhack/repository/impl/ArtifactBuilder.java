@@ -35,11 +35,7 @@ public class ArtifactBuilder {
 			XPath path = XPathFactory.newInstance().newXPath();
 			Element elem = doc.getDocumentElement();
 
-			Map<String, String> parent = new HashMap<String, String>();
-			put(parent, "parent.groupId", path.evaluate("parent/groupId", elem));
-			put(parent, "parent.artifactId", path.evaluate("parent/artifactId",
-					elem));
-			put(parent, "parent.version", path.evaluate("parent/version", elem));
+			Map<String, String> parent = parseParent(path, elem);
 
 			DefaultArtifact a = new DefaultArtifact();
 			setValue(path, a, elem, parent);
@@ -72,6 +68,16 @@ public class ArtifactBuilder {
 			StreamUtil.close(pom);
 		}
 		return null;
+	}
+
+	protected Map<String, String> parseParent(XPath path, Element elem)
+			throws XPathExpressionException {
+		Map<String, String> parent = new HashMap<String, String>();
+		put(parent, "parent.groupId", path.evaluate("parent/groupId", elem));
+		put(parent, "parent.artifactId", path.evaluate("parent/artifactId",
+				elem));
+		put(parent, "parent.version", path.evaluate("parent/version", elem));
+		return parent;
 	}
 
 	protected void put(Map<String, String> m, String key, String value) {
