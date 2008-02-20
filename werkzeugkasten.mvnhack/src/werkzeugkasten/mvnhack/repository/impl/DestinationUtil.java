@@ -19,7 +19,7 @@ public class DestinationUtil {
 		for (URL url : repository.getLocation(artifact)) {
 			InputStream in = null;
 			try {
-				File dest = handler.toDestination(url);
+				File dest = handler.toDestination(artifact, url);
 				if (dest != null && dest.exists() == false) {
 					File dir = dest.getParentFile();
 					if (dir.exists() == false) {
@@ -43,6 +43,6 @@ public class DestinationUtil {
 	}
 
 	interface Handler {
-		File toDestination(URL url);
+		File toDestination(Artifact artifact, URL from);
 	}
 }

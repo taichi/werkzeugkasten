@@ -9,7 +9,6 @@ import java.util.Set;
 
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.util.UrlUtil;
-import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Context;
 import werkzeugkasten.mvnhack.repository.Destination;
@@ -65,11 +64,11 @@ public class LocalRepository implements Repository, Destination,
 	}
 
 	@Override
-	public File toDestination(URL url) {
-		String path = url.getPath();
-		int index = path.indexOf(Constants.DIR_REPOSITORY);
-		int length = Constants.DIR_REPOSITORY.length();
-		path = path.substring(index + length, path.length());
+	public File toDestination(Artifact artifact, URL from) {
+		String a = artifact.toPath();
+		String f = from.getPath();
+		String path = a.substring(0, a.lastIndexOf('/'));
+		path += f.substring(f.lastIndexOf('/'));
 		return new File(root, path);
 	}
 

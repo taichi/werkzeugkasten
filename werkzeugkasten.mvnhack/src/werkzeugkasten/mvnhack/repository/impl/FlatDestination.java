@@ -36,8 +36,8 @@ public class FlatDestination implements Destination, DestinationUtil.Handler {
 	}
 
 	@Override
-	public File toDestination(URL url) {
-		String path = url.getPath();
+	public File toDestination(Artifact artifact, URL from) {
+		String path = from.getPath();
 		path = path.substring(path.lastIndexOf('/') + 1);
 		if (this.filter.filter(path)) {
 			return new File(dest, path);

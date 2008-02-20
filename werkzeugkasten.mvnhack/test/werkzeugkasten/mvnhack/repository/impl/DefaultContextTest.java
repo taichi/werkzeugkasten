@@ -19,6 +19,8 @@ public class DefaultContextTest {
 
 	File destDir;
 
+	File destRepo;
+
 	@BeforeClass
 	public static void setUpClass() {
 		UrlUtil.setDefaultUseCaches();
@@ -43,6 +45,12 @@ public class DefaultContextTest {
 		}
 		FlatDestination flat = new FlatDestination(destDir);
 		config.addDestination(flat);
+		destRepo = new File(url.getPath(), "destrepo");
+		if (destRepo.exists()) {
+			FileUtil.delete(destRepo);
+		}
+		LocalRepository lrdest = new LocalRepository(destRepo, builder);
+		config.addDestination(lrdest);
 
 		this.target = new DefaultContext(config);
 	}
@@ -51,6 +59,9 @@ public class DefaultContextTest {
 	public void tearDown() throws Exception {
 		if (destDir.exists()) {
 			FileUtil.delete(destDir);
+		}
+		if (destRepo.exists()) {
+			FileUtil.delete(destRepo);
 		}
 	}
 
@@ -61,6 +72,16 @@ public class DefaultContextTest {
 		File[] files = destDir.listFiles();
 		assertEquals(2, files.length);
 
+		File http = new File(destRepo,
+				"commons-httpclient/commons-httpclient/2.0.2");
+		assertEquals(true, http.exists());
+		assertEquals(2, http.list().length);
+
+		File logging = new File(destRepo,
+				"commons-logging/commons-logging/1.0.3");
+		assertEquals(true, logging.exists());
+		File jar = new File(logging, "commons-logging-1.0.3.jar");
+		assertEquals(true, jar.exists());
 	}
 
 }
