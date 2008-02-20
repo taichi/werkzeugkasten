@@ -151,7 +151,7 @@
 	</build>
 	<scm>
 		<connection>
-			scm:svn:https://werkzeugkasten.googlecode.com/svn/trunk/werkzeugkasten.mvnhack
+			scm:svn:http://werkzeugkasten.googlecode.com/svn/trunk/werkzeugkasten.mvnhack
 		</connection>
 		<developerConnection>
 			scm:svn:https://werkzeugkasten.googlecode.com/svn/trunk/werkzeugkasten.mvnhack
