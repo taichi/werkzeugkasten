@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.UrlUtil;
+import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Configuration;
 import werkzeugkasten.mvnhack.repository.Context;
@@ -17,6 +18,8 @@ import werkzeugkasten.mvnhack.repository.Destination;
 import werkzeugkasten.mvnhack.repository.Repository;
 
 public class DefaultContext implements Context {
+
+	protected static Logger logger = Logger.getLogger(Constants.NAME_LOGGER);
 
 	protected Map<String, Artifact> resolved;
 
@@ -71,9 +74,6 @@ public class DefaultContext implements Context {
 			}
 		}
 	}
-
-	protected static Logger logger = Logger.getLogger(DefaultContext.class
-			.getName());
 
 	@Override
 	public InputStream open(URL url) {

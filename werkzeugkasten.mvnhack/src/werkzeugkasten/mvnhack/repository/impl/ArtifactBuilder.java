@@ -25,11 +25,12 @@ import org.xml.sax.SAXException;
 
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.StringUtil;
+import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 
 public class ArtifactBuilder {
 
-	Logger logger = Logger.getLogger(ArtifactBuilder.class.getName());
+	Logger logger = Logger.getLogger(Constants.NAME_LOGGER);
 
 	protected static Set<String> legalScopes = new HashSet<String>();
 
