@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Context;
@@ -27,9 +26,6 @@ public class LocalRepository implements Repository, Destination {
 
 	@Override
 	public Artifact load(String groupId, String artifactId, String version) {
-		if (StringUtil.isEmpty(groupId)) {
-			groupId = artifactId;
-		}
 		try {
 			File pom = new File(root, ArtifactUtil.toPom(groupId, artifactId,
 					version));
