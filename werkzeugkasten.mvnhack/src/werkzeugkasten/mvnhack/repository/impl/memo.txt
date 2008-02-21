@@ -1,0 +1,42 @@
+http://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.4.3/slf4j-simple-1.4.3.pom
+[20:47:44] 太一の発言: このpomなんだけどさ。
+[20:48:02] 太一の発言: <dependency>
+<groupId>org.slf4j</groupId>
+<artifactId>slf4j-api</artifactId>
+</dependency>
+[20:48:06] 太一の発言: が、こうなっている。
+
+まず、親のversionはdependencyまでは伝播しないです
+dependency中のversionは基本的に省略できないのだけど、
+省略した場合はdependencyManagementのエントリの値が使われる。
+[20:50:11] Skirnirの発言: こいつの親は http://repo1.maven.org/maven2/org/slf4j/slf4j-parent/1.4.3/slf4j-parent-1.4.3.pom
+[20:50:24] Skirnirの発言: dependencyManagementの該当エントリは
+[20:50:40] Skirnirの発言: <dependencyManagement>
+
+<dependencies>
+ <dependency>
+  <groupId>${project.groupId}</groupId>
+  <artifactId>slf4j-api</artifactId>
+  <version>${project.version}</version>
+</dependency>
+
+project.versionは
+[20:51:01] Skirnirの発言:  <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>org.slf4j</groupId>
+<artifactId>slf4j-parent</artifactId>
+<version>1.4.3</version>
+の versionなので、1.4.3
+
+
+ちなみに、http://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.4.3/slf4j-simple-1.4.3.pomから、 http://repo1.maven.org/maven2/org/slf4j/slf4j-parent/1.4.3/slf4j-parent-1.4.3.pomには、どうやって辿りついてるの？
+[20:52:52] 太一の発言: parent/relativePathって、デフォルト値は、../pom.xmlってドキュメントにはあるけども。
+
+辿る？
+[20:56:22] Skirnirの発言: リポジトリ経由。
+[20:56:34] Skirnirの発言: <parent>
+<groupId>org.slf4j</groupId>
+<artifactId>slf4j-parent</artifactId>
+<version>1.4.3</version>
+</parent>
+[20:56:43] Skirnirの発言: って書いてあるので普通にmaven-repoを辿る
