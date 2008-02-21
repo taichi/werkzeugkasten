@@ -12,6 +12,8 @@ public interface Artifact extends Comparable<Artifact> {
 
 	String getType();
 
+	ParentArtifact getParent();
+
 	Set<Dependency> getDependencies();
 
 }

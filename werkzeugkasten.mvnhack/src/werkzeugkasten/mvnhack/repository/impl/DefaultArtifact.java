@@ -6,6 +6,7 @@ import java.util.Set;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Dependency;
+import werkzeugkasten.mvnhack.repository.ParentArtifact;
 
 public class DefaultArtifact implements Artifact {
 
@@ -16,6 +17,8 @@ public class DefaultArtifact implements Artifact {
 	protected String version;
 
 	protected String type = "jar";
+
+	protected ParentArtifact parent;
 
 	protected Set<Dependency> dependencies = new LinkedHashSet<Dependency>();
 
@@ -58,6 +61,15 @@ public class DefaultArtifact implements Artifact {
 		if (StringUtil.isEmpty(type) == false) {
 			this.type = type;
 		}
+	}
+
+	@Override
+	public ParentArtifact getParent() {
+		return this.parent;
+	}
+
+	protected void setParent(ParentArtifact parent) {
+		this.parent = parent;
 	}
 
 	@Override

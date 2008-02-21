@@ -10,6 +10,10 @@ public class StringUtil {
 		return s == null || s.toString().length() < 1;
 	}
 
+	public static String toString(Object s) {
+		return isEmpty(s) ? "" : s.toString();
+	}
+
 	public static String replace(String template, Map<String, String> context) {
 		String result = "";
 		if (StringUtil.isEmpty(template) == false) {
@@ -19,7 +23,7 @@ public class StringUtil {
 			int index = 0;
 			while (index < stb.length() && m.find(index)) {
 				String s = m.group();
-				String v = context.get(s.substring(2, s.length() - 1));
+				String v = toString(context.get(s.substring(2, s.length() - 1)));
 				index = m.start() + v.length();
 				stb.replace(m.start(), m.end(), v);
 				m = p.matcher(stb);
