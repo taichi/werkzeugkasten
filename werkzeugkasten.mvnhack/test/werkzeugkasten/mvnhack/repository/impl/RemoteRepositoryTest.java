@@ -23,6 +23,8 @@ public class RemoteRepositoryTest {
 
 	RemoteRepository target;
 
+	FlatDestination flat;
+
 	File localRoot;
 
 	@BeforeClass
@@ -39,7 +41,7 @@ public class RemoteRepositoryTest {
 		if (localRoot.exists()) {
 			FileUtil.delete(localRoot);
 		}
-		FlatDestination flat = new FlatDestination(localRoot);
+		flat = new FlatDestination(localRoot);
 		target = new RemoteRepository(Constants.CENTRAL_REPOSITORY, builder);
 		DefaultConfiguration conf = new DefaultConfiguration();
 		conf.addRepository(target);
@@ -60,6 +62,7 @@ public class RemoteRepositoryTest {
 		assertNotNull(set);
 		assertEquals(3, set.size());
 
+		flat.copyFrom(context, target, a);
 		assertEquals(2, localRoot.list().length);
 	}
 

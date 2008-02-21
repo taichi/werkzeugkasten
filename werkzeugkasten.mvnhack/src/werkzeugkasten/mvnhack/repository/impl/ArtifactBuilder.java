@@ -137,12 +137,12 @@ public class ArtifactBuilder {
 			String optional = path.evaluate("optional", n);
 			String scope = path.evaluate("scope", n);
 			if (isNotOptional(optional) && isNotTest(scope)) {
-				String groupId = StringUtil.replace(path.evaluate("groupId",
-						elem), replacer);
+				String groupId = StringUtil.replace(
+						path.evaluate("groupId", n), replacer);
 				String artifactId = StringUtil.replace(path.evaluate(
-						"artifactId", elem), replacer);
-				String version = StringUtil.replace(path.evaluate("version",
-						elem), replacer);
+						"artifactId", n), replacer);
+				String version = StringUtil.replace(
+						path.evaluate("version", n), replacer);
 				if (validate(groupId, artifactId, version)) {
 					a.addManagedDependency(groupId, artifactId, version);
 				}
