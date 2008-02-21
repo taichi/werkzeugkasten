@@ -6,11 +6,13 @@ import java.util.Set;
 public interface Repository {
 
 	/**
+	 * @notnull context
 	 * @notnull groupId
 	 * @notnull artifactId
 	 * @notnull version
 	 */
-	Artifact load(String groupId, String artifactId, String version);
+	Artifact load(Context context, String groupId, String artifactId,
+			String version);
 
 	/**
 	 * 

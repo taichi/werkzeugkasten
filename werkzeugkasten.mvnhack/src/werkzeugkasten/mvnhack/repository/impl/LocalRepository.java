@@ -25,12 +25,13 @@ public class LocalRepository implements Repository, Destination {
 	}
 
 	@Override
-	public Artifact load(String groupId, String artifactId, String version) {
+	public Artifact load(Context context, String groupId, String artifactId,
+			String version) {
 		try {
 			File pom = new File(root, ArtifactUtil.toPom(groupId, artifactId,
 					version));
 			if (pom.exists()) {
-				return builder.build(new FileInputStream(pom));
+				return builder.build(context, new FileInputStream(pom));
 			}
 		} catch (FileNotFoundException e) {
 		}

@@ -28,27 +28,31 @@ import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
+import werkzeugkasten.mvnhack.repository.Context;
 
 public class ArtifactBuilder {
 
 	protected static Set<String> legalScopes = new HashSet<String>();
 
-	public Artifact build(InputStream pom) {
+	public Artifact build(Context context, InputStream pom) {
 		try {
 			Document doc = toDocument(pom);
 			XPath path = XPathFactory.newInstance().newXPath();
 
 			Element elem = doc.getDocumentElement();
-			Map<String, String> context = new HashMap<String, String>();
+			Map<String, String> replacer = new HashMap<String, String>();
 
-			DefaultArtifact a = createArtifact(path, elem, context);
+			Artifact parent = resolveParent(context, path, elem, replacer);
 
-			addDependencies(path, elem, context, a);
+			DefaultArtifact a = createArtifact(path, elem, replacer, parent);
+
+			addManagedDependencies(path, elem, replacer, a);
+
+			addDependencies(path, elem, replacer, a);
 
 			if (validate(a)) {
 				return a;
 			}
-			return null;
 		} catch (Exception e) {
 			Constants.LOG.log(Level.WARNING, e.getMessage(), e);
 		} finally {
@@ -67,44 +71,49 @@ public class ArtifactBuilder {
 		return builder.parse(src);
 	}
 
-	protected DefaultParentArtifact createParent(XPath path, Element elem,
-			Map<String, String> context) throws XPathExpressionException {
-		DefaultParentArtifact parent = null;
-		Node parentNode = (Node) path.evaluate("parent", elem,
-				XPathConstants.NODE);
-		if (parentNode != null) {
-			parent = new DefaultParentArtifact();
-			setValues(path, parent, parentNode, context);
-			putContextValues(context, parent, "parent");
+	protected Artifact resolveParent(Context context, XPath path, Element elem,
+			Map<String, String> replacer) throws XPathExpressionException {
+		String groupId = StringUtil.toString(path.evaluate("parent/groupId",
+				elem));
+		String artifactId = StringUtil.toString(path.evaluate(
+				"parent/artifactId", elem));
+		String version = StringUtil.toString(path.evaluate("parent/version",
+				elem));
+		if (validate(groupId, artifactId, version)) {
+			Artifact parent = context.resolve(groupId, artifactId, version);
+			if (parent != null) {
+				putContextValues(replacer, parent, "parent");
+			}
+			return parent;
 		}
-		return parent;
+		return null;
 	}
 
-	protected void putContextValues(Map<String, String> context,
-			DefaultArtifact a, String prefix) {
-		context.put(prefix + ".groupId", a.getGroupId());
-		context.put(prefix + ".artifactId", a.getArtifactId());
-		context.put(prefix + ".version", a.getVersion());
+	protected void putContextValues(Map<String, String> m, Artifact a,
+			String prefix) {
+		m.put(prefix + ".groupId", a.getGroupId());
+		m.put(prefix + ".artifactId", a.getArtifactId());
+		m.put(prefix + ".version", a.getVersion());
 	}
 
 	protected DefaultArtifact createArtifact(XPath path, Element elem,
-			Map<String, String> context) throws XPathExpressionException {
-		DefaultArtifact a = new DefaultArtifact();
-		a.setParent(createParent(path, elem, context));
-		setValues(path, a, elem, context);
+			Map<String, String> replacer, Artifact parent)
+			throws XPathExpressionException {
+		DefaultArtifact a = new DefaultArtifact(parent);
+		setValues(path, a, elem, replacer);
 		a.setType(path.evaluate("packaging", elem));
-		putContextValues(context, a, "project");
+		putContextValues(replacer, a, "project");
 		return a;
 	}
 
-	private void setValues(XPath path, DefaultArtifact a, Node elem,
-			Map<String, String> context) throws XPathExpressionException {
-		a.setGroupId(StringUtil
-				.replace(path.evaluate("groupId", elem), context));
+	protected void setValues(XPath path, DefaultArtifact a, Node elem,
+			Map<String, String> replacer) throws XPathExpressionException {
+		a.setGroupId(StringUtil.replace(path.evaluate("groupId", elem),
+				replacer));
 		a.setArtifactId(StringUtil.replace(path.evaluate("artifactId", elem),
-				context));
-		a.setVersion(StringUtil
-				.replace(path.evaluate("version", elem), context));
+				replacer));
+		a.setVersion(StringUtil.replace(path.evaluate("version", elem),
+				replacer));
 	}
 
 	protected boolean isNotOptional(String optional) {
@@ -115,6 +124,30 @@ public class ArtifactBuilder {
 	protected boolean isNotTest(String scope) {
 		return StringUtil.isEmpty(scope)
 				|| "test".equalsIgnoreCase(scope) == false;
+	}
+
+	protected void addManagedDependencies(XPath path, Element elem,
+			Map<String, String> replacer, DefaultArtifact a)
+			throws XPathExpressionException {
+		NodeList list = (NodeList) path.evaluate(
+				"dependencyManagement/dependencies/dependency", elem,
+				XPathConstants.NODESET);
+		for (int i = 0; i < list.getLength(); i++) {
+			Node n = list.item(i);
+			String optional = path.evaluate("optional", n);
+			String scope = path.evaluate("scope", n);
+			if (isNotOptional(optional) && isNotTest(scope)) {
+				String groupId = StringUtil.replace(path.evaluate("groupId",
+						elem), replacer);
+				String artifactId = StringUtil.replace(path.evaluate(
+						"artifactId", elem), replacer);
+				String version = StringUtil.replace(path.evaluate("version",
+						elem), replacer);
+				if (validate(groupId, artifactId, version)) {
+					a.addManagedDependency(groupId, artifactId, version);
+				}
+			}
+		}
 	}
 
 	protected void addDependencies(XPath path, Element elem,
@@ -129,7 +162,12 @@ public class ArtifactBuilder {
 			if (isNotOptional(optional) && isNotTest(scope)) {
 				DefaultDependency d = new DefaultDependency();
 				setValues(path, d, n, context);
-				a.setType(path.evaluate("type", n));
+				d.setType(path.evaluate("type", n));
+				if (StringUtil.isEmpty(d.getVersion())) {
+					d.setVersion(a.getManagedDependency(d.getGroupId(), d
+							.getArtifactId()));
+				}
+
 				if (validate(d)) {
 					a.add(d);
 				}
@@ -138,8 +176,11 @@ public class ArtifactBuilder {
 	}
 
 	protected boolean validate(Artifact a) {
-		for (String s : new String[] { a.getGroupId(), a.getArtifactId(),
-				a.getVersion() }) {
+		return validate(a.getGroupId(), a.getArtifactId(), a.getVersion());
+	}
+
+	protected boolean validate(String... ids) {
+		for (String s : ids) {
 			if (StringUtil.isEmpty(s)) {
 				return false;
 			}

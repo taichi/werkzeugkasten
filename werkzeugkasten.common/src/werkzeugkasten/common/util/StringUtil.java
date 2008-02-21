@@ -11,7 +11,11 @@ public class StringUtil {
 	}
 
 	public static String toString(Object s) {
-		return isEmpty(s) ? "" : s.toString();
+		return toString(s, "");
+	}
+
+	public static String toString(Object s, String r) {
+		return isEmpty(s) ? r : s.toString();
 	}
 
 	public static String replace(String template, Map<String, String> context) {

@@ -41,7 +41,8 @@ public class ArtifactBuilderTest {
 	public void testBuild() {
 		assertNotNull(in);
 		ArtifactBuilder ab = new ArtifactBuilder();
-		Artifact a = ab.build(in);
+		Artifact a = ab.build(new DefaultContext(new DefaultConfiguration()),
+				in);
 		assertNotNull(a);
 		assertEquals("groupId", a.getGroupId());
 		assertEquals("artifactId", a.getArtifactId());

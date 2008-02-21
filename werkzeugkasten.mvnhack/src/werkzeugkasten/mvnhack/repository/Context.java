@@ -9,16 +9,9 @@ public interface Context {
 	 * @notnull groupId
 	 * @notnull artifactId
 	 * @notnull version
+	 * @return maybe null
 	 */
-	void resolve(String groupId, String artifactId, String version);
-
-	/**
-	 * @notnull groupId
-	 * @notnull artifactId
-	 * @notnull version
-	 * @return true : resolved / false : not resolved
-	 */
-	boolean isResolvedArtifact(String groupId, String artifactId, String version);
+	Artifact resolve(String groupId, String artifactId, String version);
 
 	/**
 	 * @notnull artifact

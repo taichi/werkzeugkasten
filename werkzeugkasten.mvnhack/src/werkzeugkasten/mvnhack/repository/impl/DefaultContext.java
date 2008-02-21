@@ -16,7 +16,6 @@ import werkzeugkasten.mvnhack.repository.Configuration;
 import werkzeugkasten.mvnhack.repository.Context;
 import werkzeugkasten.mvnhack.repository.Dependency;
 import werkzeugkasten.mvnhack.repository.Destination;
-import werkzeugkasten.mvnhack.repository.ParentArtifact;
 import werkzeugkasten.mvnhack.repository.Repository;
 
 public class DefaultContext implements Context {
@@ -35,7 +34,6 @@ public class DefaultContext implements Context {
 		this.resolved = resolved;
 	}
 
-	@Override
 	public boolean isResolvedArtifact(String groupId, String artifactId,
 			String version) {
 		return resolved.containsKey(toId(groupId, artifactId, version));
@@ -51,15 +49,13 @@ public class DefaultContext implements Context {
 	}
 
 	@Override
-	public void resolve(String groupId, String artifactId, String version) {
-		if (isResolvedArtifact(groupId, artifactId, version) == false) {
+	public Artifact resolve(String groupId, String artifactId, String version) {
+		String id = toId(groupId, artifactId, version);
+		Artifact result = resolved.get(id);
+		if (result == null) {
 			for (Repository r : configuration.getRepositories()) {
-				Artifact a = r.load(groupId, artifactId, version);
+				Artifact a = r.load(this, groupId, artifactId, version);
 				if (a != null) {
-					ParentArtifact parent = a.getParent();
-					if (parent != null) {
-						parent.reconcile(this, a);
-					}
 					for (Destination d : configuration.getDestinations()) {
 						d.copyFrom(this, r, a);
 					}
@@ -67,9 +63,11 @@ public class DefaultContext implements Context {
 					for (Dependency d : a.getDependencies()) {
 						d.resolve(this);
 					}
+					return a;
 				}
 			}
 		}
+		return result;
 	}
 
 	@Override

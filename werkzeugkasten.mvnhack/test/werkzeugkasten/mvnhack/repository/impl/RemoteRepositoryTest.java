@@ -19,11 +19,9 @@ import werkzeugkasten.mvnhack.repository.Artifact;
 
 public class RemoteRepositoryTest {
 
-	ArtifactBuilder builder;
+	DefaultContext context;
 
 	RemoteRepository target;
-
-	FlatDestination flat;
 
 	File localRoot;
 
@@ -34,15 +32,19 @@ public class RemoteRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		builder = new ArtifactBuilder();
+		ArtifactBuilder builder = new ArtifactBuilder();
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		URL url = cl.getResource(".");
 		localRoot = new File(url.getPath(), "local");
 		if (localRoot.exists()) {
 			FileUtil.delete(localRoot);
 		}
-		flat = new FlatDestination(localRoot);
+		FlatDestination flat = new FlatDestination(localRoot);
 		target = new RemoteRepository(Constants.CENTRAL_REPOSITORY, builder);
+		DefaultConfiguration conf = new DefaultConfiguration();
+		conf.addRepository(target);
+		conf.addDestination(flat);
+		context = new DefaultContext(conf);
 	}
 
 	@After
@@ -52,15 +54,12 @@ public class RemoteRepositoryTest {
 
 	@Test
 	public void testLoad() {
-		Artifact a = target.load("org.slf4j", "slf4j-simple", "1.4.3");
+		Artifact a = target.load(context, "org.slf4j", "slf4j-simple", "1.4.3");
 		assertNotNull(a);
 		Set<URL> set = target.getLocation(a);
 		assertNotNull(set);
 		assertEquals(3, set.size());
 
-		flat
-				.copyFrom(new DefaultContext(new DefaultConfiguration()),
-						target, a);
 		assertEquals(2, localRoot.list().length);
 	}
 

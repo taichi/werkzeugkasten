@@ -25,6 +25,8 @@ public class LocalRepositoryTest {
 
 	ArtifactBuilder builder;
 
+	DefaultContext context;
+
 	@BeforeClass
 	public static void setUpClass() {
 		UrlUtil.setDefaultUseCaches();
@@ -38,6 +40,7 @@ public class LocalRepositoryTest {
 		root = kid.getParentFile();
 		another = new File(root, "another");
 		builder = new ArtifactBuilder();
+		context = new DefaultContext(new DefaultConfiguration());
 		target = new LocalRepository(kid, builder);
 	}
 
@@ -50,7 +53,8 @@ public class LocalRepositoryTest {
 
 	@Test
 	public void testLoad() {
-		Artifact a = target.load("net.sourceforge.jexcelapi", "jxl", "2.6.6");
+		Artifact a = target.load(context, "net.sourceforge.jexcelapi", "jxl",
+				"2.6.6");
 		assertNotNull(a);
 		Set<URL> set = target.getLocation(a);
 		assertNotNull(set);
@@ -64,7 +68,8 @@ public class LocalRepositoryTest {
 			LocalRepository lr = new LocalRepository(another, builder);
 			lr.copyFrom(new DefaultContext(new DefaultConfiguration()), target,
 					a);
-			assertNotNull(lr.load("net.sourceforge.jexcelapi", "jxl", "2.6.6"));
+			assertNotNull(lr.load(context, "net.sourceforge.jexcelapi", "jxl",
+					"2.6.6"));
 		} finally {
 			another.delete();
 		}

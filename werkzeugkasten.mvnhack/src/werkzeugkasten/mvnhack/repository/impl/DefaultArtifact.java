@@ -1,12 +1,13 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Dependency;
-import werkzeugkasten.mvnhack.repository.ParentArtifact;
 
 public class DefaultArtifact implements Artifact {
 
@@ -18,11 +19,21 @@ public class DefaultArtifact implements Artifact {
 
 	protected String type = "jar";
 
-	protected ParentArtifact parent;
-
 	protected Set<Dependency> dependencies = new LinkedHashSet<Dependency>();
 
+	protected Map<String, String> managedDependencies;
+
 	public DefaultArtifact() {
+		this(new HashMap<String, String>());
+	}
+
+	public DefaultArtifact(Artifact parent) {
+		this(parent == null ? new HashMap<String, String>()
+				: new HashMap<String, String>(parent.getManagedDependencies()));
+	}
+
+	public DefaultArtifact(Map<String, String> managedDependencies) {
+		this.managedDependencies = managedDependencies;
 	}
 
 	@Override
@@ -58,18 +69,7 @@ public class DefaultArtifact implements Artifact {
 	}
 
 	protected void setType(String type) {
-		if (StringUtil.isEmpty(type) == false) {
-			this.type = type;
-		}
-	}
-
-	@Override
-	public ParentArtifact getParent() {
-		return this.parent;
-	}
-
-	protected void setParent(ParentArtifact parent) {
-		this.parent = parent;
+		this.type = StringUtil.toString(type, "jar");
 	}
 
 	@Override
@@ -79,6 +79,20 @@ public class DefaultArtifact implements Artifact {
 
 	protected void add(Dependency dependency) {
 		this.dependencies.add(dependency);
+	}
+
+	@Override
+	public Map<String, String> getManagedDependencies() {
+		return this.managedDependencies;
+	}
+
+	protected void addManagedDependency(String groupId, String artifactId,
+			String version) {
+		this.managedDependencies.put(groupId + '/' + artifactId, version);
+	}
+
+	protected String getManagedDependency(String groupId, String artifactId) {
+		return this.managedDependencies.get(groupId + '/' + artifactId);
 	}
 
 	@Override
