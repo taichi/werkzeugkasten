@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import werkzeugkasten.common.util.FileUtil;
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.Constants;
@@ -62,22 +61,20 @@ public class DefaultContext implements Context {
 
 	@Override
 	public InputStream open(Artifact artifact, URL url) {
-		InputStream result = null;
-		Object from = null;
+		URL from = findLocal(artifact, url);
+		InputStream result = UrlUtil.open(from);
+		Constants.LOG.log(Level.INFO, "read from {0}", from);
+		return result;
+	}
+
+	protected URL findLocal(Artifact artifact, URL url) {
 		for (Destination d : configuration.getDestinations()) {
 			File f = d.toDestination(artifact, url);
 			if (f != null && f.exists()) {
-				result = FileUtil.open(f);
-				from = f;
-				break;
+				return UrlUtil.toURL(f);
 			}
 		}
-		if (result == null) {
-			result = UrlUtil.open(url);
-			from = url;
-		}
-		Constants.LOG.log(Level.INFO, "read from {0}", from);
-		return result;
+		return url;
 	}
 
 	@Override
