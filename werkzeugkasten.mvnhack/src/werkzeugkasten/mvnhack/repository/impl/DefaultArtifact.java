@@ -85,13 +85,17 @@ public class DefaultArtifact implements Artifact {
 		return this.managedDependencies;
 	}
 
-	protected void addManagedDependency(String groupId, String artifactId,
-			String version) {
-		this.managedDependencies.put(groupId + '/' + artifactId, version);
+	protected void addManagedDependency(Artifact artifact) {
+		this.managedDependencies.put(toManagedId(artifact), version);
 	}
 
-	protected String getManagedDependency(String groupId, String artifactId) {
-		return this.managedDependencies.get(groupId + '/' + artifactId);
+	protected String getManagedDependency(Artifact artifact) {
+		return this.managedDependencies.get(toManagedId(artifact));
+	}
+
+	protected String toManagedId(Artifact artifact) {
+		return artifact.getGroupId() + '/'
+				+ artifact.getArtifactId();
 	}
 
 	@Override

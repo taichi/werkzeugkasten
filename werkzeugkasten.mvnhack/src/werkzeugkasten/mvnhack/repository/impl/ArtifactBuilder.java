@@ -104,14 +104,12 @@ public class ArtifactBuilder {
 		return a;
 	}
 
-	protected void setValues(XPath path, DefaultArtifact a, Node elem,
+	protected void setValues(XPath path, DefaultArtifact a, Node n,
 			Map<String, String> replacer) throws XPathExpressionException {
-		a.setGroupId(StringUtil.replace(path.evaluate("groupId", elem),
+		a.setGroupId(StringUtil.replace(path.evaluate("groupId", n), replacer));
+		a.setArtifactId(StringUtil.replace(path.evaluate("artifactId", n),
 				replacer));
-		a.setArtifactId(StringUtil.replace(path.evaluate("artifactId", elem),
-				replacer));
-		a.setVersion(StringUtil.replace(path.evaluate("version", elem),
-				replacer));
+		a.setVersion(StringUtil.replace(path.evaluate("version", n), replacer));
 	}
 
 	protected boolean isNotOptional(String optional) {
@@ -124,48 +122,44 @@ public class ArtifactBuilder {
 				|| "test".equalsIgnoreCase(scope) == false;
 	}
 
-	protected void addManagedDependencies(XPath path, Element elem,
+	protected boolean isValidNode(XPath path, Node n)
+			throws XPathExpressionException {
+		return isNotOptional(path.evaluate("optional", n))
+				&& isNotTest(path.evaluate("scope", n));
+	}
+
+	protected void addManagedDependencies(XPath path, Element e,
 			Map<String, String> replacer, DefaultArtifact a)
 			throws XPathExpressionException {
 		NodeList list = (NodeList) path.evaluate(
-				"dependencyManagement/dependencies/dependency", elem,
+				"dependencyManagement/dependencies/dependency", e,
 				XPathConstants.NODESET);
 		for (int i = 0; i < list.getLength(); i++) {
 			Node n = list.item(i);
-			String optional = path.evaluate("optional", n);
-			String scope = path.evaluate("scope", n);
-			if (isNotOptional(optional) && isNotTest(scope)) {
-				String groupId = StringUtil.replace(
-						path.evaluate("groupId", n), replacer);
-				String artifactId = StringUtil.replace(path.evaluate(
-						"artifactId", n), replacer);
-				String version = StringUtil.replace(
-						path.evaluate("version", n), replacer);
-				if (validate(groupId, artifactId, version)) {
-					a.addManagedDependency(groupId, artifactId, version);
+			if (isValidNode(path, n)) {
+				DefaultArtifact d = new DefaultArtifact();
+				setValues(path, d, n, replacer);
+				if (validate(d)) {
+					a.addManagedDependency(d);
 				}
 			}
 		}
 	}
 
-	protected void addDependencies(XPath path, Element elem,
-			Map<String, String> context, DefaultArtifact a)
+	protected void addDependencies(XPath path, Element e,
+			Map<String, String> replacer, DefaultArtifact a)
 			throws XPathExpressionException {
-		NodeList list = (NodeList) path.evaluate("dependencies/dependency",
-				elem, XPathConstants.NODESET);
+		NodeList list = (NodeList) path.evaluate("dependencies/dependency", e,
+				XPathConstants.NODESET);
 		for (int i = 0; i < list.getLength(); i++) {
 			Node n = list.item(i);
-			String optional = path.evaluate("optional", n);
-			String scope = path.evaluate("scope", n);
-			if (isNotOptional(optional) && isNotTest(scope)) {
+			if (isValidNode(path, n)) {
 				DefaultArtifact d = new DefaultArtifact();
-				setValues(path, d, n, context);
+				setValues(path, d, n, replacer);
 				d.setType(path.evaluate("type", n));
 				if (StringUtil.isEmpty(d.getVersion())) {
-					d.setVersion(a.getManagedDependency(d.getGroupId(), d
-							.getArtifactId()));
+					d.setVersion(a.getManagedDependency(d));
 				}
-
 				if (validate(d)) {
 					a.add(d);
 				}
