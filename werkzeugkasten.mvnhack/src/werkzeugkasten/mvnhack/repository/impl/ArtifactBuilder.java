@@ -22,7 +22,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
@@ -32,7 +31,7 @@ public class ArtifactBuilder {
 
 	public Artifact build(Context context, InputStream pom) {
 		try {
-			Document doc = toDocument(pom);
+			Document doc = toDocument(context, pom);
 			XPath path = XPathFactory.newInstance().newXPath();
 
 			Element elem = doc.getDocumentElement();
@@ -51,20 +50,23 @@ public class ArtifactBuilder {
 			}
 		} catch (Exception e) {
 			Constants.LOG.log(Level.WARNING, e.getMessage(), e);
-		} finally {
-			StreamUtil.close(pom);
 		}
 		return null;
 	}
 
-	protected Document toDocument(InputStream pom)
+	protected Document toDocument(Context context, InputStream pom)
 			throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setValidating(false);
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		InputSource src = new InputSource(new BufferedInputStream(pom));
-		src.setEncoding("UTF-8");
-		return builder.parse(src);
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
+			factory.setValidating(false);
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			InputSource src = new InputSource(new BufferedInputStream(pom));
+			src.setEncoding("UTF-8");
+			return builder.parse(src);
+		} finally {
+			context.close(pom);
+		}
 	}
 
 	protected Artifact resolveParent(Context context, XPath path, Element elem,

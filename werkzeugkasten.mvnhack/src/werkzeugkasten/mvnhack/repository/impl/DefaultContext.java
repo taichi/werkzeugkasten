@@ -25,18 +25,8 @@ public class DefaultContext implements Context {
 	protected Configuration configuration;
 
 	public DefaultContext(Configuration configuration) {
-		this(configuration, new HashMap<String, Artifact>());
-	}
-
-	public DefaultContext(Configuration configuration,
-			Map<String, Artifact> resolved) {
 		this.configuration = configuration;
-		this.resolved = resolved;
-	}
-
-	public boolean isResolvedArtifact(String groupId, String artifactId,
-			String version) {
-		return resolved.containsKey(toId(groupId, artifactId, version));
+		this.resolved = new HashMap<String, Artifact>();
 	}
 
 	protected void addResolved(Artifact artifact) {
@@ -85,7 +75,7 @@ public class DefaultContext implements Context {
 			result = UrlUtil.open(url);
 			from = url;
 		}
-		Constants.LOG.log(Level.INFO, "copy from {0}", from);
+		Constants.LOG.log(Level.INFO, "read from {0}", from);
 		return result;
 	}
 

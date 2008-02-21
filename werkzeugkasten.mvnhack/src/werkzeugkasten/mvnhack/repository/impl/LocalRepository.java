@@ -1,8 +1,6 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +9,7 @@ import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Context;
 import werkzeugkasten.mvnhack.repository.Destination;
+import werkzeugkasten.mvnhack.repository.FileNotFoundRuntimeException;
 import werkzeugkasten.mvnhack.repository.Repository;
 
 public class LocalRepository implements Repository, Destination {
@@ -31,9 +30,10 @@ public class LocalRepository implements Repository, Destination {
 			File pom = new File(root, ArtifactUtil.toPom(groupId, artifactId,
 					version));
 			if (pom.exists()) {
-				return builder.build(context, new FileInputStream(pom));
+				return builder.build(context, context.open(ArtifactUtil.create(
+						groupId, artifactId, version), UrlUtil.toURL(pom)));
 			}
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundRuntimeException e) {
 		}
 		return null;
 	}

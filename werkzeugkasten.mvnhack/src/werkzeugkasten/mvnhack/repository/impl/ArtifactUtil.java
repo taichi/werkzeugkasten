@@ -5,6 +5,15 @@ import werkzeugkasten.mvnhack.repository.Artifact;
 
 public class ArtifactUtil {
 
+	public static final Artifact create(String groupId, String artifactId,
+			String version) {
+		DefaultArtifact a = new DefaultArtifact();
+		a.setGroupId(groupId);
+		a.setArtifactId(artifactId);
+		a.setVersion(version);
+		return a;
+	}
+
 	public static final String toPom(String groupId, String artifactId,
 			String version) {
 		return toPath(groupId, artifactId, version, Constants.POM);

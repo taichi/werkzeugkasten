@@ -1,6 +1,5 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +8,7 @@ import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Context;
+import werkzeugkasten.mvnhack.repository.FileNotFoundRuntimeException;
 import werkzeugkasten.mvnhack.repository.Repository;
 
 public class RemoteRepository implements Repository {
@@ -33,8 +33,9 @@ public class RemoteRepository implements Repository {
 		stb.append(ArtifactUtil.toPom(groupId, artifactId, version));
 		URL url = UrlUtil.toURL(stb.toString());
 		try {
-			return builder.build(context, url.openStream());
-		} catch (IOException e) {
+			return builder.build(context, context.open(ArtifactUtil.create(
+					groupId, artifactId, version), url));
+		} catch (FileNotFoundRuntimeException e) {
 		}
 		return null;
 	}
