@@ -14,7 +14,6 @@ import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Configuration;
 import werkzeugkasten.mvnhack.repository.Context;
-import werkzeugkasten.mvnhack.repository.Dependency;
 import werkzeugkasten.mvnhack.repository.Destination;
 import werkzeugkasten.mvnhack.repository.Repository;
 
@@ -50,8 +49,9 @@ public class DefaultContext implements Context {
 						d.copyFrom(this, r, a);
 					}
 					addResolved(a);
-					for (Dependency d : a.getDependencies()) {
-						d.resolve(this);
+					for (Artifact d : a.getDependencies()) {
+						resolve(d.getGroupId(), d.getArtifactId(), d
+								.getVersion());
 					}
 					return a;
 				}

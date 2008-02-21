@@ -13,7 +13,7 @@ public interface Artifact extends Comparable<Artifact> {
 
 	String getType();
 
-	Set<Dependency> getDependencies();
+	Set<Artifact> getDependencies();
 
 	/**
 	 * @return key is [groupId/artifactId] ,value is [version]

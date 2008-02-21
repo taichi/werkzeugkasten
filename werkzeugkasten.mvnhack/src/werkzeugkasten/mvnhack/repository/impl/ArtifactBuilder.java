@@ -158,7 +158,7 @@ public class ArtifactBuilder {
 			String optional = path.evaluate("optional", n);
 			String scope = path.evaluate("scope", n);
 			if (isNotOptional(optional) && isNotTest(scope)) {
-				DefaultDependency d = new DefaultDependency();
+				DefaultArtifact d = new DefaultArtifact();
 				setValues(path, d, n, context);
 				d.setType(path.evaluate("type", n));
 				if (StringUtil.isEmpty(d.getVersion())) {

@@ -7,7 +7,6 @@ import java.util.Set;
 
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
-import werkzeugkasten.mvnhack.repository.Dependency;
 
 public class DefaultArtifact implements Artifact {
 
@@ -19,7 +18,7 @@ public class DefaultArtifact implements Artifact {
 
 	protected String type = "jar";
 
-	protected Set<Dependency> dependencies = new LinkedHashSet<Dependency>();
+	protected Set<Artifact> dependencies = new LinkedHashSet<Artifact>();
 
 	protected Map<String, String> managedDependencies;
 
@@ -73,11 +72,11 @@ public class DefaultArtifact implements Artifact {
 	}
 
 	@Override
-	public Set<Dependency> getDependencies() {
+	public Set<Artifact> getDependencies() {
 		return this.dependencies;
 	}
 
-	protected void add(Dependency dependency) {
+	protected void add(Artifact dependency) {
 		this.dependencies.add(dependency);
 	}
 

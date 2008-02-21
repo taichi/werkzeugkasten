@@ -14,7 +14,6 @@ import org.junit.Test;
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
-import werkzeugkasten.mvnhack.repository.Dependency;
 
 public class ArtifactBuilderTest {
 
@@ -48,9 +47,9 @@ public class ArtifactBuilderTest {
 		assertEquals("artifactId", a.getArtifactId());
 		assertEquals("1.0.0", a.getVersion());
 
-		Set<Dependency> set = a.getDependencies();
+		Set<Artifact> set = a.getDependencies();
 		assertEquals(2, set.size());
-		Dependency[] ary = set.toArray(new Dependency[set.size()]);
+		Artifact[] ary = set.toArray(new Artifact[set.size()]);
 		assertEquals("dependencyGroupId", ary[0].getGroupId());
 		assertEquals("dependencyArtifactId", ary[0].getArtifactId());
 		assertEquals("2.0.0", ary[0].getVersion());
