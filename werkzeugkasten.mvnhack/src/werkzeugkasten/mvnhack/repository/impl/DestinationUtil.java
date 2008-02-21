@@ -31,7 +31,7 @@ public class DestinationUtil {
 					StreamUtil.copy(in, dest);
 				}
 			} catch (FileNotFoundRuntimeException e) {
-			} catch (IllegalStateException e) {
+			} catch (RuntimeException e) {
 				Throwable t = e.getCause();
 				if (t == null) {
 					t = e;

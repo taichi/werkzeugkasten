@@ -15,7 +15,7 @@ public interface Destination {
 	/**
 	 * @param artifact
 	 * @param from
-	 * @return
+	 * @return maybe null
 	 */
 	File toDestination(Artifact artifact, URL from);
 
