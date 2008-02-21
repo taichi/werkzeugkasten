@@ -69,6 +69,7 @@ public class DefaultContext implements Context {
 			if (f != null && f.exists()) {
 				result = FileUtil.open(f);
 				from = f;
+				break;
 			}
 		}
 		if (result == null) {
