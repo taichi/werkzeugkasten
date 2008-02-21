@@ -4,9 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -31,8 +29,6 @@ import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Context;
 
 public class ArtifactBuilder {
-
-	protected static Set<String> legalScopes = new HashSet<String>();
 
 	public Artifact build(Context context, InputStream pom) {
 		try {
