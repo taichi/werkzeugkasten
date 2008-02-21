@@ -95,20 +95,6 @@ public class DefaultArtifact implements Artifact {
 	}
 
 	@Override
-	public int compareTo(Artifact other) {
-		String[] me = { getGroupId(), getArtifactId(), getVersion() };
-		String[] you = { other.getGroupId(), other.getArtifactId(),
-				other.getVersion() };
-		for (int i = 0; i < me.length; i++) {
-			int n = me[i].compareTo(you[i]);
-			if (n != 0) {
-				return n;
-			}
-		}
-		return 0;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Artifact) {
 			Artifact a = (Artifact) obj;

@@ -3,7 +3,7 @@ package werkzeugkasten.mvnhack.repository;
 import java.util.Map;
 import java.util.Set;
 
-public interface Artifact extends Comparable<Artifact> {
+public interface Artifact {
 
 	String getGroupId();
 
