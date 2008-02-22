@@ -34,6 +34,7 @@ public class DefaultContext implements Context {
 			Map<String, Artifact> resolved) {
 		this.configuration = configuration;
 		this.resolved = resolved;
+		this.managedDependencies = new HashMap<String, String>();
 	}
 
 	protected void addResolved(Artifact artifact) {
