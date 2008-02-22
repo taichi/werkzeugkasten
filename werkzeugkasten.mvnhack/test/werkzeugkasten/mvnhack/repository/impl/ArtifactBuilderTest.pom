@@ -3,6 +3,16 @@
   <groupId>groupId</groupId>
   <artifactId>artifactId</artifactId>
   <version>1.0.0</version>
+  <developers>
+    <developer>
+      <name>aaa bbb&oslash;ccc</name>
+      <id>aaa</id>
+      <email>name@example.org</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+  </developers>
   <build>
     <plugins>
       <plugin>

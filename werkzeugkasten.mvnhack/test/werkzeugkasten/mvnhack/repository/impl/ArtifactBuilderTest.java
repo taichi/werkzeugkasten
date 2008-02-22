@@ -3,8 +3,13 @@ package werkzeugkasten.mvnhack.repository.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.Set;
+
+import javax.xml.stream.StreamFilter;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
 
 import org.junit.After;
 import org.junit.Before;
@@ -34,6 +39,24 @@ public class ArtifactBuilderTest {
 	@After
 	public void tearDown() {
 		StreamUtil.close(in);
+	}
+
+	@Test
+	public void testA() throws Exception {
+		XMLInputFactory factory = XMLInputFactory.newInstance();
+		factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES,
+				Boolean.FALSE);
+		BufferedInputStream stream = new BufferedInputStream(in);
+		XMLStreamReader reader = factory.createXMLStreamReader(stream);
+		reader = factory.createFilteredReader(reader, new StreamFilter() {
+			@Override
+			public boolean accept(XMLStreamReader reader) {
+				return reader.isStartElement() || reader.isEndElement();
+			}
+		});
+		for (; reader.hasNext(); reader.next()) {
+			System.out.println(reader.getLocalName());
+		}
 	}
 
 	@Test
