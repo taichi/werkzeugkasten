@@ -37,13 +37,13 @@ public class ArtifactBuilder {
 			Element elem = doc.getDocumentElement();
 			Map<String, String> replacer = new HashMap<String, String>();
 
-			Artifact parent = resolveParent(context, path, elem, replacer);
+			resolveParent(context, path, elem, replacer);
 
-			DefaultArtifact a = createArtifact(path, elem, replacer, parent);
+			DefaultArtifact a = createArtifact(path, elem, replacer);
 
-			addManagedDependencies(path, elem, replacer, a);
+			addManagedDependencies(context, path, elem, replacer);
 
-			addDependencies(path, elem, replacer, a);
+			addDependencies(context, path, elem, replacer, a);
 
 			if (validate(a)) {
 				return a;
@@ -69,7 +69,7 @@ public class ArtifactBuilder {
 		}
 	}
 
-	protected Artifact resolveParent(Context context, XPath path, Element elem,
+	protected void resolveParent(Context context, XPath path, Element elem,
 			Map<String, String> replacer) throws XPathExpressionException {
 		String groupId = StringUtil.toString(path.evaluate("parent/groupId",
 				elem));
@@ -82,9 +82,7 @@ public class ArtifactBuilder {
 			if (parent != null) {
 				putContextValues(replacer, parent, "parent");
 			}
-			return parent;
 		}
-		return null;
 	}
 
 	protected void putContextValues(Map<String, String> m, Artifact a,
@@ -95,9 +93,8 @@ public class ArtifactBuilder {
 	}
 
 	protected DefaultArtifact createArtifact(XPath path, Element elem,
-			Map<String, String> replacer, Artifact parent)
-			throws XPathExpressionException {
-		DefaultArtifact a = new DefaultArtifact(parent);
+			Map<String, String> replacer) throws XPathExpressionException {
+		DefaultArtifact a = new DefaultArtifact();
 		setValues(path, a, elem, replacer);
 		a.setType(path.evaluate("packaging", elem));
 		putContextValues(replacer, a, "project");
@@ -128,8 +125,8 @@ public class ArtifactBuilder {
 				&& isNotTest(path.evaluate("scope", n));
 	}
 
-	protected void addManagedDependencies(XPath path, Element e,
-			Map<String, String> replacer, DefaultArtifact a)
+	protected void addManagedDependencies(Context context, XPath path,
+			Element e, Map<String, String> replacer)
 			throws XPathExpressionException {
 		NodeList list = (NodeList) path.evaluate(
 				"dependencyManagement/dependencies/dependency", e,
@@ -140,13 +137,13 @@ public class ArtifactBuilder {
 				DefaultArtifact d = new DefaultArtifact();
 				setValues(path, d, n, replacer);
 				if (validate(d)) {
-					a.addManagedDependency(d);
+					context.addManagedDependency(d);
 				}
 			}
 		}
 	}
 
-	protected void addDependencies(XPath path, Element e,
+	protected void addDependencies(Context c, XPath path, Element e,
 			Map<String, String> replacer, DefaultArtifact a)
 			throws XPathExpressionException {
 		NodeList list = (NodeList) path.evaluate("dependencies/dependency", e,
@@ -158,7 +155,7 @@ public class ArtifactBuilder {
 				setValues(path, d, n, replacer);
 				d.setType(path.evaluate("type", n));
 				if (StringUtil.isEmpty(d.getVersion())) {
-					d.setVersion(a.getManagedDependency(d));
+					d.setVersion(c.getManagedDependency(d));
 				}
 				if (validate(d)) {
 					a.add(d);

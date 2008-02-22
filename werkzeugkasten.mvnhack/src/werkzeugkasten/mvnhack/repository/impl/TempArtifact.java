@@ -3,7 +3,6 @@
  */
 package werkzeugkasten.mvnhack.repository.impl;
 
-import java.util.Map;
 import java.util.Set;
 
 import werkzeugkasten.mvnhack.repository.Artifact;
@@ -43,10 +42,4 @@ class TempArtifact implements Artifact {
 	public Set<Artifact> getDependencies() {
 		throw new UnsupportedOperationException();
 	}
-
-	@Override
-	public Map<String, String> getManagedDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
 }

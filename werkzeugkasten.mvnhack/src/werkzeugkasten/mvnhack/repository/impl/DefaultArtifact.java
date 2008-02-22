@@ -1,6 +1,5 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -23,12 +22,6 @@ public class DefaultArtifact implements Artifact {
 	protected Map<String, String> managedDependencies;
 
 	public DefaultArtifact() {
-		this(new HashMap<String, String>());
-	}
-
-	public DefaultArtifact(Artifact parent) {
-		this(parent == null ? new HashMap<String, String>()
-				: new HashMap<String, String>(parent.getManagedDependencies()));
 	}
 
 	public DefaultArtifact(Map<String, String> managedDependencies) {
@@ -78,24 +71,6 @@ public class DefaultArtifact implements Artifact {
 
 	protected void add(Artifact dependency) {
 		this.dependencies.add(dependency);
-	}
-
-	@Override
-	public Map<String, String> getManagedDependencies() {
-		return this.managedDependencies;
-	}
-
-	protected void addManagedDependency(Artifact artifact) {
-		this.managedDependencies.put(toManagedId(artifact), version);
-	}
-
-	protected String getManagedDependency(Artifact artifact) {
-		return this.managedDependencies.get(toManagedId(artifact));
-	}
-
-	protected String toManagedId(Artifact artifact) {
-		return artifact.getGroupId() + '/'
-				+ artifact.getArtifactId();
 	}
 
 	@Override

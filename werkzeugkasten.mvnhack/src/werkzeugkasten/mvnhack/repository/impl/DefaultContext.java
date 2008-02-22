@@ -22,9 +22,18 @@ public class DefaultContext implements Context {
 
 	protected Configuration configuration;
 
+	protected Map<String, String> managedDependencies;
+
 	public DefaultContext(Configuration configuration) {
 		this.configuration = configuration;
 		this.resolved = new HashMap<String, Artifact>();
+		this.managedDependencies = new HashMap<String, String>();
+	}
+
+	public DefaultContext(Configuration configuration,
+			Map<String, Artifact> resolved) {
+		this.configuration = configuration;
+		this.resolved = resolved;
 	}
 
 	protected void addResolved(Artifact artifact) {
@@ -34,6 +43,21 @@ public class DefaultContext implements Context {
 
 	protected String toId(String groupId, String artifactId, String version) {
 		return ArtifactUtil.toPath(groupId, artifactId, version, "");
+	}
+
+	@Override
+	public void addManagedDependency(Artifact artifact) {
+		this.managedDependencies.put(toManagedId(artifact), artifact
+				.getVersion());
+	}
+
+	@Override
+	public String getManagedDependency(Artifact artifact) {
+		return this.managedDependencies.get(toManagedId(artifact));
+	}
+
+	protected String toManagedId(Artifact artifact) {
+		return artifact.getGroupId() + '/' + artifact.getArtifactId();
 	}
 
 	@Override
@@ -49,7 +73,9 @@ public class DefaultContext implements Context {
 					}
 					addResolved(a);
 					for (Artifact d : a.getDependencies()) {
-						resolve(d.getGroupId(), d.getArtifactId(), d
+						DefaultContext c = new DefaultContext(
+								this.configuration, this.resolved);
+						c.resolve(d.getGroupId(), d.getArtifactId(), d
 								.getVersion());
 					}
 					return a;

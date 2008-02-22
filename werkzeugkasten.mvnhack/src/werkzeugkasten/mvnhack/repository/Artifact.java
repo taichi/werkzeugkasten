@@ -1,6 +1,5 @@
 package werkzeugkasten.mvnhack.repository;
 
-import java.util.Map;
 import java.util.Set;
 
 public interface Artifact {
@@ -15,8 +14,4 @@ public interface Artifact {
 
 	Set<Artifact> getDependencies();
 
-	/**
-	 * @return key is [groupId/artifactId] ,value is [version]
-	 */
-	Map<String, String> getManagedDependencies();
 }

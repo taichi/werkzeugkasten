@@ -15,6 +15,17 @@ public interface Context {
 
 	/**
 	 * @notnull artifact
+	 */
+	void addManagedDependency(Artifact artifact);
+
+	/**
+	 * @notnull artifact
+	 * @return version
+	 */
+	String getManagedDependency(Artifact artifact);
+
+	/**
+	 * @notnull artifact
 	 * @notnull url
 	 * @return maybe null
 	 */
@@ -24,4 +35,5 @@ public interface Context {
 	 * @param stream
 	 */
 	void close(InputStream stream);
+
 }
