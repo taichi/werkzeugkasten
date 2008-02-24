@@ -70,7 +70,8 @@ public class ArtifactBuilderTest {
 	public void testArtifactBuild() throws Exception {
 		DefaultArtifact a = new DefaultArtifact();
 		ArtifactBuilder builder = new ArtifactBuilder();
-		Map<String, ArtifactBuilder.Handler> m = builder.setUpArtifactParse(a);
+		Map<String, ArtifactBuilder.Handler> m = builder
+				.createArtifactParseHandlers(a);
 		builder.parse(builder.createStreamParser(in), m, "project");
 
 		assertEquals("groupId", a.getGroupId());

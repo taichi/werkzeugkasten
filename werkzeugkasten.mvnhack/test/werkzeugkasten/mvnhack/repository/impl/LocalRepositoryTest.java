@@ -60,18 +60,12 @@ public class LocalRepositoryTest {
 		assertNotNull(set);
 		assertEquals(3, set.size());
 
-		File another = new File(root, "another");
-		try {
-			if (another.exists()) {
-				FileUtil.delete(another);
-			}
-			LocalRepository lr = new LocalRepository(another, builder);
-			lr.copyFrom(new DefaultContext(new DefaultConfiguration()), target,
-					a);
-			assertNotNull(lr.load(context, "net.sourceforge.jexcelapi", "jxl",
-					"2.6.6"));
-		} finally {
-			another.delete();
+		if (another.exists()) {
+			FileUtil.delete(another);
 		}
+		LocalRepository lr = new LocalRepository(another, builder);
+		lr.copyFrom(new DefaultContext(new DefaultConfiguration()), target, a);
+		assertNotNull(lr.load(context, "net.sourceforge.jexcelapi", "jxl",
+				"2.6.6"));
 	}
 }

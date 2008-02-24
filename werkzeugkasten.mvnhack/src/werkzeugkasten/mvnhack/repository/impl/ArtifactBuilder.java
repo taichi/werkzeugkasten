@@ -24,7 +24,7 @@ public class ArtifactBuilder {
 
 	public Artifact build(Context context, InputStream pom) {
 		DefaultArtifact result = new DefaultArtifact();
-		Map<String, Handler> handlers = setUpArtifactParse(result);
+		Map<String, Handler> handlers = createArtifactParseHandlers(result);
 		put(handlers, new Packaging(result));
 
 		Parent parent = new Parent();
@@ -157,7 +157,7 @@ public class ArtifactBuilder {
 		m.put(h.getTagName(), h);
 	}
 
-	protected Map<String, Handler> setUpArtifactParse(DefaultArtifact a) {
+	protected Map<String, Handler> createArtifactParseHandlers(DefaultArtifact a) {
 		Map<String, Handler> m = new HashMap<String, Handler>();
 		put(m, new GroupId(a));
 		put(m, new ArtifactId(a));
@@ -273,7 +273,7 @@ public class ArtifactBuilder {
 
 		@Override
 		public void handle(XMLStreamReader reader) throws XMLStreamException {
-			Map<String, Handler> m = setUpArtifactParse(a);
+			Map<String, Handler> m = createArtifactParseHandlers(a);
 			parse(reader, m, getTagName());
 		}
 	}
@@ -313,7 +313,7 @@ public class ArtifactBuilder {
 		@Override
 		public void handle(XMLStreamReader reader) throws XMLStreamException {
 			DefaultArtifact newone = new DefaultArtifact();
-			Map<String, Handler> m = setUpArtifactParse(newone);
+			Map<String, Handler> m = createArtifactParseHandlers(newone);
 			put(m, new Type(newone));
 			Scope scope = new Scope();
 			put(m, scope);
