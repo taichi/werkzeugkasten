@@ -122,15 +122,16 @@ public class ArtifactBuilder {
 			String end) throws XMLStreamException {
 		for (; reader.hasNext();) {
 			int event = reader.next();
+			String localname = reader.getLocalName();
 			if (XMLStreamConstants.START_ELEMENT == event) {
-				String localname = reader.getLocalName();
 				Handler handler = handlers.get(localname);
 				if (handler == null) {
 					skipTo(reader, localname);
 				} else {
 					handler.handle(reader);
 				}
-			} else if (XMLStreamConstants.END_ELEMENT == event) {
+			} else if (XMLStreamConstants.END_ELEMENT == event
+					&& end.equals(localname)) {
 				return;
 			}
 		}
