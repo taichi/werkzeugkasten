@@ -1,26 +1,19 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import javax.xml.stream.FactoryConfigurationError;
+import javax.xml.stream.StreamFilter;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.mvnhack.Constants;
@@ -30,59 +23,63 @@ import werkzeugkasten.mvnhack.repository.Context;
 public class ArtifactBuilder {
 
 	public Artifact build(Context context, InputStream pom) {
+		DefaultArtifact result = new DefaultArtifact();
+		Map<String, Handler> handlers = setUpArtifactParse(result);
+		put(handlers, new Packaging(result));
+
+		Parent parent = new Parent();
+		put(handlers, parent);
+		put(handlers, new Dependencies(result));
+		put(handlers, new DependencyManagement(context));
 		try {
-			Document doc = toDocument(context, pom);
-			XPath path = XPathFactory.newInstance().newXPath();
+			parse(createStreamParser(pom), handlers, "project");
+			resolveParent(context, parent.getArtifact());
 
-			Element elem = doc.getDocumentElement();
-			Map<String, String> replacer = new HashMap<String, String>();
+			Map<String, String> m = new HashMap<String, String>();
+			putContextValues(m, parent.getArtifact(), "parent");
+			putContextValues(m, result, "project");
 
-			resolveParent(context, path, elem, replacer);
-
-			DefaultArtifact a = createArtifact(path, elem, replacer);
-
-			addManagedDependencies(context, path, elem, replacer);
-
-			addDependencies(context, path, elem, replacer, a);
-
-			if (validate(a)) {
-				return a;
-			}
+			reconcile(context, result, m);
+			return result;
 		} catch (Exception e) {
 			Constants.LOG.log(Level.WARNING, e.getMessage(), e);
 		}
 		return null;
 	}
 
-	protected Document toDocument(Context context, InputStream pom)
-			throws ParserConfigurationException, SAXException, IOException {
-		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			factory.setValidating(false);
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			InputSource src = new InputSource(new BufferedInputStream(pom));
-			src.setEncoding("UTF-8");
-			return builder.parse(src);
-		} finally {
-			context.close(pom);
+	protected void resolveParent(Context context, Artifact parent) {
+		if (validate(parent)) {
+			context.resolve(parent.getGroupId(), parent.getArtifactId(), parent
+					.getVersion());
 		}
 	}
 
-	protected void resolveParent(Context context, XPath path, Element elem,
-			Map<String, String> replacer) throws XPathExpressionException {
-		String groupId = StringUtil.toString(path.evaluate("parent/groupId",
-				elem));
-		String artifactId = StringUtil.toString(path.evaluate(
-				"parent/artifactId", elem));
-		String version = StringUtil.toString(path.evaluate("parent/version",
-				elem));
-		if (validate(groupId, artifactId, version)) {
-			Artifact parent = context.resolve(groupId, artifactId, version);
-			if (parent != null) {
-				putContextValues(replacer, parent, "parent");
+	protected void reconcile(Context context, DefaultArtifact project,
+			Map<String, String> m) {
+		reconcile(project, m);
+		List<Artifact> copy = new ArrayList<Artifact>(project.getDependencies());
+		project.dependencies.clear();
+		for (Artifact a : copy) {
+			DefaultArtifact newone = new DefaultArtifact();
+			reconcile(a, newone, m);
+			if (StringUtil.isEmpty(newone.getVersion())) {
+				newone.setVersion(context.getManagedDependency(a));
+			}
+			if (validate(newone)) {
+				project.add(newone);
 			}
 		}
+	}
+
+	protected void reconcile(DefaultArtifact a, Map<String, String> m) {
+		reconcile(a, a, m);
+	}
+
+	protected void reconcile(Artifact src, DefaultArtifact dest,
+			Map<String, String> m) {
+		dest.setGroupId(StringUtil.replace(src.getGroupId(), m));
+		dest.setArtifactId(StringUtil.replace(src.getArtifactId(), m));
+		dest.setVersion(StringUtil.replace(src.getVersion(), m));
 	}
 
 	protected void putContextValues(Map<String, String> m, Artifact a,
@@ -90,78 +87,6 @@ public class ArtifactBuilder {
 		m.put(prefix + ".groupId", a.getGroupId());
 		m.put(prefix + ".artifactId", a.getArtifactId());
 		m.put(prefix + ".version", a.getVersion());
-	}
-
-	protected DefaultArtifact createArtifact(XPath path, Element elem,
-			Map<String, String> replacer) throws XPathExpressionException {
-		DefaultArtifact a = new DefaultArtifact();
-		setValues(path, a, elem, replacer);
-		a.setType(path.evaluate("packaging", elem));
-		putContextValues(replacer, a, "project");
-		return a;
-	}
-
-	protected void setValues(XPath path, DefaultArtifact a, Node n,
-			Map<String, String> replacer) throws XPathExpressionException {
-		a.setGroupId(StringUtil.replace(path.evaluate("groupId", n), replacer));
-		a.setArtifactId(StringUtil.replace(path.evaluate("artifactId", n),
-				replacer));
-		a.setVersion(StringUtil.replace(path.evaluate("version", n), replacer));
-	}
-
-	protected boolean isNotOptional(String optional) {
-		return StringUtil.isEmpty(optional)
-				|| Boolean.parseBoolean(optional) == false;
-	}
-
-	protected boolean isNotTest(String scope) {
-		return StringUtil.isEmpty(scope)
-				|| "test".equalsIgnoreCase(scope) == false;
-	}
-
-	protected boolean isValidNode(XPath path, Node n)
-			throws XPathExpressionException {
-		return isNotOptional(path.evaluate("optional", n))
-				&& isNotTest(path.evaluate("scope", n));
-	}
-
-	protected void addManagedDependencies(Context context, XPath path,
-			Element e, Map<String, String> replacer)
-			throws XPathExpressionException {
-		NodeList list = (NodeList) path.evaluate(
-				"dependencyManagement/dependencies/dependency", e,
-				XPathConstants.NODESET);
-		for (int i = 0; i < list.getLength(); i++) {
-			Node n = list.item(i);
-			if (isValidNode(path, n)) {
-				DefaultArtifact d = new DefaultArtifact();
-				setValues(path, d, n, replacer);
-				if (validate(d)) {
-					context.addManagedDependency(d);
-				}
-			}
-		}
-	}
-
-	protected void addDependencies(Context c, XPath path, Element e,
-			Map<String, String> replacer, DefaultArtifact a)
-			throws XPathExpressionException {
-		NodeList list = (NodeList) path.evaluate("dependencies/dependency", e,
-				XPathConstants.NODESET);
-		for (int i = 0; i < list.getLength(); i++) {
-			Node n = list.item(i);
-			if (isValidNode(path, n)) {
-				DefaultArtifact d = new DefaultArtifact();
-				setValues(path, d, n, replacer);
-				d.setType(path.evaluate("type", n));
-				if (StringUtil.isEmpty(d.getVersion())) {
-					d.setVersion(c.getManagedDependency(d));
-				}
-				if (validate(d)) {
-					a.add(d);
-				}
-			}
-		}
 	}
 
 	protected boolean validate(Artifact a) {
@@ -177,4 +102,294 @@ public class ArtifactBuilder {
 		return true;
 	}
 
+	protected XMLStreamReader createStreamParser(InputStream in)
+			throws FactoryConfigurationError, XMLStreamException {
+		XMLInputFactory factory = XMLInputFactory.newInstance();
+		factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES,
+				Boolean.FALSE);
+		BufferedInputStream stream = new BufferedInputStream(in);
+		XMLStreamReader reader = factory.createXMLStreamReader(stream);
+		reader = factory.createFilteredReader(reader, new StreamFilter() {
+			@Override
+			public boolean accept(XMLStreamReader reader) {
+				return reader.isStartElement() || reader.isEndElement();
+			}
+		});
+		return reader;
+	}
+
+	protected void parse(XMLStreamReader reader, Map<String, Handler> handlers,
+			String end) throws XMLStreamException {
+		for (; reader.hasNext();) {
+			int event = reader.next();
+			if (XMLStreamConstants.START_ELEMENT == event) {
+				String localname = reader.getLocalName();
+				Handler handler = handlers.get(localname);
+				if (handler == null) {
+					skipTo(reader, localname);
+				} else {
+					handler.handle(reader);
+				}
+			} else if (XMLStreamConstants.END_ELEMENT == event) {
+				return;
+			}
+		}
+	}
+
+	protected void skipTo(XMLStreamReader reader, String end)
+			throws XMLStreamException {
+		for (; reader.hasNext();) {
+			if (XMLStreamConstants.END_ELEMENT == reader.next()) {
+				if (end.equals(reader.getLocalName())) {
+					break;
+				}
+			}
+		}
+	}
+
+	protected interface Handler {
+		String getTagName();
+
+		void handle(XMLStreamReader reader) throws XMLStreamException;
+	}
+
+	protected void put(Map<String, Handler> m, Handler h) {
+		m.put(h.getTagName(), h);
+	}
+
+	protected Map<String, Handler> setUpArtifactParse(DefaultArtifact a) {
+		Map<String, Handler> m = new HashMap<String, Handler>();
+		put(m, new GroupId(a));
+		put(m, new ArtifactId(a));
+		put(m, new Version(a));
+		return m;
+	}
+
+	protected class GroupId implements Handler {
+		protected DefaultArtifact a;
+
+		protected GroupId(DefaultArtifact a) {
+			this.a = a;
+		}
+
+		@Override
+		public String getTagName() {
+			return "groupId";
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			a.setGroupId(reader.getElementText());
+		}
+	}
+
+	protected class ArtifactId implements Handler {
+		protected DefaultArtifact a;
+
+		protected ArtifactId(DefaultArtifact a) {
+			this.a = a;
+		}
+
+		@Override
+		public String getTagName() {
+			return "artifactId";
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			a.setArtifactId(reader.getElementText());
+		}
+	}
+
+	protected class Version implements Handler {
+		protected DefaultArtifact a;
+
+		protected Version(DefaultArtifact a) {
+			this.a = a;
+		}
+
+		@Override
+		public String getTagName() {
+			return "version";
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			a.setVersion(reader.getElementText());
+		}
+	}
+
+	protected class Packaging implements Handler {
+		protected DefaultArtifact a;
+
+		protected Packaging(DefaultArtifact a) {
+			this.a = a;
+		}
+
+		@Override
+		public String getTagName() {
+			return "packaging";
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			a.setType(reader.getElementText());
+		}
+	}
+
+	protected class Type implements Handler {
+		protected DefaultArtifact a;
+
+		protected Type(DefaultArtifact a) {
+			this.a = a;
+		}
+
+		@Override
+		public String getTagName() {
+			return "type";
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			a.setType(reader.getElementText());
+		}
+	}
+
+	protected class Parent implements Handler {
+		protected DefaultArtifact a;
+
+		protected Parent() {
+			this.a = new DefaultArtifact();
+		}
+
+		public Artifact getArtifact() {
+			return this.a;
+		}
+
+		@Override
+		public String getTagName() {
+			return "parent";
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			Map<String, Handler> m = setUpArtifactParse(a);
+			parse(reader, m, getTagName());
+		}
+	}
+
+	protected class Dependencies implements Handler {
+		protected DefaultArtifact project;
+
+		protected Dependencies(DefaultArtifact project) {
+			this.project = project;
+		}
+
+		@Override
+		public String getTagName() {
+			return "dependencies";
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			Map<String, Handler> m = new HashMap<String, Handler>();
+			put(m, new Dependency(this.project));
+			parse(reader, m, getTagName());
+		}
+	}
+
+	protected class Dependency implements Handler {
+		protected DefaultArtifact project;
+
+		protected Dependency(DefaultArtifact a) {
+			this.project = a;
+		}
+
+		@Override
+		public String getTagName() {
+			return "dependency";
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			DefaultArtifact newone = new DefaultArtifact();
+			Map<String, Handler> m = setUpArtifactParse(newone);
+			put(m, new Type(newone));
+			Scope scope = new Scope();
+			put(m, scope);
+			Optional optional = new Optional();
+			put(m, optional);
+			parse(reader, m, getTagName());
+			if (scope.isNotTest() && optional.isNotOptional()) {
+				this.project.add(newone);
+			}
+		}
+	}
+
+	protected class Scope implements Handler {
+		protected String scope;
+
+		@Override
+		public String getTagName() {
+			return "scope";
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			this.scope = reader.getElementText();
+		}
+
+		protected boolean isNotTest() {
+			return StringUtil.isEmpty(scope)
+					|| "test".equalsIgnoreCase(scope) == false;
+		}
+
+	}
+
+	protected class Optional implements Handler {
+
+		private String optional;
+
+		@Override
+		public String getTagName() {
+			return "optional";
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			this.optional = reader.getElementText();
+		}
+
+		protected boolean isNotOptional() {
+			return StringUtil.isEmpty(optional)
+					|| Boolean.parseBoolean(optional) == false;
+		}
+
+	}
+
+	protected class DependencyManagement implements Handler {
+		protected Context context;
+
+		protected DependencyManagement(Context context) {
+			this.context = context;
+		}
+
+		@Override
+		public String getTagName() {
+			return "dependencyManagement";
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			Map<String, Handler> m = new HashMap<String, Handler>();
+			DefaultArtifact newone = new DefaultArtifact();
+			put(m, new Dependencies(newone));
+			parse(reader, m, getTagName());
+			for (Artifact a : newone.getDependencies()) {
+				if (validate(a)) {
+					this.context.addManagedDependency(a);
+				}
+			}
+		}
+	}
 }

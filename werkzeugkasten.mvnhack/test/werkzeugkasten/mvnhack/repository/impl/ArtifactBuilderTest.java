@@ -2,14 +2,14 @@ package werkzeugkasten.mvnhack.repository.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
-import javax.xml.stream.StreamFilter;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.junit.After;
@@ -43,40 +43,11 @@ public class ArtifactBuilderTest {
 	}
 
 	@Test
-	public void testA() throws Exception {
-		XMLInputFactory factory = XMLInputFactory.newInstance();
-		factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES,
-				Boolean.FALSE);
-		BufferedInputStream stream = new BufferedInputStream(in);
-		XMLStreamReader reader = factory.createXMLStreamReader(stream);
-		reader = factory.createFilteredReader(reader, new StreamFilter() {
-			@Override
-			public boolean accept(XMLStreamReader reader) {
-				return reader.isStartElement() || reader.isEndElement();
-			}
-		});
-		for (; reader.hasNext(); reader.next()) {
-			String localname = reader.getLocalName();
-			if ("developers".equals(localname)) {
-				for (; reader.hasNext();) {
-					int event = reader.next();
-					if (XMLStreamConstants.END_ELEMENT == event) {
-						String end = reader.getLocalName();
-						if (localname.equals(end)) {
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	@Test
 	public void testBuild() {
 		assertNotNull(in);
-		ArtifactBuilder ab = new ArtifactBuilder();
-		Artifact a = ab.build(new DefaultContext(new DefaultConfiguration()),
-				in);
+		ArtifactBuilder builder = new ArtifactBuilder();
+		Artifact a = builder.build(new DefaultContext(
+				new DefaultConfiguration()), in);
 		assertNotNull(a);
 		assertEquals("groupId", a.getGroupId());
 		assertEquals("artifactId", a.getArtifactId());
@@ -93,6 +64,72 @@ public class ArtifactBuilderTest {
 		assertEquals("dependencyArtifactId2", ary[1].getArtifactId());
 		assertEquals("3.0.0", ary[1].getVersion());
 
+	}
+
+	@Test
+	public void testArtifactBuild() throws Exception {
+		DefaultArtifact a = new DefaultArtifact();
+		ArtifactBuilder builder = new ArtifactBuilder();
+		Map<String, ArtifactBuilder.Handler> m = builder.setUpArtifactParse(a);
+		builder.parse(builder.createStreamParser(in), m, "project");
+
+		assertEquals("groupId", a.getGroupId());
+		assertEquals("artifactId", a.getArtifactId());
+		assertEquals("1.0.0", a.getVersion());
+	}
+
+	@Test
+	public void testReconcile() throws Exception {
+		DefaultArtifact a = new DefaultArtifact();
+		a.setGroupId("groupId");
+		a.setArtifactId("artifactId");
+		a.setVersion("1.0.0");
+		Map<String, String> m = new HashMap<String, String>();
+		ArtifactBuilder builder = new ArtifactBuilder();
+		builder.reconcile(a, a, m);
+
+		assertEquals("groupId", a.getGroupId());
+		assertEquals("artifactId", a.getArtifactId());
+		assertEquals("1.0.0", a.getVersion());
+	}
+
+	@Test
+	public void testSkip() throws Exception {
+		final Map<String, ArtifactBuilder.Handler> targets = new HashMap<String, ArtifactBuilder.Handler>();
+
+		final int[] groupIdTimes = { 0 };
+		targets.put("groupId", new ArtifactBuilder.Handler() {
+			@Override
+			public String getTagName() {
+				return "groupId";
+			}
+
+			@Override
+			public void handle(XMLStreamReader reader)
+					throws XMLStreamException {
+				assertTrue(targets.containsKey(reader.getLocalName()));
+				assertEquals("groupId", reader.getElementText());
+				groupIdTimes[0]++;
+			}
+		});
+		final int[] dependenciesTimes = { 0 };
+		targets.put("dependencies", new ArtifactBuilder.Handler() {
+			@Override
+			public String getTagName() {
+				return "dependencies";
+			}
+
+			@Override
+			public void handle(XMLStreamReader reader) {
+				dependenciesTimes[0]++;
+			}
+		});
+
+		ArtifactBuilder builder = new ArtifactBuilder();
+		builder.parse(builder.createStreamParser(in), targets, "project");
+
+		assertEquals(1, groupIdTimes[0]);
+		assertEquals(1, dependenciesTimes[0]);
 	}
 
 }

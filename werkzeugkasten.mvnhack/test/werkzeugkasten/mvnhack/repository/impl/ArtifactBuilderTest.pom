@@ -1,8 +1,14 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-parent</artifactId>
+    <version>1.4.3</version>
+  </parent>
   <groupId>groupId</groupId>
   <artifactId>artifactId</artifactId>
   <version>1.0.0</version>
+  <packaging>pom</packaging>
   <developers>
     <developer>
       <name>aaa bbb&oslash;ccc</name>
@@ -52,4 +58,18 @@
       <version>3.0.0</version>
     </dependency>
   </dependencies>
+ <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>hogehoge</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.13</version>
+      </dependency>
+   </dependencies>
+ </dependencyManagement>
 </project>
