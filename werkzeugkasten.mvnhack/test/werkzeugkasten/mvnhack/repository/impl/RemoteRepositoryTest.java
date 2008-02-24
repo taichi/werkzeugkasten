@@ -55,15 +55,14 @@ public class RemoteRepositoryTest {
 	}
 
 	@Test
-	public void testLoad() {
-		Artifact a = target.load(context, "org.slf4j", "slf4j-simple", "1.4.3");
+	public void testLoad() throws Exception {
+		Artifact a = target.load(context, "plexus", "plexus-utils", "1.0.2");
 		assertNotNull(a);
 		Set<URL> set = target.getLocation(a);
 		assertNotNull(set);
 		assertEquals(3, set.size());
 
 		flat.copyFrom(context, target, a);
-		assertEquals(2, localRoot.list().length);
+		assertEquals(1, localRoot.list().length);
 	}
-
 }
