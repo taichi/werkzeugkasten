@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.xml.stream.StreamFilter;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 import org.junit.After;
@@ -55,7 +56,18 @@ public class ArtifactBuilderTest {
 			}
 		});
 		for (; reader.hasNext(); reader.next()) {
-			System.out.println(reader.getLocalName());
+			String localname = reader.getLocalName();
+			if ("developers".equals(localname)) {
+				for (; reader.hasNext();) {
+					int event = reader.next();
+					if (XMLStreamConstants.END_ELEMENT == event) {
+						String end = reader.getLocalName();
+						if (localname.equals(end)) {
+							break;
+						}
+					}
+				}
+			}
 		}
 	}
 
