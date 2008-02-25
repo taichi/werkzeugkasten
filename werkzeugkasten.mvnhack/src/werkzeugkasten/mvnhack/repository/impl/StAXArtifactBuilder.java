@@ -52,6 +52,13 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		return null;
 	}
 
+	protected void putContextValues(Map<String, String> m, Artifact a,
+			String prefix) {
+		m.put(prefix + ".groupId", a.getGroupId());
+		m.put(prefix + ".artifactId", a.getArtifactId());
+		m.put(prefix + ".version", a.getVersion());
+	}
+
 	protected void resolveParent(Context context, Artifact parent) {
 		if (validate(parent)) {
 			context.resolve(parent.getGroupId(), parent.getArtifactId(), parent
@@ -92,13 +99,6 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		dest.setGroupId(StringUtil.replace(src.getGroupId(), m));
 		dest.setArtifactId(StringUtil.replace(src.getArtifactId(), m));
 		dest.setVersion(StringUtil.replace(src.getVersion(), m));
-	}
-
-	protected void putContextValues(Map<String, String> m, Artifact a,
-			String prefix) {
-		m.put(prefix + ".groupId", a.getGroupId());
-		m.put(prefix + ".artifactId", a.getArtifactId());
-		m.put(prefix + ".version", a.getVersion());
 	}
 
 	protected boolean validate(Artifact a) {
