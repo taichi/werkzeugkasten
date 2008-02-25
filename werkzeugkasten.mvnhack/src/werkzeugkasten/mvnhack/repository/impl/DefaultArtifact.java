@@ -17,6 +17,8 @@ public class DefaultArtifact implements Artifact {
 
 	protected String type = "jar";
 
+	protected boolean optional = false;
+
 	protected Set<Artifact> dependencies = new LinkedHashSet<Artifact>();
 
 	protected Map<String, String> managedDependencies;
@@ -62,6 +64,15 @@ public class DefaultArtifact implements Artifact {
 
 	protected void setType(String type) {
 		this.type = StringUtil.toString(type, "jar");
+	}
+
+	@Override
+	public boolean isOptional() {
+		return this.optional;
+	}
+
+	protected void setOptional(boolean optional) {
+		this.optional = optional;
 	}
 
 	@Override

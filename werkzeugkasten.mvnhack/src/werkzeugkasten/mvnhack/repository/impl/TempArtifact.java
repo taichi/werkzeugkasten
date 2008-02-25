@@ -39,6 +39,11 @@ class TempArtifact implements Artifact {
 	}
 
 	@Override
+	public boolean isOptional() {
+		return false;
+	}
+
+	@Override
 	public Set<Artifact> getDependencies() {
 		throw new UnsupportedOperationException();
 	}

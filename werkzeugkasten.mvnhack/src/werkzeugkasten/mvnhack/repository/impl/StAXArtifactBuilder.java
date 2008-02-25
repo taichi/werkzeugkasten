@@ -318,10 +318,10 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 			put(m, new Type(newone));
 			Scope scope = new Scope();
 			put(m, scope);
-			Optional optional = new Optional();
+			Optional optional = new Optional(newone);
 			put(m, optional);
 			parse(reader, m, getTagName());
-			if (scope.isNotTest() && optional.isNotOptional()) {
+			if (scope.isNotTest() && newone.isOptional() == false) {
 				this.project.add(newone);
 			}
 		}
@@ -349,7 +349,11 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 
 	protected class Optional implements Handler {
 
-		private String optional;
+		protected DefaultArtifact a;
+
+		protected Optional(DefaultArtifact a) {
+			this.a = a;
+		}
 
 		@Override
 		public String getTagName() {
@@ -358,12 +362,13 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 
 		@Override
 		public void handle(XMLStreamReader reader) throws XMLStreamException {
-			this.optional = reader.getElementText();
+			String optional = reader.getElementText();
+			a.setOptional(isOptional(optional));
 		}
 
-		protected boolean isNotOptional() {
-			return StringUtil.isEmpty(optional)
-					|| Boolean.parseBoolean(optional) == false;
+		protected boolean isOptional(String optional) {
+			return StringUtil.isEmpty(optional) == false
+					&& Boolean.parseBoolean(optional);
 		}
 
 	}

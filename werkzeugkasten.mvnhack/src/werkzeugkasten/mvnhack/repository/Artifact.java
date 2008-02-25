@@ -12,6 +12,8 @@ public interface Artifact {
 
 	String getType();
 
+	boolean isOptional();
+
 	Set<Artifact> getDependencies();
 
 }
