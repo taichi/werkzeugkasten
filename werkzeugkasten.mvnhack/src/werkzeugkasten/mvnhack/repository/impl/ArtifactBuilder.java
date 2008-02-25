@@ -4,8 +4,10 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.xml.stream.FactoryConfigurationError;
@@ -25,12 +27,13 @@ public class ArtifactBuilder {
 	public Artifact build(Context context, InputStream pom) {
 		DefaultArtifact result = new DefaultArtifact();
 		Map<String, Handler> handlers = createArtifactParseHandlers(result);
-		put(handlers, new Packaging(result));
+		put(handlers, new Type(result, "packaging"));
 
 		Parent parent = new Parent();
 		put(handlers, parent);
 		put(handlers, new Dependencies(result));
-		put(handlers, new DependencyManagement(context));
+		Set<Artifact> managed = new HashSet<Artifact>();
+		put(handlers, new DependencyManagement(managed));
 		try {
 			parse(createStreamParser(pom), handlers, "project");
 			resolveParent(context, parent.getArtifact());
@@ -39,7 +42,7 @@ public class ArtifactBuilder {
 			putContextValues(m, parent.getArtifact(), "parent");
 			putContextValues(m, result, "project");
 
-			reconcile(context, result, m);
+			reconcile(context, result, managed, m);
 			return result;
 		} catch (Exception e) {
 			Constants.LOG.log(Level.WARNING, e.getMessage(), e);
@@ -55,8 +58,15 @@ public class ArtifactBuilder {
 	}
 
 	protected void reconcile(Context context, DefaultArtifact project,
-			Map<String, String> m) {
+			Set<Artifact> managed, Map<String, String> m) {
 		reconcile(project, m);
+
+		for (Artifact a : managed) {
+			DefaultArtifact newone = new DefaultArtifact();
+			reconcile(a, newone, m);
+			context.addManagedDependency(newone);
+		}
+
 		List<Artifact> copy = new ArrayList<Artifact>(project.getDependencies());
 		project.dependencies.clear();
 		for (Artifact a : copy) {
@@ -220,34 +230,22 @@ public class ArtifactBuilder {
 		}
 	}
 
-	protected class Packaging implements Handler {
-		protected DefaultArtifact a;
-
-		protected Packaging(DefaultArtifact a) {
-			this.a = a;
-		}
-
-		@Override
-		public String getTagName() {
-			return "packaging";
-		}
-
-		@Override
-		public void handle(XMLStreamReader reader) throws XMLStreamException {
-			a.setType(reader.getElementText());
-		}
-	}
-
 	protected class Type implements Handler {
 		protected DefaultArtifact a;
+		protected String tag;
 
 		protected Type(DefaultArtifact a) {
+			this(a, "type");
+		}
+
+		protected Type(DefaultArtifact a, String tag) {
 			this.a = a;
+			this.tag = tag;
 		}
 
 		@Override
 		public String getTagName() {
-			return "type";
+			return tag;
 		}
 
 		@Override
@@ -369,10 +367,10 @@ public class ArtifactBuilder {
 	}
 
 	protected class DependencyManagement implements Handler {
-		protected Context context;
+		protected Set<Artifact> managed;
 
-		protected DependencyManagement(Context context) {
-			this.context = context;
+		protected DependencyManagement(Set<Artifact> managed) {
+			this.managed = managed;
 		}
 
 		@Override
@@ -388,7 +386,7 @@ public class ArtifactBuilder {
 			parse(reader, m, getTagName());
 			for (Artifact a : newone.getDependencies()) {
 				if (validate(a)) {
-					this.context.addManagedDependency(a);
+					this.managed.add(a);
 				}
 			}
 		}

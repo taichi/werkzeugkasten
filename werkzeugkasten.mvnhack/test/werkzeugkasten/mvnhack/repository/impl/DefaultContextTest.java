@@ -85,4 +85,23 @@ public class DefaultContextTest {
 		assertEquals(true, jar.exists());
 	}
 
+	@Test
+	public void testResolveSlf4j() throws Exception {
+		target.resolve("org.slf4j", "slf4j-simple", "1.4.2");
+
+		File[] files = destDir.listFiles();
+		assertEquals(2, files.length);
+
+		File api = new File(destRepo, "org/slf4j/slf4j-api/1.4.2");
+		assertEquals(true, api.exists());
+		assertEquals(2, api.list().length);
+
+		File simple = new File(destRepo, "org/slf4j/slf4j-simple/1.4.2");
+		assertEquals(true, simple.exists());
+		File jar = new File(simple, "slf4j-simple-1.4.2.jar");
+		assertEquals(true, jar.exists());
+
+		File parent = new File(destRepo, "org/slf4j/slf4j-parent/1.4.2");
+		assertEquals(true, new File(parent, "slf4j-parent-1.4.2.pom").exists());
+	}
 }
