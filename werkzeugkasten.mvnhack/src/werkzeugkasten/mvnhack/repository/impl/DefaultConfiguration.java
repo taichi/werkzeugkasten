@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.Constants;
+import werkzeugkasten.mvnhack.repository.ArtifactBuilder;
 import werkzeugkasten.mvnhack.repository.Configuration;
 import werkzeugkasten.mvnhack.repository.Destination;
 import werkzeugkasten.mvnhack.repository.Repository;
@@ -21,7 +22,7 @@ public class DefaultConfiguration implements Configuration {
 
 	protected Set<Destination> destinations = new LinkedHashSet<Destination>();
 
-	protected ArtifactBuilder builder = new ArtifactBuilder();
+	protected ArtifactBuilder builder = new StAXArtifactBuilder();
 
 	public DefaultConfiguration() {
 	}

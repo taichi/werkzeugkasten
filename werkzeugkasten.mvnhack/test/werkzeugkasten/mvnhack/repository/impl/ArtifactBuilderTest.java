@@ -45,7 +45,7 @@ public class ArtifactBuilderTest {
 	@Test
 	public void testBuild() {
 		assertNotNull(in);
-		ArtifactBuilder builder = new ArtifactBuilder();
+		StAXArtifactBuilder builder = new StAXArtifactBuilder();
 		Artifact a = builder.build(new DefaultContext(
 				new DefaultConfiguration()), in);
 		assertNotNull(a);
@@ -69,8 +69,8 @@ public class ArtifactBuilderTest {
 	@Test
 	public void testArtifactBuild() throws Exception {
 		DefaultArtifact a = new DefaultArtifact();
-		ArtifactBuilder builder = new ArtifactBuilder();
-		Map<String, ArtifactBuilder.Handler> m = builder
+		StAXArtifactBuilder builder = new StAXArtifactBuilder();
+		Map<String, StAXArtifactBuilder.Handler> m = builder
 				.createArtifactParseHandlers(a);
 		builder.parse(builder.createStreamParser(in), m, "project");
 
@@ -86,7 +86,7 @@ public class ArtifactBuilderTest {
 		a.setArtifactId("artifactId");
 		a.setVersion("1.0.0");
 		Map<String, String> m = new HashMap<String, String>();
-		ArtifactBuilder builder = new ArtifactBuilder();
+		StAXArtifactBuilder builder = new StAXArtifactBuilder();
 		builder.reconcile(a, a, m);
 
 		assertEquals("groupId", a.getGroupId());
@@ -96,10 +96,10 @@ public class ArtifactBuilderTest {
 
 	@Test
 	public void testSkip() throws Exception {
-		final Map<String, ArtifactBuilder.Handler> targets = new HashMap<String, ArtifactBuilder.Handler>();
+		final Map<String, StAXArtifactBuilder.Handler> targets = new HashMap<String, StAXArtifactBuilder.Handler>();
 
 		final int[] groupIdTimes = { 0 };
-		targets.put("groupId", new ArtifactBuilder.Handler() {
+		targets.put("groupId", new StAXArtifactBuilder.Handler() {
 			@Override
 			public String getTagName() {
 				return "groupId";
@@ -114,7 +114,7 @@ public class ArtifactBuilderTest {
 			}
 		});
 		final int[] dependenciesTimes = { 0 };
-		targets.put("dependencies", new ArtifactBuilder.Handler() {
+		targets.put("dependencies", new StAXArtifactBuilder.Handler() {
 			@Override
 			public String getTagName() {
 				return "dependencies";
@@ -126,7 +126,7 @@ public class ArtifactBuilderTest {
 			}
 		});
 
-		ArtifactBuilder builder = new ArtifactBuilder();
+		StAXArtifactBuilder builder = new StAXArtifactBuilder();
 		builder.parse(builder.createStreamParser(in), targets, "project");
 
 		assertEquals(1, groupIdTimes[0]);

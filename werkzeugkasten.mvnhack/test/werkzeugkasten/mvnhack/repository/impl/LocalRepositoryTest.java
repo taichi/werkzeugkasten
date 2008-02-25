@@ -23,7 +23,7 @@ public class LocalRepositoryTest {
 	File root;
 	File another;
 
-	ArtifactBuilder builder;
+	StAXArtifactBuilder builder;
 
 	DefaultContext context;
 
@@ -39,7 +39,7 @@ public class LocalRepositoryTest {
 		File kid = new File(url.getPath());
 		root = kid.getParentFile();
 		another = new File(root, "another");
-		builder = new ArtifactBuilder();
+		builder = new StAXArtifactBuilder();
 		context = new DefaultContext(new DefaultConfiguration());
 		target = new LocalRepository(kid, builder);
 	}

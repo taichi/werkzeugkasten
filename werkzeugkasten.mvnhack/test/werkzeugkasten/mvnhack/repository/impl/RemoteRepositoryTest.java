@@ -34,7 +34,7 @@ public class RemoteRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ArtifactBuilder builder = new ArtifactBuilder();
+		StAXArtifactBuilder builder = new StAXArtifactBuilder();
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		URL url = cl.getResource(".");
 		localRoot = new File(url.getPath(), "local");

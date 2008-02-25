@@ -1,6 +1,6 @@
 Get Libraries from maven2 remote/local repositories.
 
-java -jar mvnhack-0.0.1.jar [groupId] [artifactId] [version] flat=[on/off] dest=[path]
+java -jar mvnhack-0.0.2.jar [groupId] [artifactId] [version] flat=[on/off] dest=[path]
 
 - groupId
   if groupId and artifactId has same id, you skip this.

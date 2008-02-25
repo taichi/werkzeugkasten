@@ -20,10 +20,12 @@ import javax.xml.stream.XMLStreamReader;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
+import werkzeugkasten.mvnhack.repository.ArtifactBuilder;
 import werkzeugkasten.mvnhack.repository.Context;
 
-public class ArtifactBuilder {
+public class StAXArtifactBuilder implements ArtifactBuilder {
 
+	@Override
 	public Artifact build(Context context, InputStream pom) {
 		DefaultArtifact result = new DefaultArtifact();
 		Map<String, Handler> handlers = createArtifactParseHandlers(result);

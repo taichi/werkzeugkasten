@@ -28,7 +28,7 @@ public class DefaultContextTest {
 
 	@Before
 	public void setUp() throws Exception {
-		ArtifactBuilder builder = new ArtifactBuilder();
+		StAXArtifactBuilder builder = new StAXArtifactBuilder();
 
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		URL url = cl.getResource("repository");
