@@ -55,7 +55,7 @@ public class RemoteRepositoryTest {
 	}
 
 	@Test
-	public void testLoadSlf4j() throws Exception {
+	public void testLoadParentAndReplaceTemplate() throws Exception {
 		Artifact a = target.load(context, "org.slf4j", "slf4j-simple", "1.4.3");
 		assertNotNull(a);
 		Set<URL> set = target.getLocation(a);
