@@ -3,7 +3,9 @@ package werkzeugkasten.mvnhack.repository.impl;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -73,12 +75,16 @@ public class DefaultContext implements Context {
 						d.copyFrom(this, r, a);
 					}
 					addResolved(a);
+					List<Artifact> list = new ArrayList<Artifact>();
 					for (Artifact d : a.getDependencies()) {
 						DefaultContext c = new DefaultContext(
 								this.configuration, this.resolved);
-						c.resolve(d.getGroupId(), d.getArtifactId(), d
-								.getVersion());
+						Artifact resolve = c.resolve(d.getGroupId(), d
+								.getArtifactId(), d.getVersion());
+						list.add(resolve);
 					}
+					a.getDependencies().clear();
+					a.getDependencies().addAll(list);
 					return a;
 				}
 			}
