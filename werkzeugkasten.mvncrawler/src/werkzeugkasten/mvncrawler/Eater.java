@@ -12,6 +12,9 @@ import jp.aonir.fuzzyxml.FuzzyXMLParser;
 import jp.aonir.fuzzyxml.XPath;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.util.UrlUtil;
+import werkzeugkasten.mvnhack.repository.Artifact;
+import werkzeugkasten.mvnhack.repository.ArtifactBuilder;
+import werkzeugkasten.mvnhack.repository.Context;
 
 public class Eater {
 
@@ -19,6 +22,14 @@ public class Eater {
 
 	protected static final Pattern files = Pattern
 			.compile(".*\\.(xml|md5|sha1|jar|zip)");
+
+	protected Context context;
+	protected ArtifactBuilder builder;
+
+	public Eater(Context context, ArtifactBuilder builder) {
+		this.context = context;
+		this.builder = builder;
+	}
 
 	public void parse(CrawlerContext c, URL url) throws IOException {
 		FuzzyXMLParser parser = new FuzzyXMLParser(true);
@@ -66,6 +77,7 @@ public class Eater {
 	}
 
 	public void eat(URL pom) {
-		System.out.println("***** " + pom);
+		Artifact a = this.builder.build(this.context, UrlUtil.open(pom));
+		System.out.println(a.toString());
 	}
 }

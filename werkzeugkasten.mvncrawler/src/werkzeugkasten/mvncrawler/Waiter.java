@@ -10,7 +10,11 @@ public class Waiter {
 
 	protected ScheduledExecutorService executorService;
 
-	protected Eater eater = new Eater();
+	protected Eater eater;
+
+	public Waiter(Eater eater) {
+		this.eater = eater;
+	}
 
 	public void begin() {
 		this.executorService = Executors.newScheduledThreadPool(5);
