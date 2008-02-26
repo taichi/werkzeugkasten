@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import werkzeugkasten.mvnhack.repository.FileNotFoundRuntimeException;
+import werkzeugkasten.common.exception.FileNotFoundRuntimeException;
 
 public class FileUtil {
 

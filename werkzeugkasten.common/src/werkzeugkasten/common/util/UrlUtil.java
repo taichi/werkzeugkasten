@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import werkzeugkasten.mvnhack.repository.FileNotFoundRuntimeException;
+import werkzeugkasten.common.exception.FileNotFoundRuntimeException;
 
 public class UrlUtil {
 
