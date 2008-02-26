@@ -10,11 +10,11 @@ public class Main {
 	}
 
 	public void execute() {
-		String topUrl = "http://repo1.maven.org/maven2/velocity/";
+		String topUrl = "http://repo1.maven.org/maven2/";
 		Waiter waiter = new Waiter();
 		try {
 			waiter.begin();
-			CrawlerContext c = new CrawlerContext(waiter);
+			CrawlerContext c = new CrawlerContext(topUrl, waiter);
 			c.crawlmore(topUrl);
 		} catch (Exception e) {
 			e.printStackTrace();

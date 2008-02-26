@@ -40,7 +40,7 @@ public class Waiter {
 			public void run() {
 				eater.eat(pom);
 			}
-		}, 0, TimeUnit.SECONDS);
+		}, 10, TimeUnit.SECONDS);
 	}
 
 	public void finish() {
