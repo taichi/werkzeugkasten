@@ -4,12 +4,12 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
+import werkzeugkasten.common.exception.FileNotFoundRuntimeException;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.ArtifactBuilder;
 import werkzeugkasten.mvnhack.repository.Context;
-import werkzeugkasten.mvnhack.repository.FileNotFoundRuntimeException;
 import werkzeugkasten.mvnhack.repository.Repository;
 
 public class RemoteRepository implements Repository {

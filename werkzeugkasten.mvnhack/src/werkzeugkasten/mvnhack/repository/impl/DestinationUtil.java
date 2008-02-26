@@ -5,12 +5,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Level;
 
+import werkzeugkasten.common.exception.FileNotFoundRuntimeException;
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Context;
 import werkzeugkasten.mvnhack.repository.Destination;
-import werkzeugkasten.mvnhack.repository.FileNotFoundRuntimeException;
 import werkzeugkasten.mvnhack.repository.Repository;
 
 public class DestinationUtil {
