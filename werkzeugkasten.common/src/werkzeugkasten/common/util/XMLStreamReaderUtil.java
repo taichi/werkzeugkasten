@@ -49,4 +49,20 @@ public class XMLStreamReaderUtil {
 		void handle(XMLStreamReader reader) throws XMLStreamException;
 	}
 
+	public static class DefaultHandler implements Handler {
+		protected String tag;
+
+		public DefaultHandler(String tag) {
+			this.tag = tag;
+		}
+
+		@Override
+		public String getTagName() {
+			return tag;
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+		}
+	}
 }

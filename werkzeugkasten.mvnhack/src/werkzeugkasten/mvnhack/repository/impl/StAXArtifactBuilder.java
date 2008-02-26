@@ -14,12 +14,12 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.StreamFilter;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import werkzeugkasten.common.util.StringUtil;
+import werkzeugkasten.common.util.XMLStreamReaderUtil.DefaultHandler;
 import werkzeugkasten.common.util.XMLStreamReaderUtil.Handler;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
@@ -32,6 +32,7 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 	public Artifact build(Context context, InputStream pom) {
 		DefaultArtifact result = new DefaultArtifact();
 		Map<String, Handler> handlers = createArtifactParseHandlers(result);
+		put(handlers, new DefaultHandler("project"));
 		put(handlers, new Type(result, "packaging"));
 
 		Parent parent = new Parent();
@@ -126,12 +127,12 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 				Boolean.FALSE);
 		BufferedInputStream stream = new BufferedInputStream(in);
 		XMLStreamReader reader = factory.createXMLStreamReader(stream);
-		reader = factory.createFilteredReader(reader, new StreamFilter() {
-			@Override
-			public boolean accept(XMLStreamReader reader) {
-				return reader.isStartElement() || reader.isEndElement();
-			}
-		});
+		// reader = factory.createFilteredReader(reader, new StreamFilter() {
+		// @Override
+		// public boolean accept(XMLStreamReader reader) {
+		// return reader.isStartElement() || reader.isEndElement();
+		// }
+		// });
 		return reader;
 	}
 
@@ -143,16 +144,12 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		return m;
 	}
 
-	protected class GroupId implements Handler {
+	protected class GroupId extends DefaultHandler {
 		protected DefaultArtifact a;
 
 		protected GroupId(DefaultArtifact a) {
+			super("groupId");
 			this.a = a;
-		}
-
-		@Override
-		public String getTagName() {
-			return "groupId";
 		}
 
 		@Override
@@ -161,16 +158,12 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		}
 	}
 
-	protected class ArtifactId implements Handler {
+	protected class ArtifactId extends DefaultHandler {
 		protected DefaultArtifact a;
 
 		protected ArtifactId(DefaultArtifact a) {
+			super("artifactId");
 			this.a = a;
-		}
-
-		@Override
-		public String getTagName() {
-			return "artifactId";
 		}
 
 		@Override
@@ -179,16 +172,12 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		}
 	}
 
-	protected class Version implements Handler {
+	protected class Version extends DefaultHandler {
 		protected DefaultArtifact a;
 
 		protected Version(DefaultArtifact a) {
+			super("version");
 			this.a = a;
-		}
-
-		@Override
-		public String getTagName() {
-			return "version";
 		}
 
 		@Override
@@ -197,22 +186,16 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		}
 	}
 
-	protected class Type implements Handler {
+	protected class Type extends DefaultHandler {
 		protected DefaultArtifact a;
-		protected String tag;
 
 		protected Type(DefaultArtifact a) {
 			this(a, "type");
 		}
 
 		protected Type(DefaultArtifact a, String tag) {
+			super(tag);
 			this.a = a;
-			this.tag = tag;
-		}
-
-		@Override
-		public String getTagName() {
-			return tag;
 		}
 
 		@Override
@@ -221,20 +204,16 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		}
 	}
 
-	protected class Parent implements Handler {
+	protected class Parent extends DefaultHandler {
 		protected DefaultArtifact a;
 
 		protected Parent() {
+			super("parent");
 			this.a = new DefaultArtifact();
 		}
 
 		public Artifact getArtifact() {
 			return this.a;
-		}
-
-		@Override
-		public String getTagName() {
-			return "parent";
 		}
 
 		@Override
@@ -244,16 +223,12 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		}
 	}
 
-	protected class Dependencies implements Handler {
+	protected class Dependencies extends DefaultHandler {
 		protected DefaultArtifact project;
 
 		protected Dependencies(DefaultArtifact project) {
+			super("dependencies");
 			this.project = project;
-		}
-
-		@Override
-		public String getTagName() {
-			return "dependencies";
 		}
 
 		@Override
@@ -264,16 +239,12 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		}
 	}
 
-	protected class Dependency implements Handler {
+	protected class Dependency extends DefaultHandler {
 		protected DefaultArtifact project;
 
 		protected Dependency(DefaultArtifact a) {
+			super("dependency");
 			this.project = a;
-		}
-
-		@Override
-		public String getTagName() {
-			return "dependency";
 		}
 
 		@Override
@@ -292,12 +263,11 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		}
 	}
 
-	protected class Scope implements Handler {
+	protected class Scope extends DefaultHandler {
 		protected String scope;
 
-		@Override
-		public String getTagName() {
-			return "scope";
+		protected Scope() {
+			super("scope");
 		}
 
 		@Override
@@ -312,17 +282,13 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 
 	}
 
-	protected class Optional implements Handler {
+	protected class Optional extends DefaultHandler {
 
 		protected DefaultArtifact a;
 
 		protected Optional(DefaultArtifact a) {
+			super("optional");
 			this.a = a;
-		}
-
-		@Override
-		public String getTagName() {
-			return "optional";
 		}
 
 		@Override
@@ -338,16 +304,12 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 
 	}
 
-	protected class DependencyManagement implements Handler {
+	protected class DependencyManagement extends DefaultHandler {
 		protected Set<Artifact> managed;
 
 		protected DependencyManagement(Set<Artifact> managed) {
+			super("dependencyManagement");
 			this.managed = managed;
-		}
-
-		@Override
-		public String getTagName() {
-			return "dependencyManagement";
 		}
 
 		@Override

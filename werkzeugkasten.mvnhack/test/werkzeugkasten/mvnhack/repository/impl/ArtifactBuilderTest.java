@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static werkzeugkasten.common.util.XMLStreamReaderUtil.parse;
+import static werkzeugkasten.common.util.XMLStreamReaderUtil.put;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import org.junit.Test;
 
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.UrlUtil;
+import werkzeugkasten.common.util.XMLStreamReaderUtil.DefaultHandler;
 import werkzeugkasten.common.util.XMLStreamReaderUtil.Handler;
 import werkzeugkasten.mvnhack.repository.Artifact;
 
@@ -73,6 +75,7 @@ public class ArtifactBuilderTest {
 		DefaultArtifact a = new DefaultArtifact();
 		StAXArtifactBuilder builder = new StAXArtifactBuilder();
 		Map<String, Handler> m = builder.createArtifactParseHandlers(a);
+		put(m, new DefaultHandler("project"));
 		parse(builder.createStreamParser(in), m, "project");
 
 		assertEquals("groupId", a.getGroupId());
@@ -127,6 +130,7 @@ public class ArtifactBuilderTest {
 			}
 		});
 
+		put(targets, new DefaultHandler("project"));
 		StAXArtifactBuilder builder = new StAXArtifactBuilder();
 		parse(builder.createStreamParser(in), targets, "project");
 
