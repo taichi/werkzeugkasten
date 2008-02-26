@@ -25,22 +25,19 @@ public class Main {
 	}
 
 	public void execute() {
-		String topUrl = "http://repo1.maven.org/maven2/";
-		URL url = UrlUtil.toURL(topUrl);
-		dive(url, new Context());
-
+		String topUrl = "http://repo1.maven.org/maven2/velocity/";
+		Context c = new Context(UrlUtil.toURL(topUrl));
+		dive(c);
 	}
 
-	protected void dive(URL url, Context parent) {
+	protected void dive(Context c) {
 		try {
-			Context c = new Context(parent);
-			c.current = url;
+			parse(c, c.getCurrent());
 
-			parse(url, c);
-
-			if (c.depth < 2) {
+			if (c.getDepth() < 5) {
 				for (String links : c.urls) {
-					dive(UrlUtil.toURL(links), c);
+					Context newone = new Context(UrlUtil.toURL(links), c);
+					dive(newone);
 				}
 			}
 		} catch (Exception e) {
@@ -48,7 +45,7 @@ public class Main {
 		}
 	}
 
-	protected void parse(URL url, Context c) throws IOException {
+	protected void parse(Context c, URL url) throws IOException {
 		FuzzyXMLParser parser = new FuzzyXMLParser(true);
 		FuzzyXMLDocument doc = parser.parse(new BufferedInputStream(UrlUtil
 				.open(url)));
@@ -56,37 +53,39 @@ public class Main {
 		FuzzyXMLNode[] nodes = XPath.selectNodes(elem, "//a");
 		for (int i = 0; i < nodes.length; i++) {
 			if (nodes[i] instanceof FuzzyXMLElement) {
-				FuzzyXMLElement element = (FuzzyXMLElement) nodes[i];
-				processHref(c, element.getAttributeValue("href"));
+				FuzzyXMLElement e = (FuzzyXMLElement) nodes[i];
+				processHref(c, e.getAttributeValue("href"));
 			}
 		}
 	}
 
 	static final Pattern ignore = Pattern.compile(".*[\\?#:].*");
 
+	static final Pattern files = Pattern.compile(".*\\.(xml|md5|sha1|jar|zip)");
+
 	private void processHref(Context c, String href) {
 		if (StringUtil.isEmpty(href)) {
 			return;
 		}
-		if (ignore.matcher(href).matches()) {
+		if (ignore.matcher(href).matches() || files.matcher(href).matches()) {
 			return;
 		}
 
-		String ef = c.current.toExternalForm();
-		if (ef.endsWith("\\.pom")) {
-			queue(ef);
+		String ef = c.getCurrent().toExternalForm();
+		StringBuilder stb = new StringBuilder();
+		if (href.startsWith("/")) {
+			stb.append(ef.substring(0, ef.indexOf(c.getCurrent().getPath())));
 		} else {
-			StringBuilder stb = new StringBuilder();
-			if (href.startsWith("/")) {
-				stb.append(ef.substring(0, ef.indexOf(c.current.getPath())));
-			} else {
-				stb.append(ef);
-				if (ef.endsWith("/") == false) {
-					stb.append("/");
-				}
+			stb.append(ef);
+			if (ef.endsWith("/") == false) {
+				stb.append("/");
 			}
-			stb.append(href);
-			String newUrl = stb.toString();
+		}
+		stb.append(href);
+		String newUrl = stb.toString();
+		if (newUrl.endsWith(".pom")) {
+			queue(newUrl);
+		} else {
 			String[] oldary = ef.split("/");
 			String[] newary = newUrl.split("/");
 			if (oldary.length < newary.length) {
@@ -95,8 +94,8 @@ public class Main {
 		}
 	}
 
-	protected void queue(String ef) {
-
+	protected void queue(String url) {
+		System.out.println("***** " + url);
 	}
 
 	class Context {
@@ -104,11 +103,21 @@ public class Main {
 		URL current;
 		Set<String> urls = new LinkedHashSet<String>();
 
-		Context() {
+		Context(URL url) {
+			this.current = url;
 		}
 
-		Context(Context parent) {
-			this.depth = parent.depth + 1;
+		Context(URL url, Context parent) {
+			this.current = url;
+			this.depth = parent.getDepth() + 1;
+		}
+
+		public URL getCurrent() {
+			return current;
+		}
+
+		public int getDepth() {
+			return depth;
 		}
 	}
 }
