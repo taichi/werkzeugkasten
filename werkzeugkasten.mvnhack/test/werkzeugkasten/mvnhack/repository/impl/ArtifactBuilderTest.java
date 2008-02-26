@@ -3,6 +3,7 @@ package werkzeugkasten.mvnhack.repository.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static werkzeugkasten.common.util.XMLStreamReaderUtil.parse;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import org.junit.Test;
 
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.UrlUtil;
+import werkzeugkasten.common.util.XMLStreamReaderUtil.Handler;
 import werkzeugkasten.mvnhack.repository.Artifact;
 
 public class ArtifactBuilderTest {
@@ -70,9 +72,8 @@ public class ArtifactBuilderTest {
 	public void testArtifactBuild() throws Exception {
 		DefaultArtifact a = new DefaultArtifact();
 		StAXArtifactBuilder builder = new StAXArtifactBuilder();
-		Map<String, StAXArtifactBuilder.Handler> m = builder
-				.createArtifactParseHandlers(a);
-		builder.parse(builder.createStreamParser(in), m, "project");
+		Map<String, Handler> m = builder.createArtifactParseHandlers(a);
+		parse(builder.createStreamParser(in), m, "project");
 
 		assertEquals("groupId", a.getGroupId());
 		assertEquals("artifactId", a.getArtifactId());
@@ -96,10 +97,10 @@ public class ArtifactBuilderTest {
 
 	@Test
 	public void testSkip() throws Exception {
-		final Map<String, StAXArtifactBuilder.Handler> targets = new HashMap<String, StAXArtifactBuilder.Handler>();
+		final Map<String, Handler> targets = new HashMap<String, Handler>();
 
 		final int[] groupIdTimes = { 0 };
-		targets.put("groupId", new StAXArtifactBuilder.Handler() {
+		targets.put("groupId", new Handler() {
 			@Override
 			public String getTagName() {
 				return "groupId";
@@ -114,7 +115,7 @@ public class ArtifactBuilderTest {
 			}
 		});
 		final int[] dependenciesTimes = { 0 };
-		targets.put("dependencies", new StAXArtifactBuilder.Handler() {
+		targets.put("dependencies", new Handler() {
 			@Override
 			public String getTagName() {
 				return "dependencies";
@@ -127,7 +128,7 @@ public class ArtifactBuilderTest {
 		});
 
 		StAXArtifactBuilder builder = new StAXArtifactBuilder();
-		builder.parse(builder.createStreamParser(in), targets, "project");
+		parse(builder.createStreamParser(in), targets, "project");
 
 		assertEquals(1, groupIdTimes[0]);
 		assertEquals(1, dependenciesTimes[0]);

@@ -1,5 +1,8 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
+import static werkzeugkasten.common.util.XMLStreamReaderUtil.parse;
+import static werkzeugkasten.common.util.XMLStreamReaderUtil.put;
+
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -13,11 +16,11 @@ import java.util.logging.Level;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.StreamFilter;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import werkzeugkasten.common.util.StringUtil;
+import werkzeugkasten.common.util.XMLStreamReaderUtil.Handler;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.ArtifactBuilder;
@@ -128,46 +131,6 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 			}
 		});
 		return reader;
-	}
-
-	protected void parse(XMLStreamReader reader, Map<String, Handler> handlers,
-			String end) throws XMLStreamException {
-		for (; reader.hasNext();) {
-			int event = reader.next();
-			String localname = reader.getLocalName();
-			if (XMLStreamConstants.START_ELEMENT == event) {
-				Handler handler = handlers.get(localname);
-				if (handler == null) {
-					skipTo(reader, localname);
-				} else {
-					handler.handle(reader);
-				}
-			} else if (XMLStreamConstants.END_ELEMENT == event
-					&& end.equals(localname)) {
-				return;
-			}
-		}
-	}
-
-	protected void skipTo(XMLStreamReader reader, String end)
-			throws XMLStreamException {
-		for (; reader.hasNext();) {
-			if (XMLStreamConstants.END_ELEMENT == reader.next()) {
-				if (end.equals(reader.getLocalName())) {
-					break;
-				}
-			}
-		}
-	}
-
-	protected interface Handler {
-		String getTagName();
-
-		void handle(XMLStreamReader reader) throws XMLStreamException;
-	}
-
-	protected void put(Map<String, Handler> m, Handler h) {
-		m.put(h.getTagName(), h);
 	}
 
 	protected Map<String, Handler> createArtifactParseHandlers(DefaultArtifact a) {
