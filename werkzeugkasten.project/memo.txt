@@ -1,0 +1,6 @@
+INPUT AREA
+	groupId artifactId version [Brwose...] [ADD]
+	
+VIEW AREA
+	GRID
+		use groupId artifactId version optional [DELETE]
