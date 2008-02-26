@@ -6,7 +6,7 @@ public class Main {
 		new Main().execute();
 	}
 
-	Main() {
+	public Main() {
 	}
 
 	public void execute() {
@@ -14,7 +14,7 @@ public class Main {
 		Waiter waiter = new Waiter();
 		try {
 			waiter.begin();
-			Context c = new Context(waiter);
+			CrawlerContext c = new CrawlerContext(waiter);
 			c.crawlmore(topUrl);
 		} catch (Exception e) {
 			e.printStackTrace();

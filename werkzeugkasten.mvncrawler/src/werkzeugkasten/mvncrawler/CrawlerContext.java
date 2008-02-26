@@ -2,16 +2,16 @@ package werkzeugkasten.mvncrawler;
 
 import werkzeugkasten.common.util.UrlUtil;
 
-public class Context {
+public class CrawlerContext {
 	protected int depth = 0;
 
 	protected Waiter waiter;
 
-	public Context(Waiter waiter) {
+	public CrawlerContext(Waiter waiter) {
 		this.waiter = waiter;
 	}
 
-	public Context(Context parent) {
+	public CrawlerContext(CrawlerContext parent) {
 		if (parent != null) {
 			this.depth = parent.getDepth() + 1;
 			this.waiter = parent.waiter;

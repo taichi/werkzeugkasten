@@ -20,7 +20,7 @@ public class Eater {
 	protected static final Pattern files = Pattern
 			.compile(".*\\.(xml|md5|sha1|jar|zip)");
 
-	public void parse(Context c, URL url) throws IOException {
+	public void parse(CrawlerContext c, URL url) throws IOException {
 		FuzzyXMLParser parser = new FuzzyXMLParser(true);
 		FuzzyXMLDocument doc = parser.parse(new BufferedInputStream(UrlUtil
 				.open(url)));
@@ -34,7 +34,7 @@ public class Eater {
 		}
 	}
 
-	protected void processHref(Context c, URL current, String href) {
+	protected void processHref(CrawlerContext c, URL current, String href) {
 		if (StringUtil.isEmpty(href)) {
 			return;
 		}

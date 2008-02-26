@@ -16,13 +16,13 @@ public class Waiter {
 		this.executorService = Executors.newScheduledThreadPool(5);
 	}
 
-	public void serv(final URL url, final Context parent) {
+	public void serv(final URL url, final CrawlerContext parent) {
 		try {
 			executorService.schedule(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						Context c = new Context(parent);
+						CrawlerContext c = new CrawlerContext(parent);
 						eater.parse(c, url);
 					} catch (IOException e) {
 						e.printStackTrace();
