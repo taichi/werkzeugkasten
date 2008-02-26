@@ -48,7 +48,9 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 			putContextValues(m, result, "project");
 
 			reconcile(context, result, managed, m);
-			return result;
+			if (validate(result)) {
+				return result;
+			}
 		} catch (Exception e) {
 			Constants.LOG.log(Level.WARNING, e.getMessage(), e);
 		}
