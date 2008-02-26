@@ -1,9 +1,5 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
-import static werkzeugkasten.common.util.XMLStreamReaderUtil.parse;
-import static werkzeugkasten.common.util.XMLStreamReaderUtil.put;
-
-import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,14 +9,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.StringUtil;
-import werkzeugkasten.common.util.XMLStreamReaderUtil.DefaultHandler;
-import werkzeugkasten.common.util.XMLStreamReaderUtil.Handler;
+import werkzeugkasten.common.util.XMLEventParser;
+import werkzeugkasten.common.util.XMLEventParser.DefaultHandler;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.ArtifactBuilder;
@@ -31,24 +26,23 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 	@Override
 	public Artifact build(Context context, InputStream pom) {
 		DefaultArtifact result = new DefaultArtifact();
-		Map<String, Handler> handlers = createArtifactParseHandlers(result);
-		put(handlers, new DefaultHandler("project"));
-		put(handlers, new Type(result, "packaging"));
-
-		Parent parent = new Parent();
-		put(handlers, parent);
-		put(handlers, new Dependencies(result));
-		Set<Artifact> managed = new HashSet<Artifact>();
-		put(handlers, new DependencyManagement(managed));
 		try {
-			parse(createStreamParser(pom), handlers, "project");
+			XMLEventParser parser = new XMLEventParser(pom);
+			addArtifactParseHandlers(parser, result);
+			parser.add(new DefaultHandler("project"));
+			parser.add(new Type(result, "packaging"));
+			Parent parent = new Parent();
+			parser.add(parent);
+			parser.add(new Dependencies(result));
+			Set<Artifact> managed = new HashSet<Artifact>();
+			parser.add(new DependencyManagement(managed));
+			try {
+				parser.parse();
+			} finally {
+				StreamUtil.close(pom);
+			}
 			resolveParent(context, parent.getArtifact());
-
-			Map<String, String> m = new HashMap<String, String>();
-			putContextValues(m, parent.getArtifact(), "parent");
-			putContextValues(m, result, "project");
-
-			reconcile(context, result, managed, m);
+			reconcile(context, result, parent, managed);
 			if (validate(result)) {
 				return result;
 			}
@@ -58,18 +52,27 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		return null;
 	}
 
-	protected void putContextValues(Map<String, String> m, Artifact a,
-			String prefix) {
-		m.put(prefix + ".groupId", a.getGroupId());
-		m.put(prefix + ".artifactId", a.getArtifactId());
-		m.put(prefix + ".version", a.getVersion());
-	}
-
 	protected void resolveParent(Context context, Artifact parent) {
 		if (validate(parent)) {
 			context.resolve(parent.getGroupId(), parent.getArtifactId(), parent
 					.getVersion());
 		}
+	}
+
+	protected void reconcile(Context context, DefaultArtifact result,
+			Parent parent, Set<Artifact> managed) {
+		Map<String, String> m = new HashMap<String, String>();
+		putContextValues(m, parent.getArtifact(), "parent");
+		putContextValues(m, result, "project");
+
+		reconcile(context, result, managed, m);
+	}
+
+	protected void putContextValues(Map<String, String> m, Artifact a,
+			String prefix) {
+		m.put(prefix + ".groupId", a.getGroupId());
+		m.put(prefix + ".artifactId", a.getArtifactId());
+		m.put(prefix + ".version", a.getVersion());
 	}
 
 	protected void reconcile(Context context, DefaultArtifact project,
@@ -120,28 +123,11 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		return true;
 	}
 
-	protected XMLStreamReader createStreamParser(InputStream in)
-			throws FactoryConfigurationError, XMLStreamException {
-		XMLInputFactory factory = XMLInputFactory.newInstance();
-		factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES,
-				Boolean.FALSE);
-		BufferedInputStream stream = new BufferedInputStream(in);
-		XMLStreamReader reader = factory.createXMLStreamReader(stream);
-		// reader = factory.createFilteredReader(reader, new StreamFilter() {
-		// @Override
-		// public boolean accept(XMLStreamReader reader) {
-		// return reader.isStartElement() || reader.isEndElement();
-		// }
-		// });
-		return reader;
-	}
-
-	protected Map<String, Handler> createArtifactParseHandlers(DefaultArtifact a) {
-		Map<String, Handler> m = new HashMap<String, Handler>();
-		put(m, new GroupId(a));
-		put(m, new ArtifactId(a));
-		put(m, new Version(a));
-		return m;
+	protected void addArtifactParseHandlers(XMLEventParser parser,
+			DefaultArtifact a) {
+		parser.add(new GroupId(a));
+		parser.add(new ArtifactId(a));
+		parser.add(new Version(a));
 	}
 
 	protected class GroupId extends DefaultHandler {
@@ -218,8 +204,9 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 
 		@Override
 		public void handle(XMLStreamReader reader) throws XMLStreamException {
-			Map<String, Handler> m = createArtifactParseHandlers(a);
-			parse(reader, m, getTagName());
+			XMLEventParser parser = new XMLEventParser(reader);
+			addArtifactParseHandlers(parser, a);
+			parser.parse(getTagName());
 		}
 	}
 
@@ -233,9 +220,9 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 
 		@Override
 		public void handle(XMLStreamReader reader) throws XMLStreamException {
-			Map<String, Handler> m = new HashMap<String, Handler>();
-			put(m, new Dependency(this.project));
-			parse(reader, m, getTagName());
+			XMLEventParser parser = new XMLEventParser(reader);
+			parser.add(new Dependency(this.project));
+			parser.parse(getTagName());
 		}
 	}
 
@@ -250,13 +237,14 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		@Override
 		public void handle(XMLStreamReader reader) throws XMLStreamException {
 			DefaultArtifact newone = new DefaultArtifact();
-			Map<String, Handler> m = createArtifactParseHandlers(newone);
-			put(m, new Type(newone));
+			XMLEventParser parser = new XMLEventParser(reader);
+			addArtifactParseHandlers(parser, newone);
+			parser.add(new Type(newone));
 			Scope scope = new Scope();
-			put(m, scope);
+			parser.add(scope);
 			Optional optional = new Optional(newone);
-			put(m, optional);
-			parse(reader, m, getTagName());
+			parser.add(optional);
+			parser.parse(getTagName());
 			if (scope.isNotTest() && newone.isOptional() == false) {
 				this.project.add(newone);
 			}
@@ -314,10 +302,10 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 
 		@Override
 		public void handle(XMLStreamReader reader) throws XMLStreamException {
-			Map<String, Handler> m = new HashMap<String, Handler>();
+			XMLEventParser parser = new XMLEventParser(reader);
 			DefaultArtifact newone = new DefaultArtifact();
-			put(m, new Dependencies(newone));
-			parse(reader, m, getTagName());
+			parser.add(new Dependencies(newone));
+			parser.parse(getTagName());
 			for (Artifact a : newone.getDependencies()) {
 				if (validate(a)) {
 					this.managed.add(a);

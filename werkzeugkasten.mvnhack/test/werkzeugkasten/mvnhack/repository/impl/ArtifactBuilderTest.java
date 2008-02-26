@@ -2,9 +2,6 @@ package werkzeugkasten.mvnhack.repository.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static werkzeugkasten.common.util.XMLStreamReaderUtil.parse;
-import static werkzeugkasten.common.util.XMLStreamReaderUtil.put;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -21,8 +18,9 @@ import org.junit.Test;
 
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.UrlUtil;
-import werkzeugkasten.common.util.XMLStreamReaderUtil.DefaultHandler;
-import werkzeugkasten.common.util.XMLStreamReaderUtil.Handler;
+import werkzeugkasten.common.util.XMLEventParser;
+import werkzeugkasten.common.util.XMLEventParser.DefaultHandler;
+import werkzeugkasten.common.util.XMLEventParser.Handler;
 import werkzeugkasten.mvnhack.repository.Artifact;
 
 public class ArtifactBuilderTest {
@@ -74,9 +72,10 @@ public class ArtifactBuilderTest {
 	public void testArtifactBuild() throws Exception {
 		DefaultArtifact a = new DefaultArtifact();
 		StAXArtifactBuilder builder = new StAXArtifactBuilder();
-		Map<String, Handler> m = builder.createArtifactParseHandlers(a);
-		put(m, new DefaultHandler("project"));
-		parse(builder.createStreamParser(in), m, "project");
+		XMLEventParser parser = new XMLEventParser(in);
+		builder.addArtifactParseHandlers(parser, a);
+		parser.add(new DefaultHandler("project"));
+		parser.parse();
 
 		assertEquals("groupId", a.getGroupId());
 		assertEquals("artifactId", a.getArtifactId());
@@ -100,10 +99,11 @@ public class ArtifactBuilderTest {
 
 	@Test
 	public void testSkip() throws Exception {
-		final Map<String, Handler> targets = new HashMap<String, Handler>();
+		XMLEventParser parser = new XMLEventParser(in);
+		parser.add(new DefaultHandler("project"));
 
 		final int[] groupIdTimes = { 0 };
-		targets.put("groupId", new Handler() {
+		parser.add(new Handler() {
 			@Override
 			public String getTagName() {
 				return "groupId";
@@ -112,13 +112,12 @@ public class ArtifactBuilderTest {
 			@Override
 			public void handle(XMLStreamReader reader)
 					throws XMLStreamException {
-				assertTrue(targets.containsKey(reader.getLocalName()));
 				assertEquals("groupId", reader.getElementText());
 				groupIdTimes[0]++;
 			}
 		});
 		final int[] dependenciesTimes = { 0 };
-		targets.put("dependencies", new Handler() {
+		parser.add(new Handler() {
 			@Override
 			public String getTagName() {
 				return "dependencies";
@@ -130,9 +129,7 @@ public class ArtifactBuilderTest {
 			}
 		});
 
-		put(targets, new DefaultHandler("project"));
-		StAXArtifactBuilder builder = new StAXArtifactBuilder();
-		parse(builder.createStreamParser(in), targets, "project");
+		parser.parse();
 
 		assertEquals(1, groupIdTimes[0]);
 		assertEquals(1, dependenciesTimes[0]);
