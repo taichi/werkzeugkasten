@@ -78,13 +78,28 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 	protected void reconcile(Context context, DefaultArtifact project,
 			Set<Artifact> managed, Map<String, String> m) {
 		reconcile(project, m);
+		reconcileDependencies(context, project, managed, m);
+	}
 
+	protected void reconcile(DefaultArtifact a, Map<String, String> m) {
+		reconcile(a, a, m);
+	}
+
+	protected void reconcile(Artifact src, DefaultArtifact dest,
+			Map<String, String> m) {
+		dest.setGroupId(StringUtil.replace(src.getGroupId(), m));
+		dest.setArtifactId(StringUtil.replace(src.getArtifactId(), m));
+		dest.setVersion(StringUtil.replace(src.getVersion(), m));
+	}
+
+	protected void reconcileDependencies(Context context,
+			DefaultArtifact project, Set<Artifact> managed,
+			Map<String, String> m) {
 		for (Artifact a : managed) {
 			DefaultArtifact newone = new DefaultArtifact();
 			reconcile(a, newone, m);
 			context.addManagedDependency(newone);
 		}
-
 		List<Artifact> copy = new ArrayList<Artifact>(project.getDependencies());
 		project.dependencies.clear();
 		for (Artifact a : copy) {
@@ -97,17 +112,6 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 				project.add(newone);
 			}
 		}
-	}
-
-	protected void reconcile(DefaultArtifact a, Map<String, String> m) {
-		reconcile(a, a, m);
-	}
-
-	protected void reconcile(Artifact src, DefaultArtifact dest,
-			Map<String, String> m) {
-		dest.setGroupId(StringUtil.replace(src.getGroupId(), m));
-		dest.setArtifactId(StringUtil.replace(src.getArtifactId(), m));
-		dest.setVersion(StringUtil.replace(src.getVersion(), m));
 	}
 
 	protected boolean validate(Artifact a) {

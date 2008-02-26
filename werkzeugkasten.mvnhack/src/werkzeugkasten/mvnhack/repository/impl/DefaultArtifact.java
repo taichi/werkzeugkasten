@@ -108,4 +108,20 @@ public class DefaultArtifact implements Artifact {
 		return stb.toString().hashCode();
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder stb = new StringBuilder();
+		stb.append("groupId :");
+		stb.append(getGroupId());
+		stb.append(" ");
+		stb.append("artifactId :");
+		stb.append(getArtifactId());
+		stb.append(" ");
+		stb.append("version :");
+		stb.append(getVersion());
+		stb.append(" ");
+		stb.append("optional :");
+		stb.append(isOptional());
+		return stb.toString();
+	}
 }
