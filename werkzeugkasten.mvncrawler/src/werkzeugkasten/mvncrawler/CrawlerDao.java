@@ -1,22 +1,36 @@
 package werkzeugkasten.mvncrawler;
 
+import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvncrawler.util.SqlExecutor;
 import werkzeugkasten.mvncrawler.util.SqlExecutor.Handler;
 import werkzeugkasten.mvnhack.repository.Artifact;
+import werkzeugkasten.mvnhack.repository.impl.DefaultArtifact;
 
 public class CrawlerDao {
 
 	protected static final Logger LOG = LoggerFactory
 			.getLogger(CrawlerDao.class);
+
+	protected static final String SELECT_DEPENDENCY;
+
+	static {
+		ClassLoader cl = CrawlerDao.class.getClassLoader();
+		URL url = cl
+				.getResource("werkzeugkasten/mvncrawler/CrawlerDao_selectDependencies.sql");
+		SELECT_DEPENDENCY = StreamUtil.readText(UrlUtil.open(url));
+	}
 
 	protected SqlExecutor executor;
 
@@ -108,23 +122,45 @@ public class CrawlerDao {
 		});
 	}
 
-	public List<Artifact> selectDependencies(Artifact a) {
+	public List<Artifact> selectDependencies(final Artifact a) {
 		final Long id = selectId(a);
 		if (id != null) {
 			return executor.execute(new Handler<List<Artifact>>() {
 				@Override
 				public String getSql() {
-					return null;
+					return SELECT_DEPENDENCY;
 				}
 
 				@Override
 				public List<Artifact> execute(PreparedStatement ps)
 						throws SQLException {
-					return null;
+					int i = 1;
+					ps.setString(i++, a.getGroupId());
+					ps.setString(i++, a.getArtifactId());
+					ps.setString(i++, a.getVersion());
+					ResultSet rs = ps.executeQuery();
+					try {
+						List<Artifact> list = new ArrayList<Artifact>();
+						while (rs.next()) {
+							Artifact a = new DefaultArtifact() {
+								public Artifact init(ResultSet rs)
+										throws SQLException {
+									setGroupId(rs.getString("GROUP_ID"));
+									setArtifactId(rs.getString("ARTIFACT_ID"));
+									setVersion(rs.getString("VERSION"));
+									setOptional(rs.getBoolean("OPTIONAL"));
+									return this;
+								}
+							}.init(rs);
+							list.add(a);
+						}
+						return list;
+					} finally {
+						rs.close();
+					}
 				}
 			});
 		}
 		return null;
 	}
-
 }

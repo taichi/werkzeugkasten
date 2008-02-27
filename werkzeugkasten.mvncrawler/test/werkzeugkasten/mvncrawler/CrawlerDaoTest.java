@@ -2,12 +2,12 @@ package werkzeugkasten.mvncrawler;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 import org.h2.tools.Server;
@@ -31,52 +31,40 @@ public class CrawlerDaoTest {
 
 	@BeforeClass
 	public static void bootDb() throws Exception {
-		ClassLoader cl = CrawlerDaoTest.class.getClassLoader();
+		final ClassLoader cl = CrawlerDaoTest.class.getClassLoader();
 		URL url = cl.getResource(".");
 		String s = " -tcp -tcpPort 9092 -baseDir " + url.getPath();
 		String[] args = s.split(" ");
 		server = Server.createTcpServer(args);
 		server.start();
-		URL create = cl.getResource("createTable.sql");
-		final StringBuilder stb = new StringBuilder();
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new InputStreamReader(UrlUtil.open(create)));
-			while (br.ready()) {
-				stb.append(br.readLine());
+		Properties p = new Properties();
+		p.setProperty("user", "sa");
+		SqlExecutor se = new SqlExecutor("jdbc:h2:tcp://localhost:9092/test", p);
+		se.execute(new Handler<Void>() {
+			@Override
+			public String getSql() {
+				URL create = cl.getResource("createTable.sql");
+				return StreamUtil.readText(UrlUtil.open(create));
 			}
-			Properties p = new Properties();
-			p.setProperty("user", "sa");
-			SqlExecutor se = new SqlExecutor(
-					"jdbc:h2:tcp://localhost:9092/test", p);
-			se.execute(new Handler<Void>() {
-				@Override
-				public String getSql() {
-					return stb.toString();
-				}
 
-				@Override
-				public Void execute(PreparedStatement ps) throws SQLException {
-					ps.execute();
-					return null;
-				}
-			});
-			se.execute(new Handler<Void>() {
-				@Override
-				public String getSql() {
-					return "DELETE FROM ARTIFACT;DELETE FROM DEPENDENCY;";
-				}
+			@Override
+			public Void execute(PreparedStatement ps) throws SQLException {
+				ps.execute();
+				return null;
+			}
+		});
+		se.execute(new Handler<Void>() {
+			@Override
+			public String getSql() {
+				return "DELETE FROM ARTIFACT;DELETE FROM DEPENDENCY;";
+			}
 
-				@Override
-				public Void execute(PreparedStatement ps) throws SQLException {
-					ps.executeUpdate();
-					return null;
-				}
-			});
-
-		} finally {
-			StreamUtil.close(br);
-		}
+			@Override
+			public Void execute(PreparedStatement ps) throws SQLException {
+				ps.executeUpdate();
+				return null;
+			}
+		});
 	}
 
 	@AfterClass
@@ -105,10 +93,29 @@ public class CrawlerDaoTest {
 		target.insert(id, id, true);
 	}
 
-	@Ignore
 	@Test
 	public void testSelectDependencies() {
-		fail("Not yet implemented");
+		Properties p = new Properties();
+		p.setProperty("user", "sa");
+		SqlExecutor se = new SqlExecutor("jdbc:h2:tcp://localhost:9092/test", p);
+		se.execute(new Handler<Void>() {
+			@Override
+			public String getSql() {
+				URL data = getClass().getClassLoader().getResource("testdata.sql");
+				return StreamUtil.readText(UrlUtil.open(data));
+			}
+			@Override
+			public Void execute(PreparedStatement ps) throws SQLException {
+				ps.executeUpdate();
+				return null;
+			}
+		});
+		Artifact a = ArtifactUtil.create("gid1", "aid1", "v1");
+		List<Artifact> list = target.selectDependencies(a);
+		assertNotNull(list);
+		assertEquals(2, list.size());
+		assertEquals("gid2", list.get(0).getGroupId());
+		assertEquals("gid3", list.get(1).getGroupId());
 	}
 
 }

@@ -1,9 +1,11 @@
 package werkzeugkasten.common.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
@@ -79,6 +81,19 @@ public class StreamUtil {
 			throw new IllegalStateException(e);
 		} finally {
 			close(out);
+		}
+	}
+	
+	public static String readText(InputStream in) {
+		try {
+			StringBuilder stb = new StringBuilder();
+			BufferedReader buf = new BufferedReader(new InputStreamReader(in));
+			while(buf.ready()) {
+				stb.append(buf.readLine());
+			}
+			return stb.toString();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 }
