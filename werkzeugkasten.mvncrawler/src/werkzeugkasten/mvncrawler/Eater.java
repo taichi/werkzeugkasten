@@ -78,6 +78,5 @@ public class Eater {
 
 	public void eat(URL pom) {
 		Artifact a = this.builder.build(this.context, UrlUtil.open(pom));
-		System.out.println(a.toString());
 	}
 }

@@ -1,20 +1,19 @@
 package werkzeugkasten.mvncrawler;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.h2.tools.Server;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import werkzeugkasten.common.util.StreamUtil;
@@ -23,6 +22,7 @@ import werkzeugkasten.mvncrawler.util.SqlExecutor;
 import werkzeugkasten.mvncrawler.util.SqlExecutor.Handler;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.impl.ArtifactUtil;
+import werkzeugkasten.mvnhack.repository.impl.DefaultArtifact;
 
 public class CrawlerDaoTest {
 
@@ -79,10 +79,37 @@ public class CrawlerDaoTest {
 		target = new CrawlerDao("jdbc:h2:tcp://localhost:9092/test", p);
 	}
 
-	@Ignore
 	@Test
 	public void testEntry() {
-		fail("Not yet implemented");
+		DefaultArtifact a = new DefaultArtifact() {
+			public DefaultArtifact init() {
+				setGroupId("ggid1");
+				setArtifactId("aaid1");
+				setVersion("vv1");
+				return this;
+			}
+		}.init();
+		Set<Artifact> ds = a.getDependencies();
+		final int[] num = { 0 };
+		for (int i = 0; i < 5; i++) {
+			DefaultArtifact d = new DefaultArtifact() {
+				public DefaultArtifact init() {
+					num[0]++;
+					setGroupId("ggid" + num[0]);
+					setArtifactId("aaid" + num[0]);
+					setVersion("vv" + num[0]);
+					setOptional(num[0] % 2 == 1);
+					return this;
+				}
+			}.init();
+			ds.add(d);
+		}
+		target.entry(a);
+		List<Artifact> list = target.selectDependencies(ArtifactUtil.create(
+				"ggid1", "aaid1", "vv1"));
+		assertNotNull(list);
+		assertEquals(5, list.size());
+		assertEquals("ggid1", list.get(0).getGroupId());
 	}
 
 	@Test
@@ -101,9 +128,11 @@ public class CrawlerDaoTest {
 		se.execute(new Handler<Void>() {
 			@Override
 			public String getSql() {
-				URL data = getClass().getClassLoader().getResource("testdata.sql");
+				URL data = getClass().getClassLoader().getResource(
+						"testdata.sql");
 				return StreamUtil.readText(UrlUtil.open(data));
 			}
+
 			@Override
 			public Void execute(PreparedStatement ps) throws SQLException {
 				ps.executeUpdate();
