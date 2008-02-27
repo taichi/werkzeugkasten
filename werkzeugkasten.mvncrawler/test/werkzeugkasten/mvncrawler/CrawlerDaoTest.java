@@ -3,6 +3,7 @@ package werkzeugkasten.mvncrawler;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import werkzeugkasten.common.util.FileUtil;
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvncrawler.util.SqlExecutor;
@@ -27,13 +29,16 @@ import werkzeugkasten.mvnhack.repository.impl.DefaultArtifact;
 public class CrawlerDaoTest {
 
 	static Server server;
+	static File data;
 	CrawlerDao target;
 
 	@BeforeClass
 	public static void bootDb() throws Exception {
 		final ClassLoader cl = CrawlerDaoTest.class.getClassLoader();
 		URL url = cl.getResource(".");
-		String s = " -tcp -tcpPort 9092 -baseDir " + url.getPath();
+		String datapath = url.getPath() + "/data";
+		data = new File(datapath);
+		String s = " -tcp -tcpPort 9092 -baseDir " + datapath;
 		String[] args = s.split(" ");
 		server = Server.createTcpServer(args);
 		server.start();
@@ -70,6 +75,7 @@ public class CrawlerDaoTest {
 	@AfterClass
 	public static void stopDb() throws Exception {
 		server.shutdown();
+		FileUtil.delete(data);
 	}
 
 	@Before
