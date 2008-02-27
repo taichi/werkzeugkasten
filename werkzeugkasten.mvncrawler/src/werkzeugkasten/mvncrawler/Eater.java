@@ -25,10 +25,12 @@ public class Eater {
 
 	protected Context context;
 	protected ArtifactBuilder builder;
+	protected CrawlerDao dao;
 
-	public Eater(Context context, ArtifactBuilder builder) {
+	public Eater(Context context, ArtifactBuilder builder, CrawlerDao dao) {
 		this.context = context;
 		this.builder = builder;
+		this.dao = dao;
 	}
 
 	public void parse(CrawlerContext c, URL url) throws IOException {
@@ -78,5 +80,8 @@ public class Eater {
 
 	public void eat(URL pom) {
 		Artifact a = this.builder.build(this.context, UrlUtil.open(pom));
+		if ("pom".equalsIgnoreCase(a.getType()) == false) {
+			this.dao.entry(a);
+		}
 	}
 }
