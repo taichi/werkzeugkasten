@@ -1,0 +1,155 @@
+åxçê: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
+Message: Premature end of file.
+werkzeugkasten.common.exception.XMLStreamRuntimeException: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
+Message: Premature end of file.
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:76)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:52)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.build(StAXArtifactBuilder.java:40)
+	at werkzeugkasten.mvnhack.repository.impl.LocalRepository.load(LocalRepository.java:34)
+	at werkzeugkasten.mvnhack.repository.impl.DefaultContext.resolve(DefaultContext.java:72)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.resolveParent(StAXArtifactBuilder.java:57)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.build(StAXArtifactBuilder.java:44)
+	at werkzeugkasten.mvncrawler.Eater.eat(Eater.java:93)
+	at werkzeugkasten.mvncrawler.Waiter$3.run(Waiter.java:62)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:98)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:207)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:885)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)
+	at java.lang.Thread.run(Thread.java:619)
+Caused by: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
+Message: Premature end of file.
+	at com.sun.org.apache.xerces.internal.impl.XMLStreamReaderImpl.next(XMLStreamReaderImpl.java:588)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:61)
+	... 16 more
+
+èÓïÒ: read from file:/C:/development/java/workspace_3.3/werkzeugkasten.mvncrawler/./repo/wicket/wicket-parent/1.2.4/wicket-parent-1.2.4.pom
+2008/02/28 4:29:53 werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder build
+åxçê: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[202,19]
+Message: XML document structures must start and end within the same entity.
+werkzeugkasten.common.exception.XMLStreamRuntimeException: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[202,19]
+Message: XML document structures must start and end within the same entity.
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:76)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder$Dependency.handle(StAXArtifactBuilder.java:256)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:68)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder$Dependencies.handle(StAXArtifactBuilder.java:234)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:68)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder$DependencyManagement.handle(StAXArtifactBuilder.java:317)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:68)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:52)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.build(StAXArtifactBuilder.java:40)
+	at werkzeugkasten.mvnhack.repository.impl.LocalRepository.load(LocalRepository.java:34)
+	at werkzeugkasten.mvnhack.repository.impl.DefaultContext.resolve(DefaultContext.java:72)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.resolveParent(StAXArtifactBuilder.java:57)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.build(StAXArtifactBuilder.java:44)
+	at werkzeugkasten.mvncrawler.Eater.eat(Eater.java:93)
+	at werkzeugkasten.mvncrawler.Waiter$3.run(Waiter.java:62)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:98)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:207)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:885)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)
+	at java.lang.Thread.run(Thread.java:619)
+Caused by: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[202,19]
+Message: XML document structures must start and end within the same entity.
+	at com.sun.org.apache.xerces.internal.impl.XMLStreamReaderImpl.next(XMLStreamReaderImpl.java:588)
+	at com.sun.org.apache.xerces.internal.impl.XMLStreamReaderImpl.getElementText(XMLStreamReaderImpl.java:825)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder$ArtifactId.handle(StAXArtifactBuilder.java:166)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:68)
+	... 22 more
+
+èÓïÒ: read from file:/C:/development/java/workspace_3.3/werkzeugkasten.mvncrawler/./repo/eu/cedarsoft/open/1.1/open-1.1.pom
+2008/02/28 4:31:32 werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder build
+åxçê: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[43,94]
+Message: XML document structures must start and end within the same entity.
+werkzeugkasten.common.exception.XMLStreamRuntimeException: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[43,94]
+Message: XML document structures must start and end within the same entity.
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:76)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:52)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.build(StAXArtifactBuilder.java:40)
+	at werkzeugkasten.mvnhack.repository.impl.LocalRepository.load(LocalRepository.java:34)
+	at werkzeugkasten.mvnhack.repository.impl.DefaultContext.resolve(DefaultContext.java:72)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.resolveParent(StAXArtifactBuilder.java:57)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.build(StAXArtifactBuilder.java:44)
+	at werkzeugkasten.mvncrawler.Eater.eat(Eater.java:93)
+	at werkzeugkasten.mvncrawler.Waiter$3.run(Waiter.java:62)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:98)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:207)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:885)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)
+	at java.lang.Thread.run(Thread.java:619)
+Caused by: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[43,94]
+Message: XML document structures must start and end within the same entity.
+	at com.sun.org.apache.xerces.internal.impl.XMLStreamReaderImpl.next(XMLStreamReaderImpl.java:588)
+	at werkzeugkasten.common.util.XMLEventParser.skipTo(XMLEventParser.java:83)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:66)
+	... 16 more
+
+èÓïÒ: read from file:/C:/development/java/workspace_3.3/werkzeugkasten.mvncrawler/./repo/org/acegisecurity/acegi-security-parent/1.0.3/acegi-security-parent-1.0.3.pom
+2008/02/28 4:32:03 werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder build
+åxçê: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
+Message: Premature end of file.
+werkzeugkasten.common.exception.XMLStreamRuntimeException: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
+Message: Premature end of file.
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:76)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:52)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.build(StAXArtifactBuilder.java:40)
+	at werkzeugkasten.mvnhack.repository.impl.LocalRepository.load(LocalRepository.java:34)
+	at werkzeugkasten.mvnhack.repository.impl.DefaultContext.resolve(DefaultContext.java:72)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.resolveParent(StAXArtifactBuilder.java:57)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.build(StAXArtifactBuilder.java:44)
+	at werkzeugkasten.mvnhack.repository.impl.RemoteRepository.load(RemoteRepository.java:37)
+	at werkzeugkasten.mvnhack.repository.impl.DefaultContext.resolve(DefaultContext.java:72)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.resolveParent(StAXArtifactBuilder.java:57)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.build(StAXArtifactBuilder.java:44)
+	at werkzeugkasten.mvncrawler.Eater.eat(Eater.java:93)
+	at werkzeugkasten.mvncrawler.Waiter$3.run(Waiter.java:62)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:98)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:207)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:885)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)
+	at java.lang.Thread.run(Thread.java:619)
+Caused by: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
+Message: Premature end of file.
+	at com.sun.org.apache.xerces.internal.impl.XMLStreamReaderImpl.next(XMLStreamReaderImpl.java:588)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:61)
+	... 20 more
+
+èÓïÒ: read from file:/C:/development/java/workspace_3.3/werkzeugkasten.mvncrawler/./repo/org/appfuse/appfuse/2.0-rc1/appfuse-2.0-rc1.pom
+2008/02/28 4:32:21 werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder build
+åxçê: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
+Message: Premature end of file.
+werkzeugkasten.common.exception.XMLStreamRuntimeException: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
+Message: Premature end of file.
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:76)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:52)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.build(StAXArtifactBuilder.java:40)
+	at werkzeugkasten.mvnhack.repository.impl.LocalRepository.load(LocalRepository.java:34)
+	at werkzeugkasten.mvnhack.repository.impl.DefaultContext.resolve(DefaultContext.java:72)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.resolveParent(StAXArtifactBuilder.java:57)
+	at werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder.build(StAXArtifactBuilder.java:44)
+	at werkzeugkasten.mvncrawler.Eater.eat(Eater.java:93)
+	at werkzeugkasten.mvncrawler.Waiter$3.run(Waiter.java:62)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:98)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:207)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:885)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)
+	at java.lang.Thread.run(Thread.java:619)
+Caused by: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
+Message: Premature end of file.
+	at com.sun.org.apache.xerces.internal.impl.XMLStreamReaderImpl.next(XMLStreamReaderImpl.java:588)
+	at werkzeugkasten.common.util.XMLEventParser.parse(XMLEventParser.java:61)
+	... 16 more
