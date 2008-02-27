@@ -5,6 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+
+import werkzeugkasten.common.exception.IORuntimeException;
 
 public class StreamUtil {
 
@@ -28,7 +32,27 @@ public class StreamUtil {
 		}
 	}
 
-	public static final int BUF_SIZE = 8096;
+	public static void close(Reader r) {
+		try {
+			if (r != null) {
+				r.close();
+			}
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	public static void close(Writer w) {
+		try {
+			if (w != null) {
+				w.close();
+			}
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	public static final int BUF_SIZE = 128 * 128;
 
 	public static void copy(InputStream in, OutputStream out) {
 		byte[] buf = new byte[BUF_SIZE];

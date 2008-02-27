@@ -1,0 +1,5 @@
+#Wed Feb 27 19:20:39 JST 2008
+baseDir=/werkzeugkasten.mvncrawler/bin/data
+dbType=H2
+eclipse.preferences.version=1
+useInternalWebBrowser=true

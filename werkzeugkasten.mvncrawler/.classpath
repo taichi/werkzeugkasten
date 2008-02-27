@@ -6,6 +6,9 @@
 	<classpathentry kind="lib" path="lib/commons-jxpath-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/fuzzyxml.jar" sourcepath="lib/fuzzyxml.src.zip"/>
 	<classpathentry kind="lib" path="lib/h2-2008-02-22.jar" sourcepath="lib/h2-2008-02-22.src.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.5.0.jar" sourcepath="lib/slf4j-api-1.5.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple-1.5.0.jar" sourcepath="lib/slf4j-simple-1.5.0-sources.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/werkzeugkasten.mvnhack"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

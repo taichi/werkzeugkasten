@@ -6,7 +6,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Waiter {
+
+	protected static final Logger LOG = LoggerFactory.getLogger(Waiter.class);
 
 	protected ScheduledExecutorService executorService;
 
@@ -24,33 +29,39 @@ public class Waiter {
 	}
 
 	public void serv(final URL url, final CrawlerContext parent) {
-		executorService.schedule(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					CrawlerContext c = new CrawlerContext(parent);
-					eater.parse(c, url);
-				} catch (IOException e) {
-					e.printStackTrace();
+		if (executorService.isShutdown() == false
+				&& executorService.isTerminated() == false) {
+			executorService.schedule(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						CrawlerContext c = new CrawlerContext(parent);
+						eater.parse(c, url);
+					} catch (IOException e) {
+						LOG.error(e.getMessage(), e);
+					}
 				}
-			}
-		}, 0, TimeUnit.SECONDS);
+			}, 0, TimeUnit.SECONDS);
+		}
 	}
 
 	public void serv(final URL pom) {
-		executorService.schedule(new Runnable() {
-			@Override
-			public void run() {
-				eater.eat(pom);
-			}
-		}, 10, TimeUnit.SECONDS);
+		if (executorService.isShutdown() == false
+				&& executorService.isTerminated() == false) {
+			executorService.schedule(new Runnable() {
+				@Override
+				public void run() {
+					eater.eat(pom);
+				}
+			}, 10, TimeUnit.SECONDS);
+		}
 	}
 
 	public void dispose() {
 		try {
 			executorService.awaitTermination(4, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			LOG.error(e.getMessage(), e);
 		}
 	}
 }
