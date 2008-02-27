@@ -189,7 +189,7 @@
          point="werkzeugkasten.dblauncher.launchConfigurationFacet">
       <launchConfigurationFacet
             class="werkzeugkasten.dblauncher.preferences.H2LaunchConfigurationFacet"
-            description="Version 1.0.63 (2007-12-02)"
+            description="Version 1.0.67 (2008-02-22)"
             type="H2">
       </launchConfigurationFacet>
    </extension>
