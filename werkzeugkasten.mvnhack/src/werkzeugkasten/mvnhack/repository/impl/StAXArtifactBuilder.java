@@ -63,9 +63,9 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 			Parent parent, Set<Artifact> managed) {
 		Map<String, String> m = new HashMap<String, String>();
 		putContextValues(m, parent.getArtifact(), "parent");
-		putContextValues(m, result, "project");
 
-		reconcile(context, result, managed, m);
+		reconcileProject(parent.getArtifact(), result, m);
+		reconcileDependencies(context, result, managed, m);
 	}
 
 	protected void putContextValues(Map<String, String> m, Artifact a,
@@ -75,10 +75,19 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		m.put(prefix + ".version", a.getVersion());
 	}
 
-	protected void reconcile(Context context, DefaultArtifact project,
-			Set<Artifact> managed, Map<String, String> m) {
+	protected void reconcileProject(Artifact parent, DefaultArtifact project,
+			Map<String, String> m) {
 		reconcile(project, m);
-		reconcileDependencies(context, project, managed, m);
+		if (StringUtil.isEmpty(project.getGroupId())) {
+			project.setGroupId(parent.getGroupId());
+		}
+		if (StringUtil.isEmpty(project.getArtifactId())) {
+			project.setArtifactId(parent.getArtifactId());
+		}
+		if (StringUtil.isEmpty(project.getVersion())) {
+			project.setVersion(parent.getVersion());
+		}
+		putContextValues(m, project, "project");
 	}
 
 	protected void reconcile(DefaultArtifact a, Map<String, String> m) {
