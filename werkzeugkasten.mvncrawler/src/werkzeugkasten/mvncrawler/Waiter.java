@@ -14,10 +14,13 @@ public class Waiter {
 
 	public Waiter(Eater eater) {
 		this.eater = eater;
-	}
-
-	public void begin() {
 		this.executorService = Executors.newScheduledThreadPool(5);
+		this.executorService.schedule(new Runnable() {
+			@Override
+			public void run() {
+				executorService.shutdown();
+			}
+		}, 3, TimeUnit.MINUTES);
 	}
 
 	public void serv(final URL url, final CrawlerContext parent) {
@@ -47,9 +50,9 @@ public class Waiter {
 		}, 10, TimeUnit.SECONDS);
 	}
 
-	public void finish() {
+	public void dispose() {
 		try {
-			this.executorService.awaitTermination(5, TimeUnit.MINUTES);
+			executorService.awaitTermination(4, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -43,13 +43,12 @@ public class Main {
 		Eater eater = new Eater(context, builder);
 		Waiter waiter = new Waiter(eater);
 		try {
-			waiter.begin();
 			CrawlerContext c = new CrawlerContext(topUrl, waiter);
 			c.crawlmore(topUrl);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			waiter.finish();
+			waiter.dispose();
 		}
 	}
 
