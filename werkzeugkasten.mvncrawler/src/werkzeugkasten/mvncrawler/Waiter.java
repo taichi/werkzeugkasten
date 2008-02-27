@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import werkzeugkasten.common.util.StringUtil;
+
 public class Waiter {
 
 	protected static final Logger LOG = LoggerFactory.getLogger(Waiter.class);
@@ -19,7 +21,12 @@ public class Waiter {
 
 	public Waiter(Eater eater) {
 		this.eater = eater;
-		this.executorService = Executors.newScheduledThreadPool(50);
+		int thread = 20;
+		String t = System.getProperty("Waiter.Thread");
+		if (StringUtil.isEmpty(t)) {
+			thread = Integer.parseInt(t);
+		}
+		this.executorService = Executors.newScheduledThreadPool(thread);
 		this.executorService.schedule(new Runnable() {
 			@Override
 			public void run() {
