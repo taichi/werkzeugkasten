@@ -3,6 +3,8 @@ package werkzeugkasten.mvncrawler;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import jp.aonir.fuzzyxml.FuzzyXMLDocument;
@@ -39,15 +41,23 @@ public class Eater {
 				.open(url)));
 		FuzzyXMLElement elem = doc.getDocumentElement();
 		FuzzyXMLNode[] nodes = XPath.selectNodes(elem, "//a");
+		List<String> urls = new ArrayList<String>(nodes.length);
+		boolean[] hasPom = { false };
 		for (int i = 0; i < nodes.length; i++) {
 			if (nodes[i] instanceof FuzzyXMLElement) {
 				FuzzyXMLElement e = (FuzzyXMLElement) nodes[i];
-				processHref(c, url, e.getAttributeValue("href"));
+				processHref(c, url, e.getAttributeValue("href"), urls, hasPom);
+			}
+		}
+		if (hasPom[0] == false) {
+			for (String s : urls) {
+				c.crawlmore(s);
 			}
 		}
 	}
 
-	protected void processHref(CrawlerContext c, URL current, String href) {
+	protected void processHref(CrawlerContext c, URL current, String href,
+			List<String> list, boolean[] hasPom) {
 		if (StringUtil.isEmpty(href)) {
 			return;
 		}
@@ -69,11 +79,12 @@ public class Eater {
 		String newUrl = stb.toString();
 		if (newUrl.endsWith(".pom")) {
 			c.eat(newUrl);
+			hasPom[0] = true;
 		} else {
 			String[] oldary = ef.split("/");
 			String[] newary = newUrl.split("/");
 			if (oldary.length < newary.length) {
-				c.crawlmore(newUrl);
+				list.add(newUrl);
 			}
 		}
 	}

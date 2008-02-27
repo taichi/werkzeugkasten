@@ -19,7 +19,7 @@ public class Waiter {
 
 	public Waiter(Eater eater) {
 		this.eater = eater;
-		this.executorService = Executors.newScheduledThreadPool(20);
+		this.executorService = Executors.newScheduledThreadPool(50);
 		this.executorService.schedule(new Runnable() {
 			@Override
 			public void run() {
@@ -36,6 +36,7 @@ public class Waiter {
 				public void run() {
 					try {
 						CrawlerContext c = new CrawlerContext(parent);
+						LOG.info(url.toExternalForm());
 						eater.parse(c, url);
 					} catch (IOException e) {
 						LOG.error(e.getMessage(), e);
