@@ -77,7 +77,7 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 
 	protected void reconcileProject(Artifact parent, DefaultArtifact project,
 			Map<String, String> m) {
-		reconcile(project, m);
+		reconcile(project, project, m);
 		if (StringUtil.isEmpty(project.getGroupId())) {
 			project.setGroupId(parent.getGroupId());
 		}
@@ -88,10 +88,6 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 			project.setVersion(parent.getVersion());
 		}
 		putContextValues(m, project, "project");
-	}
-
-	protected void reconcile(DefaultArtifact a, Map<String, String> m) {
-		reconcile(a, a, m);
 	}
 
 	protected void reconcile(Artifact src, DefaultArtifact dest,
