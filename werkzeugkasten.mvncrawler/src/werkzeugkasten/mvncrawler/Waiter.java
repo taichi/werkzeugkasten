@@ -24,21 +24,17 @@ public class Waiter {
 	}
 
 	public void serv(final URL url, final CrawlerContext parent) {
-		try {
-			executorService.schedule(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						CrawlerContext c = new CrawlerContext(parent);
-						eater.parse(c, url);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+		executorService.schedule(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					CrawlerContext c = new CrawlerContext(parent);
+					eater.parse(c, url);
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			}, 0, TimeUnit.SECONDS);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			}
+		}, 0, TimeUnit.SECONDS);
 	}
 
 	public void serv(final URL pom) {
