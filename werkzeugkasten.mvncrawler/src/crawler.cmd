@@ -1,2 +1,2 @@
-SET CLASSPATH=classes;fuzzyxml.jar;slf4j-api-1.5.0.jar;slf4j-simple-1.5.0.jar;commons-jxpath-1.2.jar;h2-2008-02-22.jar;mvnhack-0.0.2.jar;mvncrawler-0.0.1.jar
-C:\jdk1.6.0_02\bin\javaw.exe -cp %CLASSPATH% werkzeugkasten.mvncrawler.Main
+SET CLASSPATH=.;fuzzyxml.jar;slf4j-api-1.5.0.jar;slf4j-simple-1.5.0.jar;commons-jxpath-1.2.jar;h2-2008-02-22.jar;mvnhack-0.0.2.jar;
+C:\jdk1.6.0_02\bin\javaw.exe -Xmx1024m -Xms1024m -cp %CLASSPATH% werkzeugkasten.mvncrawler.Main

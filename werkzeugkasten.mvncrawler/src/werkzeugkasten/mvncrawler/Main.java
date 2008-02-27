@@ -36,7 +36,7 @@ public class Main {
 		p.setProperty("user", "sa");
 		setUpDatabase(p);
 
-		String topUrl = "http://repo1.maven.org/maven2/org/slf4j/";
+		String topUrl = "http://repo1.maven.org/maven2/";
 		Waiter waiter = createWaiter(p);
 		try {
 			CrawlerContext c = new CrawlerContext(topUrl, waiter);

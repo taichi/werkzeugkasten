@@ -24,7 +24,7 @@ public class CrawlerContext {
 	}
 
 	public void crawlmore(final String url) {
-		if (depth < 5 && url.startsWith(baseUrl)) {
+		if (depth < 10 && url.startsWith(baseUrl)) {
 			this.waiter.serv(UrlUtil.toURL(url), this);
 		}
 	}
