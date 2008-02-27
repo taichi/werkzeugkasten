@@ -12,6 +12,10 @@ import jp.aonir.fuzzyxml.FuzzyXMLElement;
 import jp.aonir.fuzzyxml.FuzzyXMLNode;
 import jp.aonir.fuzzyxml.FuzzyXMLParser;
 import jp.aonir.fuzzyxml.XPath;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.repository.Artifact;
@@ -19,6 +23,8 @@ import werkzeugkasten.mvnhack.repository.ArtifactBuilder;
 import werkzeugkasten.mvnhack.repository.Context;
 
 public class Eater {
+
+	protected static final Logger LOG = LoggerFactory.getLogger(Eater.class);
 
 	protected static final Pattern ignore = Pattern.compile(".*[\\?#:].*");
 
@@ -90,6 +96,7 @@ public class Eater {
 	}
 
 	public void eat(URL pom) {
+		LOG.info("Read from " + pom);
 		Artifact a = this.builder.build(this.context, UrlUtil.open(pom));
 		if ("pom".equalsIgnoreCase(a.getType()) == false) {
 			this.dao.entry(a);
