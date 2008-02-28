@@ -99,8 +99,8 @@ public class DefaultContext implements Context {
 	@Override
 	public InputStream open(Artifact artifact, URL url) {
 		URL from = findLocal(artifact, url);
-		InputStream result = UrlUtil.open(from);
 		Constants.LOG.log(Level.INFO, "read from {0}", from);
+		InputStream result = UrlUtil.open(from);
 		return result;
 	}
 

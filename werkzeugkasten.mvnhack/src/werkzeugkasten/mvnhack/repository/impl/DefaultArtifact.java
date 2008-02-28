@@ -9,11 +9,11 @@ import werkzeugkasten.mvnhack.repository.Artifact;
 
 public class DefaultArtifact implements Artifact {
 
-	protected String groupId;
+	protected String groupId = "";
 
-	protected String artifactId;
+	protected String artifactId = "";
 
-	protected String version;
+	protected String version = "";
 
 	protected String type = "jar";
 
@@ -36,7 +36,7 @@ public class DefaultArtifact implements Artifact {
 	}
 
 	protected void setGroupId(String groupId) {
-		this.groupId = groupId;
+		this.groupId = StringUtil.toString(groupId).trim();
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class DefaultArtifact implements Artifact {
 	}
 
 	protected void setArtifactId(String artifactId) {
-		this.artifactId = artifactId;
+		this.artifactId = StringUtil.toString(artifactId).trim();
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class DefaultArtifact implements Artifact {
 	}
 
 	protected void setVersion(String version) {
-		this.version = version;
+		this.version = StringUtil.toString(version).trim();
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class DefaultArtifact implements Artifact {
 	}
 
 	protected void setType(String type) {
-		this.type = StringUtil.toString(type, "jar");
+		this.type = StringUtil.toString(type, "jar").trim();
 	}
 
 	@Override

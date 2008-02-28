@@ -62,7 +62,7 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 	protected void reconcile(Context context, DefaultArtifact result,
 			Parent parent, Set<Artifact> managed) {
 		Map<String, String> m = new HashMap<String, String>();
-		putContextValues(m, parent.getArtifact(), "parent");
+		putContextValues(m, parent.getArtifact(), "parent.");
 
 		reconcileProject(parent.getArtifact(), result, m);
 		reconcileDependencies(context, result, managed, m);
@@ -70,9 +70,9 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 
 	protected void putContextValues(Map<String, String> m, Artifact a,
 			String prefix) {
-		m.put(prefix + ".groupId", a.getGroupId());
-		m.put(prefix + ".artifactId", a.getArtifactId());
-		m.put(prefix + ".version", a.getVersion());
+		m.put(prefix + "groupId", a.getGroupId());
+		m.put(prefix + "artifactId", a.getArtifactId());
+		m.put(prefix + "version", a.getVersion());
 	}
 
 	protected void reconcileProject(Artifact parent, DefaultArtifact project,
@@ -87,7 +87,9 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 		if (StringUtil.isEmpty(project.getVersion())) {
 			project.setVersion(parent.getVersion());
 		}
-		putContextValues(m, project, "project");
+		putContextValues(m, project, "");
+		putContextValues(m, project, "pom.");
+		putContextValues(m, project, "project.");
 	}
 
 	protected void reconcile(Artifact src, DefaultArtifact dest,
@@ -113,6 +115,9 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 			if (StringUtil.isEmpty(newone.getVersion())) {
 				newone.setVersion(context.getManagedDependency(a));
 			}
+			// in the case of RELEASE ,
+			// get maven-metadata.xml from repository and find <release>
+
 			if (validate(newone)) {
 				project.add(newone);
 			}

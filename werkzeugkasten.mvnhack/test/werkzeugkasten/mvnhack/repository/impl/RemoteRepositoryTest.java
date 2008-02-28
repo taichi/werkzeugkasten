@@ -77,4 +77,14 @@ public class RemoteRepositoryTest {
 		flat.copyFrom(context, target, a);
 		assertEquals(1, localRoot.list().length);
 	}
+
+	@Test
+	public void testLoadGeronimo() throws Exception {
+		Artifact a = target.load(context, "org.apache.geronimo.specs", "specs",
+				"1.1");
+		assertNotNull(a);
+		a = target.load(context, "org.apache.geronimo.modules", "modules",
+				"2.0.2");
+		assertNotNull(a);
+	}
 }
