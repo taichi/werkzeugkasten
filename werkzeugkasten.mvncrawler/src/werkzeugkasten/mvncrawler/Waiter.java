@@ -32,7 +32,7 @@ public class Waiter {
 			public void run() {
 				executorService.shutdown();
 			}
-		}, 10, TimeUnit.HOURS);
+		}, 4, TimeUnit.HOURS);
 	}
 
 	public void serv(final URL url, final CrawlerContext parent) {
@@ -67,7 +67,7 @@ public class Waiter {
 
 	public void dispose() {
 		try {
-			executorService.awaitTermination(10, TimeUnit.HOURS);
+			executorService.awaitTermination(4, TimeUnit.HOURS);
 		} catch (InterruptedException e) {
 			LOG.error(e.getMessage(), e);
 		}

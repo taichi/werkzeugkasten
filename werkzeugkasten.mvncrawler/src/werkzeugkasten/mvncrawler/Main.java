@@ -1,6 +1,5 @@
 package werkzeugkasten.mvncrawler;
 
-import java.io.File;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -17,7 +16,6 @@ import werkzeugkasten.mvnhack.repository.Configuration;
 import werkzeugkasten.mvnhack.repository.Context;
 import werkzeugkasten.mvnhack.repository.impl.DefaultConfiguration;
 import werkzeugkasten.mvnhack.repository.impl.DefaultContext;
-import werkzeugkasten.mvnhack.repository.impl.LocalRepository;
 import werkzeugkasten.mvnhack.repository.impl.RemoteRepository;
 import werkzeugkasten.mvnhack.repository.impl.StAXArtifactBuilder;
 
@@ -59,9 +57,6 @@ public class Main {
 
 	protected Context createContext(ArtifactBuilder builder) {
 		Configuration config = new DefaultConfiguration();
-		LocalRepository local = new LocalRepository(new File("./repo"), builder);
-		config.addRepository(local);
-		config.addDestination(local);
 		config.addRepository(new RemoteRepository(Constants.CENTRAL_REPOSITORY,
 				builder));
 		Context context = new DefaultContext(config) {
