@@ -119,7 +119,13 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 			// get maven-metadata.xml from repository and find <release>
 
 			if (validate(newone)) {
-				project.add(newone);
+				String v = newone.getVersion();
+				if ("RELEASE".equals(v) || 0 < v.indexOf('[')) {
+					Constants.LOG
+							.log(Level.INFO, "Unsupported Versioning " + v);
+				} else {
+					project.add(newone);
+				}
 			}
 		}
 	}
