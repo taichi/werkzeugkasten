@@ -4,7 +4,7 @@ import twowaysql.TwowaySQLContext;
 import twowaysql.el.Expression;
 import twowaysql.el.ExpressionFactory;
 
-public class IfNode extends AbstractNode {
+public class IfNode extends AbstractConditionalNode {
 
 	protected Expression expression;
 
@@ -16,18 +16,9 @@ public class IfNode extends AbstractNode {
 	public void execute(TwowaySQLContext context) {
 		Object result = expression.invoke(context.getContextObject());
 		if (result instanceof Boolean) {
-			Boolean b = (Boolean) result;
-			if (b) {
-				super.execute(context);
-			} else {
-				invokeElseNodes(context);
-			}
+			execute(context, (Boolean) result);
 		}
 		throw new IllegalStateException("result is not boolean, result : "
 				+ result);
-	}
-
-	protected void invokeElseNodes(TwowaySQLContext context) {
-
 	}
 }

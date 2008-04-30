@@ -1,5 +1,16 @@
 package twowaysql.model.impl;
 
-public class ElseNode {
+import twowaysql.TwowaySQLContext;
+import twowaysql.model.ConditionalNode;
 
+public class ElseNode extends AbstractConditionalNode {
+
+	@Override
+	public void execute(TwowaySQLContext context) {
+		super.execute(context, true);
+	}
+
+	@Override
+	public void add(ConditionalNode next) {
+	}
 }
