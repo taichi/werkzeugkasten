@@ -4,5 +4,5 @@ import java.sql.PreparedStatement;
 
 public interface BindingHandler {
 
-	void bind(PreparedStatement ps);
+	void bind(PreparedStatement ps, int index);
 }

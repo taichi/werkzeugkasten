@@ -13,7 +13,7 @@ public class ELBindingHandler implements BindingHandler {
 	}
 
 	@Override
-	public void bind(PreparedStatement ps) {
+	public void bind(PreparedStatement ps, int index) {
 
 	}
 }

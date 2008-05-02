@@ -2,7 +2,6 @@ package twowaysql;
 
 import java.util.List;
 
-
 public interface TwowaySQLContext {
 
 	Object getContextObject();
