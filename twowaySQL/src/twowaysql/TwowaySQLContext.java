@@ -12,6 +12,8 @@ public interface TwowaySQLContext {
 
 	String getQuery();
 
+	void setQuery(CharSequence txt);
+
 	void addBinder(BindingHandler handler);
 
 	List<BindingHandler> getBinders();

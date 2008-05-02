@@ -8,6 +8,7 @@ public class ElseNode extends AbstractConditionalNode {
 	@Override
 	public void execute(TwowaySQLContext context) {
 		super.execute(context, true);
+		context.setConditionState(true);
 	}
 
 	@Override

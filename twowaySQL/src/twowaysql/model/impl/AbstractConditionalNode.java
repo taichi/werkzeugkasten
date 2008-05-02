@@ -16,8 +16,11 @@ public class AbstractConditionalNode extends AbstractNode implements
 	protected void execute(TwowaySQLContext context, boolean is) {
 		if (is) {
 			super.execute(context);
-		} else {
+			context.setConditionState(true);
+		} else if (next != null) {
 			this.next.execute(context);
+		} else {
+			context.setConditionState(false);
 		}
 	}
 }
