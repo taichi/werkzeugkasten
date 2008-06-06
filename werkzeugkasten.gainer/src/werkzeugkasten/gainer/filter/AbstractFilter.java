@@ -11,11 +11,17 @@ public abstract class AbstractFilter implements Filter {
 	protected String name;
 	protected AinEventListener listener;
 	protected LinkedList<List<Number>> history = new LinkedList<List<Number>>();
-	protected int historySize = 8;
+	protected int historySize;
 
 	public AbstractFilter(String name, AinEventListener listener) {
+		this(name, listener, 8);
+	}
+
+	public AbstractFilter(String name, AinEventListener listener,
+			int historySize) {
 		this.name = name;
 		this.listener = listener;
+		this.historySize = historySize;
 	}
 
 	@Override
