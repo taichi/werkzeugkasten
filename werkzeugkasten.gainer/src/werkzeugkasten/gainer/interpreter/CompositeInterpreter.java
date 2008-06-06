@@ -53,6 +53,10 @@ public class CompositeInterpreter implements Interpreter {
 			}
 		};
 		this.interpreters.put('F', off);
+
+		for (Interpreter i : interpreters.values()) {
+			i.initialize();
+		}
 	}
 
 	protected void processAIN(String datas) {
