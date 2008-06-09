@@ -6,7 +6,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.net.URL;
 
 import javax.imageio.ImageIO;
 
@@ -14,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import werkzeugkasten.gainer.conf.ConfigType;
+import werkzeugkasten.gainer.util.ResourceUtil;
 
 public class EasyGainerTest {
 
@@ -66,11 +66,10 @@ public class EasyGainerTest {
 
 	// @Test
 	public void imageToMatrix() throws Exception {
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-		URL u = cl.getResource("werkzeugkasten/gainer/cloud.bmp");
-		URL u2 = cl.getResource("werkzeugkasten/gainer/rain.bmp");
-		BufferedImage cloud = ImageIO.read(u);
-		BufferedImage rain = ImageIO.read(u2);
+		BufferedImage cloud = ImageIO.read(ResourceUtil
+				.getResource("werkzeugkasten/gainer/cloud.bmp"));
+		BufferedImage rain = ImageIO.read(ResourceUtil
+				.getResource("werkzeugkasten/gainer/rain.bmp"));
 		EasyGainer eg = new EasyGainer("COM3", ConfigType.CONFIG7, this);
 		try {
 			eg.initialize();
@@ -89,17 +88,19 @@ public class EasyGainerTest {
 	@Test
 	public void stringToMatrix() throws Exception {
 		BufferedImage bi = new BufferedImage(8, 32,
-				BufferedImage.TYPE_3BYTE_BGR);
+				BufferedImage.TYPE_BYTE_BINARY);
 		Graphics2D g2d = bi.createGraphics();
 		g2d.setColor(Color.BLACK);
-		g2d.fillRect(0, 0, 8, 32);
-		// g2d.setFont(Font.decode("Terminal").deriveFont(10.0f));
-		g2d.setFont(new Font(null, Font.PLAIN, 8));
+		g2d.fillRect(0, 0, bi.getWidth(), bi.getHeight());
+		g2d.setFont(new Font(null, Font.PLAIN, 10));
 		g2d.setColor(Color.WHITE);
-		g2d.drawString("8", 0, 0);
+		g2d.drawString("ﾄ", 2, 8);
+		g2d.drawString("ｺ", 2, 16);
+		g2d.drawString("g", 2, 24);
+		g2d.drawString("P", 2, 32);
 		FontMetrics fm = g2d.getFontMetrics();
-		System.out.println(fm.stringWidth("8"));
-		System.out.println(fm.charWidth('7'));
+		System.out.println(fm.stringWidth("ﾄ"));
+		System.out.println(fm.charWidth('g'));
 		System.out.println(fm.getHeight());
 
 		// EasyGainer eg = new EasyGainer("COM3", ConfigType.CONFIG7, this);
@@ -113,6 +114,6 @@ public class EasyGainerTest {
 		// } finally {
 		// eg.dispose();
 		// }
-		ImageIO.write(bi, "BMP", new File("D:\\hoge.bmp"));
+		ImageIO.write(bi, "BMP", new File("C:\\hoge.bmp"));
 	}
 }
