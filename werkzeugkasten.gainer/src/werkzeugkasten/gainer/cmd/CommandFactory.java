@@ -1,5 +1,7 @@
 package werkzeugkasten.gainer.cmd;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
 import java.io.OutputStream;
 import java.util.Formatter;
 
@@ -334,29 +336,38 @@ public class CommandFactory {
 		};
 	}
 
-	public Command scanMatrix(final int[][] values) {
+	public Command scanMatrix(final int... values) {
 		return new ValidatableCommand(new Command() {
 			@Override
 			public void emit(Configuration conf, OutputStream out) {
-				for (int i = 0; i < values.length; i++) {
-					validateAoutRange(i, conf);
-					validateAoutRange(values.length, conf);
-					scanLine(conf, out, i, values[i]);
+				for (int pos = 0, line = 0; pos < values.length;) {
+					int[] ary = new int[8];
+					for (int i = 0; i < 8; i++) {
+						int v = values[pos++];
+						ary[i] = 0xf < v ? (v % 0xf) : v;
+					}
+					scanLine(conf, out, line++, ary);
+					if (8 < line) {
+						line = 0;
+					}
 				}
 			}
 		}) {
 			@Override
 			protected void validate(Configuration conf) {
-				if (values == null) {
-					throw new IllegalArgumentException(
-							"values must not be null.");
-				}
+				validateNull(values);
 				if (ConfigType.CONFIG7.equals(conf.type()) == false) {
 					throw new IllegalStateException(
 							"CONFIG7 (Matrix LED mode) only.");
 				}
 			}
 		};
+	}
+
+	public Command scanMatrix(BufferedImage image) {
+		Raster raster = image.getData();
+		int[] ary = raster.getPixels(0, 0, 8, raster.getHeight(), (int[]) null);
+		return scanMatrix(ary);
 	}
 
 	public Command ampGainAGND(final int gain) {

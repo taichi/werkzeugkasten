@@ -1,5 +1,6 @@
 package werkzeugkasten.gainer;
 
+import java.awt.image.BufferedImage;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -188,8 +189,12 @@ public class EasyGainer implements LifeCycle {
 		this.driver.execute(this.cmdFactory.scanLine(lineNo, values));
 	}
 
-	public void scanMatrix(final int[][] values) {
+	public void scanMatrix(int... values) {
 		this.driver.execute(this.cmdFactory.scanMatrix(values));
+	}
+
+	public void scanMatrix(BufferedImage image) {
+		this.driver.execute(this.cmdFactory.scanMatrix(image));
 	}
 
 	public void ampGainAGND(int gain) {

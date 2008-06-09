@@ -49,8 +49,9 @@ public class SerialPortHandler implements SerialPortEventListener, LifeCycle {
 			CommPortUtil.emit(out, cmd);
 			byte[] result = CommPortUtil.read(port);
 			if (Arrays.equals(cmd, result) == false) {
-				LOG.warn("Configuration and result is difficult"
-						+ new String(cmd) + " " + new String(result));
+				LOG.warn("Configuration and result is difficult command["
+						+ new String(cmd) + "] result[ " + new String(result)
+						+ "]");
 			}
 			this.interpreter.initialize();
 			this.port.addEventListener(this);
@@ -79,7 +80,11 @@ public class SerialPortHandler implements SerialPortEventListener, LifeCycle {
 
 				this.listenBuffer.append(new String(data));
 				for (int i = this.listenBuffer.indexOf("*"); -1 < i;) {
-					this.interpreter.process(listenBuffer.substring(0, i + 1));
+					String cmd = listenBuffer.substring(0, i + 1);
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("CMD [" + cmd + "]");
+					}
+					this.interpreter.process(cmd);
 					this.listenBuffer.delete(0, i + 1);
 					i = this.listenBuffer.indexOf("*");
 				}
