@@ -5,9 +5,11 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,7 @@ public class SerialPortHandler implements SerialPortEventListener, LifeCycle {
 	protected OutputStream out;
 	protected StringBuffer listenBuffer = new StringBuffer(256);
 	protected Interpreter interpreter;
+	protected AtomicInteger numOfCmd = new AtomicInteger(0);
 
 	public SerialPortHandler(Configuration config, Interpreter interpreter) {
 		this.config = config;
@@ -64,9 +67,18 @@ public class SerialPortHandler implements SerialPortEventListener, LifeCycle {
 
 	@Override
 	public void dispose() {
-		this.port.removeEventListener();
-		this.interpreter.dispose();
-		this.port.close();
+		while (0 < this.numOfCmd.get()) {
+			// 未処理のコマンド待ち
+		}
+		try {
+			this.port.removeEventListener();
+			this.interpreter.dispose();
+			this.out.close();
+			this.port.getInputStream().close();
+			this.port.close();
+		} catch (IOException e) {
+			LOG.debug(e.getMessage(), e);
+		}
 	}
 
 	@Override
@@ -84,6 +96,7 @@ public class SerialPortHandler implements SerialPortEventListener, LifeCycle {
 					if (LOG.isDebugEnabled()) {
 						LOG.debug("CMD [" + cmd + "]");
 					}
+					this.numOfCmd.decrementAndGet();
 					this.interpreter.process(cmd);
 					this.listenBuffer.delete(0, i + 1);
 					i = this.listenBuffer.indexOf("*");
@@ -95,6 +108,7 @@ public class SerialPortHandler implements SerialPortEventListener, LifeCycle {
 	}
 
 	public void execute(Command cmd) {
+		this.numOfCmd.incrementAndGet();
 		cmd.emit(this.config, this.out);
 	}
 

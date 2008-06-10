@@ -41,7 +41,7 @@ public class EasyGainerTest {
 			0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, // aaa
 	};
 
-	// @Test
+	@Test
 	public void matrixTest() throws Exception {
 		EasyGainer eg = new EasyGainer("COM3", ConfigType.CONFIG7, this);
 		try {
@@ -62,7 +62,7 @@ public class EasyGainerTest {
 		}
 	}
 
-	// @Test
+	@Test
 	public void imageToMatrix() throws Exception {
 		BufferedImage cloud = ImageIO.read(ResourceUtil
 				.getResource("werkzeugkasten/gainer/cloud.bmp"));
@@ -72,11 +72,11 @@ public class EasyGainerTest {
 		try {
 			eg.initialize();
 			int j = 0;
-			while (j++ < 30) {
+			while (j++ < 10) {
 				eg.scanMatrix(cloud);
-				Thread.sleep(300);
+				Thread.sleep(100);
 				eg.scanMatrix(rain);
-				Thread.sleep(300);
+				Thread.sleep(100);
 			}
 		} finally {
 			eg.dispose();
@@ -85,7 +85,7 @@ public class EasyGainerTest {
 
 	@Test
 	public void stringToMatrix() throws Exception {
-		RenderedImage image = ImageUtil.render("Yoshiori 自重!!");
+		RenderedImage image = ImageUtil.render("Hello MatrixLED !!");
 		EasyGainer eg = new EasyGainer("COM3", ConfigType.CONFIG7, this);
 		try {
 			eg.initialize();
