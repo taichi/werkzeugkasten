@@ -341,8 +341,7 @@ public class CommandFactory {
 				for (int pos = 0, line = 0; pos < values.length;) {
 					int[] ary = new int[8];
 					for (int i = 0; i < 8; i++) {
-						int v = values[pos++];
-						ary[i] = 0xf < v ? (v & 0xf) : v;
+						ary[i] = (values[pos++] & 0xf);
 					}
 					scanLine(conf, out, line++, ary);
 					if (8 < line) {
