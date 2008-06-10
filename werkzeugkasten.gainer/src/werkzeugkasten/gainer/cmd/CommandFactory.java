@@ -1,13 +1,11 @@
 package werkzeugkasten.gainer.cmd;
 
-import java.awt.image.BufferedImage;
 import java.io.OutputStream;
 import java.util.Formatter;
 
 import werkzeugkasten.gainer.conf.ConfigType;
 import werkzeugkasten.gainer.conf.Configuration;
 import werkzeugkasten.gainer.util.CommPortUtil;
-import werkzeugkasten.gainer.util.ImageUtil;
 
 public class CommandFactory {
 
@@ -344,7 +342,7 @@ public class CommandFactory {
 					int[] ary = new int[8];
 					for (int i = 0; i < 8; i++) {
 						int v = values[pos++];
-						ary[i] = 0xf < v ? (v % 0xf) : v;
+						ary[i] = 0xf < v ? (v & 0xf) : v;
 					}
 					scanLine(conf, out, line++, ary);
 					if (8 < line) {
@@ -362,10 +360,6 @@ public class CommandFactory {
 				}
 			}
 		};
-	}
-
-	public Command scanMatrix(BufferedImage image) {
-		return scanMatrix(ImageUtil.toArray(image));
 	}
 
 	public Command ampGainAGND(final int gain) {

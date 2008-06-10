@@ -13,6 +13,7 @@ import werkzeugkasten.gainer.conf.ConfigType;
 import werkzeugkasten.gainer.conf.Configuration;
 import werkzeugkasten.gainer.lifecycle.LifeCycle;
 import werkzeugkasten.gainer.util.ClassUtil;
+import werkzeugkasten.gainer.util.ImageUtil;
 import werkzeugkasten.gainer.util.StringUtil;
 
 public class EasyGainer implements LifeCycle {
@@ -142,7 +143,9 @@ public class EasyGainer implements LifeCycle {
 
 	@Override
 	public void dispose() {
-		this.driver.dispose();
+		if (this.driver != null) {
+			this.driver.dispose();
+		}
 	}
 
 	public void turnOnLED() {
@@ -194,7 +197,8 @@ public class EasyGainer implements LifeCycle {
 	}
 
 	public void scanMatrix(BufferedImage image) {
-		this.driver.execute(this.cmdFactory.scanMatrix(image));
+		this.driver.execute(this.cmdFactory
+				.scanMatrix(ImageUtil.toArray(image)));
 	}
 
 	public void ampGainAGND(int gain) {

@@ -22,28 +22,35 @@ public class ImageUtil {
 	}
 
 	/**
-	 * MatrixLEDで表示出来る様に、8xXの画像にした後、配列にする。
+	 * MatrixLEDで表示出来る様に、 高さが8ドットの画像を作り、<br/>
+	 * その画像にプラットフォームデフォルトのフォントで文字列をレンダリングする。
 	 * 
 	 * @param str
 	 * @return
 	 */
-	public static int[] toImageArray(String str) {
-		BufferedImage image = new BufferedImage(8, str.length() * 8,
+	public static RenderedImage render(String str) {
+		// 計測用
+		BufferedImage tmp = new BufferedImage(1, 1,
 				BufferedImage.TYPE_BYTE_BINARY);
-		char[] chars = new char[str.length()];
-		str.getChars(0, str.length() - 1, chars, 0);
+		Font font = new Font(null, Font.PLAIN, 10);
 
+		Graphics2D tmpg = tmp.createGraphics();
+		tmpg.setFont(font);
+		FontMetrics fm = tmpg.getFontMetrics();
+		int width = fm.stringWidth(str);
+		tmpg.dispose();
+
+		// 本物
+		BufferedImage image = new BufferedImage(width, 8,
+				BufferedImage.TYPE_BYTE_GRAY);
 		Graphics2D g2d = image.createGraphics();
 		g2d.setColor(Color.BLACK);
 		g2d.fillRect(0, 0, image.getWidth(), image.getHeight());
-		g2d.setFont(new Font(null, Font.PLAIN, 10));
+		g2d.setFont(font);
 		g2d.setColor(Color.WHITE);
-		FontMetrics fm = g2d.getFontMetrics();
-		for (int i = 0; i < str.length(); i++) {
-			if (fm.charWidth(chars[i]) < 7) {
-				g2d.drawChars(chars, i, 1, 2, (i + 1) * 8);
-			}
-		}
-		return toArray(image);
+		g2d.drawString(str, 0, 7);
+		g2d.dispose();
+		return image;
 	}
+
 }
