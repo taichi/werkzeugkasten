@@ -184,8 +184,8 @@ public class EasyGainer implements LifeCycle {
 		this.driver.execute(this.cmdFactory.analogOutput(channelNo, value));
 	}
 
-	public void analogOutput(final int... values) {
-		this.driver.execute(this.cmdFactory.analogOutput(values));
+	public void analogOutputAll(final int... values) {
+		this.driver.execute(this.cmdFactory.analogOutputAll(values));
 	}
 
 	public void scanLine(int lineNo, int... values) {

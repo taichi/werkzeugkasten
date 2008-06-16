@@ -50,4 +50,13 @@ public class CommandFactoryTest {
 		assertEquals("a3A8BF2100*", out.toString());
 
 	}
+
+	@Test
+	public void testAnalaogOutput() throws Exception {
+		Command cmd = target.analogOutput(0, 0xf);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		cmd.emit(conf, out);
+		assertEquals("a00F*", out.toString());
+	}
+
 }

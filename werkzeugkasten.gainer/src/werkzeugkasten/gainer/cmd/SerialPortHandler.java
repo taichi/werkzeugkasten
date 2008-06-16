@@ -67,8 +67,12 @@ public class SerialPortHandler implements SerialPortEventListener, LifeCycle {
 
 	@Override
 	public void dispose() {
+		long now = System.currentTimeMillis();
 		while (0 < this.numOfCmd.get()) {
-			// 未処理のコマンド待ち
+			// 処理待ち
+			if (10000 < (System.currentTimeMillis() - now)) {
+				break;
+			}
 		}
 		try {
 			this.port.removeEventListener();

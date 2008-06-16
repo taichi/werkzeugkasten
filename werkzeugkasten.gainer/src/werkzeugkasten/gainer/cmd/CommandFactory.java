@@ -248,7 +248,7 @@ public class CommandFactory {
 		return new ValidatableCommand(new Command() {
 			@Override
 			public void emit(Configuration conf, OutputStream out) {
-				String str = String.format("A%1$X%2$02X*", channelNo,
+				String str = String.format("a%1$X%2$02X*", channelNo,
 						roundFF(value));
 				CommPortUtil.emit(out, str.getBytes());
 			}
@@ -267,7 +267,7 @@ public class CommandFactory {
 		}
 	}
 
-	public Command analogOutput(final int... values) {
+	public Command analogOutputAll(final int... values) {
 		return new ValidatableCommand(new Command() {
 			@Override
 			public void emit(Configuration conf, OutputStream out) {

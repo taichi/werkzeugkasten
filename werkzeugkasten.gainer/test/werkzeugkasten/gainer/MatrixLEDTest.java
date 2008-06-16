@@ -13,7 +13,7 @@ import werkzeugkasten.gainer.conf.ConfigType;
 import werkzeugkasten.gainer.util.ImageUtil;
 import werkzeugkasten.gainer.util.ResourceUtil;
 
-public class EasyGainerTest {
+public class MatrixLEDTest {
 
 	@Before
 	public void setUp() throws Exception {
