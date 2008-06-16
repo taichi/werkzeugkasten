@@ -12,9 +12,7 @@ public class MotorTest {
 		try {
 			eg.initialize();
 			for (int i = 0; i < 100; i++) {
-				// eg.analogOutputAll(0x0, 0x0);
-				// eg.analogOutputAll(0xF, 0x0);
-				eg.analogOutputAll(0x0, 0xF);
+				eg.digitalOutput(true);
 			}
 		} finally {
 			eg.dispose();
