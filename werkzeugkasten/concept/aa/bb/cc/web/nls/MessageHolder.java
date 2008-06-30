@@ -1,11 +1,12 @@
 package aa.bb.cc.web.nls;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class MessageHolder {
+public abstract class MessageHolder implements Serializable {
 
 	protected Map<Locale, ResourceBundle> bundles = new HashMap<Locale, ResourceBundle>();
 
