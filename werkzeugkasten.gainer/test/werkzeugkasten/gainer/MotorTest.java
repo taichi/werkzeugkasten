@@ -14,9 +14,9 @@ public class MotorTest {
 			for (int i = 0; i < 50; i++) {
 				// eg.analogOutput(0, 0x0);
 				eg.digitalOutput(true, false, true, false);
-				Thread.sleep(8000);
+				Thread.sleep(1000);
 				eg.digitalOutput(true, false, false, true);
-				Thread.sleep(8000);
+				Thread.sleep(1000);
 				// eg.digitalOutput(true, false, false, false);
 				// eg.analogOutput(0, 0xf);
 				// Thread.sleep(8000);
