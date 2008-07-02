@@ -56,7 +56,6 @@ public class SerialPortHandler implements SerialPortEventListener, LifeCycle {
 						+ new String(cmd) + "] result[ " + new String(result)
 						+ "]");
 			}
-			this.interpreter.initialize();
 			this.port.addEventListener(this);
 			this.port.notifyOnDataAvailable(true);
 		} catch (Exception e) {
@@ -75,11 +74,12 @@ public class SerialPortHandler implements SerialPortEventListener, LifeCycle {
 			}
 		}
 		try {
-			this.port.removeEventListener();
-			this.interpreter.dispose();
-			this.out.close();
-			this.port.getInputStream().close();
-			this.port.close();
+			if (this.port != null) {
+				this.port.removeEventListener();
+				this.out.close();
+				this.port.getInputStream().close();
+				this.port.close();
+			}
 		} catch (IOException e) {
 			LOG.debug(e.getMessage(), e);
 		}

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import werkzeugkasten.gainer.cmd.Command;
 import werkzeugkasten.gainer.cmd.SerialPortHandler;
 import werkzeugkasten.gainer.conf.Configuration;
+import werkzeugkasten.gainer.interpreter.Interpreter;
 import werkzeugkasten.gainer.interpreter.CompositeInterpreter;
 import werkzeugkasten.gainer.interpreter.MultithreadedInterpreter;
 import werkzeugkasten.gainer.lifecycle.Disposable;
@@ -17,6 +18,7 @@ public class GainerDriver implements Disposable {
 			.getLogger(GainerDriver.class);
 
 	protected SerialPortHandler handler;
+	protected Interpreter interpreter;
 
 	public GainerDriver() {
 	}
@@ -24,9 +26,10 @@ public class GainerDriver implements Disposable {
 	@Initialize
 	public void initialize(Configuration config) {
 		try {
-			this.handler = new SerialPortHandler(config,
-					new MultithreadedInterpreter(new CompositeInterpreter(
-							config)));
+			this.interpreter = new MultithreadedInterpreter(
+					new CompositeInterpreter(config));
+			this.interpreter.initialize();
+			this.handler = new SerialPortHandler(config, interpreter);
 			this.handler.initialize();
 		} catch (Exception e) {
 			LOG.error(e.getMessage(), e);
@@ -36,6 +39,7 @@ public class GainerDriver implements Disposable {
 
 	@Override
 	public void dispose() {
+		this.interpreter.dispose();
 		this.handler.dispose();
 	}
 
