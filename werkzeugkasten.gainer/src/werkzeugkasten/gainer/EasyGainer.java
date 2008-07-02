@@ -91,7 +91,7 @@ public class EasyGainer implements LifeCycle {
 		if (isEmpty(types)) {
 			return true;
 		}
-		if (types.length == 1) {
+		if (types.length != 1) {
 			return true;
 		}
 		if (StringUtil.isEmpty(act)) {
