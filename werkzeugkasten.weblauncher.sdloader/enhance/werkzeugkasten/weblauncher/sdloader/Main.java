@@ -14,7 +14,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
-			String port = System.getProperty("dblauncher.port");
+			String port = System.getProperty("weblauncher.port");
 			SDLoader server = new SDLoader(Integer.parseInt(port)) {
 				protected void initWebApp() {
 					try {
@@ -39,7 +39,7 @@ public class Main {
 			super(server);
 		}
 		protected void detectWebApps() throws Exception {
-			String contextfile = System.getProperty("dblauncher.ctx.loc");
+			String contextfile = System.getProperty("weblauncher.ctx.loc");
 			if (contextfile == null || contextfile.length() < 1) {
 				throw new IllegalArgumentException(
 						"context file path must be set.");

@@ -58,11 +58,11 @@ public class SDLoaderLaunchConfigurationBuilder implements
 	protected String buildBootArgs(IProject project, WebPreferences preferences) {
 		StringBuilder stb = new StringBuilder();
 
-		stb.append("-Ddblauncher.port=");
+		stb.append("-Dweblauncher.port=");
 		stb.append(preferences.getWebPortNo());
-		stb.append(" -Ddblauncher.ctx.loc=\"");
+		stb.append(" -Dweblauncher.ctx.loc=\"");
 		stb.append(getProject().getLocation().append(CONTEXT_XML).toString()+"\"");
-		stb.append(" -Ddblauncher.ctx.doc_base=\"");
+		stb.append(" -Dweblauncher.ctx.doc_base=\"");
 		IPath docBase = getProject().getLocation().removeLastSegments(1)
 				.append(preferences.getBaseDir());
 		stb.append(docBase.toString()+"\"");
@@ -129,7 +129,7 @@ public class SDLoaderLaunchConfigurationBuilder implements
 		stb.append("<Context ");
 		stb.append(" path=\"");
 		stb.append(preferences.getContextName());
-		stb.append("\" docBase=\"${dblauncher.ctx.doc_base}\" />");
+		stb.append("\" docBase=\"${weblauncher.ctx.doc_base}\" />");
 
 		InputStream in = null;
 		try {

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: WebLauncher SDLoader Support
 Bundle-SymbolicName: werkzeugkasten.weblauncher.sdloader;singleton:=true
-Bundle-Version: 0.0.1
+Bundle-Version: 0.0.2
 Bundle-Activator: werkzeugkasten.weblauncher.sdloader.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -12,6 +12,5 @@ Require-Bundle: org.eclipse.ui,
  werkzeugkasten.weblauncher
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
- sdloader/lib/weblauncher.enhance.sdloader.jar,
  sdloader/lib/sdloader-jsp20.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
