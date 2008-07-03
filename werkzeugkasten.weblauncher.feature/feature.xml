@@ -2,7 +2,7 @@
 <feature
       id="werkzeugkasten.weblauncher.feature"
       label="WebLauncher"
-      version="0.0.6">
+      version="0.0.7">
 
    <description url="http://code.google.com/p/werkzeugkasten/">
       This project is quickly and minimum java toolset by anytime code writing.
@@ -444,7 +444,7 @@ limitations under the License.
          id="werkzeugkasten.weblauncher.tomcat"
          download-size="0"
          install-size="0"
-         version="0.0.3"/>
+         version="0.0.4"/>
 
    <plugin
          id="werkzeugkasten.docs"
@@ -456,7 +456,7 @@ limitations under the License.
          id="werkzeugkasten.weblauncher.jetty"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.2"/>
 
    <plugin
          id="werkzeugkasten.weblauncher.sdloader"
@@ -468,6 +468,6 @@ limitations under the License.
          id="werkzeugkasten.weblauncher.tomcat55"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.2"/>
 
 </feature>
