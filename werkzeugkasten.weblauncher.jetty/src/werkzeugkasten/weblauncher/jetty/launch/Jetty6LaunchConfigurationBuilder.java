@@ -86,7 +86,6 @@ public class Jetty6LaunchConfigurationBuilder implements
 		return stb.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void setUpClasspathEntries() {
 		Bundle bundle = werkzeugkasten.weblauncher.jetty.Activator.getDefault()
 				.getBundle();

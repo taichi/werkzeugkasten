@@ -28,7 +28,6 @@
    <extension
          point="org.eclipse.ui.propertyPages">
       <page
-            category="werkzeugkasten"
             class="werkzeugkasten.dblauncher.preferences.DbPreferencesPage"
             id="werkzeugkasten.dblauncher.page"
             name="%plugin.label">

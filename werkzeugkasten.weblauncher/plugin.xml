@@ -44,7 +44,6 @@
    <extension
          point="org.eclipse.ui.propertyPages">
       <page
-            category="werkzeugkasten"
             class="werkzeugkasten.weblauncher.preferences.WebPreferencesPage"
             id="werkzeugkasten.weblauncher.page"
             name="%plugin.label">
