@@ -131,7 +131,7 @@
       <Arg>
         <New class="werkzeugkasten.weblauncher.jetty.ContextFileDeployer">
           <Set name="contexts"><Ref id="Contexts"/></Set>
-          <Set name="contextfile"><SystemProperty name="dblauncher.ctx.loc"/></Set>
+          <Set name="contextfile"><SystemProperty name="weblauncher.ctx.loc"/></Set>
         </New>
       </Arg>
     </Call>

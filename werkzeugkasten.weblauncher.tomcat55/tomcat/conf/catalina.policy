@@ -51,7 +51,7 @@ grant codeBase "file:${catalina.home}/bin/commons-daemon.jar" {
 };
 
 // These permissions apply to the commons-logging API
-grant codeBase "file:${catalina.home}/bin/commons-logging-api.jar" {
+grant codeBase "file:${catalina.home}/bin/commons-logging-api-1.1.1.jar" {
         permission java.security.AllPermission;
 };
 

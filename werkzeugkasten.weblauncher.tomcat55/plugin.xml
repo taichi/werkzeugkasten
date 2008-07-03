@@ -5,7 +5,7 @@
          point="werkzeugkasten.weblauncher.launchConfigurationFacet">
       <launchConfigurationFacet
             class="werkzeugkasten.weblauncher.tomcat55.Tomcat55LaunchConfigurationFacet"
-            description="Version 5.5.25"
+            description="Version 5.5.26"
             type="Tomcat5.5">
       </launchConfigurationFacet>
    </extension>

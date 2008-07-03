@@ -6,8 +6,8 @@ import org.apache.catalina.startup.HostConfig;
 
 public class WebLauncherHostConfig extends HostConfig {
 
-	public static final String KEY_CTX_LOC = "dblauncher.ctx.loc";
-	public static final String KEY_CTX_NAME = "dblauncher.ctx.name";
+	public static final String KEY_CTX_LOC = "weblauncher.ctx.loc";
+	public static final String KEY_CTX_NAME = "weblauncher.ctx.name";
 
 	@Override
 	protected void deployApps() {

@@ -16,7 +16,7 @@
 ================================================================================
 
 
-                     Apache Tomcat Version 5.5.25
+                     Apache Tomcat Version 5.5.26
                             Release Notes
 
 

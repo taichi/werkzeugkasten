@@ -80,7 +80,7 @@ public class Jetty6LaunchConfigurationBuilder implements
 		stb.append(p.toOSString());
 		stb.append("\"");
 
-		stb.append(" -Ddblauncher.ctx.loc=\"");
+		stb.append(" -Dweblauncher.ctx.loc=\"");
 		stb.append(getProject().getLocation().append(CONTEXT_XML).toOSString());
 		stb.append("\"");
 		return stb.toString();

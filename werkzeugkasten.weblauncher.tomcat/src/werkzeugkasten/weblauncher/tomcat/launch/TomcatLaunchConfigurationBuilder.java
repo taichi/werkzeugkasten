@@ -95,10 +95,10 @@ public class TomcatLaunchConfigurationBuilder implements
 		stb.append(p.toOSString());
 		stb.append("\"");
 
-		stb.append(" -Ddblauncher.ctx.loc=\"");
+		stb.append(" -Dweblauncher.ctx.loc=\"");
 		stb.append(getProject().getLocation().append(CONTEXT_XML).toOSString());
 		stb.append("\"");
-		stb.append(" -Ddblauncher.ctx.name=");
+		stb.append(" -Dweblauncher.ctx.name=");
 		stb.append(preferences.getContextName());
 		return stb.toString();
 	}

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: WebLauncher Jetty6 Support
 Bundle-SymbolicName: werkzeugkasten.weblauncher.jetty;singleton:=true
-Bundle-Version: 0.0.1
+Bundle-Version: 0.0.2
 Bundle-Activator: werkzeugkasten.weblauncher.jetty.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
