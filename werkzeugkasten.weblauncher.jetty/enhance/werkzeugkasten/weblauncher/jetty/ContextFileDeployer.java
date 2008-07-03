@@ -104,7 +104,7 @@ public class ContextFileDeployer extends AbstractLifeCycle {
 			return null;
 
 		XmlConfiguration xmlConfiguration = new XmlConfiguration(
-				hotDeployXmlFile.toURL());
+				hotDeployXmlFile.toURI().toURL());
 		HashMap properties = new HashMap();
 		properties.put("Server", _contexts.getServer());
 		if (_configMgr != null)
