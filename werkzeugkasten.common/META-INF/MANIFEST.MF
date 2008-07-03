@@ -15,3 +15,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.browser,
  org.eclipse.ui.ide,
  org.eclipse.ui.editors
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
