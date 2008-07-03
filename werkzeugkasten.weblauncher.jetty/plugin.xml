@@ -5,7 +5,7 @@
          point="werkzeugkasten.weblauncher.launchConfigurationFacet">
       <launchConfigurationFacet
             class="werkzeugkasten.weblauncher.jetty.Jetty6LaunchConfigurationFacet"
-            description="Version 6.1.5"
+            description="Version 6.1.11"
             type="Jetty6.1">
       </launchConfigurationFacet>
    </extension>
