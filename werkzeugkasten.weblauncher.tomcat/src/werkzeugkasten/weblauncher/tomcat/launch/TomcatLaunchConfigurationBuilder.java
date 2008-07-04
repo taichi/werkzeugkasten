@@ -10,7 +10,6 @@ import java.util.Enumeration;
 import java.util.List;
 
 import org.apache.catalina.startup.Bootstrap;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -183,9 +182,9 @@ public class TomcatLaunchConfigurationBuilder implements
 		WebPreferences pref = Activator.getPreferences(getProject());
 		IPath baseDirPath = new Path(pref.getBaseDir());
 		IWorkspaceRoot root = ProjectUtil.getWorkspaceRoot();
-		IContainer c = root.getFolder(baseDirPath);
+		IResource r  = root.findMember(baseDirPath);
 		String workDir = getProject().getLocation().toString();
-		if (c.exists()) {
+		if (r != null && r.exists()) {
 			workDir = baseDirPath.toString();
 		}
 		copy.setAttribute(
