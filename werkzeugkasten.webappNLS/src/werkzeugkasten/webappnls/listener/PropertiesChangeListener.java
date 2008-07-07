@@ -7,8 +7,7 @@ public class PropertiesChangeListener implements IResourceChangeListener {
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 }
