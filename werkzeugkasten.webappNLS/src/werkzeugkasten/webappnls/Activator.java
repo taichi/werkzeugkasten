@@ -35,10 +35,9 @@ public class Activator extends Plugin {
 		super.start(context);
 		plugin = this;
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		workspace
-				.addResourceChangeListener(propertiesChangeListener,
-						IResourceChangeEvent.PRE_BUILD
-								| IResourceChangeEvent.POST_CHANGE);
+		workspace.addResourceChangeListener(propertiesChangeListener,
+				IResourceChangeEvent.PRE_BUILD
+						| IResourceChangeEvent.POST_CHANGE);
 	}
 
 	/*
@@ -71,4 +70,7 @@ public class Activator extends Plugin {
 		LogUtil.log(getDefault(), throwable);
 	}
 
+	public static ResourceGenerator find(String key) {
+		return null;
+	}
 }
