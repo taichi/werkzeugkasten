@@ -122,11 +122,10 @@ public class MultiLocaleStrings implements ResourceGenerator {
 		IJavaProject javap = JavaElementUtil.getJavaProject(path);
 		IPackageFragment pf = javap.findPackageFragment(path
 				.removeLastSegments(1));
-
-		ICompilationUnit unit = pf.createCompilationUnit(path.lastSegment(),
-				"", true, null);
-		unit.becomeWorkingCopy(null);
+		ICompilationUnit unit = null;
 		try {
+			unit = pf.createCompilationUnit(path.lastSegment(), "", true, null);
+			unit.becomeWorkingCopy(null);
 			String name = path.removeFileExtension().lastSegment();
 			String ln = ProjectUtil.getLineDelimiterPreference(javap
 					.getProject());
@@ -160,7 +159,7 @@ public class MultiLocaleStrings implements ResourceGenerator {
 			unit.commitWorkingCopy(true, null);
 			return unit;
 		} catch (Exception e) {
-			unit.discardWorkingCopy();
+			discardWorkingCopy(unit);
 			throw e;
 		}
 	}
@@ -216,6 +215,9 @@ public class MultiLocaleStrings implements ResourceGenerator {
 		IMethod[] methods = type.getMethods();
 		Set<String> methodNames = new HashSet<String>();
 		for (IMethod m : methods) {
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
 			String[] types = m.getParameterTypes();
 			if (types != null
 					&& types.length == 1
