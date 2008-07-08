@@ -38,7 +38,8 @@ public class Activator extends Plugin {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		workspace.addResourceChangeListener(propertiesChangeListener,
 				IResourceChangeEvent.PRE_BUILD
-						| IResourceChangeEvent.POST_CHANGE);
+						| IResourceChangeEvent.POST_CHANGE
+						| IResourceChangeEvent.PRE_REFRESH);
 	}
 
 	/*
