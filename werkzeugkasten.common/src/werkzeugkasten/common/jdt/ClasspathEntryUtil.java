@@ -1,7 +1,9 @@
 package werkzeugkasten.common.jdt;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -57,5 +59,20 @@ public class ClasspathEntryUtil {
 			}
 		}
 		return map;
+	}
+
+	public static Set<IPath> getOutputLocations(IJavaProject p)
+			throws CoreException {
+		Set<IPath> set = new LinkedHashSet<IPath>();
+		if (p != null) {
+			set.add(p.getOutputLocation());
+			for (IClasspathEntry ce : p.getRawClasspath()) {
+				IPath path = ce.getOutputLocation();
+				if (path != null) {
+					set.add(path);
+				}
+			}
+		}
+		return set;
 	}
 }
