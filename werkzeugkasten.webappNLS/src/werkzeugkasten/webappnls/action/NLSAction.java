@@ -29,21 +29,24 @@ public class NLSAction implements IActionDelegate {
 
 	@Override
 	public void run(IAction action) {
-		new WorkspaceJob("NLSJob") {
-			@Override
-			public IStatus runInWorkspace(final IProgressMonitor monitor)
-					throws CoreException {
-				monitor.beginTask(Strings.GENERATE_CLASSES,
-						IProgressMonitor.UNKNOWN);
-				ResourceGenerator gen = Activator.createResourceGenerator(""); // XXX
-				try {
-					gen.generateFrom(selected, monitor);
-				} catch (OperationCanceledException e) {
-					return Status.CANCEL_STATUS;
+		if (selected != null) {
+			new WorkspaceJob(Strings.GENERATE_CLASSES) {
+				@Override
+				public IStatus runInWorkspace(final IProgressMonitor monitor)
+						throws CoreException {
+					monitor.beginTask(Strings.GENERATE_CLASSES,
+							IProgressMonitor.UNKNOWN);
+					ResourceGenerator gen = Activator
+							.createResourceGenerator(""); // XXX
+					try {
+						gen.generateFrom(selected, monitor);
+					} catch (OperationCanceledException e) {
+						return Status.CANCEL_STATUS;
+					}
+					return Status.OK_STATUS;
 				}
-				return Status.OK_STATUS;
-			}
-		}.schedule();
+			}.schedule();
+		}
 	}
 
 	@Override

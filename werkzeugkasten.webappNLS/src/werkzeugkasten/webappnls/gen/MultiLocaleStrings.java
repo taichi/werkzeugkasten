@@ -6,10 +6,12 @@ import java.io.FileInputStream;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -22,14 +24,18 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.ToolFactory;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.ui.CodeGeneration;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
 
+import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.common.jdt.JavaElementUtil;
+import werkzeugkasten.common.jdt.TypeUtil;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.webappnls.Activator;
@@ -40,24 +46,20 @@ public class MultiLocaleStrings implements ResourceGenerator {
 
 	@Override
 	public void generateFrom(IResource resource, IProgressMonitor monitor) {
+		ICompilationUnit unit = null;
 		try {
-			String destPath = resource
-					.getPersistentProperty(Constants.GENERATION_DEST);
-			IPath path = null;
-			if (StringUtil.isEmpty(destPath)) {
-				IPath p = resource.getFullPath();
-				p = p.removeFileExtension();
-				String s = p.lastSegment();
-				s = s.substring(0, s.lastIndexOf('_') - 1);
-				p = p.removeLastSegments(1).append(s);
-				path = p.addFileExtension("java");
-			} else {
-				path = new Path(destPath);
+			Set<IPath> locs = ClasspathEntryUtil.getOutputLocations(JavaCore
+					.create(resource.getProject()));
+			for (IPath p : locs) {
+				if (p.isPrefixOf(resource.getFullPath())) {
+					return;
+				}
 			}
+			IPath path = toDestPath(resource);
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IResource dest = root.findMember(path);
 			IJavaElement element = JavaCore.create(dest);
-			ICompilationUnit unit = JavaElementUtil.to(element);
+			unit = JavaElementUtil.to(element);
 			if (unit == null || unit.exists() == false) {
 				if (monitor.isCanceled()) {
 					throw new OperationCanceledException();
@@ -68,12 +70,51 @@ public class MultiLocaleStrings implements ResourceGenerator {
 			Properties props = new Properties();
 			props.load(new BufferedInputStream(new FileInputStream(new File(
 					resource.getLocationURI()))));
+			unit.becomeWorkingCopy(null);
 			merge(props, type, monitor);
+
+			String ln = ProjectUtil.getLineDelimiterPreference(resource
+					.getProject());
+			IBuffer buffer = unit.getBuffer();
+			formatCU(type.getJavaProject(), ln, buffer);
+			unit.commitWorkingCopy(true, null);
 		} catch (OperationCanceledException e) {
+			discardWorkingCopy(unit);
 			throw e;
 		} catch (Exception e) {
+			discardWorkingCopy(unit);
 			Activator.log(e);
 		}
+	}
+
+	protected void discardWorkingCopy(ICompilationUnit unit) {
+		if (unit != null && unit.isWorkingCopy()) {
+			try {
+				unit.discardWorkingCopy();
+			} catch (JavaModelException jme) {
+				Activator.log(jme);
+			}
+		}
+	}
+
+	protected IPath toDestPath(IResource resource) throws CoreException {
+		IPath path = null;
+		String destPath = resource
+				.getPersistentProperty(Constants.GENERATION_DEST);
+		if (StringUtil.isEmpty(destPath)) {
+			IPath p = resource.getFullPath();
+			p = p.removeFileExtension();
+			String s = p.lastSegment();
+			int index = s.lastIndexOf('_') - 1;
+			if (0 < index) {
+				s = s.substring(0, index);
+			}
+			p = p.removeLastSegments(1).append(s);
+			path = p.addFileExtension("java");
+		} else {
+			path = new Path(destPath);
+		}
+		return path;
 	}
 
 	protected ICompilationUnit createNewCU(IResource resource, IPath path)
@@ -85,37 +126,47 @@ public class MultiLocaleStrings implements ResourceGenerator {
 		ICompilationUnit unit = pf.createCompilationUnit(path.lastSegment(),
 				"", true, null);
 		unit.becomeWorkingCopy(null);
+		try {
+			String name = path.removeFileExtension().lastSegment();
+			String ln = ProjectUtil.getLineDelimiterPreference(javap
+					.getProject());
 
-		String name = path.removeFileExtension().lastSegment();
-		String ln = ProjectUtil.getLineDelimiterPreference(javap.getProject());
+			IBuffer buffer = unit.getBuffer();
+			buffer.setContents(createCUContent(unit, name, ln));
 
-		IBuffer buffer = unit.getBuffer();
-		buffer.setContents(createCUContent(unit, name, ln));
+			unit.createImport("java.util.HashMap", null, null);
+			unit.createImport("java.util.Locale", null, null);
+			unit.createImport("java.util.Map", null, null);
+			unit.createImport("java.util.ResourceBundle", null, null);
 
-		// unit.createPackageDeclaration(pf.getElementName(), null);
-		unit.createImport("java.util.HashMap", null, null);
-		unit.createImport("java.util.Locale", null, null);
-		unit.createImport("java.util.Map", null, null);
-		unit.createImport("java.util.ResourceBundle", null, null);
+			IType type = unit.findPrimaryType();
+			type
+					.createField(
+							"protected Map<Locale, ResourceBundle> bundles = new HashMap<Locale, ResourceBundle>();",
+							null, true, null);
+			type.createMethod("public " + name + "() {"
+					+ "add(ResourceBundle.getBundle(getClass().getName()));}",
+					null, true, null);
+			type.createMethod("public void add(ResourceBundle bundle) {"
+					+ "this.bundles.put(bundle.getLocale(), bundle);" + "}",
+					null, true, null);
+			type.createMethod(
+					"public String getMessage(Locale locale, String key) {"
+							+ "ResourceBundle rb = this.bundles.get(locale);"
+							+ "return rb != null ? rb.getString(key) : null;"
+							+ "}", null, true, null);
 
-		IType type = unit.findPrimaryType();
-		type
-				.createField(
-						"protected Map<Locale, ResourceBundle> bundles = new HashMap<Locale, ResourceBundle>();",
-						null, true, null);
-		type.createMethod("public void add(ResourceBundle bundle) {"
-				+ "this.bundles.put(bundle.getLocale(), bundle);" + "}", null,
-				true, null);
-		type
-				.createMethod(
-						"public String getMessage(Locale locale, String key) {"
-								+ "ResourceBundle rb = this.bundles.get(locale);"
-								+ "return rb != null ? rb.getString(key) : null;"
-								+ "}", null, true, null);
-		type.createInitializer("public " + name + "(){"
-				+ "add(ResourceBundle.getBundle(" + name
-				+ ".class.getName()));" + "}", null, null);
+			formatCU(javap, ln, buffer);
+			unit.commitWorkingCopy(true, null);
+			return unit;
+		} catch (Exception e) {
+			unit.discardWorkingCopy();
+			throw e;
+		}
+	}
 
+	protected void formatCU(IJavaProject javap, String ln, IBuffer buffer)
+			throws BadLocationException {
 		CodeFormatter formatter = ToolFactory.createCodeFormatter(javap
 				.getOptions(true));
 		String contents = buffer.getContents();
@@ -124,11 +175,8 @@ public class MultiLocaleStrings implements ResourceGenerator {
 		if (edit != null) {
 			IDocument doc = new Document(contents);
 			edit.apply(doc);
-			buffer.setContents(doc.get());
+			buffer.replace(0, contents.length(), doc.get());
 		}
-
-		unit.commitWorkingCopy(true, null);
-		return unit;
 	}
 
 	protected String createCUContent(ICompilationUnit unit, String name,
@@ -150,20 +198,37 @@ public class MultiLocaleStrings implements ResourceGenerator {
 		StringBuilder stb = new StringBuilder();
 		stb.append("public class ");
 		stb.append(name);
-		stb.append("{");
-		stb.append(CodeGeneration.getTypeBody(
-				CodeGeneration.CLASS_BODY_TEMPLATE_ID, unit, name, ln));
+		stb.append(" {");
+		String body = CodeGeneration.getTypeBody(
+				CodeGeneration.CLASS_BODY_TEMPLATE_ID, unit, name, ln);
+		if (StringUtil.isEmpty(body) == false) {
+			stb.append(body);
+		}
 		stb.append("}");
 		return stb.toString();
 	}
+
+	protected static final Pattern isLocale = Pattern
+			.compile("(java\\.util\\.)?Locale");
 
 	protected void merge(Properties props, IType type, IProgressMonitor monitor)
 			throws Exception {
 		IMethod[] methods = type.getMethods();
 		Set<String> methodNames = new HashSet<String>();
 		for (IMethod m : methods) {
-			String name = m.getElementName();
-			methodNames.add(name);
+			String[] types = m.getParameterTypes();
+			if (types != null
+					&& types.length == 1
+					&& isLocale.matcher(
+							TypeUtil.getResolvedTypeName(types[0], type))
+							.matches()) {
+				String name = m.getElementName();
+				if (props.contains(name) == false && m.exists()) {
+					m.delete(true, null);
+				} else {
+					methodNames.add(name);
+				}
+			}
 		}
 
 		for (String s : props.stringPropertyNames()) {
@@ -171,8 +236,8 @@ public class MultiLocaleStrings implements ResourceGenerator {
 				throw new OperationCanceledException();
 			}
 			if (methodNames.contains(s) == false) {
-				String contains = createMethodContent(type, s);
-				type.createMethod(contains, null, true, null);
+				String contents = createMethodContent(type, s);
+				type.createMethod(contents, null, true, null);
 			}
 		}
 	}

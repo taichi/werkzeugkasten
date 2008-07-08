@@ -29,7 +29,7 @@ public class PropertiesChangeListener implements IResourceChangeListener {
 		protected IResourceDelta delta;
 
 		protected NLSClassGenJob(IResourceDelta delta) {
-			super("NLSClassGenJob");
+			super(GENERATE_CLASSES);
 			this.delta = delta;
 		}
 
@@ -48,7 +48,8 @@ public class PropertiesChangeListener implements IResourceChangeListener {
 										.getFileExtension())) {
 							String generator = r
 									.getPersistentProperty(GENERATION_TARGET);
-							ResourceGenerator rg = Activator.createResourceGenerator(generator);
+							ResourceGenerator rg = Activator
+									.createResourceGenerator(generator);
 							if (rg != null) {
 								rg.generateFrom(r, monitor);
 							}
