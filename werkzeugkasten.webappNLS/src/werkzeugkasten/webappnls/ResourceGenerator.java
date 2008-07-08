@@ -1,8 +1,9 @@
 package werkzeugkasten.webappnls;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 public interface ResourceGenerator {
 
-	void generateFrom(IResource resource);
+	void generateFrom(IResource resource, IProgressMonitor monitor);
 }

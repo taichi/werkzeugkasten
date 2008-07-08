@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
 import werkzeugkasten.common.resource.LogUtil;
+import werkzeugkasten.webappnls.gen.MultiLocaleStrings;
 import werkzeugkasten.webappnls.listener.PropertiesChangeListener;
 
 /**
@@ -70,7 +71,7 @@ public class Activator extends Plugin {
 		LogUtil.log(getDefault(), throwable);
 	}
 
-	public static ResourceGenerator find(String key) {
-		return null;
+	public static ResourceGenerator createResourceGenerator(String key) {
+		return new MultiLocaleStrings();
 	}
 }

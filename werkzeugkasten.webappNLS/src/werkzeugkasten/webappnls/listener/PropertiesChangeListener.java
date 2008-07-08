@@ -48,9 +48,9 @@ public class PropertiesChangeListener implements IResourceChangeListener {
 										.getFileExtension())) {
 							String generator = r
 									.getPersistentProperty(GENERATION_TARGET);
-							ResourceGenerator rg = Activator.find(generator);
+							ResourceGenerator rg = Activator.createResourceGenerator(generator);
 							if (rg != null) {
-								rg.generateFrom(r);
+								rg.generateFrom(r, monitor);
 							}
 						}
 						monitor.worked(1);
