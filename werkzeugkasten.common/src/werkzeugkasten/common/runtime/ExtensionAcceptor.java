@@ -17,6 +17,12 @@ public class ExtensionAcceptor {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint point = registry.getExtensionPoint(namespace,
 				extensionPointName);
+		if (point == null) {
+			throw new IllegalStateException(
+					"ExtensionPoint is Nothing namespace [" + namespace
+							+ "] extensionPointName [" + extensionPointName
+							+ "]");
+		}
 		IExtension[] extensions = point.getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
 			IConfigurationElement[] elements = extensions[i]
