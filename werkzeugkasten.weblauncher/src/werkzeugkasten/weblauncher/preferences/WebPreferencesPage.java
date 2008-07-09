@@ -83,7 +83,9 @@ public class WebPreferencesPage extends PropertyPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+	 * @see
+	 * org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
+	 * .swt.widgets.Composite)
 	 */
 	protected Control createContents(Composite parent) {
 		WorkbenchUtil.setHelp(parent, CTX_HELP_PREF);
@@ -99,7 +101,7 @@ public class WebPreferencesPage extends PropertyPage {
 
 		this.libType = createPartOfLibType(composite);
 
-		this.webType = createPartOfDbType(composite, LABEL_SERVER_TYPE);
+		this.webType = createPartOfWebType(composite, LABEL_SERVER_TYPE);
 
 		this.contextName = createPart(composite, LABEL_CONTEXT_NAME);
 		this.baseDir = createBaseDir(composite);
@@ -464,7 +466,7 @@ public class WebPreferencesPage extends PropertyPage {
 		return c;
 	}
 
-	private Combo createPartOfDbType(Composite parent, String label) {
+	private Combo createPartOfWebType(Composite parent, String label) {
 		Label l = new Label(parent, SWT.NONE);
 		l.setText(label);
 
