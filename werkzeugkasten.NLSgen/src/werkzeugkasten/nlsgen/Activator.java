@@ -3,6 +3,7 @@ package werkzeugkasten.nlsgen;
 import static werkzeugkasten.nlsgen.Constants.EXT_RESOURCE_GENERATOR;
 import static werkzeugkasten.nlsgen.Constants.ID_PLUGIN;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -96,24 +97,24 @@ public class Activator extends Plugin {
 	}
 
 	protected synchronized static void initializeExtensionPoint() {
-		Map<String, ResourceGeneratorDesc> map = new LinkedHashMap<String, ResourceGeneratorDesc>();
+		final Map<String, ResourceGeneratorDesc> map = new LinkedHashMap<String, ResourceGeneratorDesc>();
 		ExtensionAcceptor.accept(ID_PLUGIN, EXT_RESOURCE_GENERATOR,
 				new ExtensionAcceptor.ExtensionVisitor() {
 					@Override
 					public boolean visit(IConfigurationElement e) {
 						ResourceGeneratorDesc desc = new ResourceGeneratorDesc(
 								e);
-						getDefault().extensionpoints.put(desc.getId(), desc);
+						map.put(desc.getId(), desc);
 						return true;
 					}
 				});
 		getDefault().extensionpoints = map;
 	}
 
-	public static Map<String, ResourceGeneratorDesc> getGeneratorTypes() {
+	public static Collection<ResourceGeneratorDesc> getGeneratorTypes() {
 		if (getDefault().extensionpoints == null) {
 			initializeExtensionPoint();
 		}
-		return getDefault().extensionpoints;
+		return getDefault().extensionpoints.values();
 	}
 }
