@@ -31,5 +31,24 @@
             label="%label.singlelocale">
       </resourceGenerator>
    </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="werkzeugkasten.nlsgen.ui.NLSPropertyPage"
+            id="werkzeugkasten.NLSgen.page"
+            name="%plugin.label"
+            nameFilter="*.properties">
+         <enabledWhen>
+            <or>
+               <instanceof
+                     value="org.eclipse.core.resources.IFile">
+               </instanceof>
+               <adapt
+                     type="org.eclipse.core.resources.IFile">
+               </adapt>
+            </or>
+         </enabledWhen>
+      </page>
+   </extension>
 
 </plugin>
