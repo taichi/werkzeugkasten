@@ -133,27 +133,15 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 			IBuffer buffer = unit.getBuffer();
 			buffer.setContents(createCUContent(unit, name, ln));
 
-			unit.createImport("java.util.HashMap", null, null);
 			unit.createImport("java.util.Locale", null, null);
-			unit.createImport("java.util.Map", null, null);
 			unit.createImport("java.util.ResourceBundle", null, null);
+			unit.createImport("werkzeugkasten.nlsgen.MultiLocaleStrings", null,
+					null);
 
 			IType type = unit.findPrimaryType();
-			type
-					.createField(
-							"protected Map<Locale, ResourceBundle> bundles = new HashMap<Locale, ResourceBundle>();",
-							null, true, null);
 			type.createMethod("public " + name + "() {"
 					+ "add(ResourceBundle.getBundle(getClass().getName()));}",
 					null, true, null);
-			type.createMethod("public void add(ResourceBundle bundle) {"
-					+ "this.bundles.put(bundle.getLocale(), bundle);" + "}",
-					null, true, null);
-			type.createMethod(
-					"public String getMessage(Locale locale, String key) {"
-							+ "ResourceBundle rb = this.bundles.get(locale);"
-							+ "return rb != null ? rb.getString(key) : null;"
-							+ "}", null, true, null);
 
 			formatCU(javap, ln, buffer);
 			unit.commitWorkingCopy(true, null);
@@ -197,7 +185,7 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 		StringBuilder stb = new StringBuilder();
 		stb.append("public class ");
 		stb.append(name);
-		stb.append(" {");
+		stb.append(" extends MultiLocaleStrings {");
 		String body = CodeGeneration.getTypeBody(
 				CodeGeneration.CLASS_BODY_TEMPLATE_ID, unit, name, ln);
 		if (StringUtil.isEmpty(body) == false) {
@@ -248,7 +236,7 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 		StringBuilder stb = new StringBuilder();
 		stb.append("public String ");
 		stb.append(name);
-		stb.append("(Locale l) {\r\nreturn getMessage(l, \"");
+		stb.append("(Locale l) { return getMessage(l, \"");
 		stb.append(name);
 		stb.append("\");}");
 		return stb.toString();

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
+   <extension-point id="resourceGenerator" name="resourceGenerator" schema="schema/resourceGenerator.exsd"/>
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
@@ -14,6 +15,21 @@
                label="%action.nls">
          </action>
       </objectContribution>
+   </extension>
+   <extension
+         point="werkzeugkasten.NLSgen.resourceGenerator">
+      <resourceGenerator
+            class="werkzeugkasten.nlsgen.gen.MultiLocaleStringsGenerator"
+            desc="%desc.multilocale"
+            id="werkzeugkasten.nlsgen.gen.MultiLocaleStringsGenerator"
+            label="%label.multilocale">
+      </resourceGenerator>
+      <resourceGenerator
+            class="werkzeugkasten.nlsgen.gen.SingleLocaleStringsGenerator"
+            desc="%desc.singlelocale"
+            id="werkzeugkasten.nlsgen.gen.SingleLocaleStringsGenerator"
+            label="%label.singlelocale">
+      </resourceGenerator>
    </extension>
 
 </plugin>

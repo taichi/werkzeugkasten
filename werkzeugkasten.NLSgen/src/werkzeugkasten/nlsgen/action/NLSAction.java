@@ -15,6 +15,7 @@ import org.eclipse.ui.IActionDelegate;
 
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.nlsgen.Activator;
+import werkzeugkasten.nlsgen.Constants;
 import werkzeugkasten.nlsgen.ResourceGenerator;
 import werkzeugkasten.nlsgen.nls.Strings;
 
@@ -29,17 +30,19 @@ public class NLSAction implements IActionDelegate {
 
 	@Override
 	public void run(IAction action) {
-		if (selected != null) {
+		if (this.selected != null) {
 			new WorkspaceJob(Strings.GENERATE_CLASSES) {
 				@Override
 				public IStatus runInWorkspace(final IProgressMonitor monitor)
 						throws CoreException {
 					monitor.beginTask(Strings.GENERATE_CLASSES,
 							IProgressMonitor.UNKNOWN);
+					String key = NLSAction.this.selected
+							.getPersistentProperty(Constants.GENERATOR_TYPE);
 					ResourceGenerator gen = Activator
-							.createResourceGenerator(""); // XXX
+							.createResourceGenerator(key);
 					try {
-						gen.generateFrom(selected, monitor);
+						gen.generateFrom(NLSAction.this.selected, monitor);
 					} catch (OperationCanceledException e) {
 						return Status.CANCEL_STATUS;
 					}

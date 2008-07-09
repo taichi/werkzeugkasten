@@ -6,8 +6,11 @@ public class Constants {
 
 	public static final String ID_PLUGIN = "werkzeugkasten.NLSgen";
 
-	public static final QualifiedName GENERATION_TARGET = new QualifiedName(
-			ID_PLUGIN, ".isGen");
+	public static final String EXT_RESOURCE_GENERATOR = ID_PLUGIN
+			+ ".resourceGenerator";
+
+	public static final QualifiedName GENERATOR_TYPE = new QualifiedName(
+			ID_PLUGIN, ".generatorType");
 
 	public static final QualifiedName GENERATION_DEST = new QualifiedName(
 			ID_PLUGIN, ".dest");

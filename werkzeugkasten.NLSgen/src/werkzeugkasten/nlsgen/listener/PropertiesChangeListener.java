@@ -1,6 +1,6 @@
 package werkzeugkasten.nlsgen.listener;
 
-import static werkzeugkasten.nlsgen.Constants.GENERATION_TARGET;
+import static werkzeugkasten.nlsgen.Constants.GENERATOR_TYPE;
 import static werkzeugkasten.nlsgen.nls.Strings.GENERATE_CLASSES;
 
 import org.eclipse.core.resources.IResource;
@@ -47,7 +47,7 @@ public class PropertiesChangeListener implements IResourceChangeListener {
 								&& "properties".equals(r.getFullPath()
 										.getFileExtension())) {
 							String generator = r
-									.getPersistentProperty(GENERATION_TARGET);
+									.getPersistentProperty(GENERATOR_TYPE);
 							ResourceGenerator rg = Activator
 									.createResourceGenerator(generator);
 							if (rg != null) {
