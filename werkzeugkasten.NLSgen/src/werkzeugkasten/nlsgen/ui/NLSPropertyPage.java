@@ -15,6 +15,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -32,7 +35,9 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
 import werkzeugkasten.nlsgen.Activator;
+import werkzeugkasten.nlsgen.ResourceGenerator;
 import werkzeugkasten.nlsgen.ResourceGeneratorDesc;
+import werkzeugkasten.nlsgen.nls.Strings;
 
 /**
  * @author taichi
@@ -72,15 +77,17 @@ public class NLSPropertyPage extends PropertyPage {
 			public void widgetSelected(SelectionEvent e) {
 				int index = NLSPropertyPage.this.generatorType
 						.getSelectionIndex();
-				if (0 < index) {
+				if (index < 1) {
+					NLSPropertyPage.this.description.setText("");
+					setErrorMessage(null);
+				} else {
 					NLSPropertyPage.this.description
 							.setText(labelToDescText(NLSPropertyPage.this.generatorType
 									.getText()));
-				} else {
-					NLSPropertyPage.this.description.setText("");
+					verifyRuntime();
 				}
-				// XXX verify runtime.
 			}
+
 		});
 
 		Button addRuntime = new Button(composite, SWT.PUSH);
@@ -104,6 +111,7 @@ public class NLSPropertyPage extends PropertyPage {
 							// XXX
 							// copy jar
 							// add classpath entry and attach source.
+							verifyRuntime();
 						}
 					}
 				}
@@ -139,8 +147,17 @@ public class NLSPropertyPage extends PropertyPage {
 						Object[] results = dialog.getResult();
 						if (results != null && 0 < results.length) {
 							IResource r = (IResource) results[0];
-							NLSPropertyPage.this.destPath.setText(r
-									.getFullPath().toString());
+							IPath path = r.getFullPath();
+							String fileName = file.getName();
+							int index = fileName.indexOf('_');
+							if (0 < index) {
+								fileName = fileName.substring(0, index);
+							}
+							path = path.append(fileName);
+							path = path.removeFileExtension().addFileExtension(
+									"java");
+							NLSPropertyPage.this.destPath.setText(path
+									.toString());
 						}
 					}
 				}
@@ -182,6 +199,23 @@ public class NLSPropertyPage extends PropertyPage {
 			}
 		}
 		return null;
+	}
+
+	protected void verifyRuntime() {
+		IFile file = getSelected();
+		if (file == null) {
+			return;
+		}
+		IJavaProject javap = JavaCore.create(file.getProject());
+		ResourceGeneratorDesc desc = labelToDesc(this.generatorType.getText());
+		if (desc != null) {
+			ResourceGenerator rg = desc.getInstance();
+			if (rg.verifyRuntime(javap)) {
+				setErrorMessage(null);
+			} else {
+				setErrorMessage(Strings.MSG_NEED_RUNTIME);
+			}
+		}
 	}
 
 	@Override

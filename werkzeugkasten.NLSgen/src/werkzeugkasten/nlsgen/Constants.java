@@ -13,4 +13,5 @@ public class Constants {
 
 	public static final QualifiedName GENERATION_DEST = new QualifiedName(
 			ID_PLUGIN, ".dest");
+
 }

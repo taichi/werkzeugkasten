@@ -45,6 +45,11 @@ import werkzeugkasten.nlsgen.ResourceGenerator;
 public class MultiLocaleStringsGenerator implements ResourceGenerator {
 
 	@Override
+	public boolean verifyRuntime(IJavaProject javap) {
+		return false;
+	}
+
+	@Override
 	public void generateFrom(IResource resource, IProgressMonitor monitor) {
 		ICompilationUnit unit = null;
 		try {

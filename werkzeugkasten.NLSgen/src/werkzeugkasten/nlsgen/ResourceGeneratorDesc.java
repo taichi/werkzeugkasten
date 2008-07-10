@@ -9,6 +9,8 @@ public class ResourceGeneratorDesc {
 
 	protected IConfigurationElement conf;
 
+	protected ResourceGenerator rg;
+
 	public ResourceGeneratorDesc(IConfigurationElement conf) {
 		this.conf = conf;
 	}
@@ -27,9 +29,12 @@ public class ResourceGeneratorDesc {
 
 	public ResourceGenerator getInstance() {
 		try {
-			return AdaptableUtil.to(this.conf
-					.createExecutableExtension("class"),
-					ResourceGenerator.class);
+			if (this.rg == null) {
+				this.rg = AdaptableUtil.to(this.conf
+						.createExecutableExtension("class"),
+						ResourceGenerator.class);
+			}
+			return this.rg;
 		} catch (CoreException e) {
 			Activator.log(e);
 			return null;
