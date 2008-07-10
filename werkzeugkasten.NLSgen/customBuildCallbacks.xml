@@ -26,6 +26,7 @@
 	<!--   build.result.folder - folder to contain the build results           -->
 	<!-- ===================================================================== -->
 	<target name="post.build.jars">
+		<copyfile dest="${build.result.folder}/nlsgen-runtime.src.jar" src="nlsgen-runtime.src.jar"/>
 	</target>
 	
 	<!-- ===================================================================== -->
@@ -74,7 +75,16 @@
 
 	<target name="post.compile.@dot">
 	</target>
-	
+
+	<target name="post.compile.nlsgen-runtime.jar">
+		<delete file="nlsgen-runtime.src.jar" quiet="true"/>
+		<zip destfile="nlsgen-runtime.src.jar">
+			<fileset dir="${source.folder1}">
+				<include name="**/*.java"/>
+			</fileset>
+		</zip>
+	</target>
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do after the compilation target <name>                       -->
 	<!-- Substitute "name" with the name of the compilation target, eg @dot    -->
