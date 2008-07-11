@@ -11,10 +11,12 @@ import static werkzeugkasten.nlsgen.nls.Strings.LABEL_GENERATOR_TYPE;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -33,8 +35,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 import werkzeugkasten.common.runtime.AdaptableUtil;
+import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
 import werkzeugkasten.nlsgen.Activator;
+import werkzeugkasten.nlsgen.Constants;
 import werkzeugkasten.nlsgen.ResourceGenerator;
 import werkzeugkasten.nlsgen.ResourceGeneratorDesc;
 import werkzeugkasten.nlsgen.nls.Strings;
@@ -70,6 +74,9 @@ public class NLSPropertyPage extends PropertyPage {
 		Label typelabel = new Label(composite, SWT.NONE);
 		typelabel.setText(LABEL_GENERATOR_TYPE);
 		this.generatorType = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
+		this.generatorType
+				.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
 		String[] types = getGeneratorTypes();
 		this.generatorType.setItems(types);
 		this.generatorType.addSelectionListener(new SelectionAdapter() {
@@ -87,7 +94,6 @@ public class NLSPropertyPage extends PropertyPage {
 					verifyRuntime();
 				}
 			}
-
 		});
 
 		Button addRuntime = new Button(composite, SWT.PUSH);
@@ -107,10 +113,9 @@ public class NLSPropertyPage extends PropertyPage {
 					if (dialog.open() == Window.OK) {
 						Object[] results = dialog.getResult();
 						if (results != null && 0 < results.length) {
-							IResource r = (IResource) results[0];
-							// XXX
-							// copy jar
-							// add classpath entry and attach source.
+							IContainer c = AdaptableUtil.to(results[0],
+									IContainer.class);
+							addRuntime(c);
 							verifyRuntime();
 						}
 					}
@@ -164,7 +169,43 @@ public class NLSPropertyPage extends PropertyPage {
 			}
 		});
 
+		setUpStoredValues();
+
 		return composite;
+	}
+
+	protected void setUpStoredValues() {
+		IFile file = getSelected();
+		if (file != null) {
+			try {
+				String id = file
+						.getPersistentProperty(Constants.GENERATOR_TYPE);
+				if (StringUtil.isEmpty(id) == false) {
+					outer: for (ResourceGeneratorDesc desc : Activator
+							.getGeneratorTypes()) {
+						if (desc.getId().equals(id)) {
+							String msg = desc.getLabel();
+							String[] items = this.generatorType.getItems();
+							for (int i = 0; i < items.length; i++) {
+								if (msg.equals(items[i])) {
+									this.generatorType.select(i);
+									this.description.setText(desc
+											.getDescription());
+									break outer;
+								}
+							}
+						}
+					}
+				}
+				String dest = file
+						.getPersistentProperty(Constants.GENERATION_DEST);
+				if (StringUtil.isEmpty(dest) == false) {
+					this.destPath.setText(dest);
+				}
+			} catch (CoreException e) {
+				Activator.log(e);
+			}
+		}
 	}
 
 	protected String[] getGeneratorTypes() {
@@ -218,6 +259,14 @@ public class NLSPropertyPage extends PropertyPage {
 		}
 	}
 
+	protected void addRuntime(IContainer dest) {
+		ResourceGeneratorDesc desc = labelToDesc(this.generatorType.getText());
+		if (desc != null) {
+			ResourceGenerator rg = desc.getInstance();
+			rg.addRuntime(dest);
+		}
+	}
+
 	@Override
 	protected void performDefaults() {
 		super.performDefaults();
@@ -228,7 +277,26 @@ public class NLSPropertyPage extends PropertyPage {
 
 	@Override
 	public boolean performOk() {
-		// XXX
+		IFile file = getSelected();
+		try {
+			if (file != null) {
+				String type = labelToId(this.generatorType.getText());
+				if (StringUtil.isEmpty(type) == false) {
+					file.setPersistentProperty(Constants.GENERATOR_TYPE, type);
+				} else {
+					file.setPersistentProperty(Constants.GENERATOR_TYPE, null);
+				}
+				String dest = this.destPath.getText();
+				if (StringUtil.isEmpty(dest) == false) {
+					file.setPersistentProperty(Constants.GENERATION_DEST, dest);
+				} else {
+					file.setPersistentProperty(Constants.GENERATION_DEST, null);
+				}
+				return true;
+			}
+		} catch (CoreException e) {
+			Activator.log(e);
+		}
 		return false;
 	}
 

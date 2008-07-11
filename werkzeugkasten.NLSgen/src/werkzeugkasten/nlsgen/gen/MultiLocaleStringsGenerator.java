@@ -3,11 +3,15 @@ package werkzeugkasten.nlsgen.gen;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -17,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IBuffer;
+import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -32,6 +37,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
+import org.osgi.framework.Bundle;
 
 import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.common.jdt.JavaElementUtil;
@@ -40,13 +46,48 @@ import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.nlsgen.Activator;
 import werkzeugkasten.nlsgen.Constants;
+import werkzeugkasten.nlsgen.MultiLocaleStrings;
 import werkzeugkasten.nlsgen.ResourceGenerator;
 
 public class MultiLocaleStringsGenerator implements ResourceGenerator {
 
+	protected static final String RUNTIME = MultiLocaleStrings.class.getName();
+
 	@Override
 	public boolean verifyRuntime(IJavaProject javap) {
-		return false;
+		try {
+			IType type = javap.findType(RUNTIME);
+			return type != null && type.exists();
+		} catch (CoreException e) {
+			Activator.log(e);
+			return false;
+		}
+	}
+
+	@Override
+	public void addRuntime(IContainer container) {
+		try {
+			Bundle bundle = Activator.getDefault().getBundle();
+			createFile(container, bundle.getEntry("nlsgen-runtime.jar"));
+			createFile(container, bundle.getEntry("nlsgen-runtime.src.jar"));
+
+			IPath path = container.getFullPath();
+			IJavaProject javap = JavaCore.create(container.getProject());
+			IClasspathEntry ce = JavaCore.newLibraryEntry(path
+					.append("nlsgen-runtime.jar"), path
+					.append("nlsgen-runtime.src.jar"), new Path("."));
+			ClasspathEntryUtil.addClasspathEntry(javap, ce);
+		} catch (Exception e) {
+			Activator.log(e);
+		}
+	}
+
+	protected void createFile(IContainer container, URL u)
+			throws CoreException, IOException {
+		IPath p = new Path(u.getFile());
+		String s = p.lastSegment();
+		IFile newone = container.getFile(new Path(s));
+		newone.create(new BufferedInputStream(u.openStream()), true, null);
 	}
 
 	@Override

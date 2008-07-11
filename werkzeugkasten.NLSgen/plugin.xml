@@ -14,6 +14,12 @@
                id="werkzeugkasten.NLSgen.action"
                label="%action.nls">
          </action>
+         <visibility>
+            <objectState
+                  name="persistentProperty"
+                  value="werkzeugkasten.NLSgen.generatorType">
+            </objectState>
+         </visibility>
       </objectContribution>
    </extension>
    <extension

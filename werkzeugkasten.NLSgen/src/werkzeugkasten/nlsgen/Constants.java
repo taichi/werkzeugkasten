@@ -9,9 +9,9 @@ public class Constants {
 	public static final String EXT_RESOURCE_GENERATOR = "resourceGenerator";
 
 	public static final QualifiedName GENERATOR_TYPE = new QualifiedName(
-			ID_PLUGIN, ".generatorType");
+			ID_PLUGIN, "generatorType");
 
 	public static final QualifiedName GENERATION_DEST = new QualifiedName(
-			ID_PLUGIN, ".dest");
+			ID_PLUGIN, "dest");
 
 }

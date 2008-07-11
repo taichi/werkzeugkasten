@@ -1,5 +1,6 @@
 package werkzeugkasten.nlsgen.gen;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
@@ -12,6 +13,12 @@ public class SingleLocaleStringsGenerator implements ResourceGenerator {
 	public boolean verifyRuntime(IJavaProject javap) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void addRuntime(IContainer container) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override

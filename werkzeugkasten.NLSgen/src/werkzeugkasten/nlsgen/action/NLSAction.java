@@ -42,7 +42,9 @@ public class NLSAction implements IActionDelegate {
 					ResourceGenerator gen = Activator
 							.createResourceGenerator(key);
 					try {
-						gen.generateFrom(NLSAction.this.selected, monitor);
+						if (gen != null) {
+							gen.generateFrom(NLSAction.this.selected, monitor);
+						}
 					} catch (OperationCanceledException e) {
 						return Status.CANCEL_STATUS;
 					}
