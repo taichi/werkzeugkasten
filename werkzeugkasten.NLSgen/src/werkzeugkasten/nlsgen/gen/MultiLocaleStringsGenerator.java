@@ -3,15 +3,12 @@ package werkzeugkasten.nlsgen.gen;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -33,7 +30,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.ToolFactory;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.ui.CodeGeneration;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
@@ -43,6 +39,7 @@ import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.common.jdt.JavaElementUtil;
 import werkzeugkasten.common.jdt.TypeUtil;
 import werkzeugkasten.common.resource.ProjectUtil;
+import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.nlsgen.Activator;
 import werkzeugkasten.nlsgen.Constants;
@@ -51,12 +48,10 @@ import werkzeugkasten.nlsgen.ResourceGenerator;
 
 public class MultiLocaleStringsGenerator implements ResourceGenerator {
 
-	protected static final String RUNTIME = MultiLocaleStrings.class.getName();
-
 	@Override
 	public boolean verifyRuntime(IJavaProject javap) {
 		try {
-			IType type = javap.findType(RUNTIME);
+			IType type = javap.findType(MultiLocaleStrings.class.getName());
 			return type != null && type.exists();
 		} catch (CoreException e) {
 			Activator.log(e);
@@ -68,8 +63,10 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 	public void addRuntime(IContainer container) {
 		try {
 			Bundle bundle = Activator.getDefault().getBundle();
-			createFile(container, bundle.getEntry("nlsgen-runtime.jar"));
-			createFile(container, bundle.getEntry("nlsgen-runtime.src.jar"));
+			ResourceUtil.copyFile(container, bundle
+					.getEntry("nlsgen-runtime.jar"));
+			ResourceUtil.copyFile(container, bundle
+					.getEntry("nlsgen-runtime.src.jar"));
 
 			IPath path = container.getFullPath();
 			IJavaProject javap = JavaCore.create(container.getProject());
@@ -80,14 +77,6 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 		} catch (Exception e) {
 			Activator.log(e);
 		}
-	}
-
-	protected void createFile(IContainer container, URL u)
-			throws CoreException, IOException {
-		IPath p = new Path(u.getFile());
-		String s = p.lastSegment();
-		IFile newone = container.getFile(new Path(s));
-		newone.create(new BufferedInputStream(u.openStream()), true, null);
 	}
 
 	@Override
@@ -112,23 +101,18 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 				}
 				unit = createNewCU(resource, path);
 			}
+
 			IType type = unit.findPrimaryType();
 			Properties props = new Properties();
 			props.load(new BufferedInputStream(new FileInputStream(new File(
 					resource.getLocationURI()))));
-			unit.becomeWorkingCopy(null);
 			merge(props, type, monitor);
-
 			String ln = ProjectUtil.getLineDelimiterPreference(resource
 					.getProject());
-			IBuffer buffer = unit.getBuffer();
-			formatCU(type.getJavaProject(), ln, buffer);
-			unit.commitWorkingCopy(true, null);
+			formatCU(type.getJavaProject(), ln, unit);
 		} catch (OperationCanceledException e) {
-			discardWorkingCopy(unit);
 			throw e;
 		} catch (Exception e) {
-			discardWorkingCopy(unit);
 			Activator.log(e);
 		}
 	}
@@ -168,47 +152,46 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 		IJavaProject javap = JavaElementUtil.getJavaProject(path);
 		IPackageFragment pf = javap.findPackageFragment(path
 				.removeLastSegments(1));
-		ICompilationUnit unit = null;
-		try {
-			unit = pf.createCompilationUnit(path.lastSegment(), "", true, null);
-			unit.becomeWorkingCopy(null);
-			String name = path.removeFileExtension().lastSegment();
-			String ln = ProjectUtil.getLineDelimiterPreference(javap
-					.getProject());
+		ICompilationUnit unit = pf.createCompilationUnit(path.lastSegment(),
+				"", false, null);
+		String name = path.removeFileExtension().lastSegment();
+		String ln = ProjectUtil.getLineDelimiterPreference(javap.getProject());
 
-			IBuffer buffer = unit.getBuffer();
-			buffer.setContents(createCUContent(unit, name, ln));
+		unit.createType(createCUContent(unit, name, ln), null, false, null);
 
-			unit.createImport("java.util.Locale", null, null);
-			unit.createImport("java.util.ResourceBundle", null, null);
-			unit.createImport("werkzeugkasten.nlsgen.MultiLocaleStrings", null,
-					null);
+		unit.createImport("java.util.Locale", null, null);
+		unit.createImport("java.util.ResourceBundle", null, null);
+		unit.createImport("werkzeugkasten.nlsgen.MultiLocaleStrings", null,
+				null);
 
-			IType type = unit.findPrimaryType();
-			type.createMethod("public " + name + "() {"
-					+ "add(ResourceBundle.getBundle(getClass().getName()));}",
-					null, true, null);
+		IType type = unit.findPrimaryType();
+		type.createMethod("public " + name + "() {"
+				+ "add(ResourceBundle.getBundle(getClass().getName()));}",
+				null, false, null);
 
-			formatCU(javap, ln, buffer);
-			unit.commitWorkingCopy(true, null);
-			return unit;
-		} catch (Exception e) {
-			discardWorkingCopy(unit);
-			throw e;
-		}
+		formatCU(javap, ln, unit);
+
+		return unit;
 	}
 
-	protected void formatCU(IJavaProject javap, String ln, IBuffer buffer)
-			throws BadLocationException {
-		CodeFormatter formatter = ToolFactory.createCodeFormatter(javap
-				.getOptions(true));
-		String contents = buffer.getContents();
-		TextEdit edit = formatter.format(CodeFormatter.K_COMPILATION_UNIT,
-				contents, 0, buffer.getLength(), 0, ln);
-		if (edit != null) {
-			IDocument doc = new Document(contents);
-			edit.apply(doc);
-			buffer.replace(0, contents.length(), doc.get());
+	protected void formatCU(IJavaProject javap, String ln, ICompilationUnit unit)
+			throws Exception {
+		ICompilationUnit copy = unit.getWorkingCopy(null);
+		try {
+			IBuffer buffer = copy.getBuffer();
+			CodeFormatter formatter = ToolFactory.createCodeFormatter(javap
+					.getOptions(true));
+			String contents = buffer.getContents();
+			TextEdit edit = formatter.format(CodeFormatter.K_COMPILATION_UNIT,
+					contents, 0, buffer.getLength(), 0, ln);
+			if (edit != null) {
+				IDocument doc = new Document(contents);
+				edit.apply(doc);
+				buffer.replace(0, contents.length(), doc.get());
+			}
+			copy.commitWorkingCopy(false, null);
+		} catch (Exception e) {
+			copy.discardWorkingCopy();
 		}
 	}
 
