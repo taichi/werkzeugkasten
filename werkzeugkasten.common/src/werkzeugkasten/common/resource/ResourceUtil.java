@@ -1,5 +1,9 @@
 package werkzeugkasten.common.resource;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.URL;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -116,6 +120,14 @@ public class ResourceUtil {
 			return ss.getFirstElement();
 		}
 		return null;
+	}
+
+	public static void copyFile(IContainer container, URL u)
+			throws CoreException, IOException {
+		IPath p = new Path(u.getFile());
+		String s = p.lastSegment();
+		IFile newone = container.getFile(new Path(s));
+		newone.create(new BufferedInputStream(u.openStream()), true, null);
 	}
 
 }
