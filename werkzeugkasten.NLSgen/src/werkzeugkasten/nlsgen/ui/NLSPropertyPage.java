@@ -16,8 +16,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.window.Window;
@@ -277,10 +281,10 @@ public class NLSPropertyPage extends PropertyPage {
 
 	@Override
 	public boolean performOk() {
-		IFile file = getSelected();
+		final IFile file = getSelected();
 		try {
 			if (file != null) {
-				String type = labelToId(this.generatorType.getText());
+				final String type = labelToId(this.generatorType.getText());
 				if (StringUtil.isEmpty(type) == false) {
 					file.setPersistentProperty(Constants.GENERATOR_TYPE, type);
 				} else {
@@ -291,6 +295,20 @@ public class NLSPropertyPage extends PropertyPage {
 					file.setPersistentProperty(Constants.GENERATION_DEST, dest);
 				} else {
 					file.setPersistentProperty(Constants.GENERATION_DEST, null);
+				}
+				if (StringUtil.isEmpty(type) == false) {
+					new WorkspaceJob(Strings.GENERATE_CLASSES) {
+						@Override
+						public IStatus runInWorkspace(IProgressMonitor monitor)
+								throws CoreException {
+							ResourceGenerator rg = Activator
+									.createResourceGenerator(type);
+							if (rg != null) {
+								rg.generateFrom(file, monitor);
+							}
+							return Status.OK_STATUS;
+						}
+					}.schedule();
 				}
 				return true;
 			}

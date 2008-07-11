@@ -94,7 +94,7 @@ public class SingleLocaleStringsGenerator extends MultiLocaleStringsGenerator {
 			if (isString.matcher(TypeUtil.getResolvedTypeName(t, type))
 					.matches()) {
 				String name = f.getElementName();
-				if (props.contains(name) == false && f.exists()) {
+				if (props.containsKey(name) == false && f.exists()) {
 					f.delete(true, null);
 				} else {
 					fieldNames.add(name);

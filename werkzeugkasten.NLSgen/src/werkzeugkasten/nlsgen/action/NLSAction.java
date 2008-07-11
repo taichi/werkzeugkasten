@@ -35,8 +35,6 @@ public class NLSAction implements IActionDelegate {
 				@Override
 				public IStatus runInWorkspace(final IProgressMonitor monitor)
 						throws CoreException {
-					monitor.beginTask(Strings.GENERATE_CLASSES,
-							IProgressMonitor.UNKNOWN);
 					String key = NLSAction.this.selected
 							.getPersistentProperty(Constants.GENERATOR_TYPE);
 					ResourceGenerator gen = Activator

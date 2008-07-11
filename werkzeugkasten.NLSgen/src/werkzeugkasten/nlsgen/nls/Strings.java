@@ -16,6 +16,8 @@ public class Strings extends NLS {
 
 	public static String LABEL_BROWSE;
 
+	public static String MODIFY_CLASSES;
+
 	static {
 		Class<?> clazz = Strings.class;
 		NLS.initializeMessages(clazz.getName(), clazz);

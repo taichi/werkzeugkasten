@@ -1,14 +1,14 @@
 package werkzeugkasten.nlsgen.gen;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -40,11 +41,14 @@ import werkzeugkasten.common.jdt.JavaElementUtil;
 import werkzeugkasten.common.jdt.TypeUtil;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.resource.ResourceUtil;
+import werkzeugkasten.common.ui.ProgressMonitorUtil;
+import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.nlsgen.Activator;
 import werkzeugkasten.nlsgen.Constants;
 import werkzeugkasten.nlsgen.MultiLocaleStrings;
 import werkzeugkasten.nlsgen.ResourceGenerator;
+import werkzeugkasten.nlsgen.nls.Strings;
 
 public class MultiLocaleStringsGenerator implements ResourceGenerator {
 
@@ -80,40 +84,60 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 	}
 
 	@Override
-	public void generateFrom(IResource resource, IProgressMonitor monitor) {
+	public void generateFrom(IFile properties, IProgressMonitor monitor) {
 		ICompilationUnit unit = null;
 		try {
+			monitor = ProgressMonitorUtil.care(monitor);
+			monitor.beginTask(Strings.GENERATE_CLASSES, 5);
 			Set<IPath> locs = ClasspathEntryUtil.getOutputLocations(JavaCore
-					.create(resource.getProject()));
+					.create(properties.getProject()));
 			for (IPath p : locs) {
-				if (p.isPrefixOf(resource.getFullPath())) {
+				if (p.isPrefixOf(properties.getFullPath())) {
 					return;
 				}
 			}
-			IPath path = toDestPath(resource);
+			ProgressMonitorUtil.isCanceled(monitor, 1);
+
+			IPath path = toDestPath(properties);
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IResource dest = root.findMember(path);
 			IJavaElement element = JavaCore.create(dest);
 			unit = JavaElementUtil.to(element);
 			if (unit == null || unit.exists() == false) {
-				if (monitor.isCanceled()) {
-					throw new OperationCanceledException();
-				}
-				unit = createNewCU(resource, path);
+				ProgressMonitorUtil.isCanceled(monitor, 1);
+				unit = createNewCU(properties, path);
 			}
 
+			ProgressMonitorUtil.isCanceled(monitor, 1);
+
 			IType type = unit.findPrimaryType();
-			Properties props = new Properties();
-			props.load(new BufferedInputStream(new FileInputStream(new File(
-					resource.getLocationURI()))));
-			merge(props, type, monitor);
-			String ln = ProjectUtil.getLineDelimiterPreference(resource
+			Properties props = loadProperties(properties);
+
+			merge(props, type, new SubProgressMonitor(monitor, 1));
+
+			String ln = ProjectUtil.getLineDelimiterPreference(properties
 					.getProject());
 			formatCU(type.getJavaProject(), ln, unit);
+
+			ProgressMonitorUtil.isCanceled(monitor, 1);
 		} catch (OperationCanceledException e) {
 			throw e;
 		} catch (Exception e) {
 			Activator.log(e);
+		} finally {
+			monitor.done();
+		}
+	}
+
+	private Properties loadProperties(IFile properties) throws Exception {
+		InputStream in = null;
+		try {
+			in = new BufferedInputStream(properties.getContents());
+			Properties props = new Properties();
+			props.load(in);
+			return props;
+		} finally {
+			StreamUtil.close(in);
 		}
 	}
 
@@ -229,12 +253,13 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 
 	protected void merge(Properties props, IType type, IProgressMonitor monitor)
 			throws Exception {
+		monitor = ProgressMonitorUtil.care(monitor);
+		monitor.beginTask(Strings.MODIFY_CLASSES, IProgressMonitor.UNKNOWN);
+
 		IMethod[] methods = type.getMethods();
 		Set<String> methodNames = new HashSet<String>();
 		for (IMethod m : methods) {
-			if (monitor.isCanceled()) {
-				throw new OperationCanceledException();
-			}
+			ProgressMonitorUtil.isCanceled(monitor, 1);
 			String[] types = m.getParameterTypes();
 			if (types != null
 					&& types.length == 1
@@ -242,21 +267,21 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 							TypeUtil.getResolvedTypeName(types[0], type))
 							.matches()) {
 				String name = m.getElementName();
-				if (props.contains(name) == false && m.exists()) {
-					m.delete(true, null);
+				if (props.containsKey(name) == false && m.exists()) {
+					m.delete(false, null);
 				} else {
 					methodNames.add(name);
 				}
 			}
 		}
 
+		ProgressMonitorUtil.isCanceled(monitor, 1);
+
 		for (String s : props.stringPropertyNames()) {
-			if (monitor.isCanceled()) {
-				throw new OperationCanceledException();
-			}
+			ProgressMonitorUtil.isCanceled(monitor, 1);
 			if (methodNames.contains(s) == false) {
 				String contents = createMethodContent(type, s);
-				type.createMethod(contents, null, true, null);
+				type.createMethod(contents, null, false, null);
 			}
 		}
 	}
