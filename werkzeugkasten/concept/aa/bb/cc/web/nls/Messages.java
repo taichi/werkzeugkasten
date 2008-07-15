@@ -11,7 +11,7 @@ public class Messages extends MessageHolder {
 	private static final long serialVersionUID = -1809899457841590085L;
 
 	public Messages() {
-		add(ResourceBundle.getBundle(Messages.class.getName()));
+		add(ResourceBundle.getBundle(getClass().getName()));
 	}
 
 	public String ERROR_REQUIRED() {

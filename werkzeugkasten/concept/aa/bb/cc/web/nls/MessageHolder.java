@@ -17,11 +17,8 @@ public abstract class MessageHolder implements Serializable {
 		this.bundles.put(bundle.getLocale(), bundle);
 	}
 
-	public String getMessage(Locale l, String key) {
-		ResourceBundle rb = this.bundles.get(l);
-		if (rb != null) {
-			return rb.getString(key);
-		}
-		return null;
+	public String getMessage(Locale locale, String key) {
+		ResourceBundle rb = this.bundles.get(locale);
+		return rb != null ? rb.getString(key) : null;
 	}
 }
