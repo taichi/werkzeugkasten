@@ -3,7 +3,7 @@
 <repository name='file:/D:/development/java/workspace-3.4/werkzeugkasten.update/ - metadata' type='org.eclipse.equinox.internal.p2.metadata.repository.LocalMetadataRepository' version='1.0.0'>
   <properties size='2'>
     <property name='p2.compressed' value='false'/>
-    <property name='p2.timestamp' value='1216127106373'/>
+    <property name='p2.timestamp' value='1216127612642'/>
   </properties>
   <units size='41'>
     <unit id='werkzeugkasten.docs' version='0.0.2'>
