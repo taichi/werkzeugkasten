@@ -20,6 +20,22 @@ public class Strings extends NLS {
 
 	public static String MODIFY_CLASSES;
 
+	public static String plugin_label;
+
+	public static String plugin_author;
+
+	public static String label_singlelocale;
+
+	public static String label_multilocale;
+
+	public static String plugin_name;
+
+	public static String desc_singlelocale;
+
+	public static String action_nls;
+
+	public static String desc_multilocale;
+
 	static {
 		Object o = Activator.getDefault().getBundle().getHeaders().get(
 				"Bundle-Localization");
