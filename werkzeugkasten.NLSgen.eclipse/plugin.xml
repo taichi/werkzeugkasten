@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="werkzeugkasten.NLSgen.resourceGenerator">
+      <resourceGenerator
+            class="werkzeugkasten.nlsgen.eclipse.StringResourceGenerator"
+            desc="%desc_string"
+            id="werkzeugkasten.NLSgen.eclipse.resourceGenerator1"
+            label="%label_string">
+      </resourceGenerator>
+      <resourceGenerator
+            class="werkzeugkasten.nlsgen.eclipse.ImageResourceGenerator"
+            desc="%desc_image"
+            id="werkzeugkasten.NLSgen.eclipse.resourceGenerator2"
+            label="%label_image">
+      </resourceGenerator>
+   </extension>
+
+</plugin>
