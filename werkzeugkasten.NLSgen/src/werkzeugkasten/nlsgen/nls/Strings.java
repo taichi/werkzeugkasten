@@ -2,6 +2,8 @@ package werkzeugkasten.nlsgen.nls;
 
 import org.eclipse.osgi.util.NLS;
 
+import werkzeugkasten.nlsgen.Activator;
+
 public class Strings extends NLS {
 
 	public static String GENERATE_CLASSES;
@@ -19,7 +21,9 @@ public class Strings extends NLS {
 	public static String MODIFY_CLASSES;
 
 	static {
-		Class<?> clazz = Strings.class;
-		NLS.initializeMessages(clazz.getName(), clazz);
+		Object o = Activator.getDefault().getBundle().getHeaders().get(
+				"Bundle-Localization");
+		String s = o == null ? "plugin" : o.toString();
+		NLS.initializeMessages(s, Strings.class);
 	}
 }
