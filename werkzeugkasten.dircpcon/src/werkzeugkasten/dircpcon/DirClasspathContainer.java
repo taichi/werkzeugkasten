@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.osgi.util.NLS;
 
 import werkzeugkasten.dircpcon.nls.Strings;
 
@@ -41,7 +42,7 @@ public class DirClasspathContainer implements IClasspathContainer,
 			this.entries = computeEntries();
 		}
 		return this.entries.values().toArray(
-				new IClasspathEntry[entries.size()]);
+				new IClasspathEntry[this.entries.size()]);
 	}
 
 	protected Map<String, IClasspathEntry> computeEntries() {
@@ -49,7 +50,7 @@ public class DirClasspathContainer implements IClasspathContainer,
 	}
 
 	public String getDescription() {
-		return Strings.bind(Strings.DESC_DIR_CLASSPATH_CONTAINER, dir);
+		return NLS.bind(Strings.DESC_DIR_CLASSPATH_CONTAINER, this.dir);
 	}
 
 	public int getKind() {
@@ -63,7 +64,7 @@ public class DirClasspathContainer implements IClasspathContainer,
 	public void resourceChanged(IResourceChangeEvent event) {
 		IResource r = event.getResource();
 		IPath changed = r.getLocation();
-		if (changed.isPrefixOf(path) && this.entries != null) {
+		if (changed.isPrefixOf(this.path) && this.entries != null) {
 			this.entries.clear();
 			this.entries = null;
 		}
