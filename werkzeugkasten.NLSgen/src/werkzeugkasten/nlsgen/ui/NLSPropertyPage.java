@@ -174,6 +174,7 @@ public class NLSPropertyPage extends PropertyPage {
 		});
 
 		setUpStoredValues();
+		verifyRuntime();
 
 		return composite;
 	}
