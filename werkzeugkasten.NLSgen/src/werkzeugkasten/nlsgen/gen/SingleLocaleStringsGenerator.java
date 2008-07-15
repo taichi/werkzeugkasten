@@ -106,7 +106,7 @@ public class SingleLocaleStringsGenerator extends MultiLocaleStringsGenerator {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-			if (fieldNames.contains(s) == false) {
+			if (fieldNames.contains(s) == false && isJavaIdentifier(s)) {
 				String contents = createFiledContent(type, s);
 				type.createField(contents, null, true, null);
 			}

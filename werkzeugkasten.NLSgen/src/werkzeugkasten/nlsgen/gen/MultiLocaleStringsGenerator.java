@@ -279,11 +279,27 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 
 		for (String s : props.stringPropertyNames()) {
 			ProgressMonitorUtil.isCanceled(monitor, 1);
-			if (methodNames.contains(s) == false) {
+			if (methodNames.contains(s) == false && isJavaIdentifier(s)) {
 				String contents = createMethodContent(type, s);
 				type.createMethod(contents, null, false, null);
 			}
 		}
+	}
+
+	protected boolean isJavaIdentifier(String s) {
+		if (s == null || s.length() < 1) {
+			return false;
+		}
+		char[] chars = s.toCharArray();
+		if (Character.isJavaIdentifierStart(chars[0]) == false) {
+			return false;
+		}
+		for (int i = 1; i < chars.length; i++) {
+			if (Character.isJavaIdentifierPart(chars[i]) == false) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	protected String createMethodContent(IType type, String name) {
