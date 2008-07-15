@@ -127,7 +127,9 @@ public class ResourceUtil {
 		IPath p = new Path(u.getFile());
 		String s = p.lastSegment();
 		IFile newone = container.getFile(new Path(s));
-		newone.create(new BufferedInputStream(u.openStream()), true, null);
+		if (newone != null && newone.exists() == false) {
+			newone.create(new BufferedInputStream(u.openStream()), true, null);
+		}
 	}
 
 }
