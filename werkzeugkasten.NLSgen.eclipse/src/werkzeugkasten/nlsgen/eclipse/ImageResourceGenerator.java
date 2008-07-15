@@ -17,9 +17,8 @@ import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.common.jdt.JavaElementUtil;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.resource.ResourceUtil;
-import werkzeugkasten.nlsgen.gen.SingleLocaleStringsGenerator;
 
-public class ImageResourceGenerator extends SingleLocaleStringsGenerator {
+public class ImageResourceGenerator extends StringResourceGenerator {
 
 	@Override
 	public boolean verifyRuntime(IJavaProject javap) {
@@ -58,6 +57,14 @@ public class ImageResourceGenerator extends SingleLocaleStringsGenerator {
 		IJavaProject javap = JavaElementUtil.getJavaProject(path);
 		IPackageFragment pf = javap.findPackageFragment(path
 				.removeLastSegments(1));
+		if (pf == null || pf.exists() == false) {
+			pf = createNewPackage(javap, path);
+		}
+
+		if (pf == null) {
+			return null;
+		}
+
 		ICompilationUnit unit = pf.createCompilationUnit(path.lastSegment(),
 				"", true, null);
 		String name = path.removeFileExtension().lastSegment();
@@ -70,10 +77,12 @@ public class ImageResourceGenerator extends SingleLocaleStringsGenerator {
 				null);
 		unit.createImport("org.eclipse.swt.graphics.Image", null, null);
 
+		String activator = getActivatorClass(resource, unit);
+
 		IType type = unit.findPrimaryType();
-		type.createInitializer("static {"
-				+ "ImageLoader.load(Activator.getDefault(), " + name
-				+ ".class,\"images\");" + "}", null, null);
+		type.createInitializer("static {" + "ImageLoader.load(" + activator
+				+ ".getDefault(), " + name + ".class,\"images\");" + "}", null,
+				null);
 
 		formatCU(javap, ln, unit);
 		return unit;

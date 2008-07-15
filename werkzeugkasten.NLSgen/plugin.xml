@@ -12,7 +12,7 @@
          <action
                class="werkzeugkasten.nlsgen.action.NLSAction"
                id="werkzeugkasten.NLSgen.action"
-               label="%action.nls">
+               label="%action_nls">
          </action>
          <visibility>
             <objectState
@@ -26,15 +26,15 @@
          point="werkzeugkasten.NLSgen.resourceGenerator">
       <resourceGenerator
             class="werkzeugkasten.nlsgen.gen.MultiLocaleStringsGenerator"
-            desc="%desc.multilocale"
+            desc="%desc_multilocale"
             id="werkzeugkasten.nlsgen.gen.MultiLocaleStringsGenerator"
-            label="%label.multilocale">
+            label="%label_multilocale">
       </resourceGenerator>
       <resourceGenerator
             class="werkzeugkasten.nlsgen.gen.SingleLocaleStringsGenerator"
-            desc="%desc.singlelocale"
+            desc="%desc_singlelocale"
             id="werkzeugkasten.nlsgen.gen.SingleLocaleStringsGenerator"
-            label="%label.singlelocale">
+            label="%label_singlelocale">
       </resourceGenerator>
    </extension>
    <extension
@@ -42,7 +42,7 @@
       <page
             class="werkzeugkasten.nlsgen.ui.NLSPropertyPage"
             id="werkzeugkasten.NLSgen.page"
-            name="%plugin.label"
+            name="%plugin_label"
             nameFilter="*.properties">
          <enabledWhen>
             <or>

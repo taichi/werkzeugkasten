@@ -43,6 +43,14 @@ public class SingleLocaleStringsGenerator extends MultiLocaleStringsGenerator {
 		IJavaProject javap = JavaElementUtil.getJavaProject(path);
 		IPackageFragment pf = javap.findPackageFragment(path
 				.removeLastSegments(1));
+		if (pf == null || pf.exists() == false) {
+			pf = createNewPackage(javap, path);
+		}
+
+		if (pf == null) {
+			return null;
+		}
+
 		ICompilationUnit unit = pf.createCompilationUnit(path.lastSegment(),
 				"", true, null);
 		String name = path.removeFileExtension().lastSegment();

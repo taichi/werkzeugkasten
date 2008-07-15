@@ -25,6 +25,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -85,7 +86,6 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 
 	@Override
 	public void generateFrom(IFile properties, IProgressMonitor monitor) {
-		ICompilationUnit unit = null;
 		try {
 			monitor = ProgressMonitorUtil.care(monitor);
 			monitor.beginTask(Strings.GENERATE_CLASSES, 5);
@@ -102,10 +102,14 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IResource dest = root.findMember(path);
 			IJavaElement element = JavaCore.create(dest);
-			unit = JavaElementUtil.to(element);
+			ICompilationUnit unit = JavaElementUtil.to(element);
 			if (unit == null || unit.exists() == false) {
 				ProgressMonitorUtil.isCanceled(monitor, 1);
 				unit = createNewCU(properties, path);
+			}
+
+			if (unit == null) {
+				return;
 			}
 
 			ProgressMonitorUtil.isCanceled(monitor, 1);
@@ -176,6 +180,14 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 		IJavaProject javap = JavaElementUtil.getJavaProject(path);
 		IPackageFragment pf = javap.findPackageFragment(path
 				.removeLastSegments(1));
+		if (pf == null || pf.exists() == false) {
+			pf = createNewPackage(javap, path);
+		}
+
+		if (pf == null) {
+			return null;
+		}
+
 		ICompilationUnit unit = pf.createCompilationUnit(path.lastSegment(),
 				"", false, null);
 		String name = path.removeFileExtension().lastSegment();
@@ -196,6 +208,20 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 		formatCU(javap, ln, unit);
 
 		return unit;
+	}
+
+	protected IPackageFragment createNewPackage(IJavaProject javap, IPath path)
+			throws JavaModelException {
+		for (IPackageFragmentRoot root : javap.getPackageFragmentRoots()) {
+			IPath p = root.getPath();
+			if (p.isPrefixOf(path)) {
+				p = path.removeFirstSegments(p.segmentCount())
+						.removeLastSegments(1);
+				return root.createPackageFragment(p.toString()
+						.replace('/', '.'), false, null);
+			}
+		}
+		return null;
 	}
 
 	protected void formatCU(IJavaProject javap, String ln, ICompilationUnit unit)
