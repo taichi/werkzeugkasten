@@ -6,13 +6,13 @@
       <resourceGenerator
             class="werkzeugkasten.nlsgen.eclipse.StringResourceGenerator"
             desc="%desc_string"
-            id="werkzeugkasten.NLSgen.eclipse.resourceGenerator1"
+            id="werkzeugkasten.NLSgen.eclipse.StringResourceGenerator"
             label="%label_string">
       </resourceGenerator>
       <resourceGenerator
             class="werkzeugkasten.nlsgen.eclipse.ImageResourceGenerator"
             desc="%desc_image"
-            id="werkzeugkasten.NLSgen.eclipse.resourceGenerator2"
+            id="werkzeugkasten.NLSgen.eclipse.ImageResourceGenerator"
             label="%label_image">
       </resourceGenerator>
    </extension>

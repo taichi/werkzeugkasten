@@ -47,8 +47,12 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+	}
+
+	public static void registerListener() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		workspace.addResourceChangeListener(this.propertiesChangeListener,
+		workspace.addResourceChangeListener(
+				getDefault().propertiesChangeListener,
 				IResourceChangeEvent.PRE_BUILD
 						| IResourceChangeEvent.POST_CHANGE
 						| IResourceChangeEvent.PRE_REFRESH);
