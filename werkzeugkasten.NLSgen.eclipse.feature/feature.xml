@@ -2,7 +2,7 @@
 <feature
       id="werkzeugkasten.NLSgen.eclipse.feature"
       label="NLSgen for eclipse"
-      version="0.0.2"
+      version="0.0.3"
       provider-name="ryushi">
 
    <description url="http://code.google.com/p/werkzeugkasten/">
@@ -435,7 +435,7 @@
          id="werkzeugkasten.NLSgen.eclipse"
          download-size="0"
          install-size="0"
-         version="0.0.2"
+         version="0.0.3"
          unpack="false"/>
 
 </feature>
