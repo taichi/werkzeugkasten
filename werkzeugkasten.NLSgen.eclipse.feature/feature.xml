@@ -417,6 +417,10 @@
    limitations under the License.
    </license>
 
+   <url>
+      <update label="werkzeugkasten" url="http://werkzeugkasten.googlecode.com/svn/trunk/werkzeugkasten.update/"/>
+   </url>
+
    <requires>
       <import plugin="org.eclipse.core.resources" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
