@@ -9,10 +9,10 @@
    <feature url="features/werkzeugkasten.editor.feature_0.0.5.jar" id="werkzeugkasten.editor.feature" version="0.0.5">
       <category name="Misc"/>
    </feature>
-   <feature url="features/werkzeugkasten.NLSgen.feature_0.0.1.jar" id="werkzeugkasten.NLSgen.feature" version="0.0.1">
+   <feature url="features/werkzeugkasten.NLSgen.feature_0.0.2.jar" id="werkzeugkasten.NLSgen.feature" version="0.0.2">
       <category name="Misc"/>
    </feature>
-   <feature url="features/werkzeugkasten.NLSgen.eclipse.feature_0.0.1.jar" id="werkzeugkasten.NLSgen.eclipse.feature" version="0.0.1">
+   <feature url="features/werkzeugkasten.NLSgen.eclipse.feature_0.0.2.jar" id="werkzeugkasten.NLSgen.eclipse.feature" version="0.0.2">
       <category name="Misc"/>
    </feature>
    <category-def name="DbLauncher" label="DbLauncher">
