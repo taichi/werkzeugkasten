@@ -3,14 +3,14 @@
 <repository name='file:/D:/development/java/workspace-3.4/werkzeugkasten.update/ - artifacts' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1.0.0'>
   <properties size='2'>
     <property name='p2.compressed' value='false'/>
-    <property name='p2.timestamp' value='1216201493153'/>
+    <property name='p2.timestamp' value='1216202046020'/>
   </properties>
   <mappings size='3'>
     <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
     <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>
     <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
   </mappings>
-  <artifacts size='50'>
+  <artifacts size='53'>
     <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.NLSgen.feature' version='0.0.1'>
       <properties size='2'>
         <property name='artifact.size' value='4936'/>
@@ -91,6 +91,12 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.weblauncher.feature' version='0.0.6'>
+      <properties size='2'>
+        <property name='artifact.size' value='5413'/>
+        <property name='download.size' value='5413'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher' version='0.0.5'>
       <properties size='3'>
         <property name='artifact.size' value='407800'/>
@@ -98,23 +104,10 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.weblauncher.feature' version='0.0.6'>
-      <properties size='2'>
-        <property name='artifact.size' value='5413'/>
-        <property name='download.size' value='5413'/>
-      </properties>
-    </artifact>
     <artifact classifier='osgi.bundle' id='werkzeugkasten.NLSgen' version='0.0.1'>
       <properties size='3'>
         <property name='artifact.size' value='73368'/>
         <property name='download.size' value='73368'/>
-        <property name='download.contentType' value='application/zip'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher' version='0.0.5'>
-      <properties size='3'>
-        <property name='artifact.size' value='397990'/>
-        <property name='download.size' value='397990'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
@@ -125,10 +118,10 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher.tomcat55' version='0.0.3'>
+    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher' version='0.0.5'>
       <properties size='3'>
-        <property name='artifact.size' value='4623172'/>
-        <property name='download.size' value='4623172'/>
+        <property name='artifact.size' value='397990'/>
+        <property name='download.size' value='397990'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
@@ -136,6 +129,13 @@
       <properties size='3'>
         <property name='artifact.size' value='4694940'/>
         <property name='download.size' value='4694940'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher.tomcat55' version='0.0.3'>
+      <properties size='3'>
+        <property name='artifact.size' value='4623172'/>
+        <property name='download.size' value='4623172'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
@@ -199,6 +199,12 @@
         <property name='artifact.size' value='81132'/>
         <property name='download.size' value='81132'/>
         <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.NLSgen.eclipse.feature' version='0.0.3'>
+      <properties size='2'>
+        <property name='artifact.size' value='4986'/>
+        <property name='download.size' value='4986'/>
       </properties>
     </artifact>
     <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.NLSgen.eclipse.feature' version='0.0.3'>
@@ -303,6 +309,13 @@
     </artifact>
     <artifact classifier='osgi.bundle' id='werkzeugkasten.NLSgen' version='0.0.3'>
       <properties size='3'>
+        <property name='artifact.size' value='84220'/>
+        <property name='download.size' value='84220'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='werkzeugkasten.NLSgen' version='0.0.3'>
+      <properties size='3'>
         <property name='artifact.size' value='84219'/>
         <property name='download.size' value='84219'/>
         <property name='download.contentType' value='application/zip'/>
@@ -325,6 +338,13 @@
       <properties size='3'>
         <property name='artifact.size' value='72453'/>
         <property name='download.size' value='72453'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='werkzeugkasten.NLSgen.eclipse' version='0.0.3'>
+      <properties size='3'>
+        <property name='artifact.size' value='12182'/>
+        <property name='download.size' value='12182'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
