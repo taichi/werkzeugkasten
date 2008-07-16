@@ -37,4 +37,13 @@ public class StringUtil {
 		return result;
 	}
 
+	public static String toCamelCase(String s) {
+		if (isEmpty(s) == false) {
+			StringBuilder stb = new StringBuilder(s);
+			stb.replace(0, 1, String
+					.valueOf(Character.toUpperCase(s.charAt(0))));
+			return stb.toString();
+		}
+		return s;
+	}
 }
