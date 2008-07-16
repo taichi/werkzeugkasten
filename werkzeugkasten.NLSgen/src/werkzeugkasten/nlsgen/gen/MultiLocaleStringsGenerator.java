@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -35,6 +36,7 @@ import org.eclipse.jdt.ui.CodeGeneration;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.framework.Bundle;
 
 import werkzeugkasten.common.jdt.ClasspathEntryUtil;
@@ -157,8 +159,10 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 
 	protected IPath toDestPath(IResource resource) throws CoreException {
 		IPath path = null;
-		String destPath = resource
-				.getPersistentProperty(Constants.GENERATION_DEST);
+		ScopedPreferenceStore store = new ScopedPreferenceStore(
+				new ProjectScope(resource.getProject()), Constants.ID_PLUGIN);
+		String destPath = store.getString(Constants.GENERATION_DEST(resource));
+
 		if (StringUtil.isEmpty(destPath)) {
 			IPath p = resource.getFullPath();
 			p = p.removeFileExtension();
@@ -167,6 +171,7 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 			if (0 < index) {
 				s = s.substring(0, index);
 			}
+			s = StringUtil.toCamelCase(s);
 			p = p.removeLastSegments(1).append(s);
 			path = p.addFileExtension("java");
 		} else {

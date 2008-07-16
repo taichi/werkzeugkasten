@@ -8,6 +8,7 @@ import static werkzeugkasten.nlsgen.nls.Strings.LABEL_BROWSE;
 import static werkzeugkasten.nlsgen.nls.Strings.LABEL_DEST_PATH;
 import static werkzeugkasten.nlsgen.nls.Strings.LABEL_GENERATOR_TYPE;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -37,6 +39,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.util.StringUtil;
@@ -162,6 +165,7 @@ public class NLSPropertyPage extends PropertyPage {
 							if (0 < index) {
 								fileName = fileName.substring(0, index);
 							}
+							fileName = StringUtil.toCamelCase(fileName);
 							path = path.append(fileName);
 							path = path.removeFileExtension().addFileExtension(
 									"java");
@@ -182,33 +186,28 @@ public class NLSPropertyPage extends PropertyPage {
 	protected void setUpStoredValues() {
 		IFile file = getSelected();
 		if (file != null) {
-			try {
-				String id = file
-						.getPersistentProperty(Constants.GENERATOR_TYPE);
-				if (StringUtil.isEmpty(id) == false) {
-					outer: for (ResourceGeneratorDesc desc : Activator
-							.getGeneratorTypes()) {
-						if (desc.getId().equals(id)) {
-							String msg = desc.getLabel();
-							String[] items = this.generatorType.getItems();
-							for (int i = 0; i < items.length; i++) {
-								if (msg.equals(items[i])) {
-									this.generatorType.select(i);
-									this.description.setText(desc
-											.getDescription());
-									break outer;
-								}
+			ScopedPreferenceStore store = new ScopedPreferenceStore(
+					new ProjectScope(file.getProject()), Constants.ID_PLUGIN);
+			String id = store.getString(Constants.GENERATOR_TYPE(file));
+			if (StringUtil.isEmpty(id) == false) {
+				outer: for (ResourceGeneratorDesc desc : Activator
+						.getGeneratorTypes()) {
+					if (desc.getId().equals(id)) {
+						String msg = desc.getLabel();
+						String[] items = this.generatorType.getItems();
+						for (int i = 0; i < items.length; i++) {
+							if (msg.equals(items[i])) {
+								this.generatorType.select(i);
+								this.description.setText(desc.getDescription());
+								break outer;
 							}
 						}
 					}
 				}
-				String dest = file
-						.getPersistentProperty(Constants.GENERATION_DEST);
-				if (StringUtil.isEmpty(dest) == false) {
-					this.destPath.setText(dest);
-				}
-			} catch (CoreException e) {
-				Activator.log(e);
+			}
+			String dest = store.getString(Constants.GENERATION_DEST(file));
+			if (StringUtil.isEmpty(dest) == false) {
+				this.destPath.setText(dest);
 			}
 		}
 	}
@@ -283,38 +282,42 @@ public class NLSPropertyPage extends PropertyPage {
 	@Override
 	public boolean performOk() {
 		final IFile file = getSelected();
-		try {
-			if (file != null) {
-				final String type = labelToId(this.generatorType.getText());
-				if (StringUtil.isEmpty(type) == false) {
-					file.setPersistentProperty(Constants.GENERATOR_TYPE, type);
-				} else {
-					file.setPersistentProperty(Constants.GENERATOR_TYPE, null);
-				}
-				String dest = this.destPath.getText();
-				if (StringUtil.isEmpty(dest) == false) {
-					file.setPersistentProperty(Constants.GENERATION_DEST, dest);
-				} else {
-					file.setPersistentProperty(Constants.GENERATION_DEST, null);
-				}
-				if (StringUtil.isEmpty(type) == false) {
-					new WorkspaceJob(Strings.GENERATE_CLASSES) {
-						@Override
-						public IStatus runInWorkspace(IProgressMonitor monitor)
-								throws CoreException {
-							ResourceGenerator rg = Activator
-									.createResourceGenerator(type);
-							if (rg != null) {
-								rg.generateFrom(file, monitor);
-							}
-							return Status.OK_STATUS;
-						}
-					}.schedule();
-				}
-				return true;
+		if (file != null) {
+			ScopedPreferenceStore store = new ScopedPreferenceStore(
+					new ProjectScope(file.getProject()), Constants.ID_PLUGIN);
+
+			final String type = labelToId(this.generatorType.getText());
+			if (StringUtil.isEmpty(type) == false) {
+				store.setValue(Constants.GENERATOR_TYPE(file), type);
+			} else {
+				store.setValue(Constants.GENERATOR_TYPE(file), "");
 			}
-		} catch (CoreException e) {
-			Activator.log(e);
+			String dest = this.destPath.getText();
+			if (StringUtil.isEmpty(dest) == false) {
+				store.setValue(Constants.GENERATION_DEST(file), dest);
+			} else {
+				store.setValue(Constants.GENERATION_DEST(file), "");
+			}
+			if (StringUtil.isEmpty(type) == false) {
+				new WorkspaceJob(Strings.GENERATE_CLASSES) {
+					@Override
+					public IStatus runInWorkspace(IProgressMonitor monitor)
+							throws CoreException {
+						ResourceGenerator rg = Activator
+								.createResourceGenerator(type);
+						if (rg != null) {
+							rg.generateFrom(file, monitor);
+						}
+						return Status.OK_STATUS;
+					}
+				}.schedule();
+			}
+			try {
+				store.save();
+				return true;
+			} catch (IOException e) {
+				Activator.log(e);
+			}
 		}
 		return false;
 	}

@@ -1,6 +1,7 @@
 package werkzeugkasten.nlsgen.action;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -12,6 +13,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.nlsgen.Activator;
@@ -35,8 +37,11 @@ public class NLSAction implements IActionDelegate {
 				@Override
 				public IStatus runInWorkspace(final IProgressMonitor monitor)
 						throws CoreException {
-					String key = NLSAction.this.selected
-							.getPersistentProperty(Constants.GENERATOR_TYPE);
+					ScopedPreferenceStore store = new ScopedPreferenceStore(
+							new ProjectScope(NLSAction.this.selected
+									.getProject()), Constants.ID_PLUGIN);
+					String key = store.getString(Constants
+							.GENERATOR_TYPE(NLSAction.this.selected));
 					ResourceGenerator gen = Activator
 							.createResourceGenerator(key);
 					try {

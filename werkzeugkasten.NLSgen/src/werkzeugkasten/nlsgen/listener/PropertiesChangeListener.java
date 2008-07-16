@@ -8,15 +8,18 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.nlsgen.Activator;
+import werkzeugkasten.nlsgen.Constants;
 import werkzeugkasten.nlsgen.ResourceGenerator;
 
 public class PropertiesChangeListener implements IResourceChangeListener {
@@ -52,8 +55,11 @@ public class PropertiesChangeListener implements IResourceChangeListener {
 								&& r.exists()
 								&& "properties".equals(r.getFullPath()
 										.getFileExtension())) {
-							String generator = r
-									.getPersistentProperty(GENERATOR_TYPE);
+							ScopedPreferenceStore store = new ScopedPreferenceStore(
+									new ProjectScope(r.getProject()),
+									Constants.ID_PLUGIN);
+							String generator = store
+									.getString(GENERATOR_TYPE(r));
 							ResourceGenerator rg = Activator
 									.createResourceGenerator(generator);
 							if (rg != null) {

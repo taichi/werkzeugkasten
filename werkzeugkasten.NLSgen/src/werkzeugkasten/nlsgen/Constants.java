@@ -1,6 +1,6 @@
 package werkzeugkasten.nlsgen;
 
-import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.resources.IResource;
 
 public class Constants {
 
@@ -8,10 +8,12 @@ public class Constants {
 
 	public static final String EXT_RESOURCE_GENERATOR = "resourceGenerator";
 
-	public static final QualifiedName GENERATOR_TYPE = new QualifiedName(
-			ID_PLUGIN, "generatorType");
+	public static final String GENERATOR_TYPE(IResource r) {
+		return r.getFullPath().toString() + "#generatorType";
+	}
 
-	public static final QualifiedName GENERATION_DEST = new QualifiedName(
-			ID_PLUGIN, "dest");
+	public static final String GENERATION_DEST(IResource r) {
+		return r.getFullPath().toString() + "#generationDest";
+	};
 
 }
