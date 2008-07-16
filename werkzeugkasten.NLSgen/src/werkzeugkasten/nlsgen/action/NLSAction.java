@@ -1,5 +1,9 @@
 package werkzeugkasten.nlsgen.action;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -28,28 +32,31 @@ import werkzeugkasten.nlsgen.nls.Strings;
  */
 public class NLSAction implements IActionDelegate {
 
-	protected IFile selected;
+	protected List<IFile> selectedFiles;
 
 	@Override
 	public void run(IAction action) {
-		if (this.selected != null) {
+		if (this.selectedFiles != null && 0 < this.selectedFiles.size()) {
+			final List<IFile> files = new ArrayList<IFile>(this.selectedFiles);
 			new WorkspaceJob(Strings.GENERATE_CLASSES) {
 				@Override
 				public IStatus runInWorkspace(final IProgressMonitor monitor)
 						throws CoreException {
-					ScopedPreferenceStore store = new ScopedPreferenceStore(
-							new ProjectScope(NLSAction.this.selected
-									.getProject()), Constants.ID_PLUGIN);
-					String key = store.getString(Constants
-							.GENERATOR_TYPE(NLSAction.this.selected));
-					ResourceGenerator gen = Activator
-							.createResourceGenerator(key);
-					try {
-						if (gen != null) {
-							gen.generateFrom(NLSAction.this.selected, monitor);
+					for (IFile selected : files) {
+						ScopedPreferenceStore store = new ScopedPreferenceStore(
+								new ProjectScope(selected.getProject()),
+								Constants.ID_PLUGIN);
+						String key = store.getString(Constants
+								.GENERATOR_TYPE(selected));
+						ResourceGenerator gen = Activator
+								.createResourceGenerator(key);
+						try {
+							if (gen != null) {
+								gen.generateFrom(selected, monitor);
+							}
+						} catch (OperationCanceledException e) {
+							return Status.CANCEL_STATUS;
 						}
-					} catch (OperationCanceledException e) {
-						return Status.CANCEL_STATUS;
 					}
 					return Status.OK_STATUS;
 				}
@@ -68,14 +75,27 @@ public class NLSAction implements IActionDelegate {
 		if (iss == null) {
 			return;
 		}
-		IFile file = AdaptableUtil.to(iss.getFirstElement(), IFile.class);
-		if (file == null) {
-			return;
+		List<IFile> files = new ArrayList<IFile>();
+		for (Iterator<?> i = iss.iterator(); i.hasNext();) {
+			IFile file = AdaptableUtil.to(i.next(), IFile.class);
+			if (file != null) {
+				IPath full = file.getFullPath();
+				if ("properties".equalsIgnoreCase(full.getFileExtension())) {
+					ScopedPreferenceStore store = new ScopedPreferenceStore(
+							new ProjectScope(file.getProject()),
+							Constants.ID_PLUGIN);
+					String key = store
+							.getString(Constants.GENERATOR_TYPE(file));
+					ResourceGenerator gen = Activator
+							.createResourceGenerator(key);
+					if (gen != null) {
+						files.add(file);
+					}
+				}
+			}
 		}
-		IPath full = file.getFullPath();
-		if ("properties".equalsIgnoreCase(full.getFileExtension())) {
-			this.selected = file;
-		}
+		this.selectedFiles = files;
+		action.setEnabled(0 < this.selectedFiles.size());
 	}
 
 }

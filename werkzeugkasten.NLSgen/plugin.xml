@@ -11,15 +11,10 @@
             objectClass="org.eclipse.core.resources.IFile">
          <action
                class="werkzeugkasten.nlsgen.action.NLSAction"
+               enablesFor="+"
                id="werkzeugkasten.NLSgen.action"
                label="%action_nls">
          </action>
-         <visibility>
-            <objectState
-                  name="persistentProperty"
-                  value="werkzeugkasten.NLSgen.generatorType">
-            </objectState>
-         </visibility>
       </objectContribution>
    </extension>
    <extension
