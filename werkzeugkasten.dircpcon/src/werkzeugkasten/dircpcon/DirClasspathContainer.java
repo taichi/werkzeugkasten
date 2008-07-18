@@ -16,15 +16,20 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.osgi.util.NLS;
 
+import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.dircpcon.nls.Strings;
 
@@ -146,8 +151,11 @@ public class DirClasspathContainer implements IClasspathContainer,
 	}
 
 	public IPath getPath() {
-		return ID;
+		return ID.append(this.path);
 	}
+
+	// <classpathentry kind="con"
+	// path="werkzeugkasten.dircpcon.DIR_CLASSPATH/webproject/webapp"/>
 
 	public void resourceChanged(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
@@ -155,10 +163,28 @@ public class DirClasspathContainer implements IClasspathContainer,
 			delta.accept(new IResourceDeltaVisitor() {
 				@Override
 				public boolean visit(IResourceDelta delta) throws CoreException {
-					IResource r = delta.getResource();
+					final IResource r = delta.getResource();
 					IPath changed = r.getFullPath().makeRelative();
 					if (changed.equals(DirClasspathContainer.this.path)) {
-						DirClasspathContainer.this.entries = computeEntries();
+						new WorkspaceJob(Strings.UPDATE_CLASSPATH_CONTAINER) {
+							@Override
+							public IStatus runInWorkspace(
+									IProgressMonitor monitor)
+									throws CoreException {
+								IJavaProject p = JavaCore
+										.create(r.getProject());
+								IPath cppath = DirClasspathContainer.this
+										.getPath();
+								ClasspathEntryUtil.removeClasspathEntry(p,
+										cppath);
+								ResourcesPlugin.getWorkspace()
+										.removeResourceChangeListener(
+												DirClasspathContainer.this);
+								ClasspathEntryUtil.addClasspathContainer(p,
+										cppath);
+								return Status.OK_STATUS;
+							}
+						}.schedule();
 					}
 					return true;
 				}

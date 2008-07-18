@@ -17,6 +17,7 @@ public class Strings {
 	public static String action_addToContainer;
 	public static String plugin_author;
 	public static String DESC_DIR_CLASSPATH_CONTAINER;
+	public static String UPDATE_CLASSPATH_CONTAINER;
 
 	static {
 		Object o = Activator.getDefault().getBundle().getHeaders().get(
