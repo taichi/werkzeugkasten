@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin_name
-Bundle-SymbolicName: werkzeugkasten.dircpcon;singleton:=true
+Bundle-SymbolicName: werkzeugkasten.dirbuildpathupdater;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: werkzeugkasten.dircpcon.Activator
 Bundle-Vendor: %plugin_author

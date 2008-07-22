@@ -7,17 +7,27 @@
             adaptable="true"
             id="werkzeugkasten.dircpcon.objectContribution.folder"
             objectClass="org.eclipse.core.resources.IContainer">
+         <menu
+               id="werkzeugkasten.dircpcon.menu"
+               label="%menu_dirClasspath"
+               path="additions">
+            <groupMarker
+                  name="additions">
+            </groupMarker>
+         </menu>
          <action
                class="werkzeugkasten.dircpcon.action.RemoveClasspathDirAction"
                enablesFor="+"
                id="werkzeugkasten.dircpcon.action2"
-               label="%action_removeDirFromClasspath">
+               label="%action_removeDirFromClasspath"
+               menubarPath="werkzeugkasten.dircpcon.menu/additions">
          </action>
          <action
                class="werkzeugkasten.dircpcon.action.AddClasspathDirAction"
                enablesFor="+"
                id="werkzeugkasten.dircpcon.action1"
-               label="%action_addDirToClasspath">
+               label="%action_addDirToClasspath"
+               menubarPath="werkzeugkasten.dircpcon.menu/additions">
          </action>
       </objectContribution>
    </extension>

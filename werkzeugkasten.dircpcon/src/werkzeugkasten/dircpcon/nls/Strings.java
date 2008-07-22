@@ -20,6 +20,7 @@ public class Strings {
 	public static String UPDATE_CLASSPATH_CONTAINER;
 	public static String action_addDirToClasspath;
 	public static String action_removeDirFromClasspath;
+	public static String menu_dirClasspath;
 
 	static {
 		Object o = Activator.getDefault().getBundle().getHeaders().get(
