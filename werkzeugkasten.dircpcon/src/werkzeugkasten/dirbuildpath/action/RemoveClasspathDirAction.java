@@ -12,7 +12,7 @@ import org.eclipse.ui.IActionDelegate;
 
 import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
-import werkzeugkasten.dirbuildpath.job.RemoveDirClasspathJob;
+import werkzeugkasten.dirbuildpath.job.RemoveDirBuildpathJob;
 
 public class RemoveClasspathDirAction implements IActionDelegate {
 
@@ -31,7 +31,7 @@ public class RemoveClasspathDirAction implements IActionDelegate {
 
 		Map<IProject, List<IPath>> map = ResourceUtil.toProjectPathMap(ss
 				.iterator());
-		new RemoveDirClasspathJob(map).schedule();
+		new RemoveDirBuildpathJob(map).schedule();
 
 	}
 

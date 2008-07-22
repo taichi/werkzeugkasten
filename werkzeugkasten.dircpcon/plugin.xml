@@ -9,7 +9,7 @@
             objectClass="org.eclipse.core.resources.IContainer">
          <menu
                id="werkzeugkasten.dircpcon.menu"
-               label="%menu_dirClasspath"
+               label="%menu_dirBuildpath"
                path="additions">
             <groupMarker
                   name="additions">
@@ -19,14 +19,14 @@
                class="werkzeugkasten.dirbuildpath.action.RemoveClasspathDirAction"
                enablesFor="+"
                id="werkzeugkasten.dircpcon.action2"
-               label="%action_removeDirFromClasspath"
+               label="%action_removeDirFromBuildpath"
                menubarPath="werkzeugkasten.dircpcon.menu/additions">
          </action>
          <action
                class="werkzeugkasten.dirbuildpath.action.AddClasspathDirAction"
                enablesFor="+"
                id="werkzeugkasten.dircpcon.action1"
-               label="%action_addDirToClasspath"
+               label="%action_addDirToBuildpath"
                menubarPath="werkzeugkasten.dircpcon.menu/additions">
          </action>
       </objectContribution>
@@ -34,7 +34,7 @@
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="werkzeugkasten.dirbuildpath.DirClasspathStartup">
+            class="werkzeugkasten.dirbuildpath.DirBuildpathStartup">
       </startup>
    </extension>
 

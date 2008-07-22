@@ -16,7 +16,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.dirbuildpath.Constants;
-import werkzeugkasten.dirbuildpath.job.AddDirClasspathJob;
+import werkzeugkasten.dirbuildpath.job.AddDirBuildpathJob;
 
 public class AddClasspathDirAction implements IActionDelegate {
 
@@ -39,7 +39,7 @@ public class AddClasspathDirAction implements IActionDelegate {
 		Map<IProject, List<IPath>> map = ResourceUtil.toProjectPathMap(ss
 				.iterator());
 		for (IProject p : map.keySet()) {
-			new AddDirClasspathJob(JavaCore.create(p), new ScopedPreferenceStore(
+			new AddDirBuildpathJob(JavaCore.create(p), new ScopedPreferenceStore(
 					new ProjectScope(p), Constants.ID_PLUGIN), map.get(p))
 					.schedule();
 		}

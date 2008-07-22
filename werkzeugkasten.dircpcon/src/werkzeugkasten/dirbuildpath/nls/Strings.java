@@ -16,12 +16,11 @@ public class Strings {
 	public static String plugin_label;
 	public static String plugin_name;
 	public static String plugin_author;
-	public static String DESC_DIR_CLASSPATH_CONTAINER;
-	public static String UPDATE_CLASSPATH_CONTAINER;
-	public static String action_addDirToClasspath;
-	public static String action_removeDirFromClasspath;
-	public static String menu_dirClasspath;
-
+	public static String action_addDirToBuildpath;
+	public static String action_removeDirFromBuildpath;
+	public static String menu_dirBuildpath;
+	public static String DESC_DIR_BUILDPATH_CONTAINER;
+	public static String UPDATE_BUILDPATH_CONTAINER;
 	static {
 		Object o = Activator.getDefault().getBundle().getHeaders().get(
 				"Bundle-Localization");

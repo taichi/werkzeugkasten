@@ -4,7 +4,7 @@ import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
-public class DirClasspathStartup implements IStartup {
+public class DirBuildpathStartup implements IStartup {
 
 	@Override
 	public void earlyStartup() {

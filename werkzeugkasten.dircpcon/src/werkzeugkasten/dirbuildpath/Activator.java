@@ -13,13 +13,10 @@ import werkzeugkasten.common.resource.LogUtil;
  */
 public class Activator extends Plugin {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "werkzeugkasten.dircpcon";
-
 	// The shared instance
 	private static Activator plugin;
 
-	protected DirClasspathResourceChangeListener listener;
+	protected DirBuildpathResourceChangeListener listener;
 
 	/**
 	 * The constructor
@@ -37,7 +34,7 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		this.listener = new DirClasspathResourceChangeListener();
+		this.listener = new DirBuildpathResourceChangeListener();
 	}
 
 	/*

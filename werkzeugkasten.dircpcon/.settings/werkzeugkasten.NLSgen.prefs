@@ -1,4 +1,6 @@
-#Fri Jul 18 16:43:42 JST 2008
+#Tue Jul 22 19:12:49 JST 2008
+///werkzeugkasten.dirbuildpathupdater/plugin.properties\#generationDest=/werkzeugkasten.dirbuildpathupdater/src/werkzeugkasten/dirbuildpath/nls/Strings.java
+///werkzeugkasten.dirbuildpathupdater/plugin.properties\#generatorType=werkzeugkasten.NLSgen.eclipse.StringResourceGenerator
 ///werkzeugkasten.dircpcon/plugin.properties\#generationDest=/werkzeugkasten.dircpcon/src/werkzeugkasten/dircpcon/nls/Strings.java
 ///werkzeugkasten.dircpcon/plugin.properties\#generatorType=werkzeugkasten.NLSgen.eclipse.StringResourceGenerator
 eclipse.preferences.version=1

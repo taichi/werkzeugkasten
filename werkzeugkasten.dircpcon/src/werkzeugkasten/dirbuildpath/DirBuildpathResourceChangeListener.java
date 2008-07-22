@@ -13,9 +13,9 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import werkzeugkasten.common.util.StringUtil;
-import werkzeugkasten.dirbuildpath.job.AddDirClasspathJob;
+import werkzeugkasten.dirbuildpath.job.AddDirBuildpathJob;
 
-public class DirClasspathResourceChangeListener implements
+public class DirBuildpathResourceChangeListener implements
 		IResourceChangeListener {
 
 	@Override
@@ -41,7 +41,7 @@ public class DirClasspathResourceChangeListener implements
 						String s = this.currentPref.getString(path.toString());
 						if (StringUtil.isEmpty(s) == false
 								&& Boolean.parseBoolean(s)) {
-							new AddDirClasspathJob(JavaCore.create(this.current),
+							new AddDirBuildpathJob(JavaCore.create(this.current),
 									this.currentPref, path).schedule();
 						}
 						return false;

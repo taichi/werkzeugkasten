@@ -33,20 +33,20 @@ import werkzeugkasten.common.ui.ProgressMonitorUtil;
 import werkzeugkasten.dirbuildpath.Activator;
 import werkzeugkasten.dirbuildpath.nls.Strings;
 
-public class AddDirClasspathJob extends WorkspaceJob {
+public class AddDirBuildpathJob extends WorkspaceJob {
 
 	protected List<IPath> pathList;
 	protected IJavaProject project;
 	protected IPersistentPreferenceStore pref;
 
-	public AddDirClasspathJob(IJavaProject project,
+	public AddDirBuildpathJob(IJavaProject project,
 			IPersistentPreferenceStore store, IPath... path) {
 		this(project, store, Arrays.asList(path));
 	}
 
-	public AddDirClasspathJob(IJavaProject project,
+	public AddDirBuildpathJob(IJavaProject project,
 			IPersistentPreferenceStore store, List<IPath> pathList) {
-		super(Strings.UPDATE_CLASSPATH_CONTAINER);
+		super(Strings.UPDATE_BUILDPATH_CONTAINER);
 		this.pathList = pathList;
 		this.project = project;
 		this.pref = store;
@@ -55,7 +55,7 @@ public class AddDirClasspathJob extends WorkspaceJob {
 	@Override
 	public IStatus runInWorkspace(final IProgressMonitor monitor)
 			throws CoreException {
-		monitor.beginTask(Strings.UPDATE_CLASSPATH_CONTAINER,
+		monitor.beginTask(Strings.UPDATE_BUILDPATH_CONTAINER,
 				IProgressMonitor.UNKNOWN);
 		try {
 			Map<IPath, IClasspathEntry> ents = ClasspathEntryUtil
