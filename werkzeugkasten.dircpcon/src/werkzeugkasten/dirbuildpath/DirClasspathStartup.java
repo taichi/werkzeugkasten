@@ -1,4 +1,4 @@
-package werkzeugkasten.dircpcon;
+package werkzeugkasten.dirbuildpath;
 
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;

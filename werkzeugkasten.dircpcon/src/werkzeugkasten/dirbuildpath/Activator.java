@@ -1,4 +1,4 @@
-package werkzeugkasten.dircpcon;
+package werkzeugkasten.dirbuildpath;
 
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;

@@ -1,4 +1,4 @@
-package werkzeugkasten.dircpcon;
+package werkzeugkasten.dirbuildpath;
 
 
 public final class Constants {

@@ -1,11 +1,11 @@
 /**
  * 
  */
-package werkzeugkasten.dircpcon.nls;
+package werkzeugkasten.dirbuildpath.nls;
 
 import org.eclipse.osgi.util.NLS;
 
-import werkzeugkasten.dircpcon.Activator;
+import werkzeugkasten.dirbuildpath.Activator;
 
 /**
  * @author taichi

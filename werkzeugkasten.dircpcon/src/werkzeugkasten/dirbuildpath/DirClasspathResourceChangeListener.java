@@ -1,4 +1,4 @@
-package werkzeugkasten.dircpcon;
+package werkzeugkasten.dirbuildpath;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -13,7 +13,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import werkzeugkasten.common.util.StringUtil;
-import werkzeugkasten.dircpcon.job.AddDirClasspathJob;
+import werkzeugkasten.dirbuildpath.job.AddDirClasspathJob;
 
 public class DirClasspathResourceChangeListener implements
 		IResourceChangeListener {

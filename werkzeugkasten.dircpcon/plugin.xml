@@ -16,14 +16,14 @@
             </groupMarker>
          </menu>
          <action
-               class="werkzeugkasten.dircpcon.action.RemoveClasspathDirAction"
+               class="werkzeugkasten.dirbuildpath.action.RemoveClasspathDirAction"
                enablesFor="+"
                id="werkzeugkasten.dircpcon.action2"
                label="%action_removeDirFromClasspath"
                menubarPath="werkzeugkasten.dircpcon.menu/additions">
          </action>
          <action
-               class="werkzeugkasten.dircpcon.action.AddClasspathDirAction"
+               class="werkzeugkasten.dirbuildpath.action.AddClasspathDirAction"
                enablesFor="+"
                id="werkzeugkasten.dircpcon.action1"
                label="%action_addDirToClasspath"
@@ -34,7 +34,7 @@
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="werkzeugkasten.dircpcon.DirClasspathStartup">
+            class="werkzeugkasten.dirbuildpath.DirClasspathStartup">
       </startup>
    </extension>
 

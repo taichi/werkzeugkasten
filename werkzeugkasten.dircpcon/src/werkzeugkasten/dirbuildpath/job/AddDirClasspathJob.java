@@ -1,4 +1,4 @@
-package werkzeugkasten.dircpcon.job;
+package werkzeugkasten.dirbuildpath.job;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,8 +30,8 @@ import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.common.resource.StatusUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.ui.ProgressMonitorUtil;
-import werkzeugkasten.dircpcon.Activator;
-import werkzeugkasten.dircpcon.nls.Strings;
+import werkzeugkasten.dirbuildpath.Activator;
+import werkzeugkasten.dirbuildpath.nls.Strings;
 
 public class AddDirClasspathJob extends WorkspaceJob {
 

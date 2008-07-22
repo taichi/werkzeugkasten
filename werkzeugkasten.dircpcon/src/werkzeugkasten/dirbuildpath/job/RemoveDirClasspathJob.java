@@ -1,4 +1,4 @@
-package werkzeugkasten.dircpcon.job;
+package werkzeugkasten.dirbuildpath.job;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -23,9 +23,9 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import werkzeugkasten.common.jdt.ClasspathEntryUtil;
-import werkzeugkasten.dircpcon.Activator;
-import werkzeugkasten.dircpcon.Constants;
-import werkzeugkasten.dircpcon.nls.Strings;
+import werkzeugkasten.dirbuildpath.Activator;
+import werkzeugkasten.dirbuildpath.Constants;
+import werkzeugkasten.dirbuildpath.nls.Strings;
 
 public class RemoveDirClasspathJob extends WorkspaceJob {
 
