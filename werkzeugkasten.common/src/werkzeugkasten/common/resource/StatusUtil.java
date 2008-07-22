@@ -12,6 +12,10 @@ public class StatusUtil {
 				message, throwable);
 	}
 
+	public static IStatus createError(Plugin plugin, Throwable throwable) {
+		return createError(plugin, IStatus.ERROR, throwable);
+	}
+
 	public static IStatus createError(Plugin plugin, int code,
 			Throwable throwable) {
 		String message = throwable.getMessage();

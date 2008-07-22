@@ -3,6 +3,11 @@ package werkzeugkasten.common.resource;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -130,6 +135,23 @@ public class ResourceUtil {
 		if (newone != null && newone.exists() == false) {
 			newone.create(new BufferedInputStream(u.openStream()), true, null);
 		}
+	}
+
+	public static Map<IProject, List<IPath>> toProjectPathMap(Iterator<?> i) {
+		Map<IProject, List<IPath>> map = new LinkedHashMap<IProject, List<IPath>>();
+		while (i.hasNext()) {
+			IContainer c = AdaptableUtil.to(i.next(), IContainer.class);
+			if (c != null) {
+				IProject p = c.getProject();
+				List<IPath> list = map.get(p);
+				if (list == null) {
+					list = new ArrayList<IPath>();
+					map.put(p, list);
+				}
+				list.add(c.getFullPath());
+			}
+		}
+		return map;
 	}
 
 }
