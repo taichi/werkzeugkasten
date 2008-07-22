@@ -2,11 +2,30 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.eclipse.jdt.core.classpathContainerInitializer">
-      <classpathContainerInitializer
-            class="werkzeugkasten.dircpcon.DirClasspathContainerInitializer"
-            id="werkzeugkasten.dircpcon.DIR_CLASSPATH">
-      </classpathContainerInitializer>
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="werkzeugkasten.dircpcon.objectContribution.folder"
+            objectClass="org.eclipse.core.resources.IContainer">
+         <action
+               class="werkzeugkasten.dircpcon.action.RemoveClasspathDirAction"
+               enablesFor="+"
+               id="werkzeugkasten.dircpcon.action2"
+               label="%action_removeDirFromClasspath">
+         </action>
+         <action
+               class="werkzeugkasten.dircpcon.action.AddClasspathDirAction"
+               enablesFor="+"
+               id="werkzeugkasten.dircpcon.action1"
+               label="%action_addDirToClasspath">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="werkzeugkasten.dircpcon.DirClasspathStartup">
+      </startup>
    </extension>
 
 </plugin>
