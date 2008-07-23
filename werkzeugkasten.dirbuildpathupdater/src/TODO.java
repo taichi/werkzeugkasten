@@ -8,4 +8,5 @@ public class TODO {
 	// XXX VARIABLEをresolveして、そのディレクトリにあるjarとzipをclasspath
 	// 現在のdircpContainerを、通常のclasspathにexport
 	// dirclasspathcontainerのコンテキストメニューから通常のclasspathにexport
+	// XXX build pathとして使用しているディレクトリのラベルを弄る。
 }

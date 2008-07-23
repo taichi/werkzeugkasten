@@ -30,7 +30,9 @@ import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.common.resource.StatusUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.ui.ProgressMonitorUtil;
+import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
 import werkzeugkasten.dirbuildpath.Activator;
+import werkzeugkasten.dirbuildpath.Constants;
 import werkzeugkasten.dirbuildpath.nls.Strings;
 
 public class AddDirBuildpathJob extends WorkspaceJob {
@@ -76,6 +78,12 @@ public class AddDirBuildpathJob extends WorkspaceJob {
 			IClasspathEntry[] ary = c.toArray(new IClasspathEntry[c.size()]);
 			this.project.setRawClasspath(ary, monitor);
 			this.pref.save();
+
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			for (IPath p : this.pathList) {
+				AbstractLightweightLabelDecorator.updateDecorators(
+						Constants.ID_DECORATOR, root.findMember(p));
+			}
 			return Status.OK_STATUS;
 		} catch (IOException e) {
 			throw new CoreException(StatusUtil.createError(Activator

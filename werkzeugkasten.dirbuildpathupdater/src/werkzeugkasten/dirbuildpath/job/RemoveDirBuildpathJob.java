@@ -24,6 +24,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import werkzeugkasten.common.jdt.ClasspathEntryUtil;
 import werkzeugkasten.common.ui.ProgressMonitorUtil;
+import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
 import werkzeugkasten.dirbuildpath.Activator;
 import werkzeugkasten.dirbuildpath.Constants;
 import werkzeugkasten.dirbuildpath.nls.Strings;
@@ -71,6 +72,8 @@ public class RemoveDirBuildpathJob extends WorkspaceJob {
 								}
 							});
 						}
+						AbstractLightweightLabelDecorator.updateDecorators(
+								Constants.ID_DECORATOR, r);
 					}
 					Collection<IClasspathEntry> c = ents.values();
 					javap.setRawClasspath(c.toArray(new IClasspathEntry[c
