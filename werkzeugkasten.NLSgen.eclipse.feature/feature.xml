@@ -2,7 +2,7 @@
 <feature
       id="werkzeugkasten.NLSgen.eclipse.feature"
       label="NLSgen for eclipse"
-      version="0.0.3"
+      version="0.0.4"
       provider-name="ryushi">
 
    <description url="http://code.google.com/p/werkzeugkasten/">
@@ -426,16 +426,16 @@
       <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="werkzeugkasten.NLSgen" version="0.0.3" match="greaterOrEqual"/>
       <import plugin="org.eclipse.pde.core" version="3.4.0" match="greaterOrEqual"/>
-      <import feature="werkzeugkasten.NLSgen.feature" version="0.0.3" match="greaterOrEqual"/>
+      <import feature="werkzeugkasten.NLSgen.feature" version="0.0.4" match="greaterOrEqual"/>
+      <import plugin="werkzeugkasten.NLSgen" version="0.0.4" match="greaterOrEqual"/>
    </requires>
 
    <plugin
          id="werkzeugkasten.NLSgen.eclipse"
          download-size="0"
          install-size="0"
-         version="0.0.3"
+         version="0.0.4"
          unpack="false"/>
 
 </feature>

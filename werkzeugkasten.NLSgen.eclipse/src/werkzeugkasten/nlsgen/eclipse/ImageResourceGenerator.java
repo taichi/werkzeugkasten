@@ -1,5 +1,7 @@
 package werkzeugkasten.nlsgen.eclipse;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -86,6 +88,14 @@ public class ImageResourceGenerator extends StringResourceGenerator {
 
 		formatCU(javap, ln, unit);
 		return unit;
+	}
+
+	protected static final Pattern isImage = Pattern
+			.compile("((org\\.eclipse\\.jface\\.resource\\.)?ImageDescriptor|(org\\.eclipse\\.swt\\.graphics\\.)?Image)");
+
+	@Override
+	protected boolean matches(String resolvedTypeName) {
+		return isImage.matcher(resolvedTypeName).matches();
 	}
 
 	@Override

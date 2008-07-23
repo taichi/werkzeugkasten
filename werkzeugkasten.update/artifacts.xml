@@ -3,7 +3,7 @@
 <repository name='file:/D:/development/java/workspace-3.4/werkzeugkasten.update/ - artifacts' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1'>
   <properties size='2'>
     <property name='p2.compressed' value='false'/>
-    <property name='p2.timestamp' value='1216204569627'/>
+    <property name='p2.timestamp' value='1216781295304'/>
   </properties>
   <mappings size='3'>
     <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
@@ -25,17 +25,18 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='werkzeugkasten.NLSgen' version='0.0.3'>
+    <artifact classifier='osgi.bundle' id='werkzeugkasten.NLSgen' version='0.0.4'>
       <properties size='3'>
-        <property name='artifact.size' value='84218'/>
-        <property name='download.size' value='84218'/>
+        <property name='artifact.size' value='84263'/>
+        <property name='download.size' value='84263'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.NLSgen.eclipse.feature' version='0.0.3'>
-      <properties size='2'>
-        <property name='artifact.size' value='4986'/>
-        <property name='download.size' value='4986'/>
+    <artifact classifier='osgi.bundle' id='werkzeugkasten.NLSgen.eclipse' version='0.0.4'>
+      <properties size='3'>
+        <property name='artifact.size' value='12434'/>
+        <property name='download.size' value='12434'/>
+        <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='werkzeugkasten.docs' version='0.0.3'>
@@ -51,17 +52,16 @@
         <property name='download.size' value='5408'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.NLSgen.feature' version='0.0.4'>
+      <properties size='2'>
+        <property name='artifact.size' value='4984'/>
+        <property name='download.size' value='4984'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher.tomcat55' version='0.0.3'>
       <properties size='3'>
         <property name='artifact.size' value='4623172'/>
         <property name='download.size' value='4623172'/>
-        <property name='download.contentType' value='application/zip'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='werkzeugkasten.NLSgen.eclipse' version='0.0.3'>
-      <properties size='3'>
-        <property name='artifact.size' value='12186'/>
-        <property name='download.size' value='12186'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
@@ -70,6 +70,12 @@
         <property name='artifact.size' value='16065384'/>
         <property name='download.size' value='16065384'/>
         <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.NLSgen.eclipse.feature' version='0.0.4'>
+      <properties size='2'>
+        <property name='artifact.size' value='4983'/>
+        <property name='download.size' value='4983'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher.sdloader' version='0.0.2'>
@@ -97,12 +103,6 @@
       <properties size='2'>
         <property name='artifact.size' value='5386'/>
         <property name='download.size' value='5386'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.NLSgen.feature' version='0.0.3'>
-      <properties size='2'>
-        <property name='artifact.size' value='4984'/>
-        <property name='download.size' value='4984'/>
       </properties>
     </artifact>
     <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.editor.feature' version='0.0.5'>

@@ -99,8 +99,7 @@ public class SingleLocaleStringsGenerator extends MultiLocaleStringsGenerator {
 			}
 			String t = f.getTypeSignature();
 
-			if (isString.matcher(TypeUtil.getResolvedTypeName(t, type))
-					.matches()) {
+			if (matches(TypeUtil.getResolvedTypeName(t, type))) {
 				String name = f.getElementName();
 				if (props.containsKey(name) == false && f.exists()) {
 					f.delete(true, null);
@@ -120,6 +119,10 @@ public class SingleLocaleStringsGenerator extends MultiLocaleStringsGenerator {
 			}
 		}
 
+	}
+
+	protected boolean matches(String resolvedTypeName) {
+		return isString.matcher(resolvedTypeName).matches();
 	}
 
 	protected String createFiledContent(IType type, String name) {
