@@ -15,7 +15,7 @@
    <feature url="features/werkzeugkasten.NLSgen.eclipse.feature_0.0.4.jar" id="werkzeugkasten.NLSgen.eclipse.feature" version="0.0.4">
       <category name="Misc"/>
    </feature>
-   <feature url="features/werkzeugkasten.dirbuildpathupdater.feature_0.0.1.jar" id="werkzeugkasten.dirbuildpathupdater.feature" version="0.0.1">
+   <feature url="features/werkzeugkasten.dirbuildpathupdater.feature_0.0.2.jar" id="werkzeugkasten.dirbuildpathupdater.feature" version="0.0.2">
       <category name="Misc"/>
    </feature>
    <category-def name="DbLauncher" label="DbLauncher">
