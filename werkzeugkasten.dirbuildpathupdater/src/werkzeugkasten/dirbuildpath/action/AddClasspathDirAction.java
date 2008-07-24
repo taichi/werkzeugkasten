@@ -39,9 +39,13 @@ public class AddClasspathDirAction implements IActionDelegate {
 		Map<IProject, List<IPath>> map = ResourceUtil.toProjectPathMap(ss
 				.iterator());
 		for (IProject p : map.keySet()) {
-			new AddDirBuildpathJob(JavaCore.create(p), new ScopedPreferenceStore(
-					new ProjectScope(p), Constants.ID_PLUGIN), map.get(p))
-					.schedule();
+			new AddDirBuildpathJob(JavaCore.create(p),
+					new ScopedPreferenceStore(new ProjectScope(p),
+							Constants.ID_PLUGIN), map.get(p)) {
+				{
+					this.forceupdate = true;
+				}
+			}.schedule();
 		}
 	}
 

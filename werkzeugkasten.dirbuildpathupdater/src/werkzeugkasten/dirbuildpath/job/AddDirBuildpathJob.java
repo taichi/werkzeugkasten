@@ -40,6 +40,7 @@ public class AddDirBuildpathJob extends WorkspaceJob {
 	protected List<IPath> pathList;
 	protected IJavaProject project;
 	protected IPersistentPreferenceStore pref;
+	protected boolean forceupdate;
 
 	public AddDirBuildpathJob(IJavaProject project,
 			IPersistentPreferenceStore store, IPath... path) {
@@ -67,7 +68,7 @@ public class AddDirBuildpathJob extends WorkspaceJob {
 				ProgressMonitorUtil.isCanceled(monitor, 1);
 				for (IClasspathEntry ce : map.values()) {
 					IPath p = ce.getPath();
-					if (ents.containsKey(p) == false) {
+					if (this.forceupdate || ents.containsKey(p) == false) {
 						ents.put(p, ce);
 					}
 				}
