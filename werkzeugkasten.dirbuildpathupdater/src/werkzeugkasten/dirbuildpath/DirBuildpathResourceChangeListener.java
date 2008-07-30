@@ -21,35 +21,41 @@ public class DirBuildpathResourceChangeListener implements
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		try {
-			event.getDelta().accept(new IResourceDeltaVisitor() {
-				protected IProject current;
-				protected ScopedPreferenceStore currentPref;
+			IResourceDelta delta = event.getDelta();
+			if (delta != null) {
+				delta.accept(new IResourceDeltaVisitor() {
+					protected IProject current;
+					protected ScopedPreferenceStore currentPref;
 
-				@Override
-				public boolean visit(IResourceDelta delta) throws CoreException {
-					IResource r = delta.getResource();
-					switch (r.getType()) {
-					case IResource.PROJECT: {
-						IProject p = r.getProject();
-						this.current = p;
-						this.currentPref = new ScopedPreferenceStore(
-								new ProjectScope(p), Constants.ID_PLUGIN);
+					@Override
+					public boolean visit(IResourceDelta delta)
+							throws CoreException {
+						IResource r = delta.getResource();
+						switch (r.getType()) {
+						case IResource.PROJECT: {
+							IProject p = r.getProject();
+							this.current = p;
+							this.currentPref = new ScopedPreferenceStore(
+									new ProjectScope(p), Constants.ID_PLUGIN);
+							return true;
+						}
+						case IResource.FOLDER: {
+							IPath path = r.getFullPath();
+							String s = this.currentPref.getString(path
+									.toString());
+							if (StringUtil.isEmpty(s) == false
+									&& Boolean.parseBoolean(s)) {
+								new AddDirBuildpathJob(JavaCore
+										.create(this.current),
+										this.currentPref, path).schedule();
+							}
+							return false;
+						}
+						}
 						return true;
 					}
-					case IResource.FOLDER: {
-						IPath path = r.getFullPath();
-						String s = this.currentPref.getString(path.toString());
-						if (StringUtil.isEmpty(s) == false
-								&& Boolean.parseBoolean(s)) {
-							new AddDirBuildpathJob(JavaCore.create(this.current),
-									this.currentPref, path).schedule();
-						}
-						return false;
-					}
-					}
-					return true;
-				}
-			});
+				});
+			}
 		} catch (CoreException e) {
 			Activator.log(e);
 		}
