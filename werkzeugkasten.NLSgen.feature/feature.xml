@@ -2,7 +2,7 @@
 <feature
       id="werkzeugkasten.NLSgen.feature"
       label="NLSgen"
-      version="0.0.4"
+      version="0.0.5"
       provider-name="ryushi">
 
    <description url="http://code.google.com/p/werkzeugkasten/">
@@ -437,7 +437,7 @@
          id="werkzeugkasten.NLSgen"
          download-size="0"
          install-size="0"
-         version="0.0.4"
+         version="0.0.5"
          unpack="false"/>
 
 </feature>
