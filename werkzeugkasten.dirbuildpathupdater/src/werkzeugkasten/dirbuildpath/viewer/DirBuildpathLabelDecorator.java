@@ -1,8 +1,8 @@
 package werkzeugkasten.dirbuildpath.viewer;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -20,13 +20,15 @@ public class DirBuildpathLabelDecorator extends
 	public void decorate(Object element, IDecoration decoration) {
 		IContainer c = AdaptableUtil.to(element, IContainer.class);
 		if (c != null) {
-			IPath p = c.getFullPath();
-			IPreferenceStore pref = new ScopedPreferenceStore(new ProjectScope(
-					c.getProject()), Constants.ID_PLUGIN);
-			String is = pref.getString(p.toString());
-			if (StringUtil.isEmpty(is) == false && Boolean.parseBoolean(is)) {
-				decoration.addOverlay(Images.AS_BUILDPATH,
-						IDecoration.BOTTOM_LEFT);
+			IProject p = c.getProject();
+			if (p != null) { // IWorkspaceRootの場合、project参照をとる事が出来ない。
+				IPreferenceStore pref = new ScopedPreferenceStore(
+						new ProjectScope(p), Constants.ID_PLUGIN);
+				String is = pref.getString(c.getFullPath().toString());
+				if (StringUtil.isEmpty(is) == false && Boolean.parseBoolean(is)) {
+					decoration.addOverlay(Images.AS_BUILDPATH,
+							IDecoration.BOTTOM_LEFT);
+				}
 			}
 		}
 	}

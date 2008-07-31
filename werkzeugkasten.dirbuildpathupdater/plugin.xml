@@ -48,9 +48,16 @@
             location="BOTTOM_LEFT"
             state="true">
          <enablement>
-            <objectClass
-                  name="org.eclipse.core.resources.IContainer">
-            </objectClass>
+            <and>
+               <objectClass
+                     name="org.eclipse.core.resources.IContainer">
+               </objectClass>
+               <not>
+                  <objectClass
+                        name="org.eclipse.core.resources.IWorkspaceRoot">
+                  </objectClass>
+               </not>
+            </and>
          </enablement>
       </decorator>
    </extension>
