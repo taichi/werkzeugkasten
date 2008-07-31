@@ -16,8 +16,18 @@ public class MultiLocaleStrings {
 		this.bundles.put(bundle.getLocale().getLanguage(), bundle);
 	}
 
-	protected String getMessage(Locale locale, String key) {
+	protected String getMessage(Locale locale, String key, Object... objects) {
 		ResourceBundle rb = this.bundles.get(locale.getLanguage());
-		return rb != null ? rb.getString(key) : null;
+		if (rb == null) {
+			rb = this.bundles.get("");
+			if (rb == null) {
+				return null;
+			}
+		}
+		String s = rb.getString(key);
+		if (objects != null && 0 < objects.length) {
+			return String.format(s, objects);
+		}
+		return s;
 	}
 }

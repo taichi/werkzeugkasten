@@ -282,6 +282,9 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 	protected static final Pattern isLocale = Pattern
 			.compile("(java\\.util\\.)?Locale");
 
+	protected static final Pattern isObjectArray = Pattern
+			.compile("(java\\.lang\\.)?Object\\[\\]");
+
 	protected void merge(Properties props, IType type, IProgressMonitor monitor)
 			throws Exception {
 		monitor = ProgressMonitorUtil.care(monitor);
@@ -293,9 +296,12 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 			ProgressMonitorUtil.isCanceled(monitor, 1);
 			String[] types = m.getParameterTypes();
 			if (types != null
-					&& types.length == 1
+					&& types.length == 2
 					&& isLocale.matcher(
 							TypeUtil.getResolvedTypeName(types[0], type))
+							.matches()
+					&& isObjectArray.matcher(
+							TypeUtil.getResolvedTypeName(types[1], type))
 							.matches()) {
 				String name = m.getElementName();
 				if (props.containsKey(name) == false && m.exists()) {
@@ -337,9 +343,9 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 		StringBuilder stb = new StringBuilder();
 		stb.append("public String ");
 		stb.append(name);
-		stb.append("(Locale l) { return getMessage(l, \"");
+		stb.append("(Locale l, Object...objects) { return getMessage(l, \"");
 		stb.append(name);
-		stb.append("\");}");
+		stb.append("\",objects);}");
 		return stb.toString();
 	}
 
