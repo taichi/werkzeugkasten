@@ -18,6 +18,9 @@
    <feature url="features/werkzeugkasten.dirbuildpathupdater.feature_0.0.3.jar" id="werkzeugkasten.dirbuildpathupdater.feature" version="0.0.3">
       <category name="Misc"/>
    </feature>
+   <feature url="features/werkzeugkasten.resource.synchronizer.feature_0.0.5.jar" id="werkzeugkasten.resource.synchronizer.feature" version="0.0.5">
+      <category name="ResourceSynchronizer"/>
+   </feature>
    <category-def name="DbLauncher" label="DbLauncher">
       <description>
          Launching Plugin for H2.
@@ -29,4 +32,5 @@
       </description>
    </category-def>
    <category-def name="Misc" label="Misc"/>
+   <category-def name="ResourceSynchronizer" label="ResourceSynchronizer"/>
 </site>
