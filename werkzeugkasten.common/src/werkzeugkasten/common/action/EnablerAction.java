@@ -152,8 +152,9 @@ public abstract class EnablerAction implements IWorkbenchWindowActionDelegate,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.seasar.eclipse.common.action.AbstractProjectAction#selectionChanged(org.eclipse.jface.action.IAction,
-	 *      org.eclipse.jface.viewers.ISelection)
+	 * @see
+	 * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
+	 * .IAction, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 		maybeEnabled();
