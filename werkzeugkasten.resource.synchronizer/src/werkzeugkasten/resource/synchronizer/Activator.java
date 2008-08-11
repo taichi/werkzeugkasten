@@ -18,7 +18,7 @@ import werkzeugkasten.resource.synchronizer.server.JettyLauncher;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.seasar.resource.synchronizer";
+	public static final String PLUGIN_ID = "werkzeugkasten.resource.synchronizer";
 
 	// The shared instance
 	private static Activator plugin;
