@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
+   <extension-point id="servlet" name="servlet" schema="schema/servlet.exsd"/>
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
@@ -45,6 +46,29 @@
             id="werkzeugkasten.resource.synchronizer.wizard.debug"
             name="%wizard.debug.name">
       </wizard>
+   </extension>
+   <extension
+         point="werkzeugkasten.resource.synchronizer.servlet">
+      <servlet
+            class="werkzeugkasten.resource.synchronizer.servlet.RefreshServlet"
+            url-pattern="/">
+      </servlet>
+      <servlet
+            class="werkzeugkasten.resource.synchronizer.servlet.RefreshServlet"
+            url-pattern="/refresh">
+      </servlet>
+      <servlet
+            class="werkzeugkasten.resource.synchronizer.servlet.ListServlet"
+            url-pattern="/list">
+      </servlet>
+      <servlet
+            class="werkzeugkasten.resource.synchronizer.servlet.SrcLocationServlet"
+            url-pattern="/srcloc">
+      </servlet>
+      <servlet
+            class="werkzeugkasten.resource.synchronizer.servlet.SelectionServlet"
+            url-pattern="/select">
+      </servlet>
    </extension>
 
 </plugin>
