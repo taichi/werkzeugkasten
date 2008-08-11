@@ -1,18 +1,3 @@
-/*
- * Copyright 2008 the Seasar Foundation and the Others.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
 package werkzeugkasten.resource.synchronizer.servlet;
 
 import java.io.IOException;
@@ -44,9 +29,9 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.progress.WorkbenchJob;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.seasar.eclipse.common.resource.ResourceUtil;
-import org.seasar.eclipse.common.runtime.AdaptableUtil;
 
+import werkzeugkasten.common.resource.ProjectUtil;
+import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.resource.synchronizer.Activator;
 import werkzeugkasten.resource.synchronizer.util.JavascriptUtil;
 
@@ -82,7 +67,7 @@ public class SelectionServlet extends HttpServlet {
 		String code = NOT_FOUND_CODE;
 
 		try {
-			IProject project = ResourceUtil.getProject(req
+			IProject project = ProjectUtil.getProject(req
 					.getParameter("project"));
 			if (project != null) {
 				IJavaProject javap = JavaCore.create(project);
