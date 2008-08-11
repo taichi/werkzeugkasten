@@ -23,3 +23,12 @@ Bundle-ClassPath: .,
  lib/servlet-api-2.5-6.1.5.jar,
  lib/nlsgen-runtime-eclipse.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: werkzeugkasten.resource.synchronizer,
+ werkzeugkasten.resource.synchronizer.action,
+ werkzeugkasten.resource.synchronizer.job,
+ werkzeugkasten.resource.synchronizer.nls,
+ werkzeugkasten.resource.synchronizer.server,
+ werkzeugkasten.resource.synchronizer.servlet,
+ werkzeugkasten.resource.synchronizer.startup,
+ werkzeugkasten.resource.synchronizer.util,
+ werkzeugkasten.resource.synchronizer.wizard
