@@ -20,5 +20,6 @@ Bundle-Vendor: %plugin.author
 Bundle-ClassPath: .,
  lib/jetty-6.1.5.jar,
  lib/jetty-util-6.1.5.jar,
- lib/servlet-api-2.5-6.1.5.jar
+ lib/servlet-api-2.5-6.1.5.jar,
+ lib/nlsgen-runtime-eclipse.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
