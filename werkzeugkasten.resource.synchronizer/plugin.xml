@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="werkzeugkasten.resource.synchronizer.actionSet"
+            label="%plugin.label"
+            visible="true">
+         <menu
+               id="werkzeugkasten.resource.synchronizer.menu"
+               label="%plugin.label">
+            <groupMarker
+                  name="werkzeugkasten.resource.synchronizer.groupMarker">
+            </groupMarker>
+         </menu>
+         <action
+               class="werkzeugkasten.resource.synchronizer.action.ToggleServerAction"
+               icon="icons/refresh_start.gif"
+               id="werkzeugkasten.resource.synchronizer.action.toggle"
+               label="%start"
+               menubarPath="werkzeugkasten.resource.synchronizer.menu/werkzeugkasten.resource.synchronizer.groupMarker"
+               toolbarPath="werkzeugkasten.resource.synchronizer.menu/werkzeugkasten.resource.synchronizer.groupMarker">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="werkzeugkasten.resource.synchronizer.startup.ServerStartup">
+      </startup>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="werkzeugkasten.resource.synchronizer.category"
+            name="%plugin.name">
+      </category>
+      <wizard
+            canFinishEarly="false"
+            category="werkzeugkasten.resource.synchronizer.category"
+            class="werkzeugkasten.resource.synchronizer.wizard.DebugJspCreationWizard"
+            hasPages="true"
+            icon="icons/jsp.png"
+            id="werkzeugkasten.resource.synchronizer.wizard.debug"
+            name="%wizard.debug.name">
+      </wizard>
+   </extension>
+
+</plugin>
