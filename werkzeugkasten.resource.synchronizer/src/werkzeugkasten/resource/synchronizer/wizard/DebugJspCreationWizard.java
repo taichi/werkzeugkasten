@@ -1,18 +1,3 @@
-/*
- * Copyright 2008 the Seasar Foundation and the Others.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
 package werkzeugkasten.resource.synchronizer.wizard;
 
 import java.io.BufferedInputStream;
@@ -28,6 +13,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,8 +26,9 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.osgi.framework.Bundle;
-import org.seasar.eclipse.common.resource.ResourceUtil;
 
+import werkzeugkasten.common.resource.ResourceUtil;
+import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.resource.synchronizer.Activator;
 import werkzeugkasten.resource.synchronizer.nls.Strings;
 
@@ -67,8 +54,8 @@ public class DebugJspCreationWizard extends BasicNewResourceWizard implements
 		setWindowTitle(Strings.TITLE_NEW_DEBUG_JSP);
 		setNeedsProgressMonitor(true);
 
-		this.project = ResourceUtil.toProject(currentSelection
-				.getFirstElement());
+		this.project = AdaptableUtil.to(currentSelection.getFirstElement(),
+				IProject.class);
 	}
 
 	@Override
@@ -87,7 +74,7 @@ public class DebugJspCreationWizard extends BasicNewResourceWizard implements
 	public boolean performFinish() {
 		IPath root = new Path(this.creationWizardPage.getContextRoot());
 		IPath out = new Path(this.creationWizardPage.getOutputDir());
-		IWorkspaceRoot wr = ResourceUtil.getResourceRoot();
+		IWorkspaceRoot wr = ResourcesPlugin.getWorkspace().getRoot();
 		ResourceUtil.createDir(wr, out.toString());
 		final IFolder folder = wr.getFolder(out);
 		if (folder == null) {
