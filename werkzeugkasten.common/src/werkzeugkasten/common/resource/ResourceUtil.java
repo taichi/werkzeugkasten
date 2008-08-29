@@ -27,6 +27,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import werkzeugkasten.common.runtime.AdaptableUtil;
+import werkzeugkasten.common.runtime.LogUtil;
 import werkzeugkasten.common.ui.WorkbenchUtil;
 
 public class ResourceUtil {

@@ -9,9 +9,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 
-import werkzeugkasten.common.resource.LogUtil;
 import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
+import werkzeugkasten.common.runtime.LogUtil;
 
 /**
  * @author taichi

@@ -8,7 +8,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 
-import werkzeugkasten.common.resource.LogUtil;
+import werkzeugkasten.common.runtime.LogUtil;
 import werkzeugkasten.common.util.StringUtil;
 
 /**

@@ -7,7 +7,7 @@ import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IProcess;
 
-import werkzeugkasten.common.resource.LogUtil;
+import werkzeugkasten.common.runtime.LogUtil;
 
 /**
  * @author taichi

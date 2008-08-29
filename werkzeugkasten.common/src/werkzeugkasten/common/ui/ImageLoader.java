@@ -14,7 +14,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-import werkzeugkasten.common.resource.LogUtil;
+import werkzeugkasten.common.runtime.LogUtil;
 
 public class ImageLoader {
 

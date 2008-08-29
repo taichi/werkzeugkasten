@@ -1,4 +1,4 @@
-package werkzeugkasten.common.resource;
+package werkzeugkasten.common.runtime;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;

@@ -10,8 +10,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
-import werkzeugkasten.common.resource.LogUtil;
 import werkzeugkasten.common.runtime.ExtensionAcceptor;
+import werkzeugkasten.common.runtime.LogUtil;
 
 public class ConfigurationFacetRegistry {
 
