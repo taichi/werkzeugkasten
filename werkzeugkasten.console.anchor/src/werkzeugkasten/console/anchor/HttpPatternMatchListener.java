@@ -34,7 +34,7 @@ public class HttpPatternMatchListener implements IPatternMatchListenerDelegate {
 			this.console.addHyperlink(new URLHyperLink(url), event.getOffset(),
 					event.getLength());
 		} catch (Exception e) {
-			e.printStackTrace();
+			Activator.log(e);
 		}
 	}
 
@@ -67,7 +67,7 @@ public class HttpPatternMatchListener implements IPatternMatchListenerDelegate {
 					browser.openURL(this.url);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				Activator.log(e);
 			}
 		}
 
