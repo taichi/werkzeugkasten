@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin_name
 Bundle-SymbolicName: werkzeugkasten.dirbuildpathupdater;singleton:=true
-Bundle-Version: 0.0.3
+Bundle-Version: 0.0.4
 Bundle-Activator: werkzeugkasten.dirbuildpath.Activator
 Bundle-Vendor: %plugin_author
 Bundle-Localization: plugin
