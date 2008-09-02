@@ -21,7 +21,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -90,16 +92,16 @@ public class ResourceUtil {
 		IProject result = null;
 		IWorkbenchWindow window = WorkbenchUtil.getWorkbenchWindow();
 		if (window != null) {
-			result = getCurrentSelectedResouce(window, IProject.class);
-			if (result == null) {
+			IResource r = getCurrentSelectedResouce(window, IResource.class);
+			if (r == null) {
 				Object o = getCurrentSelectedResouce(window);
 				result = AdaptableUtil.to(o, IProject.class);
 				if (result == null) {
-					IResource r = AdaptableUtil.to(o, IResource.class);
-					if (r != null) {
-						result = r.getProject();
-					}
+					r = AdaptableUtil.to(o, IResource.class);
 				}
+			}
+			if (r != null) {
+				result = r.getProject();
 			}
 		}
 		return result;
@@ -110,10 +112,19 @@ public class ResourceUtil {
 		IWorkbenchPage page = window.getActivePage();
 		if (page != null) {
 			// getActiveEditorで取れる参照は、フォーカスがどこにあってもアクティブなエディタの参照が取れてしまう為。
-			IWorkbenchPart part = page.getActivePart();
-			if (part instanceof IEditorPart) {
-				IEditorPart editor = (IEditorPart) part;
-				return AdaptableUtil.to(editor.getEditorInput(), clazz);
+			IWorkbenchPart wpart = page.getActivePart();
+			IEditorPart part = AdaptableUtil.to(wpart, IEditorPart.class);
+			if (part != null) {
+				IEditorInput input = part.getEditorInput();
+				T result = AdaptableUtil.to(input, clazz);
+				if (result == null) {
+					IFileEditorInput file = AdaptableUtil.to(input,
+							IFileEditorInput.class);
+					if (file != null) {
+						return AdaptableUtil.to(file.getFile(), clazz);
+					}
+				}
+				return result;
 			}
 		}
 		return null;
