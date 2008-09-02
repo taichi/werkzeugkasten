@@ -14,8 +14,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-import werkzeugkasten.common.resource.LogUtil;
 import werkzeugkasten.common.runtime.ExtensionAcceptor;
+import werkzeugkasten.common.runtime.LogUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.nlsgen.listener.PropertiesChangeListener;
 
