@@ -244,4 +244,22 @@ public class Activator extends AbstractUIPlugin {
 		}
 	}
 
+	public static String getBundleVersion() {
+		return getDefault().getBundle().getHeaders().get(
+				org.osgi.framework.Constants.BUNDLE_VERSION).toString();
+	}
+
+	public static void setVersion(ILaunchConfigurationWorkingCopy copy) {
+		copy.setAttribute(org.osgi.framework.Constants.BUNDLE_VERSION,
+				getBundleVersion());
+
+	}
+
+	public static boolean isSameVersion(ILaunchConfiguration config)
+			throws CoreException {
+		String version = config.getAttribute(
+				org.osgi.framework.Constants.BUNDLE_VERSION, (String) null);
+		String me = getBundleVersion();
+		return me.equals(version);
+	}
 }

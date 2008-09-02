@@ -152,7 +152,7 @@ public class TomcatLaunchConfigurationBuilder implements
 
 					public boolean equals(ILaunchConfiguration config)
 							throws CoreException {
-						return true;
+						return Activator.isSameVersion(config);
 					}
 				});
 	}
@@ -178,6 +178,8 @@ public class TomcatLaunchConfigurationBuilder implements
 
 	protected void setUp(ILaunchConfigurationWorkingCopy copy)
 			throws CoreException {
+		Activator.setVersion(copy);
+
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME,
 				getProject().getName());
 
