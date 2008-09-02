@@ -1,23 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?artifactRepository class='org.eclipse.equinox.internal.p2.artifact.repository.simple.SimpleArtifactRepository' version='1.0.0'?>
-<repository name='file:/C:/development/java/workspace_3.4/werkzeugkasten.update/ - artifacts' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1.0.0'>
+<repository name='file:/C:/development/java/workspace_3.4/werkzeugkasten.update/ - artifacts' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1'>
   <properties size='2'>
     <property name='p2.compressed' value='false'/>
-    <property name='p2.timestamp' value='1218474509515'/>
+    <property name='p2.timestamp' value='1220349794953'/>
   </properties>
   <mappings size='3'>
     <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
     <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>
     <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
   </mappings>
-  <artifacts size='20'>
-    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher' version='0.0.5'>
-      <properties size='3'>
-        <property name='artifact.size' value='407800'/>
-        <property name='download.size' value='407800'/>
-        <property name='download.contentType' value='application/zip'/>
-      </properties>
-    </artifact>
+  <artifacts size='19'>
     <artifact classifier='osgi.bundle' id='werkzeugkasten.dirbuildpathupdater' version='0.0.3'>
       <properties size='3'>
         <property name='artifact.size' value='74574'/>
@@ -25,18 +18,10 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher.tomcat' version='0.0.5'>
-      <properties size='3'>
-        <property name='artifact.size' value='4694945'/>
-        <property name='download.size' value='4694945'/>
-        <property name='download.contentType' value='application/zip'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='werkzeugkasten.resource.synchronizer' version='0.0.5'>
-      <properties size='3'>
-        <property name='artifact.size' value='1183530'/>
-        <property name='download.size' value='1183530'/>
-        <property name='download.contentType' value='application/zip'/>
+    <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.weblauncher.feature' version='0.0.9'>
+      <properties size='2'>
+        <property name='artifact.size' value='4880'/>
+        <property name='download.size' value='4880'/>
       </properties>
     </artifact>
     <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.dirbuildpathupdater.feature' version='0.0.3'>
@@ -49,6 +34,20 @@
       <properties size='3'>
         <property name='artifact.size' value='85081'/>
         <property name='download.size' value='85081'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher.sdloader' version='0.0.3'>
+      <properties size='3'>
+        <property name='artifact.size' value='2237668'/>
+        <property name='download.size' value='2237668'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher.jetty' version='0.0.4'>
+      <properties size='3'>
+        <property name='artifact.size' value='16065425'/>
+        <property name='download.size' value='16065425'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
@@ -78,23 +77,17 @@
         <property name='download.size' value='5257'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='werkzeugkasten.weblauncher.feature' version='0.0.8'>
-      <properties size='2'>
-        <property name='artifact.size' value='5408'/>
-        <property name='download.size' value='5408'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher.tomcat55' version='0.0.3'>
+    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher.tomcat55' version='0.0.4'>
       <properties size='3'>
-        <property name='artifact.size' value='4623172'/>
-        <property name='download.size' value='4623172'/>
+        <property name='artifact.size' value='4623286'/>
+        <property name='download.size' value='4623286'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher.jetty' version='0.0.3'>
+    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher.tomcat' version='0.0.6'>
       <properties size='3'>
-        <property name='artifact.size' value='16065384'/>
-        <property name='download.size' value='16065384'/>
+        <property name='artifact.size' value='4694102'/>
+        <property name='download.size' value='4694102'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
@@ -102,13 +95,6 @@
       <properties size='2'>
         <property name='artifact.size' value='4983'/>
         <property name='download.size' value='4983'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher.sdloader' version='0.0.2'>
-      <properties size='3'>
-        <property name='artifact.size' value='2237628'/>
-        <property name='download.size' value='2237628'/>
-        <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='werkzeugkasten.editor' version='0.0.5'>
@@ -129,6 +115,13 @@
       <properties size='2'>
         <property name='artifact.size' value='5386'/>
         <property name='download.size' value='5386'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='werkzeugkasten.weblauncher' version='0.0.6'>
+      <properties size='3'>
+        <property name='artifact.size' value='411888'/>
+        <property name='download.size' value='411888'/>
+        <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='werkzeugkasten.resource.synchronizer' version='0.0.5'>
