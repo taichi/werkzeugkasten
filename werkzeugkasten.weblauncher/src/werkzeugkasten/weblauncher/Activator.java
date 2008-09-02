@@ -14,6 +14,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.model.IPersistableSourceLocator;
+import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupDirector;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -211,4 +220,28 @@ public class Activator extends AbstractUIPlugin {
 			}
 		});
 	}
+
+	// exportしてないライブラリすら、lookupの対象になっているが、取り合えず無視。
+	public static void setSourceLocator(IProject project,
+			ILaunchConfigurationWorkingCopy copy) throws CoreException {
+		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+		String type = copy.getType().getSourceLocatorId();
+		IPersistableSourceLocator locator = manager.newSourceLocator(type);
+		if (locator instanceof AbstractSourceLookupDirector) {
+			IJavaProject javap = JavaCore.create(project);
+			IRuntimeClasspathEntry[] entries = JavaRuntime
+					.computeUnresolvedRuntimeClasspath(javap);
+			IRuntimeClasspathEntry[] resolved = JavaRuntime
+					.resolveSourceLookupPath(entries, copy);
+			AbstractSourceLookupDirector asld = (AbstractSourceLookupDirector) locator;
+			asld.initializeDefaults(copy);
+			asld.setSourceContainers(JavaRuntime.getSourceContainers(resolved));
+			copy.setAttribute(ILaunchConfiguration.ATTR_SOURCE_LOCATOR_MEMENTO,
+					asld.getMemento());
+			copy.setAttribute(ILaunchConfiguration.ATTR_SOURCE_LOCATOR_ID, asld
+					.getId());
+
+		}
+	}
+
 }

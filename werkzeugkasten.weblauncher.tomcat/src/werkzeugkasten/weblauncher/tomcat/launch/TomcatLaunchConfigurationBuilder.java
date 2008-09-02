@@ -209,6 +209,7 @@ public class TomcatLaunchConfigurationBuilder implements
 				"start");
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
 				getArgs());
+		Activator.setSourceLocator(project, copy);
 	}
 
 	private List<String> toMemento(List<IRuntimeClasspathEntry> classpath)

@@ -98,7 +98,7 @@ public class Jetty6LaunchConfigurationBuilder implements
 			Activator.log(ex);
 		}
 	}
-
+	
 	public ILaunchConfiguration build() throws CoreException {
 		IFile f = getProject().getFile(CONTEXT_XML);
 		if (f == null || f.exists() == false) {
@@ -154,7 +154,7 @@ public class Jetty6LaunchConfigurationBuilder implements
 		} finally {
 			StreamUtil.close(in);
 		}
-	}
+	}	
 
 	protected void setUp(ILaunchConfigurationWorkingCopy copy)
 			throws CoreException {
@@ -179,12 +179,14 @@ public class Jetty6LaunchConfigurationBuilder implements
 						false);
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH,
 				toMemento(getClasspath()));
-
+		
 		copy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
 				getMainClass());
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
 				getArgs());
+
+		Activator.setSourceLocator(project, copy);
 	}
 
 	private List<String> toMemento(List<IRuntimeClasspathEntry> classpath)
