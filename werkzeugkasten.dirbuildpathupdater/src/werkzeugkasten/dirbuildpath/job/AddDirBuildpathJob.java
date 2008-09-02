@@ -1,5 +1,8 @@
 package werkzeugkasten.dirbuildpath.job;
 
+import static werkzeugkasten.dirbuildpath.Constants.NO_ACCESS_RULES;
+import static werkzeugkasten.dirbuildpath.Constants.NO_EXTRA_ATTRIBUTES;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,8 +30,8 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 
 import werkzeugkasten.common.jdt.ClasspathEntryUtil;
-import werkzeugkasten.common.resource.StatusUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
+import werkzeugkasten.common.runtime.StatusUtil;
 import werkzeugkasten.common.ui.ProgressMonitorUtil;
 import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
 import werkzeugkasten.dirbuildpath.Activator;
@@ -115,7 +118,9 @@ public class AddDirBuildpathJob extends WorkspaceJob {
 							&& isLib.matcher(full.lastSegment()).matches()) {
 						IPath src = findSource(full);
 						IClasspathEntry ce = JavaCore.newLibraryEntry(full,
-								src, new Path("."));
+								src, new Path("."),
+								NO_ACCESS_RULES,
+								NO_EXTRA_ATTRIBUTES, true);
 						result.put(full.toString(), ce);
 					}
 					return true;

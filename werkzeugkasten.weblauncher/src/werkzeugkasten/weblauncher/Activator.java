@@ -28,7 +28,7 @@ import org.osgi.framework.BundleContext;
 
 import werkzeugkasten.common.debug.LaunchUtil;
 import werkzeugkasten.common.debug.TerminateListener;
-import werkzeugkasten.common.resource.LogUtil;
+import werkzeugkasten.common.runtime.LogUtil;
 import werkzeugkasten.common.ui.ImageLoader;
 import werkzeugkasten.common.util.FileUtil;
 import werkzeugkasten.common.util.StringUtil;

@@ -6,7 +6,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import werkzeugkasten.common.resource.LogUtil;
+import werkzeugkasten.common.runtime.LogUtil;
+
 
 /**
  * The activator class controls the plug-in life cycle
