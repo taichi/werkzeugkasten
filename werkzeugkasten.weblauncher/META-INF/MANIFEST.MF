@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
 Bundle-SymbolicName: werkzeugkasten.weblauncher;singleton:=true
-Bundle-Version: 0.0.6
+Bundle-Version: 0.0.7
 Bundle-Localization: plugin
 Bundle-Activator: werkzeugkasten.weblauncher.Activator
 Bundle-ActivationPolicy: lazy
