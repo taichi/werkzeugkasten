@@ -9,13 +9,13 @@
    <feature url="features/werkzeugkasten.weblauncher.feature_0.0.10.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.10">
       <category name="WebLauncher"/>
    </feature>
-   <feature url="features/werkzeugkasten.NLSgen.feature_0.0.3.jar" id="werkzeugkasten.NLSgen.feature" version="0.0.3">
-      <category name="Misc"/>
-   </feature>
-   <feature url="features/werkzeugkasten.NLSgen.eclipse.feature_0.0.3.jar" id="werkzeugkasten.NLSgen.eclipse.feature" version="0.0.3">
-      <category name="Misc"/>
-   </feature>
    <feature url="features/werkzeugkasten.dirbuildpathupdater.feature_0.0.4.jar" id="werkzeugkasten.dirbuildpathupdater.feature" version="0.0.4">
+      <category name="Misc"/>
+   </feature>
+   <feature url="features/werkzeugkasten.NLSgen.eclipse.feature_0.0.6.jar" id="werkzeugkasten.NLSgen.eclipse.feature" version="0.0.6">
+      <category name="Misc"/>
+   </feature>
+   <feature url="features/werkzeugkasten.NLSgen.feature_0.0.6.jar" id="werkzeugkasten.NLSgen.feature" version="0.0.6">
       <category name="Misc"/>
    </feature>
    <category-def name="DbLauncher" label="DbLauncher">
