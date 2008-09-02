@@ -142,6 +142,9 @@ public class Jetty6LaunchConfigurationBuilder implements
 		stb.append(pref.getContextName());
 		stb.append("</Set>");
 		stb.append("<Set name=\"war\"><SystemProperty name=\"doc_base\"/>");
+		stb.append("</Set>");
+		stb.append("<Set name=\"defaultsDescriptor\">");
+		stb.append("werkzeugkasten/weblauncher/jetty/webdefault.xml");
 		stb.append("</Set></Configure>");
 		InputStream in = null;
 		try {
