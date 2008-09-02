@@ -57,7 +57,8 @@ public class TomcatLaunchConfigurationBuilder implements
 		setUpClasspathEntries();
 	}
 
-	protected String buildBootArgs(IProject project, WebPreferences preferences) {
+	protected String buildBootArgs(final IProject project,
+			WebPreferences preferences) {
 		Bundle bundle = werkzeugkasten.weblauncher.tomcat.Activator
 				.getDefault().getBundle();
 		URL u = bundle.getEntry("/tomcat");
@@ -66,7 +67,9 @@ public class TomcatLaunchConfigurationBuilder implements
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}
-		String tomcatbase = new File(u.getPath()).getAbsolutePath();
+		final String tomcatbase = new File(u.getPath()).getAbsolutePath();
+		File work = new File(tomcatbase, "work");
+		Activator.tempFileDeletion(project, work);
 
 		StringBuilder stb = new StringBuilder();
 

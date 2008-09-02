@@ -2,6 +2,7 @@ package werkzeugkasten.weblauncher;
 
 import static werkzeugkasten.weblauncher.Constants.*;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -20,6 +21,7 @@ import werkzeugkasten.common.debug.LaunchUtil;
 import werkzeugkasten.common.debug.TerminateListener;
 import werkzeugkasten.common.resource.LogUtil;
 import werkzeugkasten.common.ui.ImageLoader;
+import werkzeugkasten.common.util.FileUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
 import werkzeugkasten.launcher.ConfigurationFacetRegistry;
@@ -192,5 +194,21 @@ public class Activator extends AbstractUIPlugin {
 
 	public static ConfigurationFacetRegistry getLibraryRegistry() {
 		return getDefault().libraryRegistry;
+	}
+
+	public static void tempFileDeletion(final IProject project, final File work) {
+		DebugPlugin.getDefault().addDebugEventListener(new TerminateListener() {
+			public void handle(ILaunch l) throws CoreException {
+				String id = l.getLaunchConfiguration().getType()
+						.getIdentifier();
+				if (ID_LAUNCH_CONFIG.equals(id)) {
+					IProject p = LaunchUtil.getProject(l);
+					if (project.equals(p)) {
+						FileUtil.delete(work);
+						DebugPlugin.getDefault().removeDebugEventListener(this);
+					}
+				}
+			}
+		});
 	}
 }

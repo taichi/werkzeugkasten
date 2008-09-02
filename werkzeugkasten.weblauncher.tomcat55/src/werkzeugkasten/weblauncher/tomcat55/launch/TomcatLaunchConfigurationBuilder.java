@@ -67,6 +67,8 @@ public class TomcatLaunchConfigurationBuilder implements
 			throw new IllegalStateException(e);
 		}
 		String tomcatbase = new File(u.getPath()).getAbsolutePath();
+		File work = new File(tomcatbase, "work");
+		Activator.tempFileDeletion(project, work);
 
 		StringBuilder stb = new StringBuilder();
 
