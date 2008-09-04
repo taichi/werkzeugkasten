@@ -28,6 +28,7 @@ import org.osgi.framework.BundleContext;
 
 import werkzeugkasten.common.debug.LaunchUtil;
 import werkzeugkasten.common.debug.TerminateListener;
+import werkzeugkasten.common.jdt.JavaElementUtil;
 import werkzeugkasten.common.runtime.LogUtil;
 import werkzeugkasten.common.ui.ImageLoader;
 import werkzeugkasten.common.util.FileUtil;
@@ -88,6 +89,7 @@ public class Activator extends AbstractUIPlugin {
 		DebugPlugin.getDefault().addDebugEventListener(terminateListener);
 		ImageLoader.load(plugin, Images.class);
 		urlToProjectCache = new Hashtable<String, IProject>();
+		JavaElementUtil.appendEditorSeeker();
 	}
 
 	/*
