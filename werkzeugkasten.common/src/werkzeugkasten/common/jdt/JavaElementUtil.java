@@ -24,13 +24,32 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import werkzeugkasten.common.resource.ProjectUtil;
+import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 
 public class JavaElementUtil {
+
+	static final ResourceUtil.EditorPartSeeker seeker = new ResourceUtil.EditorPartSeeker() {
+		public <T extends IResource> T seek(IEditorPart part, Class<T> clazz) {
+			IEditorInput input = part.getEditorInput();
+			IJavaElement je = AdaptableUtil.to(input, IJavaElement.class);
+			IResource r = je.getResource();
+			if (r == null) {
+				IJavaProject project = je.getJavaProject();
+				r = project.getResource();
+			}
+			return AdaptableUtil.to(r, clazz);
+		}
+	};
+
+	public static void appendEditorSeeker() {
+		ResourceUtil.seekers.add(seeker);
+	}
 
 	public static ITextEditor selectAndReveal(IMember member)
 			throws CoreException {

@@ -4,10 +4,13 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -107,6 +110,33 @@ public class ResourceUtil {
 		return result;
 	}
 
+	public interface EditorPartSeeker {
+		<T extends IResource> T seek(IEditorPart part, Class<T> clazz);
+	}
+
+	public static Set<EditorPartSeeker> seekers = Collections
+			.synchronizedSet(new HashSet<EditorPartSeeker>());
+
+	static {
+		seekers.add(new EditorPartSeeker() {
+			public <T extends IResource> T seek(IEditorPart part, Class<T> clazz) {
+				IEditorInput input = part.getEditorInput();
+				return AdaptableUtil.to(input, clazz);
+			}
+		});
+		seekers.add(new EditorPartSeeker() {
+			public <T extends IResource> T seek(IEditorPart part, Class<T> clazz) {
+				IEditorInput input = part.getEditorInput();
+				IFileEditorInput file = AdaptableUtil.to(input,
+						IFileEditorInput.class);
+				if (file != null) {
+					return AdaptableUtil.to(file.getFile(), clazz);
+				}
+				return null;
+			}
+		});
+	}
+
 	private static <T extends IResource> T getCurrentSelectedResouce(
 			IWorkbenchWindow window, Class<T> clazz) {
 		IWorkbenchPage page = window.getActivePage();
@@ -115,16 +145,12 @@ public class ResourceUtil {
 			IWorkbenchPart wpart = page.getActivePart();
 			IEditorPart part = AdaptableUtil.to(wpart, IEditorPart.class);
 			if (part != null) {
-				IEditorInput input = part.getEditorInput();
-				T result = AdaptableUtil.to(input, clazz);
-				if (result == null) {
-					IFileEditorInput file = AdaptableUtil.to(input,
-							IFileEditorInput.class);
-					if (file != null) {
-						return AdaptableUtil.to(file.getFile(), clazz);
+				for (EditorPartSeeker seeker : seekers) {
+					T result = seeker.seek(part, clazz);
+					if (result != null) {
+						return result;
 					}
 				}
-				return result;
 			}
 		}
 		return null;
