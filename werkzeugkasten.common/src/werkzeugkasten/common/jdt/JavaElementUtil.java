@@ -38,12 +38,15 @@ public class JavaElementUtil {
 		public <T extends IResource> T seek(IEditorPart part, Class<T> clazz) {
 			IEditorInput input = part.getEditorInput();
 			IJavaElement je = AdaptableUtil.to(input, IJavaElement.class);
-			IResource r = je.getResource();
-			if (r == null) {
-				IJavaProject project = je.getJavaProject();
-				r = project.getResource();
+			if (je != null) {
+				IResource r = je.getResource();
+				if (r == null) {
+					IJavaProject project = je.getJavaProject();
+					r = project.getResource();
+				}
+				return AdaptableUtil.to(r, clazz);
 			}
-			return AdaptableUtil.to(r, clazz);
+			return null;
 		}
 	};
 
