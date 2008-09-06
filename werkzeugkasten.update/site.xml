@@ -9,7 +9,7 @@
    <feature url="features/werkzeugkasten.weblauncher.feature_0.0.11.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.11">
       <category name="WebLauncher"/>
    </feature>
-   <feature url="features/werkzeugkasten.dirbuildpathupdater.feature_0.0.4.jar" id="werkzeugkasten.dirbuildpathupdater.feature" version="0.0.4">
+   <feature url="features/werkzeugkasten.dirbuildpathupdater.feature_0.0.5.jar" id="werkzeugkasten.dirbuildpathupdater.feature" version="0.0.5">
       <category name="Misc"/>
    </feature>
    <feature url="features/werkzeugkasten.NLSgen.eclipse.feature_0.0.6.jar" id="werkzeugkasten.NLSgen.eclipse.feature" version="0.0.6">
