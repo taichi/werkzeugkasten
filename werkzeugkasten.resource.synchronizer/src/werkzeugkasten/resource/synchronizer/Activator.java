@@ -6,7 +6,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import werkzeugkasten.common.resource.LogUtil;
+import werkzeugkasten.common.runtime.LogUtil;
 import werkzeugkasten.nlsgen.eclipse.ImageLoader;
 import werkzeugkasten.resource.synchronizer.action.ToggleServerAction;
 import werkzeugkasten.resource.synchronizer.nls.Images;
