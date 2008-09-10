@@ -20,7 +20,7 @@ public class StreamUtil {
 				in.close();
 			}
 		} catch (IOException e) {
-			throw new IllegalStateException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -30,7 +30,7 @@ public class StreamUtil {
 				out.close();
 			}
 		} catch (IOException e) {
-			throw new IllegalStateException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -83,12 +83,12 @@ public class StreamUtil {
 			close(out);
 		}
 	}
-	
+
 	public static String readText(InputStream in) {
 		try {
 			StringBuilder stb = new StringBuilder();
 			BufferedReader buf = new BufferedReader(new InputStreamReader(in));
-			while(buf.ready()) {
+			while (buf.ready()) {
 				stb.append(buf.readLine());
 			}
 			return stb.toString();
