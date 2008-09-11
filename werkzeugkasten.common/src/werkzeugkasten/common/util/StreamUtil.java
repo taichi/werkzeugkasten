@@ -14,6 +14,51 @@ import werkzeugkasten.common.exception.IORuntimeException;
 
 public class StreamUtil {
 
+	public interface _<STREAM, T extends Throwable> {
+		STREAM open() throws T;
+
+		void handle(STREAM stream) throws T;
+
+		void happen(T exception);
+
+	}
+
+	private interface D<STREAM> {
+		void dispose(STREAM stream);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <STREAM, T extends Throwable> void $(_<STREAM, T> _,
+			D<STREAM> c) {
+		STREAM in = null;
+		try {
+			in = _.open();
+			_.handle(in);
+		} catch (Throwable e) {
+			_.happen((T) e);
+		} finally {
+			c.dispose(in);
+		}
+	}
+
+	public static <STREAM extends InputStream, T extends Throwable> void is(
+			_<STREAM, T> _) {
+		$(_, new D<STREAM>() {
+			public void dispose(STREAM stream) {
+				close(stream);
+			};
+		});
+	}
+
+	public static <STREAM extends OutputStream, T extends Throwable> void os(
+			_<STREAM, T> _) {
+		$(_, new D<STREAM>() {
+			public void dispose(STREAM stream) {
+				close(stream);
+			};
+		});
+	}
+
 	public static void close(InputStream in) {
 		try {
 			if (in != null) {
