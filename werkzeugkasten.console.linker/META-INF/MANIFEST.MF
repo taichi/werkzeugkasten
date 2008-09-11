@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Console Anchor
-Bundle-SymbolicName: werkzeugkasten.console.anchor;singleton:=true
+Bundle-SymbolicName: werkzeugkasten.console.linker;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: werkzeugkasten.console.anchor.Activator
 Bundle-Vendor: ryushi
