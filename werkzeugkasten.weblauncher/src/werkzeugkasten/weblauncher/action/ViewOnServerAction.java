@@ -53,7 +53,7 @@ public class ViewOnServerAction extends EnablerAction {
 	 * @see org.seasar.weblauncher.action.ServerAction#checkEnabled()
 	 */
 	protected boolean checkEnabled() {
-		IProject project = ToggleServerAction.findCurrentProject();
+		IProject project = Activator.findCurrentProject();
 		boolean is = false;
 		if (project != null) {
 			if (ProjectUtil.hasNature(project, Constants.ID_NATURE)) {
@@ -76,7 +76,7 @@ public class ViewOnServerAction extends EnablerAction {
 	 */
 	public void run(IAction action) {
 		try {
-			IProject project = ToggleServerAction.findCurrentProject();
+			IProject project = Activator.findCurrentProject();
 			if (project != null) {
 				run(action, project);
 			}
@@ -88,8 +88,9 @@ public class ViewOnServerAction extends EnablerAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.seasar.eclipse.common.action.AbstractProjectAction#run(org.eclipse.jface.action.IAction,
-	 *      org.eclipse.core.resources.IProject)
+	 * @see
+	 * org.seasar.eclipse.common.action.AbstractProjectAction#run(org.eclipse
+	 * .jface.action.IAction, org.eclipse.core.resources.IProject)
 	 */
 	public void run(IAction action, IProject project) throws CoreException {
 		if (checkEnabled() == false) {
@@ -229,7 +230,8 @@ public class ViewOnServerAction extends EnablerAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.seasar.weblauncher.action.ServerAction#init(org.eclipse.ui.IWorkbenchWindow)
+	 * @seeorg.seasar.weblauncher.action.ServerAction#init(org.eclipse.ui.
+	 * IWorkbenchWindow)
 	 */
 	public void init(IWorkbenchWindow window) {
 		window.getPartService().addPartListener(new IPartListener2() {

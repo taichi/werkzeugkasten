@@ -23,14 +23,24 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IPersistableElement;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.XMLMemento;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import werkzeugkasten.common.debug.LaunchUtil;
 import werkzeugkasten.common.debug.TerminateListener;
 import werkzeugkasten.common.jdt.JavaElementUtil;
+import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.runtime.LogUtil;
 import werkzeugkasten.common.ui.ImageLoader;
+import werkzeugkasten.common.ui.WorkbenchUtil;
 import werkzeugkasten.common.util.FileUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.viewers.AbstractLightweightLabelDecorator;
@@ -264,4 +274,39 @@ public class Activator extends AbstractUIPlugin {
 		String me = getBundleVersion();
 		return me.equals(version);
 	}
+
+	public static IProject findCurrentProject() {
+		IProject result = ResourceUtil.getCurrentSelectedProject();
+		if (result != null) {
+			return result;
+		}
+		return getProjectByBrowserId();
+	}
+
+	public static IProject getProjectByBrowserId() {
+		IProject result = null;
+		// see. ViewDatabaseManagerAction
+		IWorkbenchWindow window = WorkbenchUtil.getWorkbenchWindow();
+		if (window != null) {
+			IWorkbenchPage page = window.getActivePage();
+			if (page != null) {
+				// getActiveEditorで取れる参照は、フォーカスがどこにあってもアクティブなエディタの参照が取れてしまう為。
+				IWorkbenchPart part = page.getActivePart();
+				if (part instanceof IEditorPart) {
+					IEditorPart editor = (IEditorPart) part;
+					IEditorInput input = editor.getEditorInput();
+					if (input instanceof IPersistableElement) {
+						IPersistableElement element = (IPersistableElement) input;
+						IMemento memento = XMLMemento.createWriteRoot("root");
+						// see. WebBrowserEditorInput
+						element.saveState(memento);
+						String url = memento.getString("url");
+						result = Activator.findProject(url);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
 }

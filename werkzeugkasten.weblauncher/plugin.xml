@@ -105,6 +105,14 @@
             </objectState>
          </visibility>
          <action
+               class="werkzeugkasten.weblauncher.action.ExportWarAction"
+               enablesFor="1"
+               icon="icons/jar_obj.gif"
+               id="werkzeugkasten.weblauncher.action.toggle.war"
+               label="%war"
+               menubarPath="werkzeugkasten.weblauncher.menu.popup/additions">
+         </action>
+         <action
                class="werkzeugkasten.weblauncher.action.ToggleServerAction"
                enablesFor="1"
                icon="icons/start.gif"
@@ -196,8 +204,18 @@
             </groupMarker>
          </menu>
          <action
+               class="werkzeugkasten.weblauncher.action.ExportWarAction"
+               enablesFor="1"
+               icon="icons/jar_obj.gif"
+               id="werkzeugkasten.weblauncher.action.war"
+               label="%war"
+               menubarPath="werkzeugkasten.weblauncher.menu/werkzeugkasten.weblauncher.groupMarker"
+               toolbarPath="werkzeugkasten.weblauncher.menu/werkzeugkasten.weblauncher.groupMarker">
+         </action>
+         <action
                class="werkzeugkasten.weblauncher.action.ViewOnServerAction"
                definitionId="werkzeugkasten.weblauncher.command.view"
+               enablesFor="1"
                icon="icons/browser.gif"
                id="werkzeugkasten.weblauncher.action.view"
                label="%view"
@@ -207,6 +225,7 @@
          <action
                class="werkzeugkasten.weblauncher.action.ToggleServerAction"
                definitionId="werkzeugkasten.weblauncher.command.toggle"
+               enablesFor="1"
                icon="icons/start.gif"
                id="werkzeugkasten.weblauncher.action.toggle"
                label="%start"
