@@ -3,6 +3,7 @@ package werkzeugkasten.weblauncher.job;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -12,6 +13,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.ui.jarpackager.IJarBuilder;
 import org.eclipse.jdt.ui.jarpackager.JarPackageData;
@@ -19,26 +21,28 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.progress.WorkbenchJob;
 
 import werkzeugkasten.common.ui.ProgressMonitorUtil;
+import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.Constants;
+import werkzeugkasten.weblauncher.preferences.WebPreferences;
 
 public class WarExportJob extends WorkbenchJob {
 
-	protected JarPackageData data;
-	protected IPath basePath;
-	protected IResource base;
+	protected IProject project;
 
-	public WarExportJob(JarPackageData data, IPath basePath) {
+	public WarExportJob(IProject project) {
 		super("WarExportJob"); // TODO externalize strings.
-		this.data = data;
-		this.basePath = basePath;
-		this.base = ResourcesPlugin.getWorkspace().getRoot().findMember(
-				basePath);
+		this.project = project;
 	}
 
 	public IStatus runInUIThread(final IProgressMonitor monitor) {
 		monitor.beginTask("Export War ...", IProgressMonitor.UNKNOWN);
 		try {
+			WebPreferences pref = Activator.getPreferences(project);
+			JarPackageData data = setUp(project, pref);
+			IPath basePath = new Path(pref.getBaseDir());
+			IResource base = ResourcesPlugin.getWorkspace().getRoot()
+					.findMember(basePath);
 
 			final MultiStatus status = new MultiStatus(Constants.ID_PLUGIN,
 					IStatus.ERROR, "War Export Errors", null); // TODO to
@@ -95,6 +99,23 @@ public class WarExportJob extends WorkbenchJob {
 			monitor.done();
 		}
 		return Status.OK_STATUS;
+	}
+
+	protected JarPackageData setUp(IProject project, WebPreferences pref) {
+		JarPackageData data = new JarPackageData();
+		data.setCompress(false);
+
+		IPath distPath = project.getLocation();
+		String ctx = new Path(pref.getContextName()).removeTrailingSeparator()
+				.toOSString();
+		if (StringUtil.isEmpty(ctx)) {
+			distPath = distPath.append(project.getName());
+		} else {
+			distPath = distPath.append(ctx);
+		}
+		distPath = distPath.addFileExtension("war");
+		data.setJarLocation(distPath);
+		return data;
 	}
 
 }
