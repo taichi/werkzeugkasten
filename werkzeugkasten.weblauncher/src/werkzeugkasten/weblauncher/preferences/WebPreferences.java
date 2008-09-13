@@ -1,5 +1,7 @@
 package werkzeugkasten.weblauncher.preferences;
 
+import java.util.regex.Pattern;
+
 /**
  * @author ryushi
  */
@@ -40,4 +42,8 @@ public interface WebPreferences {
 	boolean useInternalWebBrowser();
 
 	void setInternalWebBrowser(boolean is);
+
+	Pattern getExportIgnore();
+
+	void setExportIgnore(String fmt);
 }

@@ -2,6 +2,8 @@ package werkzeugkasten.weblauncher.preferences.impl;
 
 import static werkzeugkasten.weblauncher.Constants.*;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
@@ -125,6 +127,15 @@ public class WebPreferencesImpl implements WebPreferences {
 
 	public void setLibraryType(String type) {
 		store.setValue(PREF_LIBRARY_TYPE, type);
+	}
+
+	public Pattern getExportIgnore() {
+		return Pattern.compile(store.getString(PREF_EXPORT_IGNORE),
+				Pattern.CASE_INSENSITIVE);
+	}
+
+	public void setExportIgnore(String fmt) {
+		store.setValue(PREF_EXPORT_IGNORE, fmt);
 	}
 
 }

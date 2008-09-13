@@ -15,7 +15,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
+	 * @seeorg.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
+	 * initializeDefaultPreferences()
 	 */
 	public void initializeDefaultPreferences() {
 		IEclipsePreferences pref = new DefaultScope().getNode(ID_PLUGIN);
@@ -24,6 +25,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		pref.putBoolean(PREF_IS_DEBUG, true);
 		pref.putBoolean(PREF_CHECK_SERVER, false);
 		pref.putBoolean(PREF_USE_INTERNAL_WEBBROWSER, false);
+		pref.put(PREF_EXPORT_IGNORE, "\\.(bak|tmp|ori?g)");
 
 	}
 

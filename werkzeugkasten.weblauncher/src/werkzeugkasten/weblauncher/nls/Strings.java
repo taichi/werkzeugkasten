@@ -44,6 +44,10 @@ public class Strings extends NLS {
 
 	public static String LABEL_BROWSE;
 
+	public static String MSG_PROCESS_EXPORT;
+
+	public static String MSG_EXPORT_ERRORS;
+
 	static {
 		Class<Strings> clazz = Strings.class;
 		NLS.initializeMessages(clazz.getName(), clazz);

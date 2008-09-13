@@ -24,6 +24,7 @@ import werkzeugkasten.common.ui.ProgressMonitorUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.Constants;
+import werkzeugkasten.weblauncher.nls.Strings;
 import werkzeugkasten.weblauncher.preferences.WebPreferences;
 
 public class WarExportJob extends WorkbenchJob {
@@ -31,12 +32,12 @@ public class WarExportJob extends WorkbenchJob {
 	protected IProject project;
 
 	public WarExportJob(IProject project) {
-		super("WarExportJob"); // TODO externalize strings.
+		super(Strings.MSG_PROCESS_EXPORT);
 		this.project = project;
 	}
 
 	public IStatus runInUIThread(final IProgressMonitor monitor) {
-		monitor.beginTask("Export War ...", IProgressMonitor.UNKNOWN);
+		monitor.beginTask(Strings.MSG_PROCESS_EXPORT, IProgressMonitor.UNKNOWN);
 		try {
 			WebPreferences pref = Activator.getPreferences(project);
 			JarPackageData data = setUp(project, pref);
@@ -45,17 +46,14 @@ public class WarExportJob extends WorkbenchJob {
 					.findMember(basePath);
 
 			final MultiStatus status = new MultiStatus(Constants.ID_PLUGIN,
-					IStatus.ERROR, "War Export Errors", null); // TODO to
-			// externalize
-			// strings.
+					IStatus.ERROR, Strings.MSG_EXPORT_ERRORS, null);
 			final IJarBuilder builder = data.createFatJarBuilder();
 			final int baseSegment = basePath.segmentCount();
 			try {
 				data.setElements(new Object[] { base }); // dummy data.
 				builder.open(data, new Shell(getDisplay()), status);
 
-				final Pattern ignore = Pattern.compile("\\.(bak|tmp|ori?g)",
-						Pattern.CASE_INSENSITIVE); // TODO to be Pref.
+				final Pattern ignore = pref.getExportIgnore();
 				base.accept(new IResourceVisitor() {
 					public boolean visit(IResource resource)
 							throws CoreException {

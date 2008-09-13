@@ -49,6 +49,8 @@ public final class Constants {
 
 	public static final String PREF_LIBRARY_TYPE = "libraryType";
 
+	public static final String PREF_EXPORT_IGNORE = "ExportIgnore";
+
 	/* ---------------------------------------------------------------------- */
 	public static final String CTX_HELP_PREF = ID_PLUGIN
 			+ ".preferences_page_context";
