@@ -24,9 +24,13 @@ public class Strings extends NLS {
 
 	public static String LABEL_USE_INTERNAL_WEBBROWSER;
 
+	public static String LABEL_IGNORE_PATTERN;
+
 	public static String TOOLTIP_CHECK_SERVER;
 
 	public static String ERR_ONLY_NUMERIC;
+
+	public static String ERR_PATTERN_SYNTAX;
 
 	public static String MSG_START_SERVER;
 

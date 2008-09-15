@@ -41,45 +41,18 @@ public class WarExportJob extends WorkbenchJob {
 		try {
 			WebPreferences pref = Activator.getPreferences(project);
 			JarPackageData data = setUp(project, pref);
-			IPath basePath = new Path(pref.getBaseDir());
-			IResource base = ResourcesPlugin.getWorkspace().getRoot()
-					.findMember(basePath);
 
 			final MultiStatus status = new MultiStatus(Constants.ID_PLUGIN,
 					IStatus.ERROR, Strings.MSG_EXPORT_ERRORS, null);
 			final IJarBuilder builder = data.createFatJarBuilder();
-			final int baseSegment = basePath.segmentCount();
 			try {
-				data.setElements(new Object[] { base }); // dummy data.
+				data.setElements(new Object[] { project }); // dummy data.
 				builder.open(data, new Shell(getDisplay()), status);
 
-				final Pattern ignore = pref.getExportIgnore();
-				base.accept(new IResourceVisitor() {
-					public boolean visit(IResource resource)
-							throws CoreException {
-						ProgressMonitorUtil.isCanceled(monitor, 1);
-						switch (resource.getType()) {
-						case IResource.FOLDER: {
-							return resource.getName().startsWith(".") == false;
-						}
-						case IResource.FILE: {
-							IFile f = (IFile) resource;
-							String name = f.getName();
-							if (ignore.matcher(name).matches()) {
-								return false;
-							}
-							IPath dest = f.getFullPath().removeFirstSegments(
-									baseSegment);
-							builder.writeFile(f, dest);
-							break;
-						}
-						default: {
-							break;
-						}
-						}
-						return true;
-					}
-				});
+				ProgressMonitorUtil.isCanceled(monitor, 1);
+
+				addEntries(monitor, pref, data, builder);
+
 				ProgressMonitorUtil.isCanceled(monitor, 1);
 				IStatus[] kids = status.getChildren();
 				if (kids != null && 0 < kids.length) {
@@ -97,6 +70,34 @@ public class WarExportJob extends WorkbenchJob {
 			monitor.done();
 		}
 		return Status.OK_STATUS;
+	}
+
+	protected void addEntries(final IProgressMonitor monitor,
+			WebPreferences pref, JarPackageData data, final IJarBuilder builder)
+			throws CoreException {
+		IPath basePath = new Path(pref.getBaseDir());
+		IResource base = ResourcesPlugin.getWorkspace().getRoot().findMember(
+				basePath);
+		final int baseSegment = basePath.segmentCount();
+		if (base != null && base.exists()) {
+			final Pattern ignore = pref.getExportIgnore();
+			base.accept(new IResourceVisitor() {
+				public boolean visit(IResource resource) throws CoreException {
+					ProgressMonitorUtil.isCanceled(monitor, 1);
+					String name = resource.getName();
+					if (ignore.matcher(name).matches()) {
+						return false;
+					}
+					if (resource.getType() == IResource.FILE) {
+						IFile f = (IFile) resource;
+						IPath dest = f.getFullPath().removeFirstSegments(
+								baseSegment);
+						builder.writeFile(f, dest);
+					}
+					return true;
+				}
+			});
+		}
 	}
 
 	protected JarPackageData setUp(IProject project, WebPreferences pref) {

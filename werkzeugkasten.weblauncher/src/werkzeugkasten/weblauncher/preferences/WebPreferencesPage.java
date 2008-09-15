@@ -5,6 +5,7 @@ import static werkzeugkasten.weblauncher.nls.Strings.*;
 
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -29,7 +30,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -68,7 +68,7 @@ public class WebPreferencesPage extends PropertyPage {
 
 	private Text webPortNo;
 
-	private Text config;
+	private Text ignorePattern;
 
 	private Button isCheckServer;
 
@@ -106,9 +106,9 @@ public class WebPreferencesPage extends PropertyPage {
 		this.contextName = createPart(composite, LABEL_CONTEXT_NAME);
 		this.baseDir = createBaseDir(composite);
 		this.webPortNo = createPart(composite, LABEL_WEB_PORTNO);
-		NumberVerifier nv = new NumberVerifier();
-		this.webPortNo.addModifyListener(nv);
-		this.config = createConfig(composite);
+		this.webPortNo.addModifyListener(new NumberVerifier());
+		this.ignorePattern = createPart(composite, LABEL_IGNORE_PATTERN);
+		this.ignorePattern.addModifyListener(new PatternVerifier());
 
 		this.isCheckServer = createCheckBox(composite, LABEL_CHECK_SERVER);
 		this.isCheckServer.setToolTipText(TOOLTIP_CHECK_SERVER);
@@ -171,6 +171,25 @@ public class WebPreferencesPage extends PropertyPage {
 		return result;
 	}
 
+	private class PatternVerifier implements ModifyListener {
+		public void modifyText(ModifyEvent e) {
+			if (e.widget instanceof Text) {
+				Text t = (Text) e.widget;
+				boolean is = false;
+				try {
+					Pattern.compile(t.getText(), Pattern.CASE_INSENSITIVE);
+					is = true;
+					setErrorMessage(null);
+				} catch (PatternSyntaxException ex) {
+					is = false;
+					setErrorMessage(NLS.bind(ERR_PATTERN_SYNTAX, ex.getIndex(),
+							ex.getDescription()));
+				}
+				setValid(is);
+			}
+		}
+	}
+
 	private class NumberVerifier implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
 			if (e.widget instanceof Text) {
@@ -208,7 +227,7 @@ public class WebPreferencesPage extends PropertyPage {
 		this.contextName.setText(wp.getContextName());
 		this.baseDir.setText(wp.getBaseDir());
 		this.webPortNo.setText(wp.getWebPortNo());
-		this.config.setText(wp.getConfig());
+		this.ignorePattern.setText(wp.getExportIgnore().pattern());
 		this.isCheckServer.setSelection(wp.checkServerWhenOpen());
 		this.isDebug.setSelection(wp.isDebug());
 		this.useInternalWebBrowser.setSelection(wp.useInternalWebBrowser());
@@ -245,7 +264,6 @@ public class WebPreferencesPage extends PropertyPage {
 		this.contextName.setText(store.getDefaultString(PREF_CONTEXT_NAME));
 		this.baseDir.setText(store.getDefaultString(PREF_BASE_DIR));
 		this.webPortNo.setText(store.getDefaultString(PREF_WEB_PORTNO));
-		this.config.setText(store.getDefaultString(PREF_CONFIG));
 		this.isCheckServer.setSelection(store
 				.getDefaultBoolean(PREF_CHECK_SERVER));
 		this.isDebug.setSelection(store.getDefaultBoolean(PREF_IS_DEBUG));
@@ -275,7 +293,9 @@ public class WebPreferencesPage extends PropertyPage {
 				store.setValue(PREF_CONTEXT_NAME, this.contextName.getText());
 				store.setValue(PREF_BASE_DIR, this.baseDir.getText());
 				store.setValue(PREF_WEB_PORTNO, this.webPortNo.getText());
-				store.setValue(PREF_CONFIG, this.config.getText());
+				store
+						.setValue(PREF_EXPORT_IGNORE, this.ignorePattern
+								.getText());
 
 				boolean is = this.isCheckServer.getSelection();
 				store.setValue(PREF_CHECK_SERVER, is);
@@ -371,44 +391,6 @@ public class WebPreferencesPage extends PropertyPage {
 				ResourceTreeSelectionDialog dialog = new ResourceTreeSelectionDialog(
 						getShell(), getProject().getParent(), IResource.FOLDER
 								| IResource.PROJECT);
-				dialog.setInitialSelection(getProject());
-				dialog.setAllowMultiple(false);
-				if (dialog.open() == Dialog.OK) {
-					Object[] results = dialog.getResult();
-					if (results != null && 0 < results.length) {
-						IResource r = (IResource) results[0];
-						t.setText(r.getFullPath().toString());
-					}
-				}
-			}
-		});
-
-		return t;
-	}
-
-	private Text createConfig(Composite parent) {
-		Link l = new Link(parent, SWT.NONE);
-		l.setText(LABEL_CONFIG);
-
-		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		layout.marginWidth = 0;
-		composite.setLayout(layout);
-
-		GridData data = new GridData(GridData.FILL_HORIZONTAL);
-		composite.setLayoutData(data);
-
-		final Text t = new Text(composite, SWT.SINGLE | SWT.BORDER);
-		data = new GridData(GridData.FILL_HORIZONTAL);
-		t.setLayoutData(data);
-		Button b = new Button(composite, SWT.PUSH);
-		b.setText(LABEL_BROWSE);
-		b.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				ResourceTreeSelectionDialog dialog = new ResourceTreeSelectionDialog(
-						getShell(), getProject().getParent(), IResource.FOLDER
-								| IResource.PROJECT | IResource.FILE);
 				dialog.setInitialSelection(getProject());
 				dialog.setAllowMultiple(false);
 				if (dialog.open() == Dialog.OK) {
