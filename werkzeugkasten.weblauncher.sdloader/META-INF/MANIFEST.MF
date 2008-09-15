@@ -12,5 +12,6 @@ Require-Bundle: org.eclipse.ui,
  werkzeugkasten.weblauncher
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
- sdloader/lib/sdloader-jsp20.jar
+ sdloader/lib/sdloader-jsp20.jar,
+ sdloader/lib/executablewar.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
