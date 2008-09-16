@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class FileOpener implements Opener {
-	File file;
+	protected File file;
 
 	public FileOpener(File file) {
 		this.file = file;

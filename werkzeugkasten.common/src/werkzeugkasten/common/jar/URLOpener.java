@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class URLOpener implements Opener {
-	URL url;
+	protected URL url;
 
 	public URLOpener(URL url) {
 		this.url = url;

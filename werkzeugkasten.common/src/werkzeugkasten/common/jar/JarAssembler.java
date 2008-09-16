@@ -6,8 +6,11 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -23,59 +26,6 @@ public class JarAssembler {
 		boolean compress();
 	}
 
-	protected interface State {
-		void open(File dest, Manifest manifest);
-
-		void isWritable();
-
-		void close();
-	}
-
-	protected class Begin implements State {
-		public void open(File f, Manifest m) {
-			try {
-				manifest = m;
-				stream = new JarOutputStream(new BufferedOutputStream(
-						new FileOutputStream(f)));
-			} catch (Exception e) {
-				handle(e);
-			}
-		}
-
-		public void isWritable() {
-			throw new IllegalStateException();
-		}
-
-		public void close() {
-			throw new IllegalStateException();
-		}
-	}
-
-	protected class InProcess implements State {
-		public void open(File arg0, Manifest arg1) {
-			throw new IllegalStateException();
-		}
-
-		public void isWritable() {
-		}
-
-		public void close() {
-			try {
-				for (ManifestModifier mm : modifiers) {
-					mm.modify(manifest);
-				}
-				ZipEntry e = new ZipEntry(JarFile.MANIFEST_NAME);
-				stream.putNextEntry(e);
-				manifest.write(stream);
-				stream.closeEntry();
-				stream.close();
-				modifiers.clear();
-			} catch (Exception e) {
-				handle(e);
-			}
-		}
-	}
-
 	protected static final ExceptionHandler DEFAULT_HANDLER = new ExceptionHandler() {
 		public void handle(Exception cause) {
 			throw new IllegalStateException(cause);
@@ -85,7 +35,6 @@ public class JarAssembler {
 	protected Map<Class<?>, ExceptionHandler> excetionHandlers = new HashMap<Class<?>, ExceptionHandler>();
 	protected Config conf;
 
-	protected State state;
 	protected Manifest manifest;
 	protected JarOutputStream stream;
 
@@ -93,7 +42,6 @@ public class JarAssembler {
 
 	public JarAssembler(Config conf) {
 		this.conf = conf;
-		this.state = new Begin();
 	}
 
 	public void add(Class<?> key, ExceptionHandler handler) {
@@ -104,9 +52,14 @@ public class JarAssembler {
 		open(dest, new Manifest());
 	}
 
-	public void open(File f, Manifest m) {
-		state.open(f, m);
-		state = new InProcess();
+	public void open(File file, Manifest manifest) {
+		try {
+			this.manifest = manifest;
+			this.stream = new JarOutputStream(new BufferedOutputStream(
+					new FileOutputStream(file)));
+		} catch (Exception e) {
+			handle(e);
+		}
 	}
 
 	protected void handle(Exception ex) {
@@ -140,7 +93,6 @@ public class JarAssembler {
 	}
 
 	public void entry(final Opener opener, String path) {
-		this.state.isWritable();
 		JarEntry entry = createEntry(opener, path);
 		writeEntry(opener, entry);
 	}
@@ -187,18 +139,50 @@ public class JarAssembler {
 		}
 	}
 
-	public void entry(String path) {
-		this.state.isWritable();
+	protected Set<String> existsDirectories = new HashSet<String>();
 
+	public void entry(String path) {
+		LinkedList<JarEntry> list = new LinkedList<JarEntry>();
+		for (int i = path.lastIndexOf('/'); 0 < i; i = path.lastIndexOf('/',
+				i - 1)) {
+			path = path.substring(0, i + 1);
+			if (this.existsDirectories.add(path)) {
+				JarEntry entry = new JarEntry(path);
+				entry.setMethod(ZipEntry.STORED);
+				entry.setSize(0);
+				entry.setCrc(0);
+				list.addLast(entry);
+			} else {
+				break;
+			}
+		}
+		try {
+			for (JarEntry je : list) {
+				this.stream.putNextEntry(je);
+			}
+		} catch (Exception e) {
+			handle(e);
+		}
 	}
 
 	public void add(ManifestModifier modifier) {
-		this.state.isWritable();
 		this.modifiers.add(modifier);
 	}
 
 	public void close() {
-		this.state.close();
-		this.state = new Begin();
+		try {
+			for (ManifestModifier mm : this.modifiers) {
+				mm.modify(this.manifest);
+			}
+			ZipEntry e = new ZipEntry(JarFile.MANIFEST_NAME);
+			this.stream.putNextEntry(e);
+			this.manifest.write(this.stream);
+			this.stream.closeEntry();
+			this.stream.close();
+			this.modifiers.clear();
+			this.existsDirectories.clear();
+		} catch (Exception e) {
+			handle(e);
+		}
 	}
 }
