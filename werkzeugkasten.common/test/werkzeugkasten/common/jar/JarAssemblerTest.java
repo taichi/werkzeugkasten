@@ -26,9 +26,6 @@ public class JarAssemblerTest {
 		File dest = File.createTempFile("Test", null);
 		dest.deleteOnExit();
 		try {
-			if (dest.exists()) {
-				dest.delete();
-			}
 			assembler.open(dest);
 			assembler.entry("/aaa/bbb/");
 			assembler.entry("/aaa/bbb/ccc/ddd/");
