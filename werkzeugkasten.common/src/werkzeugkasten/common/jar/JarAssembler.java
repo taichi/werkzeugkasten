@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -17,6 +18,7 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 
 import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.StringUtil;
 
 public class JarAssembler {
 
@@ -38,6 +40,12 @@ public class JarAssembler {
 	public void open(File dest, Manifest manifest) {
 		try {
 			this.manifest = manifest;
+			Attributes main = manifest.getMainAttributes();
+			String version = main.getValue(Attributes.Name.MANIFEST_VERSION);
+			if (StringUtil.isEmpty(version)) {
+				main.putValue(Attributes.Name.MANIFEST_VERSION.toString(),
+						"1.0");
+			}
 			this.stream = new JarOutputStream(new BufferedOutputStream(
 					new FileOutputStream(dest)));
 		} catch (Exception e) {
@@ -118,6 +126,9 @@ public class JarAssembler {
 	}
 
 	public void entry(String path) {
+		if ('/' != path.charAt(path.length() - 1)) {
+			path += "/";
+		}
 		LinkedList<JarEntry> list = new LinkedList<JarEntry>();
 		for (int i = path.lastIndexOf('/'); 0 < i; i = path.lastIndexOf('/',
 				i - 1)) {
