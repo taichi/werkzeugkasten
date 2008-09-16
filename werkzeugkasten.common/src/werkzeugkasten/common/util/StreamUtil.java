@@ -113,7 +113,7 @@ public class StreamUtil {
 				}
 			}
 		} catch (IOException e) {
-			throw new IllegalStateException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -123,7 +123,7 @@ public class StreamUtil {
 			out = new FileOutputStream(dest);
 			copy(in, out);
 		} catch (IOException e) {
-			throw new IllegalStateException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			close(out);
 		}
