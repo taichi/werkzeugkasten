@@ -8,6 +8,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -16,8 +17,8 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jdt.ui.jarpackager.JarPackageData;
-import org.eclipse.ui.progress.WorkbenchJob;
 
 import werkzeugkasten.common.jar.ExceptionHandler;
 import werkzeugkasten.common.jar.JarAssembler;
@@ -31,7 +32,7 @@ import werkzeugkasten.weblauncher.Constants;
 import werkzeugkasten.weblauncher.nls.Strings;
 import werkzeugkasten.weblauncher.preferences.WebPreferences;
 
-public class WarExportJob extends WorkbenchJob {
+public class WarExportJob extends WorkspaceJob {
 
 	protected IProject project;
 
@@ -40,7 +41,8 @@ public class WarExportJob extends WorkbenchJob {
 		this.project = project;
 	}
 
-	public IStatus runInUIThread(final IProgressMonitor monitor) {
+	public IStatus runInWorkspace(IProgressMonitor monitor)
+			throws CoreException {
 		monitor.beginTask(Strings.MSG_PROCESS_EXPORT, IProgressMonitor.UNKNOWN);
 		try {
 			WebPreferences pref = Activator.getPreferences(project);
@@ -86,6 +88,7 @@ public class WarExportJob extends WorkbenchJob {
 			} finally {
 				assembler.close();
 			}
+			project.refreshLocal(1, new SubProgressMonitor(monitor, 1));
 		} catch (OperationCanceledException e) {
 			throw e;
 		} catch (Exception e) {
