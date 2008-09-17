@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: werkzeugkasten.weblauncher.sdloader.exec.Main
-Server-Main: sdloader.BrowserOpen
-Server-Lib: sdloader-jsp20.jar
