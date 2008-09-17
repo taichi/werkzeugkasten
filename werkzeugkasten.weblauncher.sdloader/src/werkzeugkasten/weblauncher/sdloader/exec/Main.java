@@ -15,71 +15,90 @@ import java.util.Enumeration;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-public class Main {
+public class Main extends Thread {
+
+	private File dir;
+
+	public Main(File dir) {
+		this.dir = dir;
+	}
+
+	@Override
+	public void run() {
+		try {
+			delete(dir);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void main(String[] args) throws Exception {
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		for (Enumeration<URL> e = loader.getResources("META-INF/MANIFEST.MF"); e
-				.hasMoreElements();) {
-			URL u = e.nextElement();
-			URLConnection connection = u.openConnection();
-			connection.setDefaultUseCaches(false);
-			if (connection instanceof JarURLConnection) {
-				JarURLConnection jarcon = (JarURLConnection) connection;
-				Manifest m = read(jarcon.getInputStream());
-				Attributes attrs = m.getMainAttributes();
-				String serverMain = attrs.getValue("Server-Main");
-				String lib = attrs.getValue("Server-Lib");
-				if (lib != null && 0 < lib.length() && serverMain != null
-						&& 0 < serverMain.length()) {
-					File me = new File(jarcon.getJarFile().getName());
-					File tmpJar = copyfiles(loader, lib, me);
-					executeServer(serverMain, tmpJar);
-					break;
+		try {
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			for (Enumeration<URL> e = loader
+					.getResources("META-INF/MANIFEST.MF"); e.hasMoreElements();) {
+				URL u = e.nextElement();
+				URLConnection connection = u.openConnection();
+				connection.setDefaultUseCaches(false);
+				if (connection instanceof JarURLConnection) {
+					JarURLConnection jarcon = (JarURLConnection) connection;
+					Manifest m = read(jarcon.getInputStream());
+					Attributes attrs = m.getMainAttributes();
+					String serverMain = attrs.getValue("Server-Main");
+					String lib = attrs.getValue("Server-Lib");
+					if (lib != null && 0 < lib.length() && serverMain != null
+							&& 0 < serverMain.length()) {
+						File me = new File(jarcon.getJarFile().getName());
+						File tmpJar = copyfiles(loader, lib, me);
+						executeServer(serverMain, tmpJar);
+						break;
+					}
 				}
 			}
+		} catch (Throwable t) {
+			t.printStackTrace();
 		}
 	}
 
 	private static File copyfiles(ClassLoader loader, String lib, File me)
 			throws IOException {
 		URL jar = loader.getResource(lib);
-		final File tmpDir = new File(System.getProperty("java.io.tmpdir"),
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"),
 				"executable.war");
+		tmpDir.deleteOnExit();
 		if (tmpDir.exists()) {
 			delete(tmpDir); // delete previus extracted files
 		}
 		tmpDir.mkdirs();
-		tmpDir.deleteOnExit();
-		File tmpMe = File.createTempFile(me.getName(), null, new File(tmpDir,
-				"webapps"));
-		tmpMe.deleteOnExit();
-		File tmpJar = File.createTempFile(lib, null, tmpDir);
-		tmpJar.deleteOnExit();
+
+		System.setProperty("sdloader.home", tmpDir.getAbsolutePath());
+		File webapps = new File(tmpDir, "webapps");
+		webapps.mkdirs();
+		File tmpMe = new File(webapps, me.getName());
+		File tmpJar = new File(tmpDir, lib);
 
 		copy(jar.openStream(), new FileOutputStream(tmpJar));
 		copy(new FileInputStream(me), new FileOutputStream(tmpMe));
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				try {
-					delete(tmpDir);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		Runtime.getRuntime().addShutdownHook(new Main(tmpDir));
 		return tmpJar;
 	}
 
 	private static void executeServer(String serverMain, File tmpJar)
 			throws Exception {
-		ClassLoader cl = new URLClassLoader(
-				new URL[] { tmpJar.toURI().toURL() });
-		Class<?> mainClass = cl.loadClass(serverMain);
-		Method main = mainClass.getMethod("main",
-				new Class[] { java.lang.String[].class });
-		main.invoke(null);
+		Thread thd = Thread.currentThread();
+		ClassLoader current = thd.getContextClassLoader();
+		try {
+			ClassLoader cl = new URLClassLoader(new URL[] { tmpJar.toURI()
+					.toURL() });
+			thd.setContextClassLoader(cl);
+			Class<?> mainClass = cl.loadClass(serverMain);
+			Method main = mainClass.getMethod("main",
+					new Class[] { java.lang.String[].class });
+			main.invoke(null, new Object[] { new String[] {} });
+		} finally {
+			thd.setContextClassLoader(current);
+		}
 	}
 
 	private static Manifest read(InputStream in) throws IOException {

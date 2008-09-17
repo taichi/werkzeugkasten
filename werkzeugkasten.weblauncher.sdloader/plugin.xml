@@ -9,5 +9,26 @@
             type="SDLoader">
       </launchConfigurationFacet>
    </extension>
-
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="werkzeugkasten.weblauncher.sdloader.objectContribution.toggle"
+            objectClass="org.eclipse.core.resources.IProject">
+         <visibility>
+            <objectState
+                  name="projectNature"
+                  value="werkzeugkasten.weblauncher.nature">
+            </objectState>
+         </visibility>
+         <action
+               class="werkzeugkasten.weblauncher.sdloader.action.ExportExecutableWarAction"
+               enablesFor="1"
+               icon="icons/jar_obj.gif"
+               id="werkzeugkasten.weblauncher.sdloader.action.toggle.war"
+               label="%executable.war"
+               menubarPath="werkzeugkasten.weblauncher.menu.popup/additions2">
+         </action>
+      </objectContribution>
+   </extension>
 </plugin>

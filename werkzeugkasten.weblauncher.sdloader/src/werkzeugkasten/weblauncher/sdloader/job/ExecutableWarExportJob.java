@@ -40,7 +40,7 @@ public class ExecutableWarExportJob extends WarExportJob {
 		assembler.entry(new URLOpener(url), "sdloader-jsp20.jar");
 
 		String main = "werkzeugkasten/weblauncher/sdloader/exec/Main.class";
-		assembler.entry(new URLOpener(bundle.getEntry(main)), main);
+		assembler.entry(new URLOpener(bundle.getResource(main)), main);
 
 	}
 }
