@@ -15,12 +15,16 @@ public abstract class JarConfig {
 
 	protected Map<Class<?>, ExceptionHandler> excetionHandlers = new HashMap<Class<?>, ExceptionHandler>();
 
+	public JarConfig() {
+		excetionHandlers.put(Object.class, DEFAULT_HANDLER);
+	}
+
 	public ExceptionHandler find(Class<?> key) {
 		ExceptionHandler eh = this.excetionHandlers.get(key);
-		if (eh == null) {
-			return DEFAULT_HANDLER;
-		} else {
+		if (eh != null) {
 			return eh;
+		} else {
+			return find(key.getSuperclass());
 		}
 	}
 
