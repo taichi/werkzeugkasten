@@ -1,5 +1,6 @@
 package werkzeugkasten.weblauncher.job;
 
+import java.io.InputStream;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
@@ -15,11 +16,14 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.ui.jarpackager.IJarBuilder;
 import org.eclipse.jdt.ui.jarpackager.JarPackageData;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.progress.WorkbenchJob;
 
+import werkzeugkasten.common.jar.ExceptionHandler;
+import werkzeugkasten.common.jar.JarAssembler;
+import werkzeugkasten.common.jar.JarConfig;
+import werkzeugkasten.common.jar.Opener;
+import werkzeugkasten.common.runtime.StatusUtil;
 import werkzeugkasten.common.ui.ProgressMonitorUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.weblauncher.Activator;
@@ -40,18 +44,38 @@ public class WarExportJob extends WorkbenchJob {
 		monitor.beginTask(Strings.MSG_PROCESS_EXPORT, IProgressMonitor.UNKNOWN);
 		try {
 			WebPreferences pref = Activator.getPreferences(project);
-			JarPackageData data = setUp(project, pref);
 
 			final MultiStatus status = new MultiStatus(Constants.ID_PLUGIN,
 					IStatus.ERROR, Strings.MSG_EXPORT_ERRORS, null);
-			final IJarBuilder builder = data.createFatJarBuilder();
+			JarAssembler assembler = new JarAssembler(new JarConfig() {
+				{
+					excetionHandlers.put(Exception.class,
+							new ExceptionHandler() {
+								public void handle(Exception cause) {
+									if (cause instanceof CoreException) {
+										CoreException ce = (CoreException) cause;
+										status.add(ce.getStatus());
+									} else {
+										status.add(StatusUtil.createError(
+												Activator.getDefault(), cause));
+									}
+								}
+							});
+				}
+
+				public boolean compress() {
+					return true;
+				}
+			});
+
 			try {
-				data.setElements(new Object[] { project }); // dummy data.
-				builder.open(data, new Shell(getDisplay()), status);
+				IPath dest = project.getLocation()
+						.append(pref.getContextName()).addFileExtension("war");
+				assembler.open(dest.toFile());
 
 				ProgressMonitorUtil.isCanceled(monitor, 1);
 
-				addEntries(monitor, pref, data, builder);
+				addEntries(monitor, pref, assembler);
 
 				ProgressMonitorUtil.isCanceled(monitor, 1);
 				IStatus[] kids = status.getChildren();
@@ -60,7 +84,7 @@ public class WarExportJob extends WorkbenchJob {
 				}
 				ProgressMonitorUtil.isCanceled(monitor, 1);
 			} finally {
-				builder.close();
+				assembler.close();
 			}
 		} catch (OperationCanceledException e) {
 			throw e;
@@ -73,7 +97,7 @@ public class WarExportJob extends WorkbenchJob {
 	}
 
 	protected void addEntries(final IProgressMonitor monitor,
-			WebPreferences pref, JarPackageData data, final IJarBuilder builder)
+			WebPreferences pref, final JarAssembler assembler)
 			throws CoreException {
 		IPath basePath = new Path(pref.getBaseDir());
 		IResource base = ResourcesPlugin.getWorkspace().getRoot().findMember(
@@ -89,10 +113,14 @@ public class WarExportJob extends WorkbenchJob {
 						return false;
 					}
 					if (resource.getType() == IResource.FILE) {
-						IFile f = (IFile) resource;
+						final IFile f = (IFile) resource;
 						IPath dest = f.getFullPath().removeFirstSegments(
 								baseSegment);
-						builder.writeFile(f, dest);
+						assembler.entry(new Opener() {
+							public InputStream open() throws Exception {
+								return f.getContents();
+							}
+						}, dest.toString());
 					}
 					return true;
 				}

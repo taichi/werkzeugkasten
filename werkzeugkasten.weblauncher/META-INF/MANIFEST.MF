@@ -19,6 +19,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text
 Export-Package: werkzeugkasten.common.action,
  werkzeugkasten.common.debug,
+ werkzeugkasten.common.exception,
+ werkzeugkasten.common.jar,
  werkzeugkasten.common.jdt,
  werkzeugkasten.common.resource,
  werkzeugkasten.common.runtime,
