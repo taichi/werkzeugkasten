@@ -6,7 +6,7 @@
    <feature url="features/werkzeugkasten.dblauncher.feature_0.0.10.jar" id="werkzeugkasten.dblauncher.feature" version="0.0.10">
       <category name="DbLauncher"/>
    </feature>
-   <feature url="features/werkzeugkasten.weblauncher.feature_0.0.11.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.11">
+   <feature url="features/werkzeugkasten.weblauncher.feature_0.0.12.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.12">
       <category name="WebLauncher"/>
    </feature>
    <feature url="features/werkzeugkasten.dirbuildpathupdater.feature_0.0.5.jar" id="werkzeugkasten.dirbuildpathupdater.feature" version="0.0.5">
