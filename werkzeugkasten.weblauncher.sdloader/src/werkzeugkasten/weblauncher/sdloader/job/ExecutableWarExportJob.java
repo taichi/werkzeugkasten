@@ -1,24 +1,17 @@
 package werkzeugkasten.weblauncher.sdloader.job;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.jar.Attributes;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.osgi.framework.Bundle;
 
 import werkzeugkasten.common.jar.JarAssembler;
 import werkzeugkasten.common.jar.ManifestModifier;
-import werkzeugkasten.common.jar.Opener;
 import werkzeugkasten.common.jar.URLOpener;
-import werkzeugkasten.common.runtime.StatusUtil;
 import werkzeugkasten.weblauncher.job.WarExportJob;
 import werkzeugkasten.weblauncher.preferences.WebPreferences;
 import werkzeugkasten.weblauncher.sdloader.Activator;
@@ -42,24 +35,12 @@ public class ExecutableWarExportJob extends WarExportJob {
 			}
 		});
 		super.addEntries(monitor, pref, assembler);
-		try {
-			Bundle bundle = Activator.getDefault().getBundle();
-			URL url = bundle.getEntry("sdloader/lib/sdloader-jsp20.jar");
-			assembler.entry(new URLOpener(url), "sdloader-jsp20.jar");
+		Bundle bundle = Activator.getDefault().getBundle();
+		URL url = bundle.getEntry("sdloader/lib/sdloader-jsp20.jar");
+		assembler.entry(new URLOpener(url), "sdloader-jsp20.jar");
 
-			url = bundle.getEntry("sdloader/lib/executablewar.jar");
-			final JarFile jar = new JarFile(url.getPath());
-			final JarEntry entry = jar
-					.getJarEntry("werkzeugkasten/weblauncher/sdloader/exec/Main.class");
-			assembler.entry(new Opener() {
-				public InputStream open() throws Exception {
-					return jar.getInputStream(entry);
-				}
-			}, "werkzeugkasten/weblauncher/sdloader/exec/Main.class");
+		String main = "werkzeugkasten/weblauncher/sdloader/exec/Main.class";
+		assembler.entry(new URLOpener(bundle.getEntry(main)), main);
 
-		} catch (IOException e) {
-			IStatus s = StatusUtil.createError(Activator.getDefault(), e);
-			throw new CoreException(s);
-		}
 	}
 }
