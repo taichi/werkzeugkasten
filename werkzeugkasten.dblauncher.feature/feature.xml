@@ -2,7 +2,7 @@
 <feature
       id="werkzeugkasten.dblauncher.feature"
       label="Dblauncher"
-      version="0.0.10"
+      version="0.0.11"
       provider-name="ryushi">
 
    <description url="http://code.google.com/p/werkzeugkasten/">
@@ -445,6 +445,6 @@ limitations under the License.
          id="werkzeugkasten.docs"
          download-size="0"
          install-size="0"
-         version="0.0.3"/>
+         version="0.0.4"/>
 
 </feature>
