@@ -90,7 +90,7 @@ public class Main extends Thread {
 		ClassLoader current = thd.getContextClassLoader();
 		try {
 			ClassLoader cl = new URLClassLoader(new URL[] { tmpJar.toURI()
-					.toURL() });
+					.toURL() }, current);
 			thd.setContextClassLoader(cl);
 			Class<?> mainClass = cl.loadClass(serverMain);
 			Method main = mainClass.getMethod("main",
