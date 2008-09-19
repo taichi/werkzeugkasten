@@ -2,7 +2,7 @@
 <feature
       id="werkzeugkasten.weblauncher.feature"
       label="WebLauncher"
-      version="0.0.12">
+      version="0.0.13">
 
    <description url="http://code.google.com/p/werkzeugkasten/">
       This project is quickly and minimum java toolset by anytime code writing.
@@ -445,7 +445,7 @@
          id="werkzeugkasten.weblauncher.sdloader"
          download-size="0"
          install-size="0"
-         version="0.0.4"/>
+         version="0.0.5"/>
 
    <plugin
          id="werkzeugkasten.weblauncher.tomcat55"
