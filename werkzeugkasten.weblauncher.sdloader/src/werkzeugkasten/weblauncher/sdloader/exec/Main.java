@@ -13,6 +13,7 @@ import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.jar.Attributes;
+import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 public class Main extends Thread {
@@ -36,7 +37,7 @@ public class Main extends Thread {
 		try {
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();
 			for (Enumeration<URL> e = loader
-					.getResources("META-INF/MANIFEST.MF"); e.hasMoreElements();) {
+					.getResources(JarFile.MANIFEST_NAME); e.hasMoreElements();) {
 				URL u = e.nextElement();
 				URLConnection connection = u.openConnection();
 				connection.setDefaultUseCaches(false);
