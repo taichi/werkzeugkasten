@@ -24,7 +24,7 @@
          <action
                class="werkzeugkasten.weblauncher.sdloader.action.ExportExecutableWarAction"
                enablesFor="1"
-               icon="icons/jar_obj.gif"
+               icon="icons/trayicon.gif"
                id="werkzeugkasten.weblauncher.sdloader.action.toggle.war"
                label="%executable.war"
                menubarPath="werkzeugkasten.weblauncher.menu.popup/additions2">
