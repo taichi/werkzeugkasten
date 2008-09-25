@@ -1,35 +1,33 @@
 package werkzeugkasten.common.util;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
 
 import werkzeugkasten.common.exception.IORuntimeException;
 
 public class StreamUtil {
 
-	public interface _<STREAM, T extends Throwable> {
-		STREAM open() throws T;
+	public static abstract class using<STREAM extends Closeable, T extends Throwable> {
+		public using() {
+			$(this);
+		}
 
-		void handle(STREAM stream) throws T;
+		public abstract STREAM open() throws T;
 
-		void happen(T exception);
+		public abstract void handle(STREAM stream) throws T;
 
-	}
-
-	private interface D<STREAM> {
-		void dispose(STREAM stream);
+		public abstract void happen(T exception);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <STREAM, T extends Throwable> void $(_<STREAM, T> _,
-			D<STREAM> c) {
+	static <STREAM extends Closeable, T extends Throwable> void $(
+			using<STREAM, T> _) {
 		STREAM in = null;
 		try {
 			in = _.open();
@@ -37,62 +35,14 @@ public class StreamUtil {
 		} catch (Throwable e) {
 			_.happen((T) e);
 		} finally {
-			c.dispose(in);
+			close(in);
 		}
 	}
 
-	public static <STREAM extends InputStream, T extends Throwable> void is(
-			_<STREAM, T> _) {
-		$(_, new D<STREAM>() {
-			public void dispose(STREAM stream) {
-				close(stream);
-			};
-		});
-	}
-
-	public static <STREAM extends OutputStream, T extends Throwable> void os(
-			_<STREAM, T> _) {
-		$(_, new D<STREAM>() {
-			public void dispose(STREAM stream) {
-				close(stream);
-			};
-		});
-	}
-
-	public static void close(InputStream in) {
+	public static void close(Closeable c) {
 		try {
-			if (in != null) {
-				in.close();
-			}
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
-
-	public static void close(OutputStream out) {
-		try {
-			if (out != null) {
-				out.close();
-			}
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
-
-	public static void close(Reader r) {
-		try {
-			if (r != null) {
-				r.close();
-			}
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-	}
-
-	public static void close(Writer w) {
-		try {
-			if (w != null) {
-				w.close();
+			if (c != null) {
+				c.close();
 			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);

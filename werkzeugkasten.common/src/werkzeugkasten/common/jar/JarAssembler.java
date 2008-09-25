@@ -19,6 +19,7 @@ import java.util.zip.ZipEntry;
 
 import werkzeugkasten.common.util.StreamUtil;
 import werkzeugkasten.common.util.StringUtil;
+import werkzeugkasten.common.util.StreamUtil.using;
 
 public class JarAssembler {
 
@@ -62,20 +63,19 @@ public class JarAssembler {
 	}
 
 	protected void entry(final Opener opener, final $entry func) {
-		StreamUtil.is(new StreamUtil._<InputStream, Exception>() {
+		new using<InputStream, Exception>() {
 			public InputStream open() throws Exception {
 				return opener.open();
 			}
 
-			public void handle(InputStream in) throws Exception {
-				func.invoke(in);
+			public void handle(InputStream stream) throws Exception {
+				func.invoke(stream);
 			}
 
-			public void happen(Exception ex) {
-				JarAssembler.this.handle(ex);
+			public void happen(Exception exception) {
+				JarAssembler.this.handle(exception);
 			}
-		});
-
+		};
 	}
 
 	public void entry(final Opener opener, String path) {
