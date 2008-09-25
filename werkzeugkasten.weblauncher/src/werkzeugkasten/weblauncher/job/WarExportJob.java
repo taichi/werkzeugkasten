@@ -1,5 +1,6 @@
 package werkzeugkasten.weblauncher.job;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.regex.Pattern;
 
@@ -71,9 +72,13 @@ public class WarExportJob extends WorkspaceJob {
 			});
 
 			try {
-				IPath dest = project.getLocation()
+				IPath path = project.getLocation()
 						.append(pref.getContextName()).addFileExtension("war");
-				assembler.open(dest.toFile());
+				File dest = path.toFile();
+				if (dest.exists()) {
+					dest.delete();
+				}
+				assembler.open(dest);
 
 				ProgressMonitorUtil.isCanceled(monitor, 1);
 
