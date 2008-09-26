@@ -27,7 +27,7 @@ import org.osgi.framework.Bundle;
 
 import werkzeugkasten.common.debug.LaunchConfigurationFactory;
 import werkzeugkasten.common.resource.ProjectUtil;
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.Constants;
@@ -173,7 +173,7 @@ public class TomcatLaunchConfigurationBuilder implements
 		} catch (Exception e) {
 			Activator.log(e);
 		} finally {
-			StreamUtil.close(in);
+			Streams.close(in);
 		}
 	}
 
@@ -187,7 +187,7 @@ public class TomcatLaunchConfigurationBuilder implements
 		WebPreferences pref = Activator.getPreferences(getProject());
 		IPath baseDirPath = new Path(pref.getBaseDir());
 		IWorkspaceRoot root = ProjectUtil.getWorkspaceRoot();
-		IResource r  = root.findMember(baseDirPath);
+		IResource r = root.findMember(baseDirPath);
 		String workDir = getProject().getLocation().toString();
 		if (r != null && r.exists()) {
 			workDir = baseDirPath.toString();
