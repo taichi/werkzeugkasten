@@ -17,9 +17,9 @@ import java.util.jar.Manifest;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.common.util.StringUtil;
-import werkzeugkasten.common.util.StreamUtil.using;
+import werkzeugkasten.common.util.Streams.using;
 
 public class JarAssembler {
 
@@ -63,15 +63,18 @@ public class JarAssembler {
 	}
 
 	protected void entry(final Opener opener, final $entry func) {
-		new using<InputStream, Exception>() {
+		new using<InputStream, Exception>(Exception.class) {
+			@Override
 			public InputStream open() throws Exception {
 				return opener.open();
 			}
 
+			@Override
 			public void handle(InputStream stream) throws Exception {
 				func.invoke(stream);
 			}
 
+			@Override
 			public void happen(Exception exception) {
 				JarAssembler.this.handle(exception);
 			}
@@ -117,7 +120,7 @@ public class JarAssembler {
 			this.stream.putNextEntry(je);
 			entry(opener, new $entry() {
 				public void invoke(InputStream in) throws Exception {
-					StreamUtil.copy(in, stream);
+					Streams.copy(in, stream);
 				}
 			});
 		} catch (Exception e) {

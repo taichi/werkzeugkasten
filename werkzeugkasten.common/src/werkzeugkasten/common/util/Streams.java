@@ -2,20 +2,22 @@ package werkzeugkasten.common.util;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import werkzeugkasten.common.exception.IORuntimeException;
 
-public class StreamUtil {
+public class Streams {
 
-	public static abstract class using<STREAM extends Closeable, T extends Throwable> {
-		public using() {
-			$(this);
+	static final Logger LOG = Logger.getLogger(Streams.class.getName());
+
+	public static abstract class using<STREAM extends Closeable, T extends Exception> {
+		public using(Class<T> clazz) {
+			$(this, clazz);
 		}
 
 		public abstract STREAM open() throws T;
@@ -26,14 +28,17 @@ public class StreamUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	static <STREAM extends Closeable, T extends Throwable> void $(
-			using<STREAM, T> _) {
+	static <STREAM extends Closeable, T extends Exception> void $(
+			using<STREAM, T> _, Class<T> clazz) {
 		STREAM in = null;
 		try {
 			in = _.open();
 			_.handle(in);
-		} catch (Throwable e) {
-			_.happen((T) e);
+		} catch (Exception e) {
+			if (clazz.isAssignableFrom(e.getClass())) {
+				_.happen((T) e);
+			}
+			throw new IllegalStateException(e);
 		} finally {
 			close(in);
 		}
@@ -45,12 +50,17 @@ public class StreamUtil {
 				c.close();
 			}
 		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			LOG.log(Level.WARNING, e.getLocalizedMessage(), e);
 		}
 	}
 
 	public static final int BUF_SIZE = 128 * 128;
 
+	/**
+	 * @param in
+	 * @param out
+	 * @see FileUtil#copy(InputStream, java.io.File)
+	 */
 	public static void copy(InputStream in, OutputStream out) {
 		byte[] buf = new byte[BUF_SIZE];
 		try {
@@ -64,18 +74,6 @@ public class StreamUtil {
 			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
-		}
-	}
-
-	public static void copy(InputStream in, File dest) {
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(dest);
-			copy(in, out);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			close(out);
 		}
 	}
 

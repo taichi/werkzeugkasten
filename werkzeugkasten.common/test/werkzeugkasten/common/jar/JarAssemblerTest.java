@@ -12,7 +12,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 
 public class JarAssemblerTest {
 
@@ -61,7 +61,7 @@ public class JarAssemblerTest {
 
 		JarEntry file = jar.getJarEntry("ccc/aaa/JarAssemblerTest.das");
 		Assert.assertNotSame(file.getSize(), file.getCompressedSize());
-		String s = StreamUtil.readText(jar.getInputStream(file));
+		String s = Streams.readText(jar.getInputStream(file));
 		Assert.assertEquals("dddddd", s);
 
 	}
