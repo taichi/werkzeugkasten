@@ -27,7 +27,7 @@ import org.osgi.framework.Bundle;
 
 import werkzeugkasten.common.debug.LaunchConfigurationFactory;
 import werkzeugkasten.common.resource.ProjectUtil;
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.Constants;
@@ -172,7 +172,7 @@ public class TomcatLaunchConfigurationBuilder implements
 		} catch (Exception e) {
 			Activator.log(e);
 		} finally {
-			StreamUtil.close(in);
+			Streams.close(in);
 		}
 	}
 
