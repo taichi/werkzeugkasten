@@ -34,7 +34,7 @@ import org.eclipse.ui.progress.WorkbenchJob;
 import werkzeugkasten.common.action.EnablerAction;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.resource.ResourceUtil;
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.Constants;
 import werkzeugkasten.weblauncher.job.StartServerJob;
@@ -167,7 +167,7 @@ public class ViewOnServerAction extends EnablerAction {
 			} catch (Exception e) {
 				Activator.log(e);
 			} finally {
-				StreamUtil.close(in);
+				Streams.close(in);
 				monitor.done();
 			}
 			return Status.OK_STATUS;
