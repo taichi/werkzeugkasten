@@ -45,7 +45,7 @@ import werkzeugkasten.common.jdt.TypeUtil;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.ui.ProgressMonitorUtil;
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.nlsgen.Activator;
 import werkzeugkasten.nlsgen.Constants;
@@ -135,7 +135,7 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 		}
 	}
 
-	private Properties loadProperties(IFile properties) throws Exception {
+	private Properties loadProperties(final IFile properties) throws Exception {
 		InputStream in = null;
 		try {
 			in = new BufferedInputStream(properties.getContents());
@@ -143,7 +143,7 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 			props.load(in);
 			return props;
 		} finally {
-			StreamUtil.close(in);
+			Streams.close(in);
 		}
 	}
 
