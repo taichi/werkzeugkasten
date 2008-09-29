@@ -31,4 +31,28 @@
          </action>
       </objectContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="werkzeugkasten.weblauncher.sdloader.actionSet"
+            label="%plugin.label"
+            visible="true">
+         <menu
+               id="werkzeugkasten.weblauncher.menu"
+               label="%plugin.label">
+            <groupMarker
+                  name="werkzeugkasten.weblauncher.groupMarker">
+            </groupMarker>
+         </menu>
+         <action
+               class="werkzeugkasten.weblauncher.sdloader.action.ExportExecutableWarAction"
+               enablesFor="1"
+               icon="icons/trayicon.gif"
+               id="werkzeugkasten.weblauncher.sdloader.action.war"
+               label="%executable.war"
+               menubarPath="werkzeugkasten.weblauncher.menu/werkzeugkasten.weblauncher.groupMarker"
+               toolbarPath="werkzeugkasten.weblauncher.menu/werkzeugkasten.weblauncher.groupMarker">
+         </action>
+      </actionSet>
+   </extension>
 </plugin>
