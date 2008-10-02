@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Level;
 
-import werkzeugkasten.common.exception.FileNotFoundRuntimeException;
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.exception.IORuntimeException;
+import werkzeugkasten.common.util.FileUtil;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
 import werkzeugkasten.mvnhack.repository.Context;
@@ -28,9 +28,9 @@ public class DestinationUtil {
 					}
 					in = context.open(artifact, url);
 					Constants.LOG.log(Level.INFO, "copy to {0}", dest);
-					StreamUtil.copy(in, dest);
+					FileUtil.copy(in, dest);
 				}
-			} catch (FileNotFoundRuntimeException e) {
+			} catch (IORuntimeException e) {
 			} catch (RuntimeException e) {
 				Throwable t = e.getCause();
 				if (t == null) {

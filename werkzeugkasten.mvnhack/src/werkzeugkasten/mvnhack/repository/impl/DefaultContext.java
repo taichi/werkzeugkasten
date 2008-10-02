@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.Constants;
 import werkzeugkasten.mvnhack.repository.Artifact;
@@ -116,6 +116,6 @@ public class DefaultContext implements Context {
 
 	@Override
 	public void close(InputStream stream) {
-		StreamUtil.close(stream);
+		Streams.close(stream);
 	}
 }

@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.util.XMLEventParser;
 import werkzeugkasten.common.util.XMLEventParser.DefaultHandler;
@@ -39,7 +39,7 @@ public class StAXArtifactBuilder implements ArtifactBuilder {
 			try {
 				parser.parse();
 			} finally {
-				StreamUtil.close(pom);
+				Streams.close(pom);
 			}
 			resolveParent(context, parent.getArtifact());
 			reconcile(context, result, parent, managed);

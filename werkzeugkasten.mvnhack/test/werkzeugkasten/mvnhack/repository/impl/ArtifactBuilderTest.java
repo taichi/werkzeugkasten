@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.common.util.XMLEventParser;
 import werkzeugkasten.common.util.XMLEventParser.DefaultHandler;
@@ -41,7 +41,7 @@ public class ArtifactBuilderTest {
 
 	@After
 	public void tearDown() {
-		StreamUtil.close(in);
+		Streams.close(in);
 	}
 
 	@Test

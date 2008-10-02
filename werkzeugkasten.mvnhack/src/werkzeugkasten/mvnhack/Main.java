@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvnhack.repository.impl.DefaultConfiguration;
 import werkzeugkasten.mvnhack.repository.impl.DefaultContext;
@@ -98,23 +98,33 @@ public class Main {
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		Locale l = Locale.getDefault();
 		String help = HELP + l.getLanguage();
-		URL url = cl.getResource(help);
-		if (url == null) {
-			url = cl.getResource(HELP_DEFAULT);
+		URL u = cl.getResource(help);
+		if (u == null) {
+			u = cl.getResource(HELP_DEFAULT);
 		}
-
+		final URL url = u;
 		if (url != null) {
-			InputStream in = null;
-			try {
-				in = UrlUtil.open(url);
-				BufferedReader r = new BufferedReader(new InputStreamReader(in));
-				while (r.ready()) {
-					System.out.println(r.readLine());
+			new Streams.using<InputStream, Exception>(Exception.class) {
+				@Override
+				public InputStream open() throws Exception {
+					return UrlUtil.open(url);
 				}
-			} catch (Exception e) {
-			} finally {
-				StreamUtil.close(in);
-			}
+
+				@Override
+				public void handle(InputStream stream) throws Exception {
+					BufferedReader r = new BufferedReader(
+							new InputStreamReader(stream));
+					while (r.ready()) {
+						System.out.println(r.readLine());
+					}
+				}
+
+				@Override
+				public void happen(Exception exception) {
+
+				}
+			};
+
 		}
 	}
 }
