@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<client>
+	<name>werkzeugkasten.ecf.provider.twitter4j</name>
+	<version>0.0.1</version>
+	<author>
+		<name>Taichi</name>
+		<email>ryushi@gmail.com</email>
+		<twitter>ryushi</twitter>
+	</author>
+	<url>http://code.google.com/p/werkzeugkasten/</url>
+	<twitter>たいちすぺしゃる</twitter>
+	<description><![CDATA[
+		werkzeugkasten.ecf.provider.twitter4j is the twitter client based on ecf.
+	]]>
+	</description>
+</client>
