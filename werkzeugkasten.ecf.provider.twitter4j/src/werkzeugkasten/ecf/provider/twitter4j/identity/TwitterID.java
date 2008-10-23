@@ -8,10 +8,16 @@ public class TwitterID extends BaseID implements IChatID {
 
 	private static final long serialVersionUID = -5464014141874282332L;
 	protected String username;
+	protected twitter4j.User user;
 
 	public TwitterID(Namespace namespace, String username) {
 		super(namespace);
 		this.username = username;
+	}
+
+	public TwitterID(Namespace namespace, twitter4j.User user) {
+		this(namespace, user.getName());
+		this.user = user;
 	}
 
 	@Override
@@ -53,6 +59,8 @@ public class TwitterID extends BaseID implements IChatID {
 	public Object getAdapter(Class clazz) {
 		if (clazz.isInstance(this)) {
 			return this;
+		} else if (clazz.isInstance(user)) {
+			return user;
 		}
 		return super.getAdapter(clazz);
 	}
