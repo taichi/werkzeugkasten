@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Twitter4j Provider UI
+Bundle-SymbolicName: werkzeugkasten.ecf.provider.twitter4j.ui
+Bundle-Version: 0.0.1
+Bundle-Activator: werkzeugkasten.ecf.provider.twitter4j.ui.Activator
+Require-Bundle: werkzeugkasten.ecf.provider.twitter4j,
+ org.eclipse.core.runtime,
+ org.eclipse.ecf.ui,
+ org.eclipse.ecf,
+ org.eclipse.ecf.presence,
+ org.eclipse.ecf.presence.ui,
+ org.eclipse.jface.text,
+ org.eclipse.ui,
+ org.eclipse.ui.workbench.texteditor
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: ryushi
