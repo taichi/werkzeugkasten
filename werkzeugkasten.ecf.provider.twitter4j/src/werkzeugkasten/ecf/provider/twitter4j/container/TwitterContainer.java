@@ -155,10 +155,11 @@ public class TwitterContainer extends AbstractContainer implements
 	}
 
 	public void readTimeline() {
-		this.twitter.getUserTimelineAsync(twitter.getUserId(), this.since,
-				this.listener);
-		this.since.setTime(System.currentTimeMillis());
-
+		synchronized (this.since) {
+			this.twitter.getUserTimelineAsync(twitter.getUserId(), this.since,
+					this.listener);
+			this.since.setTime(System.currentTimeMillis());
+		}
 	}
 
 	@Override
@@ -222,8 +223,7 @@ public class TwitterContainer extends AbstractContainer implements
 		try {
 			List<User> list = this.twitter.getFriends();
 			List<ID> ids = new ArrayList<ID>(list.size());
-			Namespace n = IDFactory.getDefault().getNamespaceByName(
-					Constants.ID_NAMESPACE);
+			Namespace n = getConnectNamespace();
 			for (User u : list) {
 				ids.add(new TwitterID(n, u));
 			}
