@@ -17,7 +17,6 @@ import org.eclipse.ui.XMLMemento;
 
 import werkzeugkasten.common.action.EnablerAction;
 import werkzeugkasten.common.resource.ProjectUtil;
-import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.ui.WorkbenchUtil;
 import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.Constants;
@@ -110,7 +109,7 @@ public class ToggleServerAction extends EnablerAction {
 	}
 
 	protected static IProject findCurrentProject() {
-		IProject result = ResourceUtil.getCurrentSelectedProject();
+		IProject result = WorkbenchUtil.getCurrentSelectedProject();
 		if (result != null) {
 			return result;
 		}
