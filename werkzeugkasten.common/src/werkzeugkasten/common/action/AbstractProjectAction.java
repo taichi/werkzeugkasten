@@ -9,9 +9,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 
-import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.runtime.LogUtil;
+import werkzeugkasten.common.ui.WorkbenchUtil;
 
 /**
  * @author taichi
@@ -31,8 +31,9 @@ public abstract class AbstractProjectAction implements IActionDelegate {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-	 *      org.eclipse.jface.viewers.ISelection)
+	 * @see
+	 * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
+	 * .IAction, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
@@ -56,7 +57,7 @@ public abstract class AbstractProjectAction implements IActionDelegate {
 	public void run(IAction action) {
 		try {
 			if (this.project == null) {
-				this.project = ResourceUtil.getCurrentSelectedProject();
+				this.project = WorkbenchUtil.getCurrentSelectedProject();
 			}
 			if (this.project != null) {
 				run(action, this.project);
