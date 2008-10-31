@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvncrawler.util.SqlExecutor;
 import werkzeugkasten.mvncrawler.util.SqlExecutor.Handler;
@@ -74,7 +74,7 @@ public class Main {
 			@Override
 			public String getSql() {
 				URL create = cl.getResource("createTable.sql");
-				return StreamUtil.readText(UrlUtil.open(create));
+				return Streams.readText(UrlUtil.open(create));
 			}
 
 			@Override

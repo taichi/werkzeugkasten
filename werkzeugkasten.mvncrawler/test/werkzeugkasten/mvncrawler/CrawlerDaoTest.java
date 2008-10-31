@@ -18,7 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import werkzeugkasten.common.util.FileUtil;
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvncrawler.util.SqlExecutor;
 import werkzeugkasten.mvncrawler.util.SqlExecutor.Handler;
@@ -49,7 +49,7 @@ public class CrawlerDaoTest {
 			@Override
 			public String getSql() {
 				URL create = cl.getResource("createTable.sql");
-				return StreamUtil.readText(UrlUtil.open(create));
+				return Streams.readText(UrlUtil.open(create));
 			}
 
 			@Override
@@ -136,7 +136,7 @@ public class CrawlerDaoTest {
 			public String getSql() {
 				URL data = getClass().getClassLoader().getResource(
 						"testdata.sql");
-				return StreamUtil.readText(UrlUtil.open(data));
+				return Streams.readText(UrlUtil.open(data));
 			}
 
 			@Override

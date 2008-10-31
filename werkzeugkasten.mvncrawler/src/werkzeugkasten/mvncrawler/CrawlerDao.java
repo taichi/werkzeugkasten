@@ -11,7 +11,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import werkzeugkasten.common.util.StreamUtil;
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.common.util.UrlUtil;
 import werkzeugkasten.mvncrawler.util.SqlExecutor;
 import werkzeugkasten.mvncrawler.util.SqlExecutor.Handler;
@@ -29,7 +29,7 @@ public class CrawlerDao {
 		ClassLoader cl = CrawlerDao.class.getClassLoader();
 		URL url = cl
 				.getResource("werkzeugkasten/mvncrawler/CrawlerDao_selectDependencies.sql");
-		SELECT_DEPENDENCY = StreamUtil.readText(UrlUtil.open(url));
+		SELECT_DEPENDENCY = Streams.readText(UrlUtil.open(url));
 	}
 
 	protected SqlExecutor executor;
