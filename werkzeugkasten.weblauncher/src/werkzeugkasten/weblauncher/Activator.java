@@ -37,7 +37,6 @@ import org.osgi.framework.BundleContext;
 import werkzeugkasten.common.debug.LaunchUtil;
 import werkzeugkasten.common.debug.TerminateListener;
 import werkzeugkasten.common.jdt.JavaElementUtil;
-import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.runtime.LogUtil;
 import werkzeugkasten.common.ui.ImageLoader;
 import werkzeugkasten.common.ui.WorkbenchUtil;
@@ -276,7 +275,7 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public static IProject findCurrentProject() {
-		IProject result = ResourceUtil.getCurrentSelectedProject();
+		IProject result = WorkbenchUtil.getCurrentSelectedProject();
 		if (result != null) {
 			return result;
 		}

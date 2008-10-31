@@ -33,7 +33,7 @@ import org.eclipse.ui.progress.WorkbenchJob;
 
 import werkzeugkasten.common.action.EnablerAction;
 import werkzeugkasten.common.resource.ProjectUtil;
-import werkzeugkasten.common.resource.ResourceUtil;
+import werkzeugkasten.common.ui.WorkbenchUtil;
 import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.Constants;
@@ -96,7 +96,7 @@ public class ViewOnServerAction extends EnablerAction {
 		if (checkEnabled() == false) {
 			return;
 		}
-		final IResource resource = ResourceUtil
+		final IResource resource = WorkbenchUtil
 				.getCurrentSelectedResouce(IResource.class);
 		if (resource == null) {
 			return;
