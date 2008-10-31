@@ -3,6 +3,8 @@ package werkzeugkasten.ecf.provider.twitter4j;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
+import werkzeugkasten.common.runtime.LogUtil;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -49,7 +51,7 @@ public class Activator extends Plugin {
 	}
 
 	public static void log(Throwable t) {
-		// TODO implement logging.
+		LogUtil.log(getDefault(), t);
 	}
 
 }
