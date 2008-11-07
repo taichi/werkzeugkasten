@@ -25,6 +25,8 @@ import org.eclipse.ecf.presence.IIMMessageListener;
 import org.eclipse.ecf.presence.IPresence;
 import org.eclipse.ecf.presence.Presence;
 import org.eclipse.ecf.presence.chatroom.ChatRoomCreateException;
+import org.eclipse.ecf.presence.chatroom.ChatRoomMessage;
+import org.eclipse.ecf.presence.chatroom.ChatRoomMessageEvent;
 import org.eclipse.ecf.presence.chatroom.IChatRoomAdminListener;
 import org.eclipse.ecf.presence.chatroom.IChatRoomAdminSender;
 import org.eclipse.ecf.presence.chatroom.IChatRoomContainer;
@@ -38,7 +40,6 @@ import org.eclipse.ecf.presence.history.IHistoryManager;
 import org.eclipse.ecf.presence.im.ChatMessage;
 import org.eclipse.ecf.presence.im.ChatMessageEvent;
 import org.eclipse.ecf.presence.im.IChatMessage;
-import org.eclipse.ecf.presence.im.IChatMessageEvent;
 import org.eclipse.ecf.presence.im.IChatMessageSender;
 import org.eclipse.ecf.presence.im.IChatMessage.Type;
 
@@ -48,7 +49,9 @@ import twitter4j.Status;
 import twitter4j.TwitterAdapter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterListener;
+import twitter4j.UserWithStatus;
 import werkzeugkasten.common.util.StringUtil;
+import werkzeugkasten.ecf.provider.twitter4j.Activator;
 import werkzeugkasten.ecf.provider.twitter4j.Constants;
 import werkzeugkasten.ecf.provider.twitter4j.identity.TwitterID;
 
@@ -73,7 +76,7 @@ public class TwitterContainer extends AbstractContainer implements
 		@Override
 		public void sentDirectMessage(DirectMessage dm) {
 			Namespace n = getConnectNamespace();
-			IChatMessageEvent event = toMessage(n, dm);
+			IIMMessageEvent event = toMessage(n, dm);
 			if (event != null) {
 				handleMessageEvent(event);
 				handlePresenceUpdated(event.getFromID(), new Presence());
@@ -84,7 +87,7 @@ public class TwitterContainer extends AbstractContainer implements
 		public void gotDirectMessages(List<DirectMessage> messages) {
 			Namespace n = getConnectNamespace();
 			for (DirectMessage dm : messages) {
-				IChatMessageEvent event = toMessage(n, dm);
+				IIMMessageEvent event = toMessage(n, dm);
 				if (event != null) {
 					handleMessageEvent(event);
 					handlePresenceUpdated(event.getFromID(), new Presence());
@@ -95,7 +98,7 @@ public class TwitterContainer extends AbstractContainer implements
 		@Override
 		public void updated(Status s) {
 			Namespace n = getConnectNamespace();
-			IChatMessageEvent event = toMessage(n, s);
+			IIMMessageEvent event = toMessage(n, s);
 			if (event != null) {
 				handleMessageEvent(event);
 				handlePresenceUpdated(event.getFromID(), new Presence());
@@ -106,7 +109,7 @@ public class TwitterContainer extends AbstractContainer implements
 		public void gotFriendsTimeline(List<Status> statuses) {
 			Namespace n = getConnectNamespace();
 			for (twitter4j.Status s : statuses) {
-				IChatMessageEvent event = toMessage(n, s);
+				IIMMessageEvent event = toMessage(n, s);
 				if (event != null) {
 					handleMessageEvent(event);
 					handlePresenceUpdated(event.getFromID(), new Presence());
@@ -114,27 +117,39 @@ public class TwitterContainer extends AbstractContainer implements
 			}
 		}
 
-		protected IChatMessageEvent toMessage(Namespace n, twitter4j.Status s) {
+		protected IIMMessageEvent toMessage(Namespace n, twitter4j.Status s) {
 			return toMessage(n, s.getUser(), s.getId(), s.getText(),
 					IChatMessage.Type.CHAT);
 		}
 
-		protected IChatMessageEvent toMessage(Namespace n,
+		protected IIMMessageEvent toMessage(Namespace n,
 				twitter4j.DirectMessage s) {
 			return toMessage(n, s.getSender(), s.getId(), s.getText(), Direct);
 		}
 
 		protected Map<Number, Object> cache = new HashMap<Number, Object>(300);
 
-		protected IChatMessageEvent toMessage(Namespace namespace,
+		protected IIMMessageEvent toMessage(Namespace namespace,
 				twitter4j.User u, Number id, String txt, IChatMessage.Type type) {
 			synchronized (cache) {
 				if (cache.get(id) == null) {
-					ID from = new TwitterID(namespace, u);
-					IChatMessageEvent event = new ChatMessageEvent(from,
-							new ChatMessage(from, type, null, txt, null));
-					cache.put(id, this);
-					return event;
+					try {
+						ID from = IDFactory.getDefault().createStringID(
+								u.getName());
+						IIMMessageEvent event = null;
+						if (Direct.equals(type)) {
+							event = new ChatMessageEvent(from, new ChatMessage(
+									from, type, null, txt, null));
+						} else {
+							event = new ChatRoomMessageEvent(from,
+									new ChatRoomMessage(from, getConnectedID(),
+											txt));
+						}
+						cache.put(id, this);
+						return event;
+					} catch (IDCreateException ex) {
+						Activator.log(ex);
+					}
 				}
 			}
 			return null;
@@ -188,6 +203,17 @@ public class TwitterContainer extends AbstractContainer implements
 				connectContext));
 		this.twitter.setUserId(this.targetID.getUsername());
 		this.twitter.setPassword(password);
+		this.twitter.getUserDetailAsync(this.targetID.getUsername(),
+				new TwitterAdapter() {
+					@Override
+					public void gotUserDetail(UserWithStatus userWithStatus) {
+						synchronized (TwitterContainer.this.targetID) {
+							TwitterContainer.this.targetID = new TwitterID(
+									TwitterContainer.this.targetID
+											.getNamespace(), userWithStatus);
+						}
+					}
+				});
 		fireContainerEvent(new ContainerConnectedEvent(this.localID,
 				this.targetID));
 	}
@@ -195,6 +221,7 @@ public class TwitterContainer extends AbstractContainer implements
 	public void readTimeline() {
 		synchronized (this.since) {
 			this.twitter.getFriendsTimelineAsync(this.since, this.listener);
+			this.twitter.getDirectMessagesAsync(this.since, this.listener);
 			this.since.setTime(System.currentTimeMillis());
 		}
 	}
@@ -296,20 +323,7 @@ public class TwitterContainer extends AbstractContainer implements
 
 	@Override
 	public synchronized ID[] getChatRoomParticipants() {
-		System.out.printf("getChatRoomParticipants \n  %s\n", participants);
 		return this.participants.toArray(new ID[participants.size()]);
-		// try {
-		// List<User> list = this.twitter.getFriends();
-		// List<ID> ids = new ArrayList<ID>(list.size());
-		// Namespace n = getConnectNamespace();
-		// for (User u : list) {
-		// ids.add(new TwitterID(n, u));
-		// }
-		// return ids.toArray(new ID[ids.size()]);
-		// } catch (TwitterException e) {
-		// // XXX ???
-		// throw new IllegalStateException(e);
-		// }
 	}
 
 	@SuppressWarnings("unchecked")
@@ -323,7 +337,6 @@ public class TwitterContainer extends AbstractContainer implements
 
 	@Override
 	public IChatRoomInfo getChatRoomInfo(final String roomName) {
-		System.out.printf("getChatRoomInfo %s \n", roomName);
 		return new IChatRoomInfo() {
 			@Override
 			public IChatRoomContainer createChatRoomContainer()
