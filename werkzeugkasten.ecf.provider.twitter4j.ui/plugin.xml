@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ecf.ui.connectWizards">
+      <wizard
+            class="werkzeugkasten.ecf.provider.twitter4j.wizard.TwitterWizard"
+            containerFactoryName="werkzeugkasten.ecf.provider.twitter4j"
+            id="werkzeugkasten.ecf.provider.twitter4j.ui.wizard.connect"
+            name="Twitter">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.eclipse.ecf.ui.newConnection.category"
+            class="werkzeugkasten.ecf.provider.twitter4j.wizard.TwitterWizard"
+            id="werkzeugkasten.ecf.provider.twitter4j.ui.wizard.new"
+            name="Twitter">
+      </wizard>
+   </extension>
+
+</plugin>

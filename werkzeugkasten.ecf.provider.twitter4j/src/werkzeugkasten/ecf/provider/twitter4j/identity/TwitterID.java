@@ -66,6 +66,20 @@ public class TwitterID extends BaseID implements IChatID {
 	}
 
 	@Override
+	public int hashCode() {
+		return this.username.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof TwitterID) {
+			TwitterID other = (TwitterID) o;
+			return this.username.equals(other.username);
+		}
+		return false;
+	}
+
+	@Override
 	public String toString() {
 		return "TwitterID [" + username + "]";
 	}

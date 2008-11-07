@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Twitter4j Provider UI
-Bundle-SymbolicName: werkzeugkasten.ecf.provider.twitter4j.ui
+Bundle-SymbolicName: werkzeugkasten.ecf.provider.twitter4j.ui;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: werkzeugkasten.ecf.provider.twitter4j.ui.Activator
 Require-Bundle: werkzeugkasten.ecf.provider.twitter4j,

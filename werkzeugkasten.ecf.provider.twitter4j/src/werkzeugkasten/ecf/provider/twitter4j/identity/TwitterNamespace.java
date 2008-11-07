@@ -14,9 +14,9 @@ public class TwitterNamespace extends Namespace {
 	public ID createInstance(Object[] parameters) throws IDCreateException {
 		if (parameters == null || parameters.length < 1
 				|| (parameters[0] instanceof String == false)) {
-			return new TwitterID(this, (String) parameters[0]);
+			throw new IDCreateException("illegalArgument");
 		}
-		throw new IDCreateException("illegalArgument");
+		return new TwitterID(this, (String) parameters[0]);
 	}
 
 	@Override

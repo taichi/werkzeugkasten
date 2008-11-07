@@ -14,6 +14,10 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/twitter4j-1.0.5.jar,
  .
 Bundle-Vendor: ryushi
-Export-Package: werkzeugkasten.ecf.provider.twitter4j,
+Export-Package: werkzeugkasten.common.exception,
+ werkzeugkasten.common.resource,
+ werkzeugkasten.common.runtime,
+ werkzeugkasten.common.util,
+ werkzeugkasten.ecf.provider.twitter4j,
  werkzeugkasten.ecf.provider.twitter4j.container,
  werkzeugkasten.ecf.provider.twitter4j.identity

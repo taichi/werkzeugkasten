@@ -16,5 +16,4 @@
             name="werkzeugkasten.ecf.provider.twitter4j">
       </namespace>
    </extension>
-
 </plugin>
