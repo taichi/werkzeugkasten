@@ -59,8 +59,8 @@ public class XMLEventParser {
 			}
 			for (; reader.hasNext();) {
 				int event = reader.next();
-				String localname = reader.getLocalName();
 				if (XMLStreamConstants.START_ELEMENT == event) {
+					String localname = reader.getLocalName();
 					Handler handler = handlers.get(localname);
 					if (handler == null) {
 						skipTo(reader, localname);
@@ -68,7 +68,7 @@ public class XMLEventParser {
 						handler.handle(reader);
 					}
 				} else if (XMLStreamConstants.END_ELEMENT == event
-						&& localname.equals(end)) {
+						&& reader.getLocalName().equals(end)) {
 					return;
 				}
 			}
