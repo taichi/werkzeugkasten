@@ -42,7 +42,7 @@ public class WarExportJob extends WorkspaceJob {
 		this.project = project;
 	}
 
-	public IStatus runInWorkspace(IProgressMonitor monitor)
+	public IStatus runInWorkspace(final IProgressMonitor monitor)
 			throws CoreException {
 		monitor.beginTask(Strings.MSG_PROCESS_EXPORT, IProgressMonitor.UNKNOWN);
 		try {
@@ -124,6 +124,7 @@ public class WarExportJob extends WorkspaceJob {
 						final IFile f = (IFile) resource;
 						IPath dest = f.getFullPath().removeFirstSegments(
 								baseSegment);
+						monitor.subTask(dest.toString());
 						assembler.entry(new Opener() {
 							public InputStream open() throws Exception {
 								return f.getContents();
