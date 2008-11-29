@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<site>
+<site
+      mirrorsURL="http://dev.handwerkszeug.org/eclipse/3.4/mirrors.xml">
+   <description url="http://code.google.com/p/werkzeugkasten/">
+      Quickly and minimum java toolset by anytime code writing.
+   </description>
    <feature url="features/werkzeugkasten.resource.synchronizer.feature_0.0.5.jar" id="werkzeugkasten.resource.synchronizer.feature" version="0.0.5">
       <category name="ResourceSynchronizer"/>
    </feature>
