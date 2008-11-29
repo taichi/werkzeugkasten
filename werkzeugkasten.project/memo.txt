@@ -1,6 +1,9 @@
 INPUT AREA
-	groupId artifactId version [Brwose...] [ADD]
+	groupId artifactId version [Browse...] [ADD]
 	
 VIEW AREA
 	GRID
 		use groupId artifactId version optional [DELETE]
+
+既存のプロジェクトから、fragmentっつうか、
+拡張ポイントに差し込めるプラグインを生成するウィザードがあるといいかもしれん。
