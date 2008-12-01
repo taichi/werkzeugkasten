@@ -5,7 +5,7 @@
          point="werkzeugkasten.weblauncher.launchConfigurationFacet">
       <launchConfigurationFacet
             class="werkzeugkasten.weblauncher.tomcat.Tomcat6LaunchConfigurationFacet"
-            description="Version 6.0.16"
+            description="Version 6.0.18"
             type="Tomcat6">
       </launchConfigurationFacet>
    </extension>
