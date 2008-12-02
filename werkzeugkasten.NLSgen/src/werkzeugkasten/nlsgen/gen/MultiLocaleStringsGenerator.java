@@ -324,19 +324,7 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 	}
 
 	protected boolean isJavaIdentifier(String s) {
-		if (s == null || s.length() < 1) {
-			return false;
-		}
-		char[] chars = s.toCharArray();
-		if (Character.isJavaIdentifierStart(chars[0]) == false) {
-			return false;
-		}
-		for (int i = 1; i < chars.length; i++) {
-			if (Character.isJavaIdentifierPart(chars[i]) == false) {
-				return false;
-			}
-		}
-		return true;
+		return StringUtil.isJavaIdentifier(s);
 	}
 
 	protected String createMethodContent(IType type, String name) {
