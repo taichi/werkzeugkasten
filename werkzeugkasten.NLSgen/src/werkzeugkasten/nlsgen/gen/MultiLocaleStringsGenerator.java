@@ -90,7 +90,11 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 	public void generateFrom(IFile properties, IProgressMonitor monitor) {
 		try {
 			monitor = ProgressMonitorUtil.care(monitor);
-			monitor.beginTask(Strings.GENERATE_CLASSES, 5);
+			monitor.beginTask(Strings.GENERATE_CLASSES, 6);
+
+			properties.refreshLocal(IResource.DEPTH_ONE,
+					new SubProgressMonitor(monitor, 1));
+
 			Set<IPath> locs = ClasspathEntryUtil.getOutputLocations(JavaCore
 					.create(properties.getProject()));
 			for (IPath p : locs) {
