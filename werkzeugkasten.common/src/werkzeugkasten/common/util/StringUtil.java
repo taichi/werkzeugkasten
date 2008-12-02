@@ -46,4 +46,20 @@ public class StringUtil {
 		}
 		return s;
 	}
+
+	public static boolean isJavaIdentifier(String s) {
+		if (StringUtil.isEmpty(s)) {
+			return false;
+		}
+		char[] chars = s.toCharArray();
+		if (Character.isJavaIdentifierStart(chars[0]) == false) {
+			return false;
+		}
+		for (int i = 1; i < chars.length; i++) {
+			if (Character.isJavaIdentifierPart(chars[i]) == false) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
