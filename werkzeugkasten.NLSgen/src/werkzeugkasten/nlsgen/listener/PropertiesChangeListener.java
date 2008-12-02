@@ -27,7 +27,8 @@ public class PropertiesChangeListener implements IResourceChangeListener {
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
-		if (delta != null) {
+		int flag = IResourceDelta.ADDED | IResourceDelta.CHANGED;
+		if (delta != null && ((delta.getKind() & flag) != 0)) {
 			new NLSClassGenJob(delta).schedule();
 		}
 	}
