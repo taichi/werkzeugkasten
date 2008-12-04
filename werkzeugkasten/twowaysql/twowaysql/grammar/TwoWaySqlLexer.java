@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g 2008-12-04 18:11:53
+// $ANTLR 3.1.1 D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g 2008-12-04 18:33:54
 
 package twowaysql.grammar;
 
@@ -66,7 +66,7 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = SYMBOLS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:122:9: ( '*' | '/' | '-' | '#' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:112:9: ( '*' | '/' | '-' | '#' )
             // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:
             {
             if ( input.LA(1)=='#'||input.LA(1)=='*'||input.LA(1)=='-'||input.LA(1)=='/' ) {
@@ -94,8 +94,8 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = SYM_LP;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:123:8: ( '(' )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:123:10: '('
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:113:8: ( '(' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:113:10: '('
             {
             match('('); 
 
@@ -114,8 +114,8 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = SYM_RP;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:124:8: ( ')' )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:124:10: ')'
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:114:8: ( ')' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:114:10: ')'
             {
             match(')'); 
 
@@ -134,8 +134,8 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = SYM_C;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:125:7: ( ',' )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:125:9: ','
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:115:7: ( ',' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:115:9: ','
             {
             match(','); 
 
@@ -154,8 +154,8 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = SYM_BIND;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:126:9: ( '?' )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:126:11: '?'
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:116:9: ( '?' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:116:11: '?'
             {
             match('?'); 
 
@@ -174,11 +174,11 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = QUOTED;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:129:8: ( SYM_Q (~ ( SYM_Q ) )+ SYM_Q )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:129:10: SYM_Q (~ ( SYM_Q ) )+ SYM_Q
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:119:8: ( SYM_Q (~ ( SYM_Q ) )+ SYM_Q )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:119:10: SYM_Q (~ ( SYM_Q ) )+ SYM_Q
             {
             mSYM_Q(); 
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:129:16: (~ ( SYM_Q ) )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:119:16: (~ ( SYM_Q ) )+
             int cnt1=0;
             loop1:
             do {
@@ -192,7 +192,7 @@ public class TwoWaySqlLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:129:16: ~ ( SYM_Q )
+            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:119:16: ~ ( SYM_Q )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -231,7 +231,7 @@ public class TwoWaySqlLexer extends Lexer {
     // $ANTLR start "SYM_Q"
     public final void mSYM_Q() throws RecognitionException {
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:130:16: ( '\\u0027' | '\"' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:120:16: ( '\\u0027' | '\"' )
             // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:
             {
             if ( input.LA(1)=='\"'||input.LA(1)=='\'' ) {
@@ -257,8 +257,8 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = C_ST;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:133:6: ({...}? '/*' )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:134:2: {...}? '/*'
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:123:6: ({...}? '/*' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:124:2: {...}? '/*'
             {
             if ( !((!inComment)) ) {
                 throw new FailedPredicateException(input, "C_ST", "!inComment");
@@ -282,8 +282,8 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = C_ED;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:135:6: ({...}? '*/' )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:136:2: {...}? '*/'
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:125:6: ({...}? '*/' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:126:2: {...}? '*/'
             {
             if ( !((inComment)) ) {
                 throw new FailedPredicateException(input, "C_ED", "inComment");
@@ -307,13 +307,13 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = C_LN_ST;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:138:9: ({...}? ( '--' | '#' ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:139:2: {...}? ( '--' | '#' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:128:9: ({...}? ( '--' | '#' ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:129:2: {...}? ( '--' | '#' )
             {
             if ( !((!inComment)) ) {
                 throw new FailedPredicateException(input, "C_LN_ST", "!inComment");
             }
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:139:16: ( '--' | '#' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:129:16: ( '--' | '#' )
             int alt2=2;
             int LA2_0 = input.LA(1);
 
@@ -331,7 +331,7 @@ public class TwoWaySqlLexer extends Lexer {
             }
             switch (alt2) {
                 case 1 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:139:17: '--'
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:129:17: '--'
                     {
                     match("--"); 
 
@@ -339,7 +339,7 @@ public class TwoWaySqlLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:139:22: '#'
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:129:22: '#'
                     {
                     match('#'); 
 
@@ -365,13 +365,13 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = C_LN_ED;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:141:9: ({...}? ( ( LN_R )? LN_N | EOF ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:142:2: {...}? ( ( LN_R )? LN_N | EOF )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:131:9: ({...}? ( ( LN_R )? LN_N | EOF ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:132:2: {...}? ( ( LN_R )? LN_N | EOF )
             {
             if ( !((inLineComment)) ) {
                 throw new FailedPredicateException(input, "C_LN_ED", "inLineComment");
             }
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:142:19: ( ( LN_R )? LN_N | EOF )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:132:19: ( ( LN_R )? LN_N | EOF )
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -382,9 +382,9 @@ public class TwoWaySqlLexer extends Lexer {
                 alt4=2;}
             switch (alt4) {
                 case 1 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:142:21: ( LN_R )? LN_N
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:132:21: ( LN_R )? LN_N
                     {
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:142:21: ( LN_R )?
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:132:21: ( LN_R )?
                     int alt3=2;
                     int LA3_0 = input.LA(1);
 
@@ -393,7 +393,7 @@ public class TwoWaySqlLexer extends Lexer {
                     }
                     switch (alt3) {
                         case 1 :
-                            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:142:21: LN_R
+                            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:132:21: LN_R
                             {
                             mLN_R(); 
 
@@ -407,7 +407,7 @@ public class TwoWaySqlLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:142:34: EOF
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:132:34: EOF
                     {
                     match(EOF); 
 
@@ -433,8 +433,8 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = BEGIN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:146:8: ( ( 'b' | 'B' ) ( 'e' | 'E' ) ( 'g' | 'G' ) ( 'i' | 'I' ) ( 'n' | 'N' ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:146:10: ( 'b' | 'B' ) ( 'e' | 'E' ) ( 'g' | 'G' ) ( 'i' | 'I' ) ( 'n' | 'N' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:136:8: ( ( 'b' | 'B' ) ( 'e' | 'E' ) ( 'g' | 'G' ) ( 'i' | 'I' ) ( 'n' | 'N' ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:136:10: ( 'b' | 'B' ) ( 'e' | 'E' ) ( 'g' | 'G' ) ( 'i' | 'I' ) ( 'n' | 'N' )
             {
             if ( input.LA(1)=='B'||input.LA(1)=='b' ) {
                 input.consume();
@@ -497,8 +497,8 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = IF;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:147:5: ( ( 'i' | 'I' ) ( 'f' | 'F' ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:147:7: ( 'i' | 'I' ) ( 'f' | 'F' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:137:5: ( ( 'i' | 'I' ) ( 'f' | 'F' ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:137:7: ( 'i' | 'I' ) ( 'f' | 'F' )
             {
             if ( input.LA(1)=='I'||input.LA(1)=='i' ) {
                 input.consume();
@@ -534,8 +534,8 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = ELSE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:148:6: ( ( 'e' | 'E' ) ( 'l' | 'L' ) ( 's' | 'S' ) ( 'e' | 'E' ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:148:8: ( 'e' | 'E' ) ( 'l' | 'L' ) ( 's' | 'S' ) ( 'e' | 'E' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:138:6: ( ( 'e' | 'E' ) ( 'l' | 'L' ) ( 's' | 'S' ) ( 'e' | 'E' ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:138:8: ( 'e' | 'E' ) ( 'l' | 'L' ) ( 's' | 'S' ) ( 'e' | 'E' )
             {
             if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                 input.consume();
@@ -589,8 +589,8 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = ELSEIF;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:149:8: ( ELSE IF )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:149:10: ELSE IF
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:139:8: ( ELSE IF )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:139:10: ELSE IF
             {
             mELSE(); 
             mIF(); 
@@ -610,8 +610,8 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = END;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:150:6: ( ( 'e' | 'E' ) ( 'n' | 'N' ) ( 'd' | 'D' ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:150:8: ( 'e' | 'E' ) ( 'n' | 'N' ) ( 'd' | 'D' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:140:6: ( ( 'e' | 'E' ) ( 'n' | 'N' ) ( 'd' | 'D' ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:140:8: ( 'e' | 'E' ) ( 'n' | 'N' ) ( 'd' | 'D' )
             {
             if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                 input.consume();
@@ -656,8 +656,8 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = IN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:151:5: ({...}? ( 'i' | 'I' ) ( 'n' | 'N' ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:151:7: {...}? ( 'i' | 'I' ) ( 'n' | 'N' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:141:5: ({...}? ( 'i' | 'I' ) ( 'n' | 'N' ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:141:7: {...}? ( 'i' | 'I' ) ( 'n' | 'N' )
             {
             if ( !((!inComment)) ) {
                 throw new FailedPredicateException(input, "IN", "!inComment");
@@ -696,10 +696,10 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = IDENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:154:7: ( ( CHAR )+ )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:154:9: ( CHAR )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:144:7: ( ( CHAR )+ )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:144:9: ( CHAR )+
             {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:154:9: ( CHAR )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:144:9: ( CHAR )+
             int cnt5=0;
             loop5:
             do {
@@ -713,7 +713,7 @@ public class TwoWaySqlLexer extends Lexer {
 
                 switch (alt5) {
             	case 1 :
-            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:154:9: CHAR
+            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:144:9: CHAR
             	    {
             	    mCHAR(); 
 
@@ -743,7 +743,7 @@ public class TwoWaySqlLexer extends Lexer {
     // $ANTLR start "WS"
     public final void mWS() throws RecognitionException {
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:156:14: ( '\\t' | ' ' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:146:14: ( '\\t' | ' ' )
             // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:
             {
             if ( input.LA(1)=='\t'||input.LA(1)==' ' ) {
@@ -767,8 +767,8 @@ public class TwoWaySqlLexer extends Lexer {
     // $ANTLR start "LN_R"
     public final void mLN_R() throws RecognitionException {
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:157:15: ( '\\r' )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:157:17: '\\r'
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:147:15: ( '\\r' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:147:17: '\\r'
             {
             match('\r'); 
 
@@ -783,8 +783,8 @@ public class TwoWaySqlLexer extends Lexer {
     // $ANTLR start "LN_N"
     public final void mLN_N() throws RecognitionException {
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:158:15: ( '\\n' )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:158:17: '\\n'
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:148:15: ( '\\n' )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:148:17: '\\n'
             {
             match('\n'); 
 
@@ -799,8 +799,8 @@ public class TwoWaySqlLexer extends Lexer {
     // $ANTLR start "CHAR"
     public final void mCHAR() throws RecognitionException {
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:159:15: (~ ( SYMBOLS | SYM_Q | SYM_BIND | SYM_LP | SYM_RP | SYM_C | LN_R | LN_N | WS ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:159:17: ~ ( SYMBOLS | SYM_Q | SYM_BIND | SYM_LP | SYM_RP | SYM_C | LN_R | LN_N | WS )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:149:15: (~ ( SYMBOLS | SYM_Q | SYM_BIND | SYM_LP | SYM_RP | SYM_C | LN_R | LN_N | WS ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:149:17: ~ ( SYMBOLS | SYM_Q | SYM_BIND | SYM_LP | SYM_RP | SYM_C | LN_R | LN_N | WS )
             {
             if ( (input.LA(1)>='\u0000' && input.LA(1)<='\b')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\u001F')||input.LA(1)=='!'||(input.LA(1)>='$' && input.LA(1)<='&')||input.LA(1)=='+'||input.LA(1)=='.'||(input.LA(1)>='0' && input.LA(1)<='>')||(input.LA(1)>='@' && input.LA(1)<='\uFFFF') ) {
                 input.consume();
@@ -825,13 +825,13 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = LT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:162:4: ({...}? ( LN_R | LN_N )+ )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:162:6: {...}? ( LN_R | LN_N )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:152:4: ({...}? ( LN_R | LN_N )+ )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:152:6: {...}? ( LN_R | LN_N )+
             {
             if ( !((!inLineComment)) ) {
                 throw new FailedPredicateException(input, "LT", "!inLineComment");
             }
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:162:24: ( LN_R | LN_N )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:152:24: ( LN_R | LN_N )+
             int cnt6=0;
             loop6:
             do {
@@ -886,10 +886,10 @@ public class TwoWaySqlLexer extends Lexer {
         try {
             int _type = WHITE_SPACES;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:163:14: ( ( WS )+ )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:163:16: ( WS )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:153:14: ( ( WS )+ )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:153:16: ( WS )+
             {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:163:16: ( WS )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:153:16: ( WS )+
             int cnt7=0;
             loop7:
             do {
@@ -903,7 +903,7 @@ public class TwoWaySqlLexer extends Lexer {
 
                 switch (alt7) {
             	case 1 :
-            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:163:17: WS
+            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\twowaysql\\grammar\\TwoWaySql.g:153:17: WS
             	    {
             	    mWS(); 
 

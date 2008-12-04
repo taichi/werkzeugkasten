@@ -6,14 +6,11 @@ options {
 }
 
 @header {
-package twowaysql.grammar;
+package werkzeugkasten.twowaysql.grammar;
 }
 
 @members {
 
-	static class Node {
-		
-	}
 }
 
 build returns[]

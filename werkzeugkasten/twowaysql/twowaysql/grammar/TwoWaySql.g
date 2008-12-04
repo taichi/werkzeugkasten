@@ -19,22 +19,12 @@ tokens {
 }
 
 @header {
-package twowaysql.grammar;
+package werkzeugkasten.twowaysql.grammar;
 
-}
-
-@members {
-// TestHeteroAST
-static class TxtNode extends CommonTree {
-	public TxtNode(int ttype) {
-		super(new CommonToken(ttype,""));
-		System.out.println(ttype);
-	}
-}
 }
 
 @lexer::header {
-package twowaysql.grammar;
+package werkzeugkasten.twowaysql.grammar;
 }
 
 
