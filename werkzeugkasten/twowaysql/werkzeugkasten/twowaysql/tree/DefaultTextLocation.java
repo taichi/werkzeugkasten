@@ -1,12 +1,12 @@
 package werkzeugkasten.twowaysql.tree;
 
-public class DefaultQueryPosition implements QueryPosition {
+public class DefaultTextLocation implements TextLocation {
 	protected int startIndex;
 	protected int endIndex;
 	protected int startLine;
 	protected int endLine;
 
-	public DefaultQueryPosition(int startIndex, int endIndex, int startLine,
+	public DefaultTextLocation(int startIndex, int endIndex, int startLine,
 			int endLine) {
 		this.startIndex = startIndex;
 		this.endIndex = endIndex;

@@ -112,8 +112,15 @@ elseifcomment :
 elsecomment :
 	(C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED) ;
 
-expression :
-	charactors -> ^(EXPRESSIONNODE charactors) ;
+expression returns[TextLocation pos]
+	@init {
+		LocationCalculator calc = new LocationCalculator();
+	}
+	@after {
+		$pos = calc.freeze();
+	}
+	:
+	charactors {calc.append($charactors.tree);}-> ^(EXPRESSIONNODE charactors) ;
 	
 begincomment :
 	((C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED) txt endcomment) -> ^(BEGINNODE txt);

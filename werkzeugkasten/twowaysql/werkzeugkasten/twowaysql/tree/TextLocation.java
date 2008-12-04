@@ -1,6 +1,6 @@
 package werkzeugkasten.twowaysql.tree;
 
-public interface QueryPosition {
+public interface TextLocation {
 
 	int startIndex();
 

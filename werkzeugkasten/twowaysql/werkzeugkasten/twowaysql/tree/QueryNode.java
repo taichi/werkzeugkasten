@@ -4,5 +4,5 @@ public interface QueryNode {
 
 	NodeType type();
 
-	QueryPosition position();
+	TextLocation position();
 }
