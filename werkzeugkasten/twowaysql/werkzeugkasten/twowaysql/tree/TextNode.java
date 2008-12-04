@@ -5,11 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.antlr.runtime.CommonToken;
+import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.CommonTree;
 
 public class TextNode implements QueryNode {
 
-	protected Deque<CommonToken> tokens = new LinkedList<CommonToken>();
+	protected Deque<Token> tokens = new LinkedList<Token>();
 
 	protected QueryPosition position;
 
@@ -21,7 +22,7 @@ public class TextNode implements QueryNode {
 		return NodeType.TXTNODE;
 	}
 
-	public void append(CommonToken token) {
+	public void append(Token token) {
 		this.tokens.add(token);
 	}
 
@@ -33,19 +34,20 @@ public class TextNode implements QueryNode {
 			List<?> kids = charactors.getChildren();
 			CommonTree st = (CommonTree) kids.get(0);
 			CommonTree ed = (CommonTree) kids.get(kids.size() - 1);
-			append((CommonToken) st.getToken());
-			append((CommonToken) ed.getToken());
+			append(st.getToken());
+			append(ed.getToken());
 		} else {
-			append((CommonToken) charactors.getToken());
+			append(charactors.getToken());
 		}
 	}
 
 	public void freeze() {
 		if (0 < this.tokens.size()) {
-			CommonToken start = this.tokens.getFirst();
-			CommonToken end = this.tokens.getLast();
+			CommonToken start = (CommonToken) this.tokens.getFirst();
+			CommonToken end = (CommonToken) this.tokens.getLast();
 			this.position = new DefaultQueryPosition(start.getStartIndex(), end
 					.getStopIndex(), start.getLine(), end.getLine());
+			System.out.println(this.tokens);
 			this.tokens.clear();
 		}
 	}

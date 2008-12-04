@@ -6,7 +6,6 @@ options {
 	//superClass = Parser;
 }
 
-
 tokens {
 	BEGINNODE;
 	IFNODE;
@@ -22,13 +21,17 @@ tokens {
 @header {
 package werkzeugkasten.twowaysql.grammar;
 
+import werkzeugkasten.twowaysql.tree.*;
+
+}
+
+@members {
+	NodeFactory f = NodeFactory.getInstance();
 }
 
 @lexer::header {
 package werkzeugkasten.twowaysql.grammar;
 }
-
-
 
 @lexer::members {
 boolean inComment = false;
@@ -42,12 +45,19 @@ twowaySQL : txt EOF
 txt : (comment | inbind | txts)+
 	;
 
-charactors :	
+charactors :
 	(IDENT| SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP)+ 
 ;
-txts :
-	charactors
-	-> ^(TXTNODE charactors)
+txts returns[TextNode node]
+	@init {
+		$node = f.textNode();
+	}
+	@after {
+		$node.freeze();
+	}
+	:
+	charactors { $node.append($charactors.tree); }
+	-> ^(TXTNODE charactors) 
 	;
 
 // $<comment
@@ -60,13 +70,27 @@ comment :
 	| linecomment
 	;
 
-blockcomment :
-	C_ST charactors C_ED 
+blockcomment returns[TextNode node]
+	@init {
+		$node = f.textNode();
+	}
+	@after {
+		$node.freeze();
+	}
+	:
+	C_ST charactors C_ED { $node.append($C_ST);$node.append($C_ED); }
 	-> ^(TXTNODE C_ST charactors C_ED)
 	;
 
-linecomment :
-	C_LN_ST charactors C_LN_ED 
+linecomment returns[TextNode node]
+	@init {
+		$node = f.textNode();
+	}
+	@after {
+		$node.freeze();
+	}
+	:
+	C_LN_ST charactors C_LN_ED { $node.append($C_LN_ST);$node.append($C_LN_ED); }
 	-> ^(TXTNODE C_LN_ST charactors C_LN_ED)
 	;
 
