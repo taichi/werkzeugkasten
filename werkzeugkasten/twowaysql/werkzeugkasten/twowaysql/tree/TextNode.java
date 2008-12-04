@@ -2,10 +2,12 @@ package werkzeugkasten.twowaysql.tree;
 
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.antlr.runtime.CommonToken;
+import org.antlr.runtime.tree.CommonTree;
 
-public class TextNode implements QueryNode, TokenAppendable {
+public class TextNode implements QueryNode {
 
 	protected Deque<CommonToken> tokens = new LinkedList<CommonToken>();
 
@@ -21,6 +23,21 @@ public class TextNode implements QueryNode, TokenAppendable {
 
 	public void append(CommonToken token) {
 		this.tokens.add(token);
+	}
+
+	public void append(CommonTree charactors) {
+		if (charactors == null) {
+			return;
+		}
+		if (charactors.isNil()) {
+			List<?> kids = charactors.getChildren();
+			CommonTree st = (CommonTree) kids.get(0);
+			CommonTree ed = (CommonTree) kids.get(kids.size() - 1);
+			append((CommonToken) st.getToken());
+			append((CommonToken) ed.getToken());
+		} else {
+			append((CommonToken) charactors.getToken());
+		}
 	}
 
 	public void freeze() {
