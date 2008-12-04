@@ -6,6 +6,7 @@ options {
 	//superClass = Parser;
 }
 
+
 tokens {
 	BEGINNODE;
 	IFNODE;
