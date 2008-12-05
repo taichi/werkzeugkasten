@@ -1,4 +1,6 @@
-package werkzeugkasten.twowaysql.tree;
+package werkzeugkasten.twowaysql.tree.visitor;
+
+import werkzeugkasten.twowaysql.tree.QueryNode;
 
 public class QueryTreeAcceptor {
 

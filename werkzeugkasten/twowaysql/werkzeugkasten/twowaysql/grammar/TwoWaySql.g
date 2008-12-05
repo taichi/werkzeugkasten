@@ -27,14 +27,17 @@ boolean inLineComment = false;
 }
 
 twowaySQL returns[TwoWayQuery query]
-	@init{
+	@init {
 		$query = new TwoWayQuery();
+	}
+	@after {
+		$query.freeze();
 	}
 	: nodelist EOF {
 		$query.setChildren($nodelist.list);
 		$query.update($nodelist.tree);
 	}
-	;
+;
 
 nodelist returns[LinkedList<QueryNode> list]
 	@init{
@@ -45,11 +48,12 @@ nodelist returns[LinkedList<QueryNode> list]
 	| inbind {$list.add($inbind.node);}
 	| txt {$list.add($txt.node);}
 	)+
-	;
+;
 
 charactors :
 	(IDENT| SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP)+ 
 ;
+
 txt returns[TxtNode node]
 	@init {
 		$node = new TxtNode();
@@ -97,6 +101,9 @@ ifcomment returns[IfNode node]
 	@init {
 		$node = new IfNode();
 	}
+	@after {
+		$node.freeze();
+	}
 	:
 	(C_ST IF expression C_ED { $node.setExpression($expression.node); }
 		nodelist { $node.setChildren($nodelist.list);}
@@ -114,8 +121,17 @@ elseifnode	 returns[IfNode node]
 	@init {
 		$node = new IfNode();
 	}
+	@after {
+		$node.freeze();
+	}
 	:
-	elseifcomment nodelist { $node.setExpression($elseifcomment.node); $node.setChildren($nodelist.list); }
+	elseifcomment nodelist 
+	{
+		$node.update($elseifcomment.tree);
+		$node.setExpression($elseifcomment.node);
+		$node.setChildren($nodelist.list);
+		$node.update($nodelist.tree);
+	}
 ;
 
 elseifcomment returns[ExpressionNode node]
@@ -156,6 +172,9 @@ begincomment returns[BeginNode node]
 	@init {
 		$node = new BeginNode();
 	}
+	@after {
+		$node.freeze();
+	}
 	:
 	(
 		(C_ST BEGIN C_ED {$node.update($C_ST);}
@@ -175,8 +194,17 @@ bindcomment returns[BindNode node]
 	@init {
 		$node = new BindNode();
 	}
+	@after {
+		$node.freeze();
+	}
 	:
-	(C_ST SYM_BIND expression C_ED txt) {$node.setExpression($expression.node);$node.setSkipped($txt.node);}
+	(C_ST SYM_BIND expression C_ED txt)
+	{
+		$node.update($C_ST);
+		$node.setExpression($expression.node);
+		$node.setSkipped($txt.node);
+		$node.update($txt.tree);
+	}
 ;
 
 inbind returns[InBindNode node]
@@ -184,13 +212,18 @@ inbind returns[InBindNode node]
 		$node = new InBindNode();
 		TxtNode skip = new TxtNode();
 	}
+	@after {
+		$node.freeze();
+	}
 	:
 	IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars (SYM_C inbindchars)* SYM_RP
 	{
+		$node.update($IN);
 		$node.setExpression($expression.node);
 		skip.update($SYM_LP);
 		skip.update($SYM_RP);
 		$node.setSkipped(skip);
+		$node.update($SYM_RP);
 	}
 ;
 

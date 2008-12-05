@@ -1,4 +1,4 @@
-package werkzeugkasten.twowaysql.tree;
+package werkzeugkasten.twowaysql.tree.loc;
 
 public class DefaultTextLocation implements TextLocation {
 	protected int startIndex;

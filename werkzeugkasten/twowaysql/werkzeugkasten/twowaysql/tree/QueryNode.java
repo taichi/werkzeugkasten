@@ -1,5 +1,8 @@
 package werkzeugkasten.twowaysql.tree;
 
+import werkzeugkasten.twowaysql.tree.loc.Locatable;
+import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
+
 public interface QueryNode extends Locatable {
 
 	NodeType getType();

@@ -3,10 +3,13 @@ package werkzeugkasten.twowaysql.tree;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.CommonTree;
 
+import werkzeugkasten.twowaysql.tree.loc.LocationCalculator;
+import werkzeugkasten.twowaysql.tree.loc.TextLocation;
+
 public abstract class AbstractQueryNode implements QueryNode {
 
 	protected LocationCalculator calculator = new LocationCalculator();
-	protected TextLocation location;
+	protected TextLocation location = TextLocation.UNKNOWN_LOCATION;
 
 	protected QueryNode parent;
 	protected Iterable<QueryNode> kids;
@@ -52,5 +55,19 @@ public abstract class AbstractQueryNode implements QueryNode {
 	@Override
 	public TextLocation getLocation() {
 		return this.location;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder stb = new StringBuilder();
+		stb.append("[");
+		stb.append(getType());
+		stb.append("]");
+		stb.append("{");
+		stb.append(getLocation().startIndex());
+		stb.append(":");
+		stb.append(getLocation().endIndex());
+		stb.append("}");
+		return stb.toString();
 	}
 }

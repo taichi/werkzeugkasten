@@ -2,6 +2,8 @@ package werkzeugkasten.twowaysql.tree;
 
 import java.util.LinkedList;
 
+import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
+
 public class IfNode extends AbstractQueryNode {
 
 	protected ExpressionNode expression;

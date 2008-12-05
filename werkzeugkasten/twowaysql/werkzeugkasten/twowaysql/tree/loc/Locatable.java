@@ -1,7 +1,8 @@
-package werkzeugkasten.twowaysql.tree;
+package werkzeugkasten.twowaysql.tree.loc;
 
 import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.CommonTree;
+
 
 public interface Locatable {
 

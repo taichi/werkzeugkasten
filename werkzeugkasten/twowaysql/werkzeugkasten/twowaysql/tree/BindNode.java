@@ -1,5 +1,7 @@
 package werkzeugkasten.twowaysql.tree;
 
+import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
+
 public class BindNode extends AbstractQueryNode {
 
 	protected ExpressionNode expression;
