@@ -3,7 +3,7 @@ grammar TwoWaySql;
 options {
 	output = AST;
 	ASTLabelType = CommonTree;
-	//superClass = Parser;
+	superClass = Parser;
 }
 
 @header {
@@ -12,9 +12,6 @@ package werkzeugkasten.twowaysql.grammar;
 import java.util.LinkedList;
 import werkzeugkasten.twowaysql.tree.*;
 
-}
-
-@members {
 }
 
 @lexer::header {
@@ -37,7 +34,7 @@ twowaySQL returns[TwoWayQuery query]
 		$query.setChildren($nodelist.list);
 		$query.update($nodelist.tree);
 	}
-;
+	;
 
 nodelist returns[LinkedList<QueryNode> list]
 	@init{
@@ -48,11 +45,11 @@ nodelist returns[LinkedList<QueryNode> list]
 	| inbind {$list.add($inbind.node);}
 	| txt {$list.add($txt.node);}
 	)+
-;
+	;
 
 charactors :
 	(IDENT| SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP)+ 
-;
+	;
 
 txt returns[TxtNode node]
 	@init {
@@ -63,7 +60,7 @@ txt returns[TxtNode node]
 	}
 	:
 	charactors { $node.update($charactors.tree); }
-;
+	;
 
 // $<comment
 
@@ -132,30 +129,31 @@ elseifnode	 returns[IfNode node]
 		$node.setChildren($nodelist.list);
 		$node.update($nodelist.tree);
 	}
-;
+	;
 
 elseifcomment returns[ExpressionNode node]
 	:
 	(elseifblockcomment {$node = $elseifblockcomment.node;}
 	 | elseiflinecomment {$node = $elseiflinecomment.node;}
 	)
-;
+	;
 
 elseifblockcomment returns[ExpressionNode node]
 	: C_ST ELSEIF expression C_ED { $node = $expression.node; }
-;
+	;
 
 elseiflinecomment returns[ExpressionNode node]
 	: C_LN_ST ELSEIF expression C_LN_ED { $node = $expression.node; }
-;
+	;
 
 elsenode returns[LinkedList<QueryNode> list]
 	:
 	elsecomment nodelist { $list = $nodelist.list; }
-;
+	;
 
 elsecomment :
-	(C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED) ;
+	(C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED)
+	;
 
 expression returns[ExpressionNode node]
 	@init {
@@ -166,7 +164,7 @@ expression returns[ExpressionNode node]
 	}
 	:
 	charactors {$node.update($charactors.tree);}
-;
+	;
 	
 begincomment returns[BeginNode node]
 	@init {
@@ -185,10 +183,11 @@ begincomment returns[BeginNode node]
 		$node.setChildren($nodelist.list);
 		$node.update($endcomment.tree);
 	}
-;
+	;
 
 endcomment :
-	C_ST END C_ED | C_LN_ST END C_LN_ED;
+	C_ST END C_ED | C_LN_ST END C_LN_ED
+	;
 
 bindcomment returns[BindNode node]
 	@init {
@@ -205,7 +204,7 @@ bindcomment returns[BindNode node]
 		$node.setSkipped($txt.node);
 		$node.update($txt.tree);
 	}
-;
+	;
 
 inbind returns[InBindNode node]
 	@init {
@@ -225,9 +224,12 @@ inbind returns[InBindNode node]
 		$node.setSkipped(skip);
 		$node.update($SYM_RP);
 	}
-;
+	;
 
-inbindchars	: (IDENT| SYMBOLS | SYM_C | QUOTED)+;
+inbindchars
+	:
+	(IDENT| SYMBOLS | SYM_C | QUOTED)+
+	;
 
 // $>
 

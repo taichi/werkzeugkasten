@@ -30,4 +30,8 @@ public class DefaultTextLocation implements TextLocation {
 		return this.endLine;
 	}
 
+	@Override
+	public String toString() {
+		return "{" + startIndex() + ":" + endIndex() + "}";
+	}
 }

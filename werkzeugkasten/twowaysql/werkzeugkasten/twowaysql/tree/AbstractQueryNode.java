@@ -63,11 +63,7 @@ public abstract class AbstractQueryNode implements QueryNode {
 		stb.append("[");
 		stb.append(getType());
 		stb.append("]");
-		stb.append("{");
-		stb.append(getLocation().startIndex());
-		stb.append(":");
-		stb.append(getLocation().endIndex());
-		stb.append("}");
+		stb.append(getLocation().toString());
 		return stb.toString();
 	}
 }
