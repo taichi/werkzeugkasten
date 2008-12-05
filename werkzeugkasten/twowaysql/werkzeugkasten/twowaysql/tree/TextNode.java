@@ -3,17 +3,17 @@ package werkzeugkasten.twowaysql.tree;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.CommonTree;
 
-public class TextNode implements QueryNode {
+public class TextNode extends AbstractQueryNode implements QueryNode {
 
 	protected LocationCalculator calculator = new LocationCalculator();
 
 	protected TextLocation position;
 
-	public TextLocation position() {
+	public TextLocation getLocation() {
 		return this.position;
 	}
 
-	public NodeType type() {
+	public NodeType getType() {
 		return NodeType.TXTNODE;
 	}
 
@@ -28,4 +28,8 @@ public class TextNode implements QueryNode {
 	public void freeze() {
 		this.position = this.calculator.freeze();
 	}
+
+	public <P> void accept(QueryTreeVisitor<P> visitor, P parameter) {
+		visitor.visit(this, parameter);
+	};
 }
