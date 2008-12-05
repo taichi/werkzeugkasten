@@ -1,9 +1,8 @@
-// $ANTLR 3.1.1 D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g 2008-12-05 19:05:06
+// $ANTLR 3.1.1 D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g 2008-12-05 19:06:40
 
 package werkzeugkasten.twowaysql.grammar;
 
 import java.util.LinkedList;
-import werkzeugkasten.twowaysql.grammar.*;
 import werkzeugkasten.twowaysql.tree.*;
 
 
@@ -78,7 +77,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "twowaySQL"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:27:1: twowaySQL returns [TwoWayQuery query] : nodelist EOF ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:26:1: twowaySQL returns [TwoWayQuery query] : nodelist EOF ;
     public final TwoWaySqlParser.twowaySQL_return twowaySQL() throws RecognitionException {
         TwoWaySqlParser.twowaySQL_return retval = new TwoWaySqlParser.twowaySQL_return();
         retval.start = input.LT(1);
@@ -95,8 +94,8 @@ public class TwoWaySqlParser extends Parser {
         		retval.query = new TwoWayQuery();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:34:2: ( nodelist EOF )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:34:4: nodelist EOF
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:33:2: ( nodelist EOF )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:33:4: nodelist EOF
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -145,7 +144,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "nodelist"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:40:1: nodelist returns [LinkedList<QueryNode> list] : ( comment | inbind | txt )+ ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:39:1: nodelist returns [LinkedList<QueryNode> list] : ( comment | inbind | txt )+ ;
     public final TwoWaySqlParser.nodelist_return nodelist() throws RecognitionException {
         TwoWaySqlParser.nodelist_return retval = new TwoWaySqlParser.nodelist_return();
         retval.start = input.LT(1);
@@ -164,12 +163,12 @@ public class TwoWaySqlParser extends Parser {
         		retval.list = new LinkedList<QueryNode>();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:44:2: ( ( comment | inbind | txt )+ )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:45:2: ( comment | inbind | txt )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:43:2: ( ( comment | inbind | txt )+ )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:44:2: ( comment | inbind | txt )+
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:45:2: ( comment | inbind | txt )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:44:2: ( comment | inbind | txt )+
             int cnt1=0;
             loop1:
             do {
@@ -218,7 +217,7 @@ public class TwoWaySqlParser extends Parser {
 
                 switch (alt1) {
             	case 1 :
-            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:45:3: comment
+            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:44:3: comment
             	    {
             	    pushFollow(FOLLOW_comment_in_nodelist104);
             	    comment3=comment();
@@ -231,7 +230,7 @@ public class TwoWaySqlParser extends Parser {
             	    }
             	    break;
             	case 2 :
-            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:46:4: inbind
+            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:45:4: inbind
             	    {
             	    pushFollow(FOLLOW_inbind_in_nodelist111);
             	    inbind4=inbind();
@@ -244,7 +243,7 @@ public class TwoWaySqlParser extends Parser {
             	    }
             	    break;
             	case 3 :
-            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:47:4: txt
+            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:46:4: txt
             	    {
             	    pushFollow(FOLLOW_txt_in_nodelist118);
             	    txt5=txt();
@@ -293,7 +292,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "charactors"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:51:1: charactors : ( IDENT | SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP )+ ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:50:1: charactors : ( IDENT | SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP )+ ;
     public final TwoWaySqlParser.charactors_return charactors() throws RecognitionException {
         TwoWaySqlParser.charactors_return retval = new TwoWaySqlParser.charactors_return();
         retval.start = input.LT(1);
@@ -305,12 +304,12 @@ public class TwoWaySqlParser extends Parser {
         CommonTree set6_tree=null;
 
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:51:12: ( ( IDENT | SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP )+ )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:52:2: ( IDENT | SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:50:12: ( ( IDENT | SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP )+ )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:51:2: ( IDENT | SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP )+
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:52:2: ( IDENT | SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:51:2: ( IDENT | SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP )+
             int cnt2=0;
             loop2:
             do {
@@ -378,7 +377,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "txt"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:55:1: txt returns [TxtNode node] : charactors ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:54:1: txt returns [TxtNode node] : charactors ;
     public final TwoWaySqlParser.txt_return txt() throws RecognitionException {
         TwoWaySqlParser.txt_return retval = new TwoWaySqlParser.txt_return();
         retval.start = input.LT(1);
@@ -393,8 +392,8 @@ public class TwoWaySqlParser extends Parser {
         		retval.node = new TxtNode();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:62:2: ( charactors )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:63:2: charactors
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:61:2: ( charactors )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:62:2: charactors
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -436,7 +435,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "comment"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:68:1: comment returns [QueryNode node] : ( begincomment | ifcomment | bindcomment | blockcomment | linecomment );
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:67:1: comment returns [QueryNode node] : ( begincomment | ifcomment | bindcomment | blockcomment | linecomment );
     public final TwoWaySqlParser.comment_return comment() throws RecognitionException {
         TwoWaySqlParser.comment_return retval = new TwoWaySqlParser.comment_return();
         retval.start = input.LT(1);
@@ -456,12 +455,12 @@ public class TwoWaySqlParser extends Parser {
 
 
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:68:32: ( begincomment | ifcomment | bindcomment | blockcomment | linecomment )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:67:32: ( begincomment | ifcomment | bindcomment | blockcomment | linecomment )
             int alt3=5;
             alt3 = dfa3.predict(input);
             switch (alt3) {
                 case 1 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:69:2: begincomment
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:68:2: begincomment
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -476,7 +475,7 @@ public class TwoWaySqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:70:4: ifcomment
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:69:4: ifcomment
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -491,7 +490,7 @@ public class TwoWaySqlParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:71:4: bindcomment
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:70:4: bindcomment
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -506,7 +505,7 @@ public class TwoWaySqlParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:72:4: blockcomment
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:71:4: blockcomment
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -521,7 +520,7 @@ public class TwoWaySqlParser extends Parser {
                     }
                     break;
                 case 5 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:73:4: linecomment
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:72:4: linecomment
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -562,7 +561,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "blockcomment"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:76:1: blockcomment returns [TxtNode node] : C_ST charactors C_ED ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:75:1: blockcomment returns [TxtNode node] : C_ST charactors C_ED ;
     public final TwoWaySqlParser.blockcomment_return blockcomment() throws RecognitionException {
         TwoWaySqlParser.blockcomment_return retval = new TwoWaySqlParser.blockcomment_return();
         retval.start = input.LT(1);
@@ -581,8 +580,8 @@ public class TwoWaySqlParser extends Parser {
         		retval.node = new TxtNode();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:83:2: ( C_ST charactors C_ED )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:84:2: C_ST charactors C_ED
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:82:2: ( C_ST charactors C_ED )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:83:2: C_ST charactors C_ED
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -632,7 +631,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "linecomment"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:87:1: linecomment returns [TxtNode node] : C_LN_ST charactors C_LN_ED ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:86:1: linecomment returns [TxtNode node] : C_LN_ST charactors C_LN_ED ;
     public final TwoWaySqlParser.linecomment_return linecomment() throws RecognitionException {
         TwoWaySqlParser.linecomment_return retval = new TwoWaySqlParser.linecomment_return();
         retval.start = input.LT(1);
@@ -651,8 +650,8 @@ public class TwoWaySqlParser extends Parser {
         		retval.node = new TxtNode();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:94:2: ( C_LN_ST charactors C_LN_ED )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:95:2: C_LN_ST charactors C_LN_ED
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:93:2: ( C_LN_ST charactors C_LN_ED )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:94:2: C_LN_ST charactors C_LN_ED
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -702,7 +701,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "ifcomment"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:98:1: ifcomment returns [IfNode node] : ( C_ST IF expression C_ED nodelist ( elseifnode )* ( elsenode )? endcomment ) ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:97:1: ifcomment returns [IfNode node] : ( C_ST IF expression C_ED nodelist ( elseifnode )* ( elsenode )? endcomment ) ;
     public final TwoWaySqlParser.ifcomment_return ifcomment() throws RecognitionException {
         TwoWaySqlParser.ifcomment_return retval = new TwoWaySqlParser.ifcomment_return();
         retval.start = input.LT(1);
@@ -731,13 +730,13 @@ public class TwoWaySqlParser extends Parser {
         		retval.node = new IfNode();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:105:2: ( ( C_ST IF expression C_ED nodelist ( elseifnode )* ( elsenode )? endcomment ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:106:2: ( C_ST IF expression C_ED nodelist ( elseifnode )* ( elsenode )? endcomment )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:104:2: ( ( C_ST IF expression C_ED nodelist ( elseifnode )* ( elsenode )? endcomment ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:105:2: ( C_ST IF expression C_ED nodelist ( elseifnode )* ( elsenode )? endcomment )
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:106:2: ( C_ST IF expression C_ED nodelist ( elseifnode )* ( elsenode )? endcomment )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:106:3: C_ST IF expression C_ED nodelist ( elseifnode )* ( elsenode )? endcomment
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:105:2: ( C_ST IF expression C_ED nodelist ( elseifnode )* ( elsenode )? endcomment )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:105:3: C_ST IF expression C_ED nodelist ( elseifnode )* ( elsenode )? endcomment
             {
             C_ST19=(Token)match(input,C_ST,FOLLOW_C_ST_in_ifcomment330); 
             C_ST19_tree = (CommonTree)adaptor.create(C_ST19);
@@ -765,7 +764,7 @@ public class TwoWaySqlParser extends Parser {
 
             adaptor.addChild(root_0, nodelist23.getTree());
              retval.node.setChildren((nodelist23!=null?nodelist23.list:null));
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:108:3: ( elseifnode )*
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:107:3: ( elseifnode )*
             loop4:
             do {
                 int alt4=2;
@@ -793,7 +792,7 @@ public class TwoWaySqlParser extends Parser {
 
                 switch (alt4) {
             	case 1 :
-            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:108:4: elseifnode
+            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:107:4: elseifnode
             	    {
             	    pushFollow(FOLLOW_elseifnode_in_ifcomment349);
             	    elseifnode24=elseifnode();
@@ -811,7 +810,7 @@ public class TwoWaySqlParser extends Parser {
                 }
             } while (true);
 
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:109:3: ( elsenode )?
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:108:3: ( elsenode )?
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -831,7 +830,7 @@ public class TwoWaySqlParser extends Parser {
             }
             switch (alt5) {
                 case 1 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:109:4: elsenode
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:108:4: elsenode
                     {
                     pushFollow(FOLLOW_elsenode_in_ifcomment359);
                     elsenode25=elsenode();
@@ -890,7 +889,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "elseifnode"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:118:1: elseifnode returns [IfNode node] : elseifcomment nodelist ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:117:1: elseifnode returns [IfNode node] : elseifcomment nodelist ;
     public final TwoWaySqlParser.elseifnode_return elseifnode() throws RecognitionException {
         TwoWaySqlParser.elseifnode_return retval = new TwoWaySqlParser.elseifnode_return();
         retval.start = input.LT(1);
@@ -907,8 +906,8 @@ public class TwoWaySqlParser extends Parser {
         		retval.node = new IfNode();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:125:2: ( elseifcomment nodelist )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:126:2: elseifcomment nodelist
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:124:2: ( elseifcomment nodelist )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:125:2: elseifcomment nodelist
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -961,7 +960,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "elseifcomment"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:135:1: elseifcomment returns [ExpressionNode node] : ( elseifblockcomment | elseiflinecomment ) ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:134:1: elseifcomment returns [ExpressionNode node] : ( elseifblockcomment | elseiflinecomment ) ;
     public final TwoWaySqlParser.elseifcomment_return elseifcomment() throws RecognitionException {
         TwoWaySqlParser.elseifcomment_return retval = new TwoWaySqlParser.elseifcomment_return();
         retval.start = input.LT(1);
@@ -975,12 +974,12 @@ public class TwoWaySqlParser extends Parser {
 
 
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:136:2: ( ( elseifblockcomment | elseiflinecomment ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:137:2: ( elseifblockcomment | elseiflinecomment )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:135:2: ( ( elseifblockcomment | elseiflinecomment ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:136:2: ( elseifblockcomment | elseiflinecomment )
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:137:2: ( elseifblockcomment | elseiflinecomment )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:136:2: ( elseifblockcomment | elseiflinecomment )
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -998,7 +997,7 @@ public class TwoWaySqlParser extends Parser {
             }
             switch (alt6) {
                 case 1 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:137:3: elseifblockcomment
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:136:3: elseifblockcomment
                     {
                     pushFollow(FOLLOW_elseifblockcomment_in_elseifcomment423);
                     elseifblockcomment29=elseifblockcomment();
@@ -1011,7 +1010,7 @@ public class TwoWaySqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:138:5: elseiflinecomment
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:137:5: elseiflinecomment
                     {
                     pushFollow(FOLLOW_elseiflinecomment_in_elseifcomment431);
                     elseiflinecomment30=elseiflinecomment();
@@ -1054,7 +1053,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "elseifblockcomment"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:142:1: elseifblockcomment returns [ExpressionNode node] : C_ST ELSEIF expression C_ED ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:141:1: elseifblockcomment returns [ExpressionNode node] : C_ST ELSEIF expression C_ED ;
     public final TwoWaySqlParser.elseifblockcomment_return elseifblockcomment() throws RecognitionException {
         TwoWaySqlParser.elseifblockcomment_return retval = new TwoWaySqlParser.elseifblockcomment_return();
         retval.start = input.LT(1);
@@ -1072,8 +1071,8 @@ public class TwoWaySqlParser extends Parser {
         CommonTree C_ED34_tree=null;
 
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:143:2: ( C_ST ELSEIF expression C_ED )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:143:4: C_ST ELSEIF expression C_ED
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:142:2: ( C_ST ELSEIF expression C_ED )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:142:4: C_ST ELSEIF expression C_ED
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1124,7 +1123,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "elseiflinecomment"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:146:1: elseiflinecomment returns [ExpressionNode node] : C_LN_ST ELSEIF expression C_LN_ED ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:145:1: elseiflinecomment returns [ExpressionNode node] : C_LN_ST ELSEIF expression C_LN_ED ;
     public final TwoWaySqlParser.elseiflinecomment_return elseiflinecomment() throws RecognitionException {
         TwoWaySqlParser.elseiflinecomment_return retval = new TwoWaySqlParser.elseiflinecomment_return();
         retval.start = input.LT(1);
@@ -1142,8 +1141,8 @@ public class TwoWaySqlParser extends Parser {
         CommonTree C_LN_ED38_tree=null;
 
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:147:2: ( C_LN_ST ELSEIF expression C_LN_ED )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:147:4: C_LN_ST ELSEIF expression C_LN_ED
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:146:2: ( C_LN_ST ELSEIF expression C_LN_ED )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:146:4: C_LN_ST ELSEIF expression C_LN_ED
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1194,7 +1193,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "elsenode"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:150:1: elsenode returns [LinkedList<QueryNode> list] : elsecomment nodelist ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:149:1: elsenode returns [LinkedList<QueryNode> list] : elsecomment nodelist ;
     public final TwoWaySqlParser.elsenode_return elsenode() throws RecognitionException {
         TwoWaySqlParser.elsenode_return retval = new TwoWaySqlParser.elsenode_return();
         retval.start = input.LT(1);
@@ -1208,8 +1207,8 @@ public class TwoWaySqlParser extends Parser {
 
 
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:151:2: ( elsecomment nodelist )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:152:2: elsecomment nodelist
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:150:2: ( elsecomment nodelist )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:151:2: elsecomment nodelist
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1253,7 +1252,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "elsecomment"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:155:1: elsecomment : ( C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED ) ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:154:1: elsecomment : ( C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED ) ;
     public final TwoWaySqlParser.elsecomment_return elsecomment() throws RecognitionException {
         TwoWaySqlParser.elsecomment_return retval = new TwoWaySqlParser.elsecomment_return();
         retval.start = input.LT(1);
@@ -1275,12 +1274,12 @@ public class TwoWaySqlParser extends Parser {
         CommonTree C_LN_ED46_tree=null;
 
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:155:13: ( ( C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:156:2: ( C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:154:13: ( ( C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:155:2: ( C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED )
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:156:2: ( C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:155:2: ( C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED )
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -1298,7 +1297,7 @@ public class TwoWaySqlParser extends Parser {
             }
             switch (alt7) {
                 case 1 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:156:3: C_ST ELSE C_ED
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:155:3: C_ST ELSE C_ED
                     {
                     C_ST41=(Token)match(input,C_ST,FOLLOW_C_ST_in_elsecomment511); 
                     C_ST41_tree = (CommonTree)adaptor.create(C_ST41);
@@ -1316,7 +1315,7 @@ public class TwoWaySqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:156:20: C_LN_ST ELSE C_LN_ED
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:155:20: C_LN_ST ELSE C_LN_ED
                     {
                     C_LN_ST44=(Token)match(input,C_LN_ST,FOLLOW_C_LN_ST_in_elsecomment519); 
                     C_LN_ST44_tree = (CommonTree)adaptor.create(C_LN_ST44);
@@ -1364,7 +1363,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "expression"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:159:1: expression returns [ExpressionNode node] : charactors ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:158:1: expression returns [ExpressionNode node] : charactors ;
     public final TwoWaySqlParser.expression_return expression() throws RecognitionException {
         TwoWaySqlParser.expression_return retval = new TwoWaySqlParser.expression_return();
         retval.start = input.LT(1);
@@ -1379,8 +1378,8 @@ public class TwoWaySqlParser extends Parser {
         		retval.node = new ExpressionNode();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:166:2: ( charactors )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:167:2: charactors
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:165:2: ( charactors )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:166:2: charactors
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1422,7 +1421,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "begincomment"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:170:1: begincomment returns [BeginNode node] : ( ( C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED ) nodelist endcomment ) ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:169:1: begincomment returns [BeginNode node] : ( ( C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED ) nodelist endcomment ) ;
     public final TwoWaySqlParser.begincomment_return begincomment() throws RecognitionException {
         TwoWaySqlParser.begincomment_return retval = new TwoWaySqlParser.begincomment_return();
         retval.start = input.LT(1);
@@ -1451,15 +1450,15 @@ public class TwoWaySqlParser extends Parser {
         		retval.node = new BeginNode();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:177:2: ( ( ( C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED ) nodelist endcomment ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:178:2: ( ( C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED ) nodelist endcomment )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:176:2: ( ( ( C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED ) nodelist endcomment ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:177:2: ( ( C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED ) nodelist endcomment )
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:178:2: ( ( C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED ) nodelist endcomment )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:179:3: ( C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED ) nodelist endcomment
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:177:2: ( ( C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED ) nodelist endcomment )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:178:3: ( C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED ) nodelist endcomment
             {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:179:3: ( C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:178:3: ( C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED )
             int alt8=2;
             int LA8_0 = input.LA(1);
 
@@ -1477,7 +1476,7 @@ public class TwoWaySqlParser extends Parser {
             }
             switch (alt8) {
                 case 1 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:179:4: C_ST BEGIN C_ED
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:178:4: C_ST BEGIN C_ED
                     {
                     C_ST48=(Token)match(input,C_ST,FOLLOW_C_ST_in_begincomment586); 
                     C_ST48_tree = (CommonTree)adaptor.create(C_ST48);
@@ -1496,7 +1495,7 @@ public class TwoWaySqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:180:6: C_LN_ST BEGIN C_LN_ED
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:179:6: C_LN_ST BEGIN C_LN_ED
                     {
                     C_LN_ST51=(Token)match(input,C_LN_ST,FOLLOW_C_LN_ST_in_begincomment599); 
                     C_LN_ST51_tree = (CommonTree)adaptor.create(C_LN_ST51);
@@ -1566,7 +1565,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "endcomment"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:189:1: endcomment : ( C_ST END C_ED | C_LN_ST END C_LN_ED );
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:188:1: endcomment : ( C_ST END C_ED | C_LN_ST END C_LN_ED );
     public final TwoWaySqlParser.endcomment_return endcomment() throws RecognitionException {
         TwoWaySqlParser.endcomment_return retval = new TwoWaySqlParser.endcomment_return();
         retval.start = input.LT(1);
@@ -1588,7 +1587,7 @@ public class TwoWaySqlParser extends Parser {
         CommonTree C_LN_ED61_tree=null;
 
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:189:12: ( C_ST END C_ED | C_LN_ST END C_LN_ED )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:188:12: ( C_ST END C_ED | C_LN_ST END C_LN_ED )
             int alt9=2;
             int LA9_0 = input.LA(1);
 
@@ -1606,7 +1605,7 @@ public class TwoWaySqlParser extends Parser {
             }
             switch (alt9) {
                 case 1 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:190:2: C_ST END C_ED
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:189:2: C_ST END C_ED
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -1626,7 +1625,7 @@ public class TwoWaySqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:190:18: C_LN_ST END C_LN_ED
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:189:18: C_LN_ST END C_LN_ED
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
@@ -1672,7 +1671,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "bindcomment"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:193:1: bindcomment returns [BindNode node] : ( C_ST SYM_BIND expression C_ED txt ) ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:192:1: bindcomment returns [BindNode node] : ( C_ST SYM_BIND expression C_ED txt ) ;
     public final TwoWaySqlParser.bindcomment_return bindcomment() throws RecognitionException {
         TwoWaySqlParser.bindcomment_return retval = new TwoWaySqlParser.bindcomment_return();
         retval.start = input.LT(1);
@@ -1695,13 +1694,13 @@ public class TwoWaySqlParser extends Parser {
         		retval.node = new BindNode();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:200:2: ( ( C_ST SYM_BIND expression C_ED txt ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:201:2: ( C_ST SYM_BIND expression C_ED txt )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:199:2: ( ( C_ST SYM_BIND expression C_ED txt ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:200:2: ( C_ST SYM_BIND expression C_ED txt )
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:201:2: ( C_ST SYM_BIND expression C_ED txt )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:201:3: C_ST SYM_BIND expression C_ED txt
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:200:2: ( C_ST SYM_BIND expression C_ED txt )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:200:3: C_ST SYM_BIND expression C_ED txt
             {
             C_ST62=(Token)match(input,C_ST,FOLLOW_C_ST_in_bindcomment671); 
             C_ST62_tree = (CommonTree)adaptor.create(C_ST62);
@@ -1767,7 +1766,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "inbind"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:210:1: inbind returns [InBindNode node] : IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars ( SYM_C inbindchars )* SYM_RP ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:209:1: inbind returns [InBindNode node] : IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars ( SYM_C inbindchars )* SYM_RP ;
     public final TwoWaySqlParser.inbind_return inbind() throws RecognitionException {
         TwoWaySqlParser.inbind_return retval = new TwoWaySqlParser.inbind_return();
         retval.start = input.LT(1);
@@ -1801,8 +1800,8 @@ public class TwoWaySqlParser extends Parser {
         		TxtNode skip = new TxtNode();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:218:2: ( IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars ( SYM_C inbindchars )* SYM_RP )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:219:2: IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars ( SYM_C inbindchars )* SYM_RP
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:217:2: ( IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars ( SYM_C inbindchars )* SYM_RP )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:218:2: IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars ( SYM_C inbindchars )* SYM_RP
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1838,7 +1837,7 @@ public class TwoWaySqlParser extends Parser {
             state._fsp--;
 
             adaptor.addChild(root_0, inbindchars73.getTree());
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:219:54: ( SYM_C inbindchars )*
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:218:54: ( SYM_C inbindchars )*
             loop10:
             do {
                 int alt10=2;
@@ -1851,7 +1850,7 @@ public class TwoWaySqlParser extends Parser {
 
                 switch (alt10) {
             	case 1 :
-            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:219:55: SYM_C inbindchars
+            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:218:55: SYM_C inbindchars
             	    {
             	    SYM_C74=(Token)match(input,SYM_C,FOLLOW_SYM_C_in_inbind725); 
             	    SYM_C74_tree = (CommonTree)adaptor.create(SYM_C74);
@@ -1914,7 +1913,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "inbindchars"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:230:1: inbindchars : ( IDENT | SYMBOLS | SYM_C | QUOTED )+ ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:229:1: inbindchars : ( IDENT | SYMBOLS | SYM_C | QUOTED )+ ;
     public final TwoWaySqlParser.inbindchars_return inbindchars() throws RecognitionException {
         TwoWaySqlParser.inbindchars_return retval = new TwoWaySqlParser.inbindchars_return();
         retval.start = input.LT(1);
@@ -1926,12 +1925,12 @@ public class TwoWaySqlParser extends Parser {
         CommonTree set77_tree=null;
 
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:231:2: ( ( IDENT | SYMBOLS | SYM_C | QUOTED )+ )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:232:2: ( IDENT | SYMBOLS | SYM_C | QUOTED )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:230:2: ( ( IDENT | SYMBOLS | SYM_C | QUOTED )+ )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:231:2: ( IDENT | SYMBOLS | SYM_C | QUOTED )+
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:232:2: ( IDENT | SYMBOLS | SYM_C | QUOTED )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:231:2: ( IDENT | SYMBOLS | SYM_C | QUOTED )+
             int cnt11=0;
             loop11:
             do {
@@ -2052,7 +2051,7 @@ public class TwoWaySqlParser extends Parser {
             this.transition = DFA3_transition;
         }
         public String getDescription() {
-            return "68:1: comment returns [QueryNode node] : ( begincomment | ifcomment | bindcomment | blockcomment | linecomment );";
+            return "67:1: comment returns [QueryNode node] : ( begincomment | ifcomment | bindcomment | blockcomment | linecomment );";
         }
     }
  
