@@ -1,10 +1,8 @@
 package werkzeugkasten.twowaysql.tree;
 
-public interface QueryNode {
+public interface QueryNode extends Locatable {
 
 	NodeType getType();
-
-	TextLocation getLocation();
 
 	QueryNode getParent();
 
@@ -14,5 +12,5 @@ public interface QueryNode {
 
 	void setChildren(Iterable<QueryNode> kids);
 
-	<P> void accept(QueryTreeVisitor<P> visitor, P parameter);
+	<C> void accept(QueryTreeVisitor<C> visitor, C context);
 }

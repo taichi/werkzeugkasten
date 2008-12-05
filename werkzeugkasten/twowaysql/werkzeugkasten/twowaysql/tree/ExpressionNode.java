@@ -1,10 +1,9 @@
 package werkzeugkasten.twowaysql.tree;
 
-
-public class TextNode extends AbstractQueryNode {
+public class ExpressionNode extends TextNode {
 
 	public NodeType getType() {
-		return NodeType.TXTNODE;
+		return NodeType.EXPRESSIONNODE;
 	}
 
 	public <P> void accept(QueryTreeVisitor<P> visitor, P parameter) {

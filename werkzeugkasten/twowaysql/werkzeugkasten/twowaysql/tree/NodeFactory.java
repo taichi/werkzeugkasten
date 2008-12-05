@@ -12,4 +12,8 @@ public class NodeFactory {
 	public TextNode textNode() {
 		return new TextNode();
 	}
+
+	public ExpressionNode expressionNode() {
+		return new ExpressionNode();
+	}
 }

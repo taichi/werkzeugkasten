@@ -11,11 +11,11 @@ import org.antlr.runtime.tree.CommonTree;
 public class LocationCalculator {
 	protected Deque<Token> tokens = new LinkedList<Token>();
 
-	public void append(Token token) {
+	public void update(Token token) {
 		this.tokens.add(token);
 	}
 
-	public void append(CommonTree charactors) {
+	public void update(CommonTree charactors) {
 		if (charactors == null) {
 			return;
 		}
@@ -23,10 +23,10 @@ public class LocationCalculator {
 			List<?> kids = charactors.getChildren();
 			CommonTree st = (CommonTree) kids.get(0);
 			CommonTree ed = (CommonTree) kids.get(kids.size() - 1);
-			append(st.getToken());
-			append(ed.getToken());
+			update(st.getToken());
+			update(ed.getToken());
 		} else {
-			append(charactors.getToken());
+			update(charactors.getToken());
 		}
 	}
 
