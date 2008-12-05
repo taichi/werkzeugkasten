@@ -10,6 +10,7 @@ options {
 package werkzeugkasten.twowaysql.grammar;
 
 import java.util.LinkedList;
+import werkzeugkasten.twowaysql.grammar.*;
 import werkzeugkasten.twowaysql.tree.*;
 
 }
