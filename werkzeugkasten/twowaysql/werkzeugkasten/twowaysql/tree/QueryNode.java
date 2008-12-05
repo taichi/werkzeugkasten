@@ -12,5 +12,5 @@ public interface QueryNode extends Locatable {
 
 	void setChildren(Iterable<QueryNode> kids);
 
-	<C> void accept(QueryTreeVisitor<C> visitor, C context);
+	<C> boolean accept(QueryTreeVisitor<C> visitor, C context);
 }

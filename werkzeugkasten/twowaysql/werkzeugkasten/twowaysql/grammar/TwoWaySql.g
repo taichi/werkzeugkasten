@@ -6,27 +6,15 @@ options {
 	//superClass = Parser;
 }
 
-tokens {
-	BEGINNODE;
-	IFNODE;
-	EXPRESSIONNODE;
-	ELSENODE;
-	ELSEIFNODE;
-	BINDNODE;
-	INBINDNODE;
-	TXTNODE;
-	ROOTNODE;
-}
-
 @header {
 package werkzeugkasten.twowaysql.grammar;
 
+import java.util.LinkedList;
 import werkzeugkasten.twowaysql.tree.*;
 
 }
 
 @members {
-	NodeFactory f = NodeFactory.getInstance();
 }
 
 @lexer::header {
@@ -38,103 +26,173 @@ boolean inComment = false;
 boolean inLineComment = false;
 }
 
-twowaySQL : txt EOF
-	-> ^(ROOTNODE txt)
+twowaySQL returns[TwoWayQuery query]
+	@init{
+		$query = new TwoWayQuery();
+	}
+	: nodelist EOF {
+		$query.setChildren($nodelist.list);
+		$query.update($nodelist.tree);
+	}
 	;
 
-txt : (comment | inbind | txts)+
+nodelist returns[LinkedList<QueryNode> list]
+	@init{
+		$list = new LinkedList<QueryNode>();
+	}
+	:
+	(comment {$list.add($comment.node);}
+	| inbind {$list.add($inbind.node);}
+	| txt {$list.add($txt.node);}
+	)+
 	;
 
 charactors :
 	(IDENT| SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP)+ 
 ;
-txts returns[TextNode node]
+txt returns[TxtNode node]
 	@init {
-		$node = f.textNode();
+		$node = new TxtNode();
 	}
 	@after {
 		$node.freeze();
 	}
 	:
-	charactors { $node.append($charactors.tree); }
-	-> ^(TXTNODE charactors) 
-	;
+	charactors { $node.update($charactors.tree); }
+;
 
 // $<comment
 
-comment :
-	begincomment
-	| ifcomment
-	| bindcomment
-	| blockcomment
-	| linecomment
+comment returns[QueryNode node]:
+	begincomment {$node = $begincomment.node;}
+	| ifcomment {$node = $ifcomment.node;}
+	| bindcomment {$node = $bindcomment.node;}
+	| blockcomment {$node = $blockcomment.node;}
+	| linecomment {$node = $linecomment.node;}
 	;
 
-blockcomment returns[TextNode node]
+blockcomment returns[TxtNode node]
 	@init {
-		$node = f.textNode();
+		$node = new TxtNode();
 	}
 	@after {
 		$node.freeze();
 	}
 	:
-	C_ST charactors C_ED { $node.append($C_ST);$node.append($C_ED); }
-	-> ^(TXTNODE C_ST charactors C_ED)
+	C_ST charactors C_ED { $node.update($C_ST);$node.update($C_ED); }
 	;
 
-linecomment returns[TextNode node]
+linecomment returns[TxtNode node]
 	@init {
-		$node = f.textNode();
+		$node = new TxtNode();
 	}
 	@after {
 		$node.freeze();
 	}
 	:
-	C_LN_ST charactors C_LN_ED { $node.append($C_LN_ST);$node.append($C_LN_ED); }
-	-> ^(TXTNODE C_LN_ST charactors C_LN_ED)
+	C_LN_ST charactors C_LN_ED { $node.update($C_LN_ST);$node.update($C_LN_ED); }
 	;
 
-ifcomment :
-	(C_ST IF expression C_ED txt elseifnode* elsenode? endcomment)
-	-> ^(IFNODE expression txt elseifnode* elsenode? )
+ifcomment returns[IfNode node]
+	@init {
+		$node = new IfNode();
+	}
+	:
+	(C_ST IF expression C_ED { $node.setExpression($expression.node); }
+		nodelist { $node.setChildren($nodelist.list);}
+		(elseifnode { $node.addElseIf($elseifnode.node); })* 
+		(elsenode { $node.setElse($elsenode.list); })?
+		endcomment
+	)
+	{
+		$node.update($C_ST);
+		$node.update($endcomment.tree);
+	}
 	;
 
-elseifnode	:
-	elseifcomment txt -> ^(ELSEIFNODE elseifcomment txt);
+elseifnode	 returns[IfNode node]
+	@init {
+		$node = new IfNode();
+	}
+	:
+	elseifcomment nodelist { $node.setExpression($elseifcomment.node); $node.setChildren($nodelist.list); }
+;
 
-elsenode :
-	elsecomment txt -> ^(ELSENODE txt);
+elseifcomment returns[ExpressionNode node]
+	:
+	(elseifblockcomment {$node = $elseifblockcomment.node;}
+	 | elseiflinecomment {$node = $elseiflinecomment.node;}
+	)
+;
 
-elseifcomment :
-	(C_ST ELSEIF expression C_ED | C_LN_ST ELSEIF expression C_LN_ED)
-		-> expression;
+elseifblockcomment returns[ExpressionNode node]
+	: C_ST ELSEIF expression C_ED { $node = $expression.node; }
+;
+
+elseiflinecomment returns[ExpressionNode node]
+	: C_LN_ST ELSEIF expression C_LN_ED { $node = $expression.node; }
+;
+
+elsenode returns[LinkedList<QueryNode> list]
+	:
+	elsecomment nodelist { $list = $nodelist.list; }
+;
 
 elsecomment :
 	(C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED) ;
 
-expression returns[TextLocation pos]
+expression returns[ExpressionNode node]
 	@init {
-		LocationCalculator calc = new LocationCalculator();
+		$node = new ExpressionNode();
 	}
 	@after {
-		$pos = calc.freeze();
+		$node.freeze();
 	}
 	:
-	charactors {calc.append($charactors.tree);}-> ^(EXPRESSIONNODE charactors) ;
+	charactors {$node.update($charactors.tree);}
+;
 	
-begincomment :
-	((C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED) txt endcomment) -> ^(BEGINNODE txt);
+begincomment returns[BeginNode node]
+	@init {
+		$node = new BeginNode();
+	}
+	:
+	(
+		(C_ST BEGIN C_ED {$node.update($C_ST);}
+		 | C_LN_ST BEGIN C_LN_ED  {$node.update($C_LN_ST);}
+		) nodelist endcomment
+	)
+	{
+		$node.setChildren($nodelist.list);
+		$node.update($endcomment.tree);
+	}
+;
 
 endcomment :
 	C_ST END C_ED | C_LN_ST END C_LN_ED;
 
-bindcomment :
-	(C_ST SYM_BIND expression C_ED charactors)
-		-> ^(BINDNODE expression);
+bindcomment returns[BindNode node]
+	@init {
+		$node = new BindNode();
+	}
+	:
+	(C_ST SYM_BIND expression C_ED txt) {$node.setExpression($expression.node);$node.setSkipped($txt.node);}
+;
 
-inbind	:
+inbind returns[InBindNode node]
+	@init {
+		$node = new InBindNode();
+		TxtNode skip = new TxtNode();
+	}
+	:
 	IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars (SYM_C inbindchars)* SYM_RP
-		-> ^(INBINDNODE IN expression);
+	{
+		$node.setExpression($expression.node);
+		skip.update($SYM_LP);
+		skip.update($SYM_RP);
+		$node.setSkipped(skip);
+	}
+;
 
 inbindchars	: (IDENT| SYMBOLS | SYM_C | QUOTED)+;
 

@@ -6,7 +6,7 @@ public class BeginNode extends AbstractQueryNode {
 		return NodeType.BEGINNODE;
 	}
 
-	public <C> void accept(QueryTreeVisitor<C> visitor, C context) {
-		visitor.visit(this, context);
+	public <C> boolean accept(QueryTreeVisitor<C> visitor, C context) {
+		return visitor.visit(this, context);
 	}
 }
