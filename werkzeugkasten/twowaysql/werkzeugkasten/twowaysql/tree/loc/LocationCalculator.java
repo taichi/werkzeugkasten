@@ -38,7 +38,9 @@ public class LocationCalculator {
 	}
 
 	public void update(Token token) {
-		this.tokens.add(token);
+		if (token != null) {
+			this.tokens.add(token);
+		}
 	}
 
 	public void update(CommonTree charactors) {
