@@ -1,5 +1,7 @@
 package werkzeugkasten.twowaysql.tree;
 
+import java.util.Collections;
+
 import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.CommonTree;
 
@@ -12,7 +14,7 @@ public abstract class AbstractQueryNode implements QueryNode {
 	protected TextLocation location = TextLocation.UNKNOWN_LOCATION;
 
 	protected QueryNode parent;
-	protected Iterable<QueryNode> kids;
+	protected Iterable<QueryNode> kids = Collections.emptyList();
 
 	@Override
 	public QueryNode getParent() {

@@ -5,10 +5,15 @@ import werkzeugkasten.twowaysql.tree.BindNode;
 import werkzeugkasten.twowaysql.tree.ExpressionNode;
 import werkzeugkasten.twowaysql.tree.IfNode;
 import werkzeugkasten.twowaysql.tree.InBindNode;
+import werkzeugkasten.twowaysql.tree.QueryNode;
 import werkzeugkasten.twowaysql.tree.TwoWayQuery;
 import werkzeugkasten.twowaysql.tree.TxtNode;
 
 public interface QueryTreeVisitor<C> {
+
+	void preVisit(QueryNode node, C context);
+
+	void postVisit(QueryNode node, C context);
 
 	boolean visit(TwoWayQuery node, C context);
 
