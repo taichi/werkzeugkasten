@@ -1,6 +1,8 @@
 package werkzeugkasten.twowaysql.tree.visitor;
 
-import java.util.LinkedList;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Iterator;
 
 import werkzeugkasten.twowaysql.tree.QueryNode;
 
@@ -22,48 +24,34 @@ public class QueryTreeAcceptor {
 		}
 	}
 
-	protected interface Task {
-		boolean execute();
-	}
-
 	public static <C> void acceptByTailRecursion(QueryNode tree,
 			final QueryTreeVisitor<C> visitor, final C context) {
-		LinkedList<Task> tasks = new LinkedList<Task>();
-		LinkedList<QueryNode> trees = new LinkedList<QueryNode>();
-		trees.addFirst(tree);
-		addTask(tree, visitor, context, tasks);
-		while (0 < tasks.size()) {
-			QueryNode current = trees.removeFirst();
-			tasks.removeFirst().execute();
-			if (tasks.removeFirst().execute()) {
-				for (QueryNode n : current.getChildren()) {
-					trees.addFirst(n);
-					addTask(n, visitor, context, tasks);
+		Deque<Iterator<QueryNode>> frames = new ArrayDeque<Iterator<QueryNode>>();
+		QueryNode current = tree;
+		do {
+			visitor.preVisit(current, context);
+			boolean is = false;
+			if (current.accept(visitor, context)) {
+				Iterator<QueryNode> kids = current.getChildren().iterator();
+				if (is = kids.hasNext()) {
+					frames.addFirst(kids);
 				}
 			}
-			tasks.removeFirst().execute();
-		}
-	}
-
-	protected static <C> void addTask(final QueryNode tree,
-			final QueryTreeVisitor<C> visitor, final C context,
-			LinkedList<Task> list) {
-		list.addFirst(new Task() {
-			public boolean execute() {
-				return tree.accept(visitor, context);
+			if (is == false) {
+				visitor.postVisit(current, context);
 			}
-		});
-		list.addFirst(new Task() {
-			public boolean execute() {
-				visitor.preVisit(tree, context);
-				return true;
+			QueryNode nextone = null;
+			while (nextone == null && 0 < frames.size()) {
+				Iterator<QueryNode> i = frames.getFirst();
+				if (i.hasNext()) {
+					nextone = i.next();
+					break;
+				} else {
+					frames.removeFirst();
+					visitor.postVisit(current.getParent(), context);
+				}
 			}
-		});
-		list.addLast(new Task() {
-			public boolean execute() {
-				visitor.postVisit(tree, context);
-				return true;
-			}
-		});
+			current = nextone;
+		} while (current != null);
 	}
 }

@@ -22,11 +22,11 @@ public class QueryTreeAcceptorTest {
 
 	QueryTreeVisitor<StringBuilder> toString = new QueryTreeVisitor<StringBuilder>() {
 		public void preVisit(QueryNode node, StringBuilder context) {
-			// context.append("(");
+			context.append("(");
 		}
 
 		public void postVisit(QueryNode node, StringBuilder context) {
-			// context.append(")");
+			context.append(")");
 		}
 
 		public boolean visit(TxtNode node, StringBuilder context) {
@@ -67,7 +67,7 @@ public class QueryTreeAcceptorTest {
 	@Before
 	public void setUp() {
 		tree = new TwoWayQuery();
-		dig(tree, 5, 3);
+		dig(tree, 4, 3);
 	}
 
 	protected QueryNode dig(QueryNode parent, int size, int depth) {
@@ -102,18 +102,30 @@ public class QueryTreeAcceptorTest {
 	public void testAccept() {
 		StringBuilder stb = new StringBuilder();
 		QueryTreeAcceptor.accept(tree, toString, stb);
-		System.out.println(stb.toString());
+		assertNotNull(stb);
 	}
 
 	@Test
 	public void testAcceptByTailRecursion() {
-		StringBuilder stb = new StringBuilder();
-		QueryTreeAcceptor.accept(tree, toString, stb);
-		StringBuilder stb2 = new StringBuilder();
-		QueryTreeAcceptor.acceptByTailRecursion(tree, toString, stb2);
-		System.out.println(stb2.toString());
+		for (int depth = 2; depth < 8; depth++) {
+			System.out.println("depth " + depth);
+			for (int i = 11; 0 < i; i--) {
+				dig(tree, i, depth);
 
-		assertEquals(stb, stb2);
+				System.out.println("width " + (i + 1));
+				long start = System.currentTimeMillis();
+				StringBuilder stb = new StringBuilder();
+				QueryTreeAcceptor.accept(tree, toString, stb);
+				System.out.println(System.currentTimeMillis() - start);
+
+				start = System.currentTimeMillis();
+				StringBuilder stb2 = new StringBuilder();
+				QueryTreeAcceptor.acceptByTailRecursion(tree, toString, stb2);
+				System.out.println(System.currentTimeMillis() - start);
+
+				assertEquals(stb.toString(), stb2.toString());
+			}
+		}
 	}
 
 }
