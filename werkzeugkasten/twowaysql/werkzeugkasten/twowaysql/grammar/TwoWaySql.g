@@ -40,7 +40,7 @@ public void reportError(RecognitionException ex) {
 	super.reportError(ex);
 }
 
-protected ExceptionMapper EM_CHARACTORS = new DefaultExceptionMapper();
+protected ExceptionMapper EM_CHARACTORS = new CharacotrsExceptionMapper();
 
 }
 
@@ -52,21 +52,7 @@ package werkzeugkasten.twowaysql.grammar;
 boolean inComment = false;
 boolean inLineComment = false;
 
-protected ProblemCoordinator coordinator;
-public void setProblemCoordinator(ProblemCoordinator pc) {
-	this.coordinator = pc;
-}
-public ProblemCoordinator getProblemCoordinator() {
-	return this.coordinator;
-}
-public void push(ExceptionMapper em) {
-	this.coordinator.push(em);
-}
-public void pop() {
-	this.coordinator.pop();
-}
 public void reportError(RecognitionException ex) {
-	this.coordinator.report(ex);
 	ex.printStackTrace();
 	super.reportError(ex);
 }
@@ -96,14 +82,17 @@ nodelist returns[LinkedList<QueryNode> list]
 	)+
 	;
 
+
 charactors
 	@init {
 		push(EM_CHARACTORS);
 	}
 	:
-	(IDENT| SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP)+ 
+	(IDENT | QUOTED | SYMBOLS | SYM_BIND | SYM_C | SYM_LP | SYM_RP)+ 
 	;
-	finally { pop(); }
+	finally {
+		pop();
+	}
 
 txt returns[TxtNode node]
 	@init {
@@ -282,10 +271,8 @@ inbind returns[InBindNode node]
 
 inbindchars
 	:
-	(IDENT| SYMBOLS | SYM_C | QUOTED)+
-	;
-	
-
+	(IDENT | QUOTED | SYMBOLS | SYM_BIND)+
+	;	
 
 // $>
 
@@ -303,7 +290,7 @@ fragment SYM_Q	:	'\u0027' | '"';
 // $<Comments
 C_ST	:
 	{!inComment}? '/*' { inComment = true; }
-	;
+	; 
 	
 C_ED	:
 	{inComment}? '*/' { inComment = false; };
@@ -332,6 +319,6 @@ fragment LN_N	: '\n';
 fragment CHAR	: ~(SYMBOLS | SYM_Q | SYM_BIND | SYM_LP | SYM_RP | SYM_C | LN_R | LN_N | WS);
 
 // $<Hidden
-LT : {!inLineComment}? (LN_R | LN_N)+ { $channel = HIDDEN; };
+LT : {!inLineComment}? (LN_R? LN_N)+ { $channel = HIDDEN; };
 WHITE_SPACES	: (WS)+ { $channel = HIDDEN; };
 // $>

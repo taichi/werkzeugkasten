@@ -1,11 +1,14 @@
 package werkzeugkasten.twowaysql.grammar;
 
+import static org.junit.Assert.*;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.EarlyExitException;
 import org.junit.Test;
 
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser.twowaySQL_return;
@@ -44,6 +47,7 @@ public class TwoWaySqlParserTest {
 		TwoWaySqlLexer lex = new TwoWaySqlLexer(in);
 		CommonTokenStream tokens = new CommonTokenStream(lex);
 		TwoWaySqlParser parser = new TwoWaySqlParser(tokens);
+		parser.setProblemCoordinator(pc);
 		return parser;
 	}
 
@@ -58,6 +62,11 @@ public class TwoWaySqlParserTest {
 	public void testCharactors() throws Exception {
 		TwoWaySqlParser parser = createParser("");
 		parser.charactors();
+
+		ProblemCoordinator pc = parser.getProblemCoordinator();
+		QueryProblem qp = pc.getAll().iterator().next();
+		System.out.println(qp.getMessage());
+		assertEquals(EarlyExitException.class, qp.getCause().getClass());
 	}
 
 	// @Test
