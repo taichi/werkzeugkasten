@@ -6,11 +6,41 @@ options {
 	superClass = Parser;
 }
 
-@header {
+@parser::header {
 package werkzeugkasten.twowaysql.grammar;
 
 import java.util.LinkedList;
 import werkzeugkasten.twowaysql.tree.*;
+
+}
+@parser::rulecatch {
+catch (RecognitionException ex) {
+	reportError(ex);
+	recover(input,ex);
+	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
+}
+}
+@parser::members {
+protected ProblemCoordinator coordinator;
+public void setProblemCoordinator(ProblemCoordinator pc) {
+	this.coordinator = pc;
+}
+public ProblemCoordinator getProblemCoordinator() {
+	return this.coordinator;
+}
+public void push(ExceptionMapper em) {
+	this.coordinator.push(em);
+}
+public void pop() {
+	this.coordinator.pop();
+}
+public void reportError(RecognitionException ex) {
+	this.coordinator.report(ex);
+	ex.printStackTrace();
+	super.reportError(ex);
+}
+
+protected ExceptionMapper EM_CHARACTORS = new DefaultExceptionMapper();
 
 }
 
@@ -21,6 +51,25 @@ package werkzeugkasten.twowaysql.grammar;
 @lexer::members {
 boolean inComment = false;
 boolean inLineComment = false;
+
+protected ProblemCoordinator coordinator;
+public void setProblemCoordinator(ProblemCoordinator pc) {
+	this.coordinator = pc;
+}
+public ProblemCoordinator getProblemCoordinator() {
+	return this.coordinator;
+}
+public void push(ExceptionMapper em) {
+	this.coordinator.push(em);
+}
+public void pop() {
+	this.coordinator.pop();
+}
+public void reportError(RecognitionException ex) {
+	this.coordinator.report(ex);
+	ex.printStackTrace();
+	super.reportError(ex);
+}
 }
 
 twowaySQL returns[TwoWayQuery query]
@@ -47,9 +96,14 @@ nodelist returns[LinkedList<QueryNode> list]
 	)+
 	;
 
-charactors :
+charactors
+	@init {
+		push(EM_CHARACTORS);
+	}
+	:
 	(IDENT| SYMBOLS | QUOTED | SYM_BIND | SYM_C | SYM_LP | SYM_RP)+ 
 	;
+	finally { pop(); }
 
 txt returns[TxtNode node]
 	@init {
@@ -202,7 +256,7 @@ bindcomment returns[BindNode node]
 		$node.update($C_ST);
 		$node.setExpression($expression.node);
 		$node.setSkipped($txt.node);
-		$node.update($txt.tree);
+				$node.update($txt.tree);
 	}
 	;
 
@@ -230,6 +284,8 @@ inbindchars
 	:
 	(IDENT| SYMBOLS | SYM_C | QUOTED)+
 	;
+	
+
 
 // $>
 
@@ -246,7 +302,9 @@ fragment SYM_Q	:	'\u0027' | '"';
 
 // $<Comments
 C_ST	:
-	{!inComment}? '/*' { inComment = true; };
+	{!inComment}? '/*' { inComment = true; }
+	;
+	
 C_ED	:
 	{inComment}? '*/' { inComment = false; };
 	

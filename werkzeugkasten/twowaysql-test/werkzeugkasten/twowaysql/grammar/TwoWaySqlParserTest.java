@@ -1,7 +1,5 @@
 package werkzeugkasten.twowaysql.grammar;
 
-import static org.junit.Assert.*;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,11 +32,19 @@ public class TwoWaySqlParserTest {
 	}
 
 	protected twowaySQL_return runParser(String sql) throws Exception {
+		System.err.println();
+		System.err.println("#########################");
+		TwoWaySqlParser parser = createParser(sql);
+		return parser.twowaySQL();
+	}
+
+	protected TwoWaySqlParser createParser(String sql) {
+		ProblemCoordinator pc = new ProblemCoordinator();
 		ANTLRStringStream in = new ANTLRStringStream(sql);
 		TwoWaySqlLexer lex = new TwoWaySqlLexer(in);
 		CommonTokenStream tokens = new CommonTokenStream(lex);
 		TwoWaySqlParser parser = new TwoWaySqlParser(tokens);
-		return parser.twowaySQL();
+		return parser;
 	}
 
 	@Test
@@ -49,9 +55,18 @@ public class TwoWaySqlParserTest {
 	}
 
 	@Test
-	public void testIfError() throws Exception {
-		String sql = "SELECT /*IF true*/* FROM HOGE;";
-		twowaySQL_return ret = runParser(sql);
-		assertNotNull(ret);
+	public void testCharactors() throws Exception {
+		TwoWaySqlParser parser = createParser("");
+		parser.charactors();
 	}
+
+	// @Test
+	// public void testIfError() throws Exception {
+	// String sql = "SELECT /*IF true";
+	// runParser(sql);
+	// sql = "SELECT /*IF true*/";
+	// runParser(sql);
+	// sql = "SELECT /*IF true*/* FROM HOGE;";
+	// runParser(sql);
+	// }
 }
