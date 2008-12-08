@@ -1,8 +1,8 @@
 package werkzeugkasten.twowaysql.tree.visitor;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import werkzeugkasten.twowaysql.tree.QueryNode;
 
@@ -26,7 +26,8 @@ public class QueryTreeAcceptor {
 
 	public static <C> void acceptByTailRecursion(QueryNode tree,
 			final QueryTreeVisitor<C> visitor, final C context) {
-		Deque<Iterator<QueryNode>> frames = new ArrayDeque<Iterator<QueryNode>>();
+		List<Iterator<QueryNode>> frames = new ArrayList<Iterator<QueryNode>>(
+				50);
 		QueryNode current = tree;
 		do {
 			visitor.preVisit(current, context);
@@ -34,7 +35,7 @@ public class QueryTreeAcceptor {
 			if (current.accept(visitor, context)) {
 				Iterator<QueryNode> kids = current.getChildren().iterator();
 				if (is = kids.hasNext()) {
-					frames.addFirst(kids);
+					frames.add(kids);
 				}
 			}
 			if (is == false) {
@@ -42,12 +43,13 @@ public class QueryTreeAcceptor {
 			}
 			QueryNode nextone = null;
 			while (nextone == null && 0 < frames.size()) {
-				Iterator<QueryNode> i = frames.getFirst();
+				int last = frames.size() - 1;
+				Iterator<QueryNode> i = frames.get(last);
 				if (i.hasNext()) {
 					nextone = i.next();
 					break;
 				} else {
-					frames.removeFirst();
+					frames.remove(last);
 					visitor.postVisit(current.getParent(), context);
 				}
 			}

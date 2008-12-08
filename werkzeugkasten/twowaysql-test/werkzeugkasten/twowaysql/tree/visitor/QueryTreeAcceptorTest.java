@@ -107,23 +107,83 @@ public class QueryTreeAcceptorTest {
 
 	@Test
 	public void testAcceptByTailRecursion() {
-		for (int depth = 2; depth < 8; depth++) {
+		StringBuilder stb = new StringBuilder();
+		QueryTreeAcceptor.accept(tree, toString, stb);
+
+		StringBuilder stb2 = new StringBuilder();
+		QueryTreeAcceptor.acceptByTailRecursion(tree, toString, stb2);
+
+		assertEquals(stb.toString(), stb2.toString());
+	}
+
+	QueryTreeVisitor<Void> pf = new QueryTreeVisitor<Void>() {
+
+		public void postVisit(QueryNode node, Void context) {
+			// TODO Auto-generated method stub
+
+		}
+
+		public void preVisit(QueryNode node, Void context) {
+			// TODO Auto-generated method stub
+
+		}
+
+		public boolean visit(TwoWayQuery node, Void context) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public boolean visit(TxtNode node, Void context) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public boolean visit(ExpressionNode node, Void context) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public boolean visit(BeginNode node, Void context) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public boolean visit(IfNode node, Void context) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public boolean visit(BindNode node, Void context) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public boolean visit(InBindNode node, Void context) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+	};
+
+	@Test
+	public void testAcceptByTailRecursionPf() {
+		for (int depth = 3; depth < 8; depth++) {
 			System.out.println("depth " + depth);
-			for (int i = 11; 0 < i; i--) {
+			for (int i = 11; 3 < i; i--) {
+				// QueryNode tree = new TwoWayQuery();
 				dig(tree, i, depth);
 
-				System.out.println("width " + (i + 1));
+				System.out.printf("width %2d ", i);
 				long start = System.currentTimeMillis();
-				StringBuilder stb = new StringBuilder();
-				QueryTreeAcceptor.accept(tree, toString, stb);
-				System.out.println(System.currentTimeMillis() - start);
+				QueryTreeAcceptor.accept(tree, pf, null);
+				System.out.printf("%4d", System.currentTimeMillis() - start);
+
+				System.out.print(" ");
 
 				start = System.currentTimeMillis();
-				StringBuilder stb2 = new StringBuilder();
-				QueryTreeAcceptor.acceptByTailRecursion(tree, toString, stb2);
-				System.out.println(System.currentTimeMillis() - start);
-
-				assertEquals(stb.toString(), stb2.toString());
+				QueryTreeAcceptor.acceptByTailRecursion(tree, pf, null);
+				System.out.printf("%4d", System.currentTimeMillis() - start);
+				System.out.println();
 			}
 		}
 	}

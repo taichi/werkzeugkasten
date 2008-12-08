@@ -1,7 +1,7 @@
 package werkzeugkasten.twowaysql.tree.loc;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.antlr.runtime.CommonToken;
@@ -10,7 +10,7 @@ import org.antlr.runtime.tree.CommonTree;
 
 public class LocationCalculator {
 	protected State state = State.BEGIN;
-	protected Deque<Token> tokens = new LinkedList<Token>();
+	protected Deque<Token> tokens = new ArrayDeque<Token>();
 	protected TextLocation location;
 
 	protected enum State {
