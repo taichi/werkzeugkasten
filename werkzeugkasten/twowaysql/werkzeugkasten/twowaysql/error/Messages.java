@@ -16,6 +16,7 @@ public class Messages {
 	public static String LABEL_ENDCOMMENT;
 	public static String VIABLE_ENDCOMMENT;
 	public static String NO_VIABLE_ALT;
+	public static String MISMATCHED_TOKEN;
 
 	static {
 		Class<?> clazz = Messages.class;

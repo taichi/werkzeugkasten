@@ -15,7 +15,7 @@ import werkzeugkasten.twowaysql.tree.*;
 }
 @parser::rulecatch {
 catch (RecognitionException ex) {
-	reportError(ex);
+	reportErrorDbg(ex);
 	recover(input,ex);
 	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
 }
@@ -34,10 +34,14 @@ public void push(ExceptionMapper em) {
 public void pop() {
 	this.coordinator.pop();
 }
-public void reportError(RecognitionException ex) {
+
+public void reportErrorDbg(RecognitionException ex) {
 	this.coordinator.report(ex);
 	ex.printStackTrace();
 	super.reportError(ex);
+}
+public void reportError(RecognitionException ex) {
+	this.coordinator.report(ex);
 }
 
 protected static final ExceptionMapper EM_CHARACTORS = new CharacotrsExceptionMapper();
@@ -233,6 +237,11 @@ endcomment
 	:
 	C_ST END C_ED | C_LN_ST END C_LN_ED
 	;
+	catch [RecognitionException ex] {
+		reportError(ex);
+		recover(input,ex);
+		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
+	}
 	finally {
 		pop();
 	}

@@ -7,22 +7,16 @@ import org.antlr.runtime.RecognitionException;
 
 public abstract class AbstractExceptionMapper implements ExceptionMapper {
 
-	protected Map<Class<? extends RecognitionException>, Handler> map = new HashMap<Class<? extends RecognitionException>, Handler>();
+	protected Map<Class<? extends RecognitionException>, RecognitionExceptionHandler> map = new HashMap<Class<? extends RecognitionException>, RecognitionExceptionHandler>();
 
-	protected interface Handler {
-		Class<? extends RecognitionException> getHadleType();
-
-		QueryProblem handle(RecognitionException ex);
-	}
-
-	protected void add(Handler... handlers) {
-		for (Handler h : handlers) {
+	protected void add(RecognitionExceptionHandler... handlers) {
+		for (RecognitionExceptionHandler h : handlers) {
 			this.map.put(h.getHadleType(), h);
 		}
 	}
 
 	public QueryProblem map(RecognitionException ex) {
-		Handler h = this.map.get(ex.getClass());
+		RecognitionExceptionHandler h = this.map.get(ex.getClass());
 		if (h != null) {
 			return h.handle(ex);
 		}

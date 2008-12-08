@@ -9,7 +9,7 @@ public class CharacotrsExceptionMapper extends AbstractExceptionMapper {
 		add(new EarlyExitHandler());
 	}
 
-	class EarlyExitHandler implements Handler {
+	class EarlyExitHandler implements RecognitionExceptionHandler {
 		public Class<? extends RecognitionException> getHadleType() {
 			return EarlyExitException.class;
 		}

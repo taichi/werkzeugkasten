@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.EarlyExitException;
+import org.antlr.runtime.MismatchedTokenException;
+import org.antlr.runtime.MissingTokenException;
 import org.antlr.runtime.NoViableAltException;
 import org.junit.Test;
 
@@ -84,12 +86,24 @@ public class TwoWaySqlParserTest {
 
 	@Test
 	public void testEndComment() throws Exception {
-		TwoWaySqlParser parser = createParser("/");
+		assertEndComment(NoViableAltException.class, "/");
+		assertEndComment(MismatchedTokenException.class, "/*ENP");
+		assertEndComment(MissingTokenException.class, "/*END*");
+		assertEndComment(MissingTokenException.class, "-- END ");
+	}
+
+	protected void assertEndComment(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
 		parser.endcomment();
+		assertParser(expected, parser);
+	}
+
+	protected void assertParser(Class<?> expected, TwoWaySqlParser parser) {
 		ProblemCoordinator pc = parser.getProblemCoordinator();
 		QueryProblem qp = pc.getAll().iterator().next();
-		System.out.println(qp.getMessage());
-		assertEquals(NoViableAltException.class, qp.getCause().getClass());
+		System.err.println(qp.getMessage());
+		assertEquals(expected, qp.getCause().getClass());
 	}
 
 	// @Test
