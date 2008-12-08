@@ -7,11 +7,6 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import werkzeugkasten.twowaysql.tree.BeginNode;
-import werkzeugkasten.twowaysql.tree.BindNode;
-import werkzeugkasten.twowaysql.tree.ExpressionNode;
-import werkzeugkasten.twowaysql.tree.IfNode;
-import werkzeugkasten.twowaysql.tree.InBindNode;
 import werkzeugkasten.twowaysql.tree.QueryNode;
 import werkzeugkasten.twowaysql.tree.TwoWayQuery;
 import werkzeugkasten.twowaysql.tree.TxtNode;
@@ -20,53 +15,12 @@ public class QueryTreeAcceptorTest {
 
 	QueryNode tree;
 
-	QueryTreeVisitor<StringBuilder> toString = new QueryTreeVisitor<StringBuilder>() {
-		public void preVisit(QueryNode node, StringBuilder context) {
-			context.append("(");
-		}
-
-		public void postVisit(QueryNode node, StringBuilder context) {
-			context.append(")");
-		}
-
-		public boolean visit(TxtNode node, StringBuilder context) {
-			context.append(node.getTxt());
-			return true;
-		}
-
-		public boolean visit(TwoWayQuery node, StringBuilder context) {
-			return true;
-		}
-
-		public boolean visit(ExpressionNode node, StringBuilder context) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public boolean visit(BeginNode node, StringBuilder context) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public boolean visit(IfNode node, StringBuilder context) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public boolean visit(BindNode node, StringBuilder context) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public boolean visit(InBindNode node, StringBuilder context) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-	};
+	ToStringVisitor toString;
 
 	@Before
 	public void setUp() {
 		tree = new TwoWayQuery();
+		toString = new ToStringVisitor();
 		dig(tree, 4, 3);
 	}
 
@@ -103,5 +57,6 @@ public class QueryTreeAcceptorTest {
 		StringBuilder stb = new StringBuilder();
 		QueryTreeAcceptor.accept(tree, toString, stb);
 		assertNotNull(stb);
+		System.out.println(stb.toString());
 	}
 }

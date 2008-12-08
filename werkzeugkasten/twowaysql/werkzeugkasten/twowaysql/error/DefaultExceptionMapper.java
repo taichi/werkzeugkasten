@@ -1,4 +1,4 @@
-package werkzeugkasten.twowaysql.grammar;
+package werkzeugkasten.twowaysql.error;
 
 import org.antlr.runtime.RecognitionException;
 

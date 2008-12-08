@@ -1,10 +1,9 @@
-package werkzeugkasten.twowaysql.grammar;
+package werkzeugkasten.twowaysql.error;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.Token;
 
 public abstract class AbstractExceptionMapper implements ExceptionMapper {
 
@@ -28,20 +27,5 @@ public abstract class AbstractExceptionMapper implements ExceptionMapper {
 			return h.handle(ex);
 		}
 		return new RecognitionExceptionAdapter(ex);
-	}
-
-	protected String getTokenErrorDisplay(Token t) {
-		String s = t.getText();
-		if (s == null) {
-			if (t.getType() == Token.EOF) {
-				s = "<EOF>";
-			} else {
-				s = "<" + t.getType() + ">";
-			}
-		}
-		s = s.replaceAll("\n", "\\\\n");
-		s = s.replaceAll("\r", "\\\\r");
-		s = s.replaceAll("\t", "\\\\t");
-		return "'" + s + "'";
 	}
 }

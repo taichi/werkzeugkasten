@@ -9,8 +9,11 @@ import java.io.InputStreamReader;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.EarlyExitException;
+import org.antlr.runtime.NoViableAltException;
 import org.junit.Test;
 
+import werkzeugkasten.twowaysql.error.ProblemCoordinator;
+import werkzeugkasten.twowaysql.error.QueryProblem;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser.twowaySQL_return;
 import werkzeugkasten.twowaysql.tree.visitor.QueryTreeAcceptor;
 import werkzeugkasten.twowaysql.tree.visitor.ToStringVisitor;
@@ -77,6 +80,16 @@ public class TwoWaySqlParserTest {
 		QueryProblem qp = pc.getAll().iterator().next();
 		System.out.println(qp.getMessage());
 		assertEquals(EarlyExitException.class, qp.getCause().getClass());
+	}
+
+	@Test
+	public void testEndComment() throws Exception {
+		TwoWaySqlParser parser = createParser("/");
+		parser.endcomment();
+		ProblemCoordinator pc = parser.getProblemCoordinator();
+		QueryProblem qp = pc.getAll().iterator().next();
+		System.out.println(qp.getMessage());
+		assertEquals(NoViableAltException.class, qp.getCause().getClass());
 	}
 
 	// @Test

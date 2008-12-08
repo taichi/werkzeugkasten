@@ -9,6 +9,7 @@ options {
 @parser::header {
 package werkzeugkasten.twowaysql.grammar;
 
+import werkzeugkasten.twowaysql.error.*;
 import werkzeugkasten.twowaysql.tree.*;
 
 }

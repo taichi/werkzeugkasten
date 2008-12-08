@@ -1,4 +1,4 @@
-package werkzeugkasten.twowaysql.grammar;
+package werkzeugkasten.twowaysql.error;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -11,11 +11,11 @@ public class ProblemCoordinator {
 	protected List<QueryProblem> problems = new ArrayList<QueryProblem>();
 	protected LinkedList<ExceptionMapper> stack = new LinkedList<ExceptionMapper>();
 
-	protected void push(ExceptionMapper mapper) {
+	public void push(ExceptionMapper mapper) {
 		this.stack.addFirst(mapper);
 	}
 
-	protected void pop() {
+	public void pop() {
 		this.stack.removeFirst();
 	}
 

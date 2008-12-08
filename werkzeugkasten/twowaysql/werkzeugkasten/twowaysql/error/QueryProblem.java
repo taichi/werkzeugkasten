@@ -1,4 +1,4 @@
-package werkzeugkasten.twowaysql.grammar;
+package werkzeugkasten.twowaysql.error;
 
 public interface QueryProblem {
 
