@@ -47,8 +47,8 @@ public abstract class AbstractQueryNode implements QueryNode {
 	}
 
 	@Override
-	public void update(ParserRuleReturnScope tree) {
-		this.calculator.update(tree);
+	public void update(ParserRuleReturnScope scope) {
+		this.calculator.update(scope);
 	}
 
 	@Override

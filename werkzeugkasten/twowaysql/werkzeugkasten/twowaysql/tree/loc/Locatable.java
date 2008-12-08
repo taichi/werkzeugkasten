@@ -7,7 +7,7 @@ public interface Locatable {
 
 	void update(Token token);
 
-	void update(ParserRuleReturnScope tree);
+	void update(ParserRuleReturnScope scope);
 
 	void freeze();
 

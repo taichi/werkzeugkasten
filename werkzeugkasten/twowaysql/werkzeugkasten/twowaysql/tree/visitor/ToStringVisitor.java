@@ -30,17 +30,11 @@ public class ToStringVisitor implements QueryTreeVisitor<StringBuilder> {
 
 	public boolean visit(TxtNode node, StringBuilder context) {
 		defaultVisit(node, context);
-		context.append("{");
-		context.append(node.getTxt());
-		context.append("}");
 		return true;
 	}
 
 	public boolean visit(ExpressionNode node, StringBuilder context) {
 		defaultVisit(node, context);
-		context.append("{");
-		context.append(node.getTxt());
-		context.append("}");
 		return true;
 	}
 

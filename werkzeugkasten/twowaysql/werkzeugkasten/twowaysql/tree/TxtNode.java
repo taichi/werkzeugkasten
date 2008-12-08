@@ -21,4 +21,14 @@ public class TxtNode extends AbstractQueryNode {
 	public <C> boolean accept(QueryTreeVisitor<C> visitor, C context) {
 		return visitor.visit(this, context);
 	};
+
+	@Override
+	public String toString() {
+		StringBuilder stb = new StringBuilder();
+		stb.append(super.toString());
+		stb.append('{');
+		stb.append(getTxt());
+		stb.append('}');
+		return stb.toString();
+	}
 }
