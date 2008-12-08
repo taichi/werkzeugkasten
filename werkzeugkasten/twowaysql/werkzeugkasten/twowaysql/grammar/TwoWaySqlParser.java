@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g 2008-12-08 17:46:02
+// $ANTLR 3.1.1 D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g 2008-12-08 21:11:57
 
 package werkzeugkasten.twowaysql.grammar;
 
@@ -88,8 +88,8 @@ public class TwoWaySqlParser extends Parser {
     	super.reportError(ex);
     }
 
-    protected ExceptionMapper EM_CHARACTORS = new CharacotrsExceptionMapper();
-
+    protected static final ExceptionMapper EM_CHARACTORS = new CharacotrsExceptionMapper();
+    protected static final ExceptionMapper EM_ENDCOMMENT = new EndCommentExceptionMapper();
 
 
     public static class twowaySQL_return extends ParserRuleReturnScope {
@@ -1608,8 +1608,11 @@ public class TwoWaySqlParser extends Parser {
         CommonTree END60_tree=null;
         CommonTree C_LN_ED61_tree=null;
 
+
+        		push(EM_ENDCOMMENT);
+        	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:228:12: ( C_ST END C_ED | C_LN_ST END C_LN_ED )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:232:2: ( C_ST END C_ED | C_LN_ST END C_LN_ED )
             int alt9=2;
             int LA9_0 = input.LA(1);
 
@@ -1627,19 +1630,19 @@ public class TwoWaySqlParser extends Parser {
             }
             switch (alt9) {
                 case 1 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:229:2: C_ST END C_ED
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:233:2: C_ST END C_ED
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
-                    C_ST56=(Token)match(input,C_ST,FOLLOW_C_ST_in_endcomment642); 
+                    C_ST56=(Token)match(input,C_ST,FOLLOW_C_ST_in_endcomment649); 
                     C_ST56_tree = (CommonTree)adaptor.create(C_ST56);
                     adaptor.addChild(root_0, C_ST56_tree);
 
-                    END57=(Token)match(input,END,FOLLOW_END_in_endcomment644); 
+                    END57=(Token)match(input,END,FOLLOW_END_in_endcomment651); 
                     END57_tree = (CommonTree)adaptor.create(END57);
                     adaptor.addChild(root_0, END57_tree);
 
-                    C_ED58=(Token)match(input,C_ED,FOLLOW_C_ED_in_endcomment646); 
+                    C_ED58=(Token)match(input,C_ED,FOLLOW_C_ED_in_endcomment653); 
                     C_ED58_tree = (CommonTree)adaptor.create(C_ED58);
                     adaptor.addChild(root_0, C_ED58_tree);
 
@@ -1647,19 +1650,19 @@ public class TwoWaySqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:229:18: C_LN_ST END C_LN_ED
+                    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:233:18: C_LN_ST END C_LN_ED
                     {
                     root_0 = (CommonTree)adaptor.nil();
 
-                    C_LN_ST59=(Token)match(input,C_LN_ST,FOLLOW_C_LN_ST_in_endcomment650); 
+                    C_LN_ST59=(Token)match(input,C_LN_ST,FOLLOW_C_LN_ST_in_endcomment657); 
                     C_LN_ST59_tree = (CommonTree)adaptor.create(C_LN_ST59);
                     adaptor.addChild(root_0, C_LN_ST59_tree);
 
-                    END60=(Token)match(input,END,FOLLOW_END_in_endcomment652); 
+                    END60=(Token)match(input,END,FOLLOW_END_in_endcomment659); 
                     END60_tree = (CommonTree)adaptor.create(END60);
                     adaptor.addChild(root_0, END60_tree);
 
-                    C_LN_ED61=(Token)match(input,C_LN_ED,FOLLOW_C_LN_ED_in_endcomment654); 
+                    C_LN_ED61=(Token)match(input,C_LN_ED,FOLLOW_C_LN_ED_in_endcomment661); 
                     C_LN_ED61_tree = (CommonTree)adaptor.create(C_LN_ED61);
                     adaptor.addChild(root_0, C_LN_ED61_tree);
 
@@ -1681,6 +1684,9 @@ public class TwoWaySqlParser extends Parser {
         	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
         }
         finally {
+
+            		pop();
+            	
         }
         return retval;
     }
@@ -1693,7 +1699,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "bindcomment"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:232:1: bindcomment returns [BindNode node] : ( C_ST SYM_BIND expression C_ED txt ) ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:239:1: bindcomment returns [BindNode node] : ( C_ST SYM_BIND expression C_ED txt ) ;
     public final TwoWaySqlParser.bindcomment_return bindcomment() throws RecognitionException {
         TwoWaySqlParser.bindcomment_return retval = new TwoWaySqlParser.bindcomment_return();
         retval.start = input.LT(1);
@@ -1716,33 +1722,33 @@ public class TwoWaySqlParser extends Parser {
         		retval.node = new BindNode();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:240:2: ( ( C_ST SYM_BIND expression C_ED txt ) )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:241:2: ( C_ST SYM_BIND expression C_ED txt )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:247:2: ( ( C_ST SYM_BIND expression C_ED txt ) )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:248:2: ( C_ST SYM_BIND expression C_ED txt )
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:241:2: ( C_ST SYM_BIND expression C_ED txt )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:241:3: C_ST SYM_BIND expression C_ED txt
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:248:2: ( C_ST SYM_BIND expression C_ED txt )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:248:3: C_ST SYM_BIND expression C_ED txt
             {
-            C_ST62=(Token)match(input,C_ST,FOLLOW_C_ST_in_bindcomment682); 
+            C_ST62=(Token)match(input,C_ST,FOLLOW_C_ST_in_bindcomment694); 
             C_ST62_tree = (CommonTree)adaptor.create(C_ST62);
             adaptor.addChild(root_0, C_ST62_tree);
 
-            SYM_BIND63=(Token)match(input,SYM_BIND,FOLLOW_SYM_BIND_in_bindcomment684); 
+            SYM_BIND63=(Token)match(input,SYM_BIND,FOLLOW_SYM_BIND_in_bindcomment696); 
             SYM_BIND63_tree = (CommonTree)adaptor.create(SYM_BIND63);
             adaptor.addChild(root_0, SYM_BIND63_tree);
 
-            pushFollow(FOLLOW_expression_in_bindcomment686);
+            pushFollow(FOLLOW_expression_in_bindcomment698);
             expression64=expression();
 
             state._fsp--;
 
             adaptor.addChild(root_0, expression64.getTree());
-            C_ED65=(Token)match(input,C_ED,FOLLOW_C_ED_in_bindcomment688); 
+            C_ED65=(Token)match(input,C_ED,FOLLOW_C_ED_in_bindcomment700); 
             C_ED65_tree = (CommonTree)adaptor.create(C_ED65);
             adaptor.addChild(root_0, C_ED65_tree);
 
-            pushFollow(FOLLOW_txt_in_bindcomment690);
+            pushFollow(FOLLOW_txt_in_bindcomment702);
             txt66=txt();
 
             state._fsp--;
@@ -1787,7 +1793,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "inbind"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:248:1: inbind returns [InBindNode node] : IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars ( SYM_C inbindchars )* SYM_RP ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:255:1: inbind returns [InBindNode node] : IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars ( SYM_C inbindchars )* SYM_RP ;
     public final TwoWaySqlParser.inbind_return inbind() throws RecognitionException {
         TwoWaySqlParser.inbind_return retval = new TwoWaySqlParser.inbind_return();
         retval.start = input.LT(1);
@@ -1821,44 +1827,44 @@ public class TwoWaySqlParser extends Parser {
         		TxtNode skip = new TxtNode();
         	
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:258:2: ( IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars ( SYM_C inbindchars )* SYM_RP )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:259:2: IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars ( SYM_C inbindchars )* SYM_RP
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:265:2: ( IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars ( SYM_C inbindchars )* SYM_RP )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:266:2: IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars ( SYM_C inbindchars )* SYM_RP
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            IN67=(Token)match(input,IN,FOLLOW_IN_in_inbind721); 
+            IN67=(Token)match(input,IN,FOLLOW_IN_in_inbind733); 
             IN67_tree = (CommonTree)adaptor.create(IN67);
             adaptor.addChild(root_0, IN67_tree);
 
-            C_ST68=(Token)match(input,C_ST,FOLLOW_C_ST_in_inbind723); 
+            C_ST68=(Token)match(input,C_ST,FOLLOW_C_ST_in_inbind735); 
             C_ST68_tree = (CommonTree)adaptor.create(C_ST68);
             adaptor.addChild(root_0, C_ST68_tree);
 
-            SYM_BIND69=(Token)match(input,SYM_BIND,FOLLOW_SYM_BIND_in_inbind725); 
+            SYM_BIND69=(Token)match(input,SYM_BIND,FOLLOW_SYM_BIND_in_inbind737); 
             SYM_BIND69_tree = (CommonTree)adaptor.create(SYM_BIND69);
             adaptor.addChild(root_0, SYM_BIND69_tree);
 
-            pushFollow(FOLLOW_expression_in_inbind727);
+            pushFollow(FOLLOW_expression_in_inbind739);
             expression70=expression();
 
             state._fsp--;
 
             adaptor.addChild(root_0, expression70.getTree());
-            C_ED71=(Token)match(input,C_ED,FOLLOW_C_ED_in_inbind729); 
+            C_ED71=(Token)match(input,C_ED,FOLLOW_C_ED_in_inbind741); 
             C_ED71_tree = (CommonTree)adaptor.create(C_ED71);
             adaptor.addChild(root_0, C_ED71_tree);
 
-            SYM_LP72=(Token)match(input,SYM_LP,FOLLOW_SYM_LP_in_inbind731); 
+            SYM_LP72=(Token)match(input,SYM_LP,FOLLOW_SYM_LP_in_inbind743); 
             SYM_LP72_tree = (CommonTree)adaptor.create(SYM_LP72);
             adaptor.addChild(root_0, SYM_LP72_tree);
 
-            pushFollow(FOLLOW_inbindchars_in_inbind733);
+            pushFollow(FOLLOW_inbindchars_in_inbind745);
             inbindchars73=inbindchars();
 
             state._fsp--;
 
             adaptor.addChild(root_0, inbindchars73.getTree());
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:259:54: ( SYM_C inbindchars )*
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:266:54: ( SYM_C inbindchars )*
             loop10:
             do {
                 int alt10=2;
@@ -1871,13 +1877,13 @@ public class TwoWaySqlParser extends Parser {
 
                 switch (alt10) {
             	case 1 :
-            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:259:55: SYM_C inbindchars
+            	    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:266:55: SYM_C inbindchars
             	    {
-            	    SYM_C74=(Token)match(input,SYM_C,FOLLOW_SYM_C_in_inbind736); 
+            	    SYM_C74=(Token)match(input,SYM_C,FOLLOW_SYM_C_in_inbind748); 
             	    SYM_C74_tree = (CommonTree)adaptor.create(SYM_C74);
             	    adaptor.addChild(root_0, SYM_C74_tree);
 
-            	    pushFollow(FOLLOW_inbindchars_in_inbind738);
+            	    pushFollow(FOLLOW_inbindchars_in_inbind750);
             	    inbindchars75=inbindchars();
 
             	    state._fsp--;
@@ -1892,7 +1898,7 @@ public class TwoWaySqlParser extends Parser {
                 }
             } while (true);
 
-            SYM_RP76=(Token)match(input,SYM_RP,FOLLOW_SYM_RP_in_inbind742); 
+            SYM_RP76=(Token)match(input,SYM_RP,FOLLOW_SYM_RP_in_inbind754); 
             SYM_RP76_tree = (CommonTree)adaptor.create(SYM_RP76);
             adaptor.addChild(root_0, SYM_RP76_tree);
 
@@ -1934,7 +1940,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "inbindchars"
-    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:268:1: inbindchars : ( IDENT | QUOTED | SYMBOLS | SYM_BIND )+ ;
+    // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:275:1: inbindchars : ( IDENT | QUOTED | SYMBOLS | SYM_BIND )+ ;
     public final TwoWaySqlParser.inbindchars_return inbindchars() throws RecognitionException {
         TwoWaySqlParser.inbindchars_return retval = new TwoWaySqlParser.inbindchars_return();
         retval.start = input.LT(1);
@@ -1946,12 +1952,12 @@ public class TwoWaySqlParser extends Parser {
         CommonTree set77_tree=null;
 
         try {
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:269:2: ( ( IDENT | QUOTED | SYMBOLS | SYM_BIND )+ )
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:270:2: ( IDENT | QUOTED | SYMBOLS | SYM_BIND )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:276:2: ( ( IDENT | QUOTED | SYMBOLS | SYM_BIND )+ )
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:277:2: ( IDENT | QUOTED | SYMBOLS | SYM_BIND )+
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:270:2: ( IDENT | QUOTED | SYMBOLS | SYM_BIND )+
+            // D:\\development\\java\\workspace-3.4\\werkzeugkasten\\twowaysql\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:277:2: ( IDENT | QUOTED | SYMBOLS | SYM_BIND )+
             int cnt11=0;
             loop11:
             do {
@@ -2132,27 +2138,27 @@ public class TwoWaySqlParser extends Parser {
     public static final BitSet FOLLOW_C_LN_ED_in_begincomment620 = new BitSet(new long[]{0x0000000000102FF0L});
     public static final BitSet FOLLOW_nodelist_in_begincomment623 = new BitSet(new long[]{0x0000000000002800L});
     public static final BitSet FOLLOW_endcomment_in_begincomment625 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_C_ST_in_endcomment642 = new BitSet(new long[]{0x0000000000080000L});
-    public static final BitSet FOLLOW_END_in_endcomment644 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_C_ED_in_endcomment646 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_C_LN_ST_in_endcomment650 = new BitSet(new long[]{0x0000000000080000L});
-    public static final BitSet FOLLOW_END_in_endcomment652 = new BitSet(new long[]{0x0000000000004000L});
-    public static final BitSet FOLLOW_C_LN_ED_in_endcomment654 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_C_ST_in_bindcomment682 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_SYM_BIND_in_bindcomment684 = new BitSet(new long[]{0x0000000000102FF0L});
-    public static final BitSet FOLLOW_expression_in_bindcomment686 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_C_ED_in_bindcomment688 = new BitSet(new long[]{0x0000000000102FF0L});
-    public static final BitSet FOLLOW_txt_in_bindcomment690 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_IN_in_inbind721 = new BitSet(new long[]{0x0000000000000800L});
-    public static final BitSet FOLLOW_C_ST_in_inbind723 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_SYM_BIND_in_inbind725 = new BitSet(new long[]{0x0000000000102FF0L});
-    public static final BitSet FOLLOW_expression_in_inbind727 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_C_ED_in_inbind729 = new BitSet(new long[]{0x0000000000000200L});
-    public static final BitSet FOLLOW_SYM_LP_in_inbind731 = new BitSet(new long[]{0x00000000000000F0L});
-    public static final BitSet FOLLOW_inbindchars_in_inbind733 = new BitSet(new long[]{0x0000000000000500L});
-    public static final BitSet FOLLOW_SYM_C_in_inbind736 = new BitSet(new long[]{0x00000000000000F0L});
-    public static final BitSet FOLLOW_inbindchars_in_inbind738 = new BitSet(new long[]{0x0000000000000500L});
-    public static final BitSet FOLLOW_SYM_RP_in_inbind742 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_set_in_inbindchars757 = new BitSet(new long[]{0x00000000000000F2L});
+    public static final BitSet FOLLOW_C_ST_in_endcomment649 = new BitSet(new long[]{0x0000000000080000L});
+    public static final BitSet FOLLOW_END_in_endcomment651 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_C_ED_in_endcomment653 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_C_LN_ST_in_endcomment657 = new BitSet(new long[]{0x0000000000080000L});
+    public static final BitSet FOLLOW_END_in_endcomment659 = new BitSet(new long[]{0x0000000000004000L});
+    public static final BitSet FOLLOW_C_LN_ED_in_endcomment661 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_C_ST_in_bindcomment694 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_SYM_BIND_in_bindcomment696 = new BitSet(new long[]{0x0000000000102FF0L});
+    public static final BitSet FOLLOW_expression_in_bindcomment698 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_C_ED_in_bindcomment700 = new BitSet(new long[]{0x0000000000102FF0L});
+    public static final BitSet FOLLOW_txt_in_bindcomment702 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_IN_in_inbind733 = new BitSet(new long[]{0x0000000000000800L});
+    public static final BitSet FOLLOW_C_ST_in_inbind735 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_SYM_BIND_in_inbind737 = new BitSet(new long[]{0x0000000000102FF0L});
+    public static final BitSet FOLLOW_expression_in_inbind739 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_C_ED_in_inbind741 = new BitSet(new long[]{0x0000000000000200L});
+    public static final BitSet FOLLOW_SYM_LP_in_inbind743 = new BitSet(new long[]{0x00000000000000F0L});
+    public static final BitSet FOLLOW_inbindchars_in_inbind745 = new BitSet(new long[]{0x0000000000000500L});
+    public static final BitSet FOLLOW_SYM_C_in_inbind748 = new BitSet(new long[]{0x00000000000000F0L});
+    public static final BitSet FOLLOW_inbindchars_in_inbind750 = new BitSet(new long[]{0x0000000000000500L});
+    public static final BitSet FOLLOW_SYM_RP_in_inbind754 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_set_in_inbindchars769 = new BitSet(new long[]{0x00000000000000F2L});
 
 }

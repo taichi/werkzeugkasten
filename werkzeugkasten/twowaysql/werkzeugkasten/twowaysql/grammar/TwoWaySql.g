@@ -39,8 +39,8 @@ public void reportError(RecognitionException ex) {
 	super.reportError(ex);
 }
 
-protected ExceptionMapper EM_CHARACTORS = new CharacotrsExceptionMapper();
-
+protected static final ExceptionMapper EM_CHARACTORS = new CharacotrsExceptionMapper();
+protected static final ExceptionMapper EM_ENDCOMMENT = new EndCommentExceptionMapper();
 }
 
 @lexer::header {
@@ -225,9 +225,16 @@ begincomment returns[BeginNode node]
 	}
 	;
 
-endcomment :
+endcomment
+	@init {
+		push(EM_ENDCOMMENT);
+	}
+	:
 	C_ST END C_ED | C_LN_ST END C_LN_ED
 	;
+	finally {
+		pop();
+	}
 
 bindcomment returns[BindNode node]
 	@init {

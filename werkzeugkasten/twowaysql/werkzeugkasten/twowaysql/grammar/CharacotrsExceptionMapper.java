@@ -6,7 +6,6 @@ import org.antlr.runtime.RecognitionException;
 public class CharacotrsExceptionMapper extends AbstractExceptionMapper {
 
 	public CharacotrsExceptionMapper() {
-
 		add(new EarlyExitHandler());
 	}
 
