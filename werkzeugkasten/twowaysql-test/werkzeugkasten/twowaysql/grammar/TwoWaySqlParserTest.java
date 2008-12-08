@@ -12,6 +12,8 @@ import org.antlr.runtime.EarlyExitException;
 import org.junit.Test;
 
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser.twowaySQL_return;
+import werkzeugkasten.twowaysql.tree.visitor.QueryTreeAcceptor;
+import werkzeugkasten.twowaysql.tree.visitor.ToStringVisitor;
 
 public class TwoWaySqlParserTest {
 
@@ -55,7 +57,11 @@ public class TwoWaySqlParserTest {
 	public void testfull() throws Exception {
 		String sql = data("werkzeugkasten/twowaysql/grammar/test.txt");
 		twowaySQL_return ret = runParser(sql);
-		System.out.println(ret.tree);
+		ToStringVisitor visitor = new ToStringVisitor();
+		StringBuilder stb = new StringBuilder();
+
+		QueryTreeAcceptor.accept(ret.query, visitor, stb);
+		System.out.println(stb.toString());
 	}
 
 	@Test

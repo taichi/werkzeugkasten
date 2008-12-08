@@ -2,11 +2,10 @@ package werkzeugkasten.twowaysql.tree.loc;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
 
 import org.antlr.runtime.CommonToken;
+import org.antlr.runtime.ParserRuleReturnScope;
 import org.antlr.runtime.Token;
-import org.antlr.runtime.tree.CommonTree;
 
 public class LocationCalculator {
 	protected State state = State.BEGIN;
@@ -39,22 +38,17 @@ public class LocationCalculator {
 
 	public void update(Token token) {
 		if (token != null) {
-			this.tokens.add(token);
+			this.tokens.addFirst(token);
 		}
 	}
 
-	public void update(CommonTree charactors) {
-		if (charactors == null) {
+	public void update(ParserRuleReturnScope scope) {
+		if (scope == null) {
 			return;
 		}
-		if (charactors.isNil()) {
-			List<?> kids = charactors.getChildren();
-			CommonTree st = (CommonTree) kids.get(0);
-			CommonTree ed = (CommonTree) kids.get(kids.size() - 1);
-			update(st.getToken());
-			update(ed.getToken());
-		} else {
-			update(charactors.getToken());
+		update(scope.start);
+		if (scope.stop != null) {
+			this.tokens.addLast(scope.stop);
 		}
 	}
 

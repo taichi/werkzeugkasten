@@ -1,14 +1,13 @@
 package werkzeugkasten.twowaysql.tree.loc;
 
+import org.antlr.runtime.ParserRuleReturnScope;
 import org.antlr.runtime.Token;
-import org.antlr.runtime.tree.CommonTree;
-
 
 public interface Locatable {
 
 	void update(Token token);
 
-	void update(CommonTree tree);
+	void update(ParserRuleReturnScope tree);
 
 	void freeze();
 

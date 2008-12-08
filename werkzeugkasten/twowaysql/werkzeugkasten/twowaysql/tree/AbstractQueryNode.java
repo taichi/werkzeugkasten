@@ -2,8 +2,8 @@ package werkzeugkasten.twowaysql.tree;
 
 import java.util.Collections;
 
+import org.antlr.runtime.ParserRuleReturnScope;
 import org.antlr.runtime.Token;
-import org.antlr.runtime.tree.CommonTree;
 
 import werkzeugkasten.twowaysql.tree.loc.LocationCalculator;
 import werkzeugkasten.twowaysql.tree.loc.TextLocation;
@@ -33,10 +33,12 @@ public abstract class AbstractQueryNode implements QueryNode {
 
 	@Override
 	public void setChildren(Iterable<QueryNode> kids) {
-		for (QueryNode qn : kids) {
-			qn.setParent(this);
+		if (kids != null) {
+			for (QueryNode qn : kids) {
+				qn.setParent(this);
+			}
+			this.kids = kids;
 		}
-		this.kids = kids;
 	}
 
 	@Override
@@ -45,7 +47,7 @@ public abstract class AbstractQueryNode implements QueryNode {
 	}
 
 	@Override
-	public void update(CommonTree tree) {
+	public void update(ParserRuleReturnScope tree) {
 		this.calculator.update(tree);
 	}
 

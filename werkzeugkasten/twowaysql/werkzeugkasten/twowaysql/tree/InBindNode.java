@@ -9,8 +9,6 @@ public class InBindNode extends BindNode {
 	}
 
 	public <C> boolean accept(QueryTreeVisitor<C> visitor, C context) {
-		return visitor.visit(this, context)
-				&& getExpression().accept(visitor, context)
-				&& getSkipped().accept(visitor, context);
+		return visitor.visit(this, context);
 	};
 }

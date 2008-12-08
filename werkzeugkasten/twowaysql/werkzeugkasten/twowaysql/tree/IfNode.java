@@ -1,14 +1,16 @@
 package werkzeugkasten.twowaysql.tree;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
 public class IfNode extends AbstractQueryNode {
 
 	protected ExpressionNode expression;
-	protected LinkedList<IfNode> elseIfNodes = new LinkedList<IfNode>();
-	protected LinkedList<QueryNode> elseNode;
+	protected List<QueryNode> elseIfNodes = new ArrayList<QueryNode>();
+	protected Iterable<QueryNode> elseNode = Collections.emptyList();
 
 	public NodeType getType() {
 		return NodeType.IFNODE;
@@ -23,15 +25,26 @@ public class IfNode extends AbstractQueryNode {
 	}
 
 	public void addElseIf(IfNode node) {
-		this.elseIfNodes.add(node);
+		if (node != null) {
+			this.elseIfNodes.add(node);
+		}
 	}
 
-	public void setElse(LinkedList<QueryNode> tree) {
-		this.elseNode = tree;
+	public Iterable<QueryNode> getElseIfNodes() {
+		return this.elseIfNodes;
+	}
+
+	public void setElse(Iterable<QueryNode> tree) {
+		if (tree != null) {
+			this.elseNode = tree;
+		}
+	}
+
+	public Iterable<QueryNode> getElse() {
+		return this.elseNode;
 	}
 
 	public <C> boolean accept(QueryTreeVisitor<C> visitor, C context) {
-		return visitor.visit(this, context)
-				&& getExpression().accept(visitor, context);
+		return visitor.visit(this, context);
 	}
 }

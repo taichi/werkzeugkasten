@@ -9,7 +9,6 @@ options {
 @parser::header {
 package werkzeugkasten.twowaysql.grammar;
 
-import java.util.LinkedList;
 import werkzeugkasten.twowaysql.tree.*;
 
 }
@@ -63,17 +62,17 @@ twowaySQL returns[TwoWayQuery query]
 		$query = new TwoWayQuery();
 	}
 	@after {
+		$query.update(retval);
 		$query.freeze();
 	}
 	: nodelist EOF {
 		$query.setChildren($nodelist.list);
-		$query.update($nodelist.tree);
 	}
 	;
 
-nodelist returns[LinkedList<QueryNode> list]
+nodelist returns[ArrayList<QueryNode> list]
 	@init{
-		$list = new LinkedList<QueryNode>();
+		$list = new ArrayList<QueryNode>();
 	}
 	:
 	(comment {$list.add($comment.node);}
@@ -99,10 +98,11 @@ txt returns[TxtNode node]
 		$node = new TxtNode();
 	}
 	@after {
+		$node.update(retval);
 		$node.freeze();
 	}
 	:
-	charactors { $node.update($charactors.tree); }
+	charactors
 	;
 
 // $<comment
@@ -120,10 +120,11 @@ blockcomment returns[TxtNode node]
 		$node = new TxtNode();
 	}
 	@after {
+		$node.update(retval);
 		$node.freeze();
 	}
 	:
-	C_ST charactors C_ED { $node.update($C_ST);$node.update($C_ED); }
+	C_ST charactors C_ED
 	;
 
 linecomment returns[TxtNode node]
@@ -131,10 +132,11 @@ linecomment returns[TxtNode node]
 		$node = new TxtNode();
 	}
 	@after {
+		$node.update(retval);
 		$node.freeze();
 	}
 	:
-	C_LN_ST charactors C_LN_ED { $node.update($C_LN_ST);$node.update($C_LN_ED); }
+	C_LN_ST charactors C_LN_ED
 	;
 
 ifcomment returns[IfNode node]
@@ -142,6 +144,7 @@ ifcomment returns[IfNode node]
 		$node = new IfNode();
 	}
 	@after {
+		$node.update(retval);
 		$node.freeze();
 	}
 	:
@@ -151,10 +154,6 @@ ifcomment returns[IfNode node]
 		(elsenode { $node.setElse($elsenode.list); })?
 		endcomment
 	)
-	{
-		$node.update($C_ST);
-		$node.update($endcomment.tree);
-	}
 	;
 
 elseifnode	 returns[IfNode node]
@@ -162,15 +161,14 @@ elseifnode	 returns[IfNode node]
 		$node = new IfNode();
 	}
 	@after {
+		$node.update(retval);
 		$node.freeze();
 	}
 	:
 	elseifcomment nodelist 
 	{
-		$node.update($elseifcomment.tree);
 		$node.setExpression($elseifcomment.node);
 		$node.setChildren($nodelist.list);
-		$node.update($nodelist.tree);
 	}
 	;
 
@@ -189,7 +187,7 @@ elseiflinecomment returns[ExpressionNode node]
 	: C_LN_ST ELSEIF expression C_LN_ED { $node = $expression.node; }
 	;
 
-elsenode returns[LinkedList<QueryNode> list]
+elsenode returns[List<QueryNode> list]
 	:
 	elsecomment nodelist { $list = $nodelist.list; }
 	;
@@ -203,10 +201,11 @@ expression returns[ExpressionNode node]
 		$node = new ExpressionNode();
 	}
 	@after {
+		$node.update(retval);
 		$node.freeze();
 	}
 	:
-	charactors {$node.update($charactors.tree);}
+	charactors
 	;
 	
 begincomment returns[BeginNode node]
@@ -214,17 +213,15 @@ begincomment returns[BeginNode node]
 		$node = new BeginNode();
 	}
 	@after {
+		$node.update(retval);
 		$node.freeze();
 	}
 	:
 	(
-		(C_ST BEGIN C_ED {$node.update($C_ST);}
-		 | C_LN_ST BEGIN C_LN_ED  {$node.update($C_LN_ST);}
-		) nodelist endcomment
+		(C_ST BEGIN C_ED | C_LN_ST BEGIN C_LN_ED) nodelist endcomment
 	)
 	{
 		$node.setChildren($nodelist.list);
-		$node.update($endcomment.tree);
 	}
 	;
 
@@ -237,15 +234,14 @@ bindcomment returns[BindNode node]
 		$node = new BindNode();
 	}
 	@after {
+		$node.update(retval);
 		$node.freeze();
 	}
 	:
 	(C_ST SYM_BIND expression C_ED txt)
 	{
-		$node.update($C_ST);
 		$node.setExpression($expression.node);
 		$node.setSkipped($txt.node);
-				$node.update($txt.tree);
 	}
 	;
 
@@ -255,17 +251,17 @@ inbind returns[InBindNode node]
 		TxtNode skip = new TxtNode();
 	}
 	@after {
+		skip.freeze();
+		$node.update(retval);
 		$node.freeze();
 	}
 	:
 	IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars (SYM_C inbindchars)* SYM_RP
 	{
-		$node.update($IN);
 		$node.setExpression($expression.node);
-		skip.update($SYM_LP);
 		skip.update($SYM_RP);
+		skip.update($SYM_LP);
 		$node.setSkipped(skip);
-		$node.update($SYM_RP);
 	}
 	;
 
