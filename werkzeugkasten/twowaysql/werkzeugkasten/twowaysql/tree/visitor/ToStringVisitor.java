@@ -46,6 +46,12 @@ public class ToStringVisitor implements QueryTreeVisitor<StringBuilder> {
 	public boolean visit(IfNode node, StringBuilder context) {
 		defaultVisit(node, context);
 		this.visit(node.getExpression(), context);
+		String s = node.getMaybeSkip();
+		if (s != null && 0 < s.length()) {
+			context.append("<MAYBESKIP[");
+			context.append(s);
+			context.append("]>");
+		}
 		if (node.getElseIfNodes().iterator().hasNext()) {
 			context.append("<ELSEIF ");
 			QueryTreeAcceptor.accept(node.getElseIfNodes(), this, context);

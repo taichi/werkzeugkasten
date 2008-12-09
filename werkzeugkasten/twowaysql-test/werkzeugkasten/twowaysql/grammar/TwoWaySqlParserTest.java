@@ -251,6 +251,24 @@ public class TwoWaySqlParserTest {
 		assertParser(expected, parser);
 	}
 
+	@Test
+	public void testInBindSkipped() throws Exception {
+		assertInBindSkipped(MissingTokenException.class, "?");
+		assertInBindSkipped(MissingTokenException.class, "? aaa)");
+		assertInBindSkipped(EarlyExitException.class, "(");
+		assertInBindSkipped(EarlyExitException.class, "(aaa,");
+		assertInBindSkipped(EarlyExitException.class, "('aaa',,");
+		assertInBindSkipped(MissingTokenException.class, "(aaa,bbb");
+		assertInBindSkipped(MissingTokenException.class, "(aaa(");
+	}
+
+	protected void assertInBindSkipped(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.inbindskipped();
+		assertParser(expected, parser);
+	}
+
 	protected void assertParser(Class<?> expected, TwoWaySqlParser parser) {
 		ProblemCoordinator pc = parser.getProblemCoordinator();
 		Iterator<QueryProblem> iterator = pc.getAll().iterator();

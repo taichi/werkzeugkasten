@@ -21,7 +21,7 @@ catch (RecognitionException ex) {
 }
 }
 @parser::members {
-protected ProblemCoordinator coordinator;
+protected ProblemCoordinator coordinator = new ProblemCoordinator();
 public void setProblemCoordinator(ProblemCoordinator pc) {
 	this.coordinator = pc;
 }
@@ -62,6 +62,7 @@ protected static final ExceptionMapper EM_ELSECOMMENT = new ElseCommentException
 protected static final ExceptionMapper EM_ENDCOMMENT = new EndCommentExceptionMapper();
 protected static final ExceptionMapper EM_BINDCOMMENT = new BindCommentExceptionMapper();
 protected static final ExceptionMapper EM_INBIND = new InBindExceptionMapper();
+protected static final ExceptionMapper EM_INBINDSKIPPED = new InBindSkippedExceptionMapper();
 
 }
 
@@ -72,11 +73,6 @@ package werkzeugkasten.twowaysql.grammar;
 @lexer::members {
 boolean inComment = false;
 boolean inLineComment = false;
-
-public void reportError(RecognitionException ex) {
-	ex.printStackTrace();
-	super.reportError(ex);
-}
 }
 
 twowaySQL returns[TwoWayQuery query]
@@ -183,6 +179,7 @@ ifcomment returns[IfNode node]
 	}
 	:
 	(C_ST IF expression C_ED { $node.setExpression($expression.node); }
+		(MAYBE_SKIP {$node.setMaybeSkip($MAYBE_SKIP.getText());} )?
 		nodelist { $node.setChildren($nodelist.list);}
 		(elseifnode { $node.addElseIf($elseifnode.node); })* 
 		(elsenode { $node.setElse($elsenode.list); })?
@@ -365,6 +362,7 @@ inbind returns[InBindNode node]
 
 inbindskipped returns[TxtNode node]
 	@init {
+		push(EM_INBINDSKIPPED);
 		$node = new TxtNode();
 	}
 	@after {
@@ -374,11 +372,25 @@ inbindskipped returns[TxtNode node]
 	:
 	SYM_LP inbindchars (SYM_C inbindchars)* SYM_RP
 	;
+	catch [RecognitionException ex] {
+		reportError(ex);
+		recover(input,ex);
+		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
+	}
+	finally { pop(); }
 
 inbindchars
 	:
 	(IDENT | QUOTED | SYMBOLS | SYM_BIND)+
-	;	
+	;
+	catch [EarlyExitException ex] {
+		throw ex;
+	}
+	catch [RecognitionException ex] {
+		reportError(ex);
+		recover(input,ex);
+		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
+	}
 
 // $>
 
@@ -409,6 +421,9 @@ C_LN_ED	:
 // $>
 
 // $<Keywords
+fragment AND :	('a'|'A')('n'|'N')('d'|'D');
+fragment OR :	('o'|'O')('r'|'R');
+MAYBE_SKIP :	AND | OR;
 BEGIN 	: ('b'|'B')('e'|'E')('g'|'G')('i'|'I')('n'|'N');
 IF		: ('i'|'I')('f'|'F');
 ELSE	: ('e'|'E')('l'|'L')('s'|'S')('e'|'E');

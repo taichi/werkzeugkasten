@@ -38,6 +38,9 @@ public class Messages {
 	public static String REQUIRED_ELSENODE;
 	public static String LABEL_ELSEIFNODE;
 	public static String REQUIRED_ELSEIFNODE;
+	public static String LABEL_INBINDSKIPPED;
+	public static String LABEL_INBIND;
+	public static String REQUIRED_INBINDSKIPPED;
 
 	static {
 		Class<?> clazz = Messages.class;

@@ -8,6 +8,8 @@ ada.cec のしのし / 30 d/*aa hoge,(
 	-- ElSe 
 	 zzz "-- fugafuga" iN/* ? hoge In(aa,bbb)*/('hoge',40)
  -- eNd
+ /*iF pp.is()*/	or
 	-- moge うぼぁ zz
 	doie5 #ccccc
+ /*end*/
 /* EnD*/
