@@ -61,6 +61,7 @@ protected static final ExceptionMapper EM_ELSENODE = new ElseNodeExceptionMapper
 protected static final ExceptionMapper EM_ELSECOMMENT = new ElseCommentExceptionMapper();
 protected static final ExceptionMapper EM_ENDCOMMENT = new EndCommentExceptionMapper();
 protected static final ExceptionMapper EM_BINDCOMMENT = new BindCommentExceptionMapper();
+protected static final ExceptionMapper EM_INBIND = new InBindExceptionMapper();
 
 }
 
@@ -346,22 +347,32 @@ bindcomment returns[BindNode node]
 
 inbind returns[InBindNode node]
 	@init {
+		push(EM_INBIND);
 		$node = new InBindNode();
-		TxtNode skip = new TxtNode();
 	}
 	@after {
-		skip.freeze();
 		$node.update(retval);
 		$node.freeze();
 	}
 	:
-	IN C_ST SYM_BIND expression C_ED SYM_LP inbindchars (SYM_C inbindchars)* SYM_RP
+	IN C_ST SYM_BIND expression C_ED inbindskipped
 	{
 		$node.setExpression($expression.node);
-		skip.update($SYM_RP);
-		skip.update($SYM_LP);
-		$node.setSkipped(skip);
+		$node.setSkipped($inbindskipped.node);
 	}
+	;
+	finally { pop(); }
+
+inbindskipped returns[TxtNode node]
+	@init {
+		$node = new TxtNode();
+	}
+	@after {
+		$node.update(retval);
+		$node.freeze();
+	}
+	:
+	SYM_LP inbindchars (SYM_C inbindchars)* SYM_RP
 	;
 
 inbindchars

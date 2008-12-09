@@ -62,16 +62,18 @@ public class ToStringVisitor implements QueryTreeVisitor<StringBuilder> {
 	public boolean visit(BindNode node, StringBuilder context) {
 		defaultVisit(node, context);
 		this.visit(node.getExpression(), context);
-		context.append("<SKIPPED>");
+		context.append("<SKIPPED ");
 		this.visit(node.getSkipped(), context);
+		context.append(">");
 		return true;
 	}
 
 	public boolean visit(InBindNode node, StringBuilder context) {
 		defaultVisit(node, context);
 		this.visit(node.getExpression(), context);
-		context.append("<SKIPPED>");
+		context.append("<SKIPPED ");
 		this.visit(node.getSkipped(), context);
+		context.append(">");
 		return true;
 	}
 
