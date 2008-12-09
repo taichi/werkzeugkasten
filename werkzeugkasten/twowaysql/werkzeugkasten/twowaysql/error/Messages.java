@@ -30,6 +30,8 @@ public class Messages {
 	public static String REQUIRED_LINECOMMENT;
 	public static String LABEL_ELSEIFBLOCKCOMMENT;
 	public static String LABEL_ELSEIFLINECOMMENT;
+	public static String VIABLE_BEGINCOMMENT;
+	public static String LABEL_BEGINCOMMENT;
 
 	static {
 		Class<?> clazz = Messages.class;

@@ -128,6 +128,29 @@ public class TwoWaySqlParserTest {
 	}
 
 	@Test
+	public void testBeginComment() throws Exception {
+		assertBeginComment(NoViableAltException.class, "/");
+		assertBeginComment(MismatchedTokenException.class, "/*BEGI");
+		assertBeginComment(MismatchedTokenException.class, "/*BEGIN");
+		assertBeginComment(MissingTokenException.class, "/*BEGIN*");
+		assertBeginComment(MismatchedTokenException.class, "-- BEGIN ");
+
+		// same as endcomment test.
+		assertBeginComment(NoViableAltException.class, "/*BEGIN*/aaaa");
+
+		// XXX nodelist のテスト時に再考。
+		// assertBeginComment(EarlyExitException.class, "/*BEGIN*/");
+		// assertBeginComment(MissingTokenException.class, "/*BEGIN*//*END*/");
+	}
+
+	protected void assertBeginComment(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.begincomment();
+		assertParser(expected, parser);
+	}
+
+	@Test
 	public void testElseIfBlockComment() throws Exception {
 		assertElseIfBlockComment(MismatchedTokenException.class, "/");
 		assertElseIfBlockComment(MissingTokenException.class, "/*ELSI");

@@ -53,6 +53,7 @@ protected static final ExceptionMapper EM_TXT = new TxtExceptionMapper();
 protected static final ExceptionMapper EM_EXPRESSION = new ExpressionExceptionMapper();
 protected static final ExceptionMapper EM_BLOCKCOMMENT = new BlockCommentExceptionMapper();
 protected static final ExceptionMapper EM_LINECOMMENT = new LineCommentExceptionMapper();
+protected static final ExceptionMapper EM_BEGINCOMMENT = new BeginCommentExceptionMapper();
 protected static final ExceptionMapper EM_ELSEIFBLOCKCOMMENT = new ElseIfBlockCommentExceptionMapper();
 protected static final ExceptionMapper EM_ELSEIFLINECOMMENT = new ElseIfLineCommentExceptionMapper();
 protected static final ExceptionMapper EM_ELSECOMMENT = new ElseCommentExceptionMapper();
@@ -262,6 +263,7 @@ expression returns[ExpressionNode node]
 	
 begincomment returns[BeginNode node]
 	@init {
+		push(EM_BEGINCOMMENT);
 		$node = new BeginNode();
 	}
 	@after {
@@ -276,6 +278,12 @@ begincomment returns[BeginNode node]
 		$node.setChildren($nodelist.list);
 	}
 	;
+	catch [RecognitionException ex] {
+		reportError(ex);
+		recover(input,ex);
+		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
+	}
+	finally { pop(); }
 
 endcomment
 	@init {
