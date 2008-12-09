@@ -96,6 +96,52 @@ public class TwoWaySqlParserTest {
 	}
 
 	@Test
+	public void testBlockComment() throws Exception {
+		assertBlockComment(EarlyExitException.class, "/*");
+		assertBlockComment(MissingTokenException.class, "/");
+		assertBlockComment(MissingTokenException.class, "/*hoge");
+		assertBlockComment(MissingTokenException.class, "/*hoge*");
+	}
+
+	protected void assertBlockComment(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.blockcomment();
+		assertParser(expected, parser);
+	}
+
+	@Test
+	public void testLineComment() throws Exception {
+		assertLineComment(EarlyExitException.class, "--");
+		assertLineComment(EarlyExitException.class, "#");
+		assertLineComment(MissingTokenException.class, "-");
+		assertLineComment(MissingTokenException.class, "--hoge");
+		assertLineComment(MissingTokenException.class, "--hoge ");
+	}
+
+	protected void assertLineComment(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.linecomment();
+		assertParser(expected, parser);
+	}
+
+	@Test
+	public void testElseComment() throws Exception {
+		assertElseComment(NoViableAltException.class, "/");
+		assertElseComment(MismatchedTokenException.class, "/*ELS");
+		assertElseComment(MissingTokenException.class, "/*ELSE*");
+		assertElseComment(MissingTokenException.class, "-- ELSE ");
+	}
+
+	protected void assertElseComment(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.elsecomment();
+		assertParser(expected, parser);
+	}
+
+	@Test
 	public void testEndComment() throws Exception {
 		assertEndComment(NoViableAltException.class, "/");
 		assertEndComment(MismatchedTokenException.class, "/*ENP");
@@ -116,14 +162,4 @@ public class TwoWaySqlParserTest {
 		System.err.println(qp.getMessage());
 		assertEquals(expected, qp.getCause().getClass());
 	}
-
-	// @Test
-	// public void testIfError() throws Exception {
-	// String sql = "SELECT /*IF true";
-	// runParser(sql);
-	// sql = "SELECT /*IF true*/";
-	// runParser(sql);
-	// sql = "SELECT /*IF true*/* FROM HOGE;";
-	// runParser(sql);
-	// }
 }

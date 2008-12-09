@@ -22,6 +22,12 @@ public class Messages {
 	public static String EARLY_EXIT;
 	public static String REQUIRED_EXPRESSION;
 	public static String LABEL_EXPRESSION;
+	public static String VIABLE_ELSECOMMENT;
+	public static String LABEL_ELSECOMMENT;
+	public static String LABEL_BLOCKCOMMENT;
+	public static String REQUIRED_BLOCKCOMMENT;
+	public static String LABEL_LINECOMMENT;
+	public static String REQUIRED_LINECOMMENT;
 
 	static {
 		Class<?> clazz = Messages.class;

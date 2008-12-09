@@ -44,9 +44,13 @@ public void reportError(RecognitionException ex) {
 	this.coordinator.report(ex);
 }
 
-protected static final ExceptionMapper EM_TXT		 = new TxtExceptionMapper();
+protected static final ExceptionMapper EM_TXT = new TxtExceptionMapper();
 protected static final ExceptionMapper EM_EXPRESSION = new ExpressionExceptionMapper();
+protected static final ExceptionMapper EM_BLOCKCOMMENT = new BlockCommentExceptionMapper();
+protected static final ExceptionMapper EM_LINECOMMENT = new LineCommentExceptionMapper();
+protected static final ExceptionMapper EM_ELSECOMMENT = new ElseCommentExceptionMapper();
 protected static final ExceptionMapper EM_ENDCOMMENT = new EndCommentExceptionMapper();
+
 }
 
 @lexer::header {
@@ -124,6 +128,7 @@ comment returns[QueryNode node]:
 
 blockcomment returns[TxtNode node]
 	@init {
+		push(EM_BLOCKCOMMENT);
 		$node = new TxtNode();
 	}
 	@after {
@@ -133,9 +138,11 @@ blockcomment returns[TxtNode node]
 	:
 	C_ST charactors C_ED
 	;
+	finally { pop(); }
 
 linecomment returns[TxtNode node]
 	@init {
+		push(EM_LINECOMMENT);
 		$node = new TxtNode();
 	}
 	@after {
@@ -145,6 +152,7 @@ linecomment returns[TxtNode node]
 	:
 	C_LN_ST charactors C_LN_ED
 	;
+	finally { pop(); }
 
 ifcomment returns[IfNode node]
 	@init {
@@ -169,7 +177,7 @@ elseifnode	 returns[IfNode node]
 	}
 	@after {
 		$node.update(retval);
-		$node.freeze();
+				$node.freeze();
 	}
 	:
 	elseifcomment nodelist 
@@ -199,9 +207,19 @@ elsenode returns[List<QueryNode> list]
 	elsecomment nodelist { $list = $nodelist.list; }
 	;
 
-elsecomment :
+elsecomment 
+	@init {
+		push(EM_ELSECOMMENT);
+	}
+	:
 	(C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED)
 	;
+	catch [RecognitionException ex] {
+		reportError(ex);
+		recover(input,ex);
+		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
+	}
+	finally { pop(); }
 
 expression returns[ExpressionNode node]
 	@init {
@@ -305,7 +323,7 @@ fragment SYM_Q	:	'\u0027' | '"';
 // $<Comments
 C_ST	:
 	{!inComment}? '/*' { inComment = true; }
-	; 
+	;
 	
 C_ED	:
 	{inComment}? '*/' { inComment = false; };
