@@ -44,7 +44,8 @@ public void reportError(RecognitionException ex) {
 	this.coordinator.report(ex);
 }
 
-protected static final ExceptionMapper EM_CHARACTORS = new CharacotrsExceptionMapper();
+protected static final ExceptionMapper EM_TXT		 = new TxtExceptionMapper();
+protected static final ExceptionMapper EM_EXPRESSION = new ExpressionExceptionMapper();
 protected static final ExceptionMapper EM_ENDCOMMENT = new EndCommentExceptionMapper();
 }
 
@@ -88,18 +89,18 @@ nodelist returns[ArrayList<QueryNode> list]
 
 
 charactors
-	@init {
-		push(EM_CHARACTORS);
-	}
 	:
 	(IDENT | QUOTED | SYMBOLS | SYM_BIND | SYM_C | SYM_LP | SYM_RP)+ 
 	;
-	finally {
-		pop();
+	catch [RecognitionException ex] {
+		reportError(ex);
+		recover(input,ex);
+		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
 	}
 
 txt returns[TxtNode node]
 	@init {
+		push(EM_TXT);
 		$node = new TxtNode();
 	}
 	@after {
@@ -109,6 +110,7 @@ txt returns[TxtNode node]
 	:
 	charactors
 	;
+	finally { pop(); }
 
 // $<comment
 
@@ -203,6 +205,7 @@ elsecomment :
 
 expression returns[ExpressionNode node]
 	@init {
+		push(EM_EXPRESSION);
 		$node = new ExpressionNode();
 	}
 	@after {
@@ -212,6 +215,7 @@ expression returns[ExpressionNode node]
 	:
 	charactors
 	;
+	finally { pop(); }
 	
 begincomment returns[BeginNode node]
 	@init {
@@ -242,9 +246,7 @@ endcomment
 		recover(input,ex);
 		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
 	}
-	finally {
-		pop();
-	}
+	finally { pop(); }
 
 bindcomment returns[BindNode node]
 	@init {

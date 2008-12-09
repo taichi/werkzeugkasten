@@ -74,13 +74,24 @@ public class TwoWaySqlParserTest {
 	}
 
 	@Test
-	public void testCharactors() throws Exception {
+	public void testTxt() throws Exception {
 		TwoWaySqlParser parser = createParser("");
-		parser.charactors();
+		parser.txt();
 
 		ProblemCoordinator pc = parser.getProblemCoordinator();
 		QueryProblem qp = pc.getAll().iterator().next();
-		System.out.println(qp.getMessage());
+		System.err.println(qp.getMessage());
+		assertEquals(EarlyExitException.class, qp.getCause().getClass());
+	}
+
+	@Test
+	public void testExpression() throws Exception {
+		TwoWaySqlParser parser = createParser("");
+		parser.expression();
+
+		ProblemCoordinator pc = parser.getProblemCoordinator();
+		QueryProblem qp = pc.getAll().iterator().next();
+		System.err.println(qp.getMessage());
 		assertEquals(EarlyExitException.class, qp.getCause().getClass());
 	}
 

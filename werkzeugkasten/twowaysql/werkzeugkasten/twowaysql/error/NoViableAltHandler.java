@@ -3,7 +3,6 @@ package werkzeugkasten.twowaysql.error;
 import org.antlr.runtime.NoViableAltException;
 import org.antlr.runtime.RecognitionException;
 
-
 public class NoViableAltHandler implements RecognitionExceptionHandler {
 
 	protected String rulename;
@@ -20,9 +19,10 @@ public class NoViableAltHandler implements RecognitionExceptionHandler {
 	}
 
 	public QueryProblem handle(final RecognitionException ex) {
-		final String msg = String.format(Messages.NO_VIABLE_ALT, this.rulename,
-				this.viable, Messages.getTokenErrorDisplay(ex.token));
 		DefaultQueryProblem qp = new DefaultQueryProblem(ex);
+		String msg = String.format(Messages.NO_VIABLE_ALT, qp.getLine(), qp
+				.getCharPositionInLine(), rulename, this.viable, Messages
+				.getTokenErrorDisplay(ex.token));
 		qp.setMessage(msg);
 		return qp;
 	}

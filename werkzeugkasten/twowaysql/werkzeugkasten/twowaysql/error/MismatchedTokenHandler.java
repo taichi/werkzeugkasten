@@ -15,10 +15,10 @@ public abstract class MismatchedTokenHandler implements
 
 	public QueryProblem handle(RecognitionException cause) {
 		MismatchedTokenException ex = (MismatchedTokenException) cause;
-		String msg = String.format(Messages.MISMATCHED_TOKEN,
-				selectExpected(ex.expecting), Messages
-						.getTokenErrorDisplay(ex.token));
 		DefaultQueryProblem qp = new DefaultQueryProblem(ex);
+		String msg = String.format(Messages.MISMATCHED_TOKEN, qp.getLine(), qp
+				.getCharPositionInLine(), selectExpected(ex.expecting),
+				Messages.getTokenErrorDisplay(ex.token));
 		qp.setMessage(msg);
 		return qp;
 	}
