@@ -9,7 +9,10 @@ public class ElseCommentExceptionMapper extends AbstractExceptionMapper {
 				Messages.VIABLE_ELSECOMMENT));
 		add(new MismatchedTokenHandler(Messages.LABEL_ELSECOMMENT) {
 			protected String selectExpected(int expecting) {
-				return "ELSE";
+				if (TwoWaySqlParser.ELSE == expecting) {
+					return "ELSE";
+				}
+				throw new IllegalStateException();
 			}
 		});
 		add(new MissingTokenHandler(Messages.LABEL_ELSECOMMENT) {

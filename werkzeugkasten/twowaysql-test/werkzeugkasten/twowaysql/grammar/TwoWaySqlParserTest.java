@@ -138,15 +138,27 @@ public class TwoWaySqlParserTest {
 		// same as endcomment test.
 		assertBeginComment(NoViableAltException.class, "/*BEGIN*/aaaa");
 
-		// XXX nodelist のテスト時に再考。
-		// assertBeginComment(EarlyExitException.class, "/*BEGIN*/");
-		// assertBeginComment(MissingTokenException.class, "/*BEGIN*//*END*/");
+		assertBeginComment(EarlyExitException.class, "/*BEGIN*/");
+		assertBeginComment(EarlyExitException.class, "/*BEGIN*//*END*/");
 	}
 
 	protected void assertBeginComment(Class<?> expected, String sql)
 			throws Exception {
 		TwoWaySqlParser parser = createParser(sql);
 		parser.begincomment();
+		assertParser(expected, parser);
+	}
+
+	@Test
+	public void testElseIfNode() throws Exception {
+		assertElseIfNode(EarlyExitException.class, "/*ELSEIF aaa*/");
+		assertElseIfNode(EarlyExitException.class, "--ELSEIF bbb\n");
+	}
+
+	protected void assertElseIfNode(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.elseifnode();
 		assertParser(expected, parser);
 	}
 
@@ -181,6 +193,19 @@ public class TwoWaySqlParserTest {
 	}
 
 	@Test
+	public void testElseNode() throws Exception {
+		assertElseNode(EarlyExitException.class, "/*ELSE*/");
+		assertElseNode(EarlyExitException.class, "/*ELSE*/\n");
+	}
+
+	protected void assertElseNode(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.elsenode();
+		assertParser(expected, parser);
+	}
+
+	@Test
 	public void testElseComment() throws Exception {
 		assertElseComment(NoViableAltException.class, "/");
 		assertElseComment(MismatchedTokenException.class, "/*ELS");
@@ -207,6 +232,22 @@ public class TwoWaySqlParserTest {
 			throws Exception {
 		TwoWaySqlParser parser = createParser(sql);
 		parser.endcomment();
+		assertParser(expected, parser);
+	}
+
+	@Test
+	public void testBindComment() throws Exception {
+		assertBindComment(MismatchedTokenException.class, "/*");
+		assertBindComment(EarlyExitException.class, "/*?");
+		assertBindComment(MismatchedTokenException.class, "/*? hoge");
+		assertBindComment(MismatchedTokenException.class, "/*?hoge*");
+		assertBindComment(EarlyExitException.class, "/*?hoge*/");
+	}
+
+	protected void assertBindComment(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.bindcomment();
 		assertParser(expected, parser);
 	}
 

@@ -32,6 +32,12 @@ public class Messages {
 	public static String LABEL_ELSEIFLINECOMMENT;
 	public static String VIABLE_BEGINCOMMENT;
 	public static String LABEL_BEGINCOMMENT;
+	public static String REQUIRED_BEGINCOMMENT;
+	public static String LABEL_BINDCOMMENT;
+	public static String LABEL_ELSENODE;
+	public static String REQUIRED_ELSENODE;
+	public static String LABEL_ELSEIFNODE;
+	public static String REQUIRED_ELSEIFNODE;
 
 	static {
 		Class<?> clazz = Messages.class;

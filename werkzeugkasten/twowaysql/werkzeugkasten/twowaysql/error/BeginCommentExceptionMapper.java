@@ -40,5 +40,7 @@ public class BeginCommentExceptionMapper extends AbstractExceptionMapper {
 				}
 			}
 		});
+		add(new EarlyExitHandler(Messages.LABEL_BEGINCOMMENT,
+				Messages.REQUIRED_BEGINCOMMENT));
 	}
 }

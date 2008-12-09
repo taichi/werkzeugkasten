@@ -54,10 +54,13 @@ protected static final ExceptionMapper EM_EXPRESSION = new ExpressionExceptionMa
 protected static final ExceptionMapper EM_BLOCKCOMMENT = new BlockCommentExceptionMapper();
 protected static final ExceptionMapper EM_LINECOMMENT = new LineCommentExceptionMapper();
 protected static final ExceptionMapper EM_BEGINCOMMENT = new BeginCommentExceptionMapper();
+protected static final ExceptionMapper EM_ELSEIFNODE = new ElseIfNodeExceptionMapper();
 protected static final ExceptionMapper EM_ELSEIFBLOCKCOMMENT = new ElseIfBlockCommentExceptionMapper();
 protected static final ExceptionMapper EM_ELSEIFLINECOMMENT = new ElseIfLineCommentExceptionMapper();
+protected static final ExceptionMapper EM_ELSENODE = new ElseNodeExceptionMapper();
 protected static final ExceptionMapper EM_ELSECOMMENT = new ElseCommentExceptionMapper();
 protected static final ExceptionMapper EM_ENDCOMMENT = new EndCommentExceptionMapper();
+protected static final ExceptionMapper EM_BINDCOMMENT = new BindCommentExceptionMapper();
 
 }
 
@@ -89,6 +92,7 @@ twowaySQL returns[TwoWayQuery query]
 	;
 
 nodelist returns[ArrayList<QueryNode> list]
+	// caller rule handles exceptions
 	@init{
 		$list = new ArrayList<QueryNode>();
 	}
@@ -98,9 +102,15 @@ nodelist returns[ArrayList<QueryNode> list]
 	| txt {$list.add($txt.node);}
 	)+
 	;
+	catch [RecognitionException ex] {
+		reportError(ex);
+		recover(input,ex);
+		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
+	}
 
 
 charactors
+	// caller rule handles exceptions
 	:
 	(IDENT | QUOTED | SYMBOLS | SYM_BIND | SYM_C | SYM_LP | SYM_RP)+ 
 	;
@@ -181,11 +191,12 @@ ifcomment returns[IfNode node]
 
 elseifnode	 returns[IfNode node]
 	@init {
+		push(EM_ELSEIFNODE);
 		$node = new IfNode();
 	}
 	@after {
 		$node.update(retval);
-				$node.freeze();
+		$node.freeze();
 	}
 	:
 	elseifcomment nodelist 
@@ -194,8 +205,10 @@ elseifnode	 returns[IfNode node]
 		$node.setChildren($nodelist.list);
 	}
 	;
+	finally { pop(); }
 
 elseifcomment returns[ExpressionNode node]
+	// needless to handle error messages.
 	:
 	(elseifblockcomment {$node = $elseifblockcomment.node;}
 	 | elseiflinecomment {$node = $elseiflinecomment.node;}
@@ -229,9 +242,18 @@ elseiflinecomment returns[ExpressionNode node]
 	finally { pop(); }
 
 elsenode returns[List<QueryNode> list]
+	@init {
+		push(EM_ELSENODE);
+	}
 	:
 	elsecomment nodelist { $list = $nodelist.list; }
 	;
+	catch [RecognitionException ex] {
+		reportError(ex);
+		recover(input,ex);
+		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
+	}
+	finally { pop(); }
 
 elsecomment 
 	@init {
@@ -301,6 +323,7 @@ endcomment
 
 bindcomment returns[BindNode node]
 	@init {
+		push(EM_BINDCOMMENT);
 		$node = new BindNode();
 	}
 	@after {
@@ -314,6 +337,12 @@ bindcomment returns[BindNode node]
 		$node.setSkipped($txt.node);
 	}
 	;
+	catch [RecognitionException ex] {
+		reportError(ex);
+		recover(input,ex);
+		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
+	}
+	finally { pop(); }
 
 inbind returns[InBindNode node]
 	@init {
