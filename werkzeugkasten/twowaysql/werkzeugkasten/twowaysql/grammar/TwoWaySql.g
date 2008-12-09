@@ -41,6 +41,11 @@ public void reportErrorDbg(RecognitionException ex) {
 	super.reportError(ex);
 }
 public void reportError(RecognitionException ex) {
+	if ( state.errorRecovery ) {
+		return;
+	}
+	state.syntaxErrors++;
+	state.errorRecovery = true;
 	this.coordinator.report(ex);
 }
 
@@ -48,6 +53,8 @@ protected static final ExceptionMapper EM_TXT = new TxtExceptionMapper();
 protected static final ExceptionMapper EM_EXPRESSION = new ExpressionExceptionMapper();
 protected static final ExceptionMapper EM_BLOCKCOMMENT = new BlockCommentExceptionMapper();
 protected static final ExceptionMapper EM_LINECOMMENT = new LineCommentExceptionMapper();
+protected static final ExceptionMapper EM_ELSEIFBLOCKCOMMENT = new ElseIfBlockCommentExceptionMapper();
+protected static final ExceptionMapper EM_ELSEIFLINECOMMENT = new ElseIfLineCommentExceptionMapper();
 protected static final ExceptionMapper EM_ELSECOMMENT = new ElseCommentExceptionMapper();
 protected static final ExceptionMapper EM_ENDCOMMENT = new EndCommentExceptionMapper();
 
@@ -195,12 +202,30 @@ elseifcomment returns[ExpressionNode node]
 	;
 
 elseifblockcomment returns[ExpressionNode node]
+	@init {
+		push(EM_ELSEIFBLOCKCOMMENT);
+	}
 	: C_ST ELSEIF expression C_ED { $node = $expression.node; }
 	;
+	catch [RecognitionException ex] {
+		reportError(ex);
+		recover(input,ex);
+		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
+	}
+	finally { pop(); }
 
 elseiflinecomment returns[ExpressionNode node]
+	@init {
+		push(EM_ELSEIFLINECOMMENT);
+	}
 	: C_LN_ST ELSEIF expression C_LN_ED { $node = $expression.node; }
 	;
+	catch [RecognitionException ex] {
+		reportError(ex);
+		recover(input,ex);
+		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
+	}
+	finally { pop(); }
 
 elsenode returns[List<QueryNode> list]
 	:

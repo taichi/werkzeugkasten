@@ -5,7 +5,8 @@ import org.antlr.runtime.RecognitionException;
 
 public abstract class MissingTokenHandler extends MismatchedTokenHandler {
 
-	public MissingTokenHandler() {
+	public MissingTokenHandler(String ruleName) {
+		super(ruleName);
 	}
 
 	public Class<? extends RecognitionException> getHadleType() {

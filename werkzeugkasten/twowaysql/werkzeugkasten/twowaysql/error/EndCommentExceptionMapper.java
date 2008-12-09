@@ -7,12 +7,12 @@ public class EndCommentExceptionMapper extends AbstractExceptionMapper {
 	public EndCommentExceptionMapper() {
 		add(new NoViableAltHandler(Messages.LABEL_ENDCOMMENT,
 				Messages.VIABLE_ENDCOMMENT));
-		add(new MismatchedTokenHandler() {
+		add(new MismatchedTokenHandler(Messages.LABEL_ENDCOMMENT) {
 			protected String selectExpected(int expecting) {
 				return "END";
 			}
 		});
-		add(new MissingTokenHandler() {
+		add(new MissingTokenHandler(Messages.LABEL_ENDCOMMENT) {
 			protected String selectExpected(int expecting) {
 				switch (expecting) {
 				case TwoWaySqlParser.C_ED: {

@@ -7,12 +7,12 @@ public class ElseCommentExceptionMapper extends AbstractExceptionMapper {
 	public ElseCommentExceptionMapper() {
 		add(new NoViableAltHandler(Messages.LABEL_ELSECOMMENT,
 				Messages.VIABLE_ELSECOMMENT));
-		add(new MismatchedTokenHandler() {
+		add(new MismatchedTokenHandler(Messages.LABEL_ELSECOMMENT) {
 			protected String selectExpected(int expecting) {
 				return "ELSE";
 			}
 		});
-		add(new MissingTokenHandler() {
+		add(new MissingTokenHandler(Messages.LABEL_ELSECOMMENT) {
 			protected String selectExpected(int expecting) {
 				switch (expecting) {
 				case TwoWaySqlParser.C_ED: {

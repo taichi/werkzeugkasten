@@ -6,7 +6,10 @@ import org.antlr.runtime.RecognitionException;
 public abstract class MismatchedTokenHandler implements
 		RecognitionExceptionHandler {
 
-	public MismatchedTokenHandler() {
+	protected String ruleName;
+
+	public MismatchedTokenHandler(String ruleName) {
+		this.ruleName = ruleName;
 	}
 
 	public Class<? extends RecognitionException> getHadleType() {
@@ -17,8 +20,9 @@ public abstract class MismatchedTokenHandler implements
 		MismatchedTokenException ex = (MismatchedTokenException) cause;
 		DefaultQueryProblem qp = new DefaultQueryProblem(ex);
 		String msg = String.format(Messages.MISMATCHED_TOKEN, qp.getLine(), qp
-				.getCharPositionInLine(), selectExpected(ex.expecting),
-				Messages.getTokenErrorDisplay(ex.token));
+				.getCharPositionInLine(), ruleName,
+				selectExpected(ex.expecting), Messages
+						.getTokenErrorDisplay(ex.token));
 		qp.setMessage(msg);
 		return qp;
 	}

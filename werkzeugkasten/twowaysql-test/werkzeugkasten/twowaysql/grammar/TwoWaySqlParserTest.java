@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Iterator;
 
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -116,13 +117,43 @@ public class TwoWaySqlParserTest {
 		assertLineComment(EarlyExitException.class, "#");
 		assertLineComment(MissingTokenException.class, "-");
 		assertLineComment(MissingTokenException.class, "--hoge");
-		assertLineComment(MissingTokenException.class, "--hoge ");
+		assertLineComment(MissingTokenException.class, "#hoge ");
 	}
 
 	protected void assertLineComment(Class<?> expected, String sql)
 			throws Exception {
 		TwoWaySqlParser parser = createParser(sql);
 		parser.linecomment();
+		assertParser(expected, parser);
+	}
+
+	@Test
+	public void testElseIfBlockComment() throws Exception {
+		assertElseIfBlockComment(MismatchedTokenException.class, "/");
+		assertElseIfBlockComment(MissingTokenException.class, "/*ELSI");
+		assertElseIfBlockComment(MissingTokenException.class, "/*ELSEIF hoge");
+		assertElseIfBlockComment(MissingTokenException.class, "/*ELSEIF hoge*");
+	}
+
+	protected void assertElseIfBlockComment(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.elseifblockcomment();
+		assertParser(expected, parser);
+	}
+
+	@Test
+	public void testElseIfLineComment() throws Exception {
+		assertElseIfLineComment(MismatchedTokenException.class, "-");
+		assertElseIfLineComment(MissingTokenException.class, "-- ELSI");
+		assertElseIfLineComment(MissingTokenException.class, "--ELSEIF hoge");
+		assertElseIfLineComment(MissingTokenException.class, "#ELSEIF hoge*");
+	}
+
+	protected void assertElseIfLineComment(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.elseiflinecomment();
 		assertParser(expected, parser);
 	}
 
@@ -158,8 +189,13 @@ public class TwoWaySqlParserTest {
 
 	protected void assertParser(Class<?> expected, TwoWaySqlParser parser) {
 		ProblemCoordinator pc = parser.getProblemCoordinator();
-		QueryProblem qp = pc.getAll().iterator().next();
+		Iterator<QueryProblem> iterator = pc.getAll().iterator();
+		QueryProblem qp = iterator.next();
 		System.err.println(qp.getMessage());
 		assertEquals(expected, qp.getCause().getClass());
+		while (iterator.hasNext()) {
+			qp = iterator.next();
+			System.err.println("++" + qp.getMessage());
+		}
 	}
 }
