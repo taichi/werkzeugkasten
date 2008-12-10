@@ -1,4 +1,4 @@
-package werkzeugkasten.twowaysql.error;
+package werkzeugkasten.twowaysql.error.handler;
 
 import org.antlr.runtime.MissingTokenException;
 import org.antlr.runtime.RecognitionException;

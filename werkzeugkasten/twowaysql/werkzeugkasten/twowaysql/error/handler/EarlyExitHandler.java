@@ -1,8 +1,11 @@
-package werkzeugkasten.twowaysql.error;
+package werkzeugkasten.twowaysql.error.handler;
 
 import org.antlr.runtime.EarlyExitException;
 import org.antlr.runtime.RecognitionException;
 
+import werkzeugkasten.twowaysql.error.DefaultQueryProblem;
+import werkzeugkasten.twowaysql.error.QueryProblem;
+import werkzeugkasten.twowaysql.error.RecognitionExceptionHandler;
 import werkzeugkasten.twowaysql.nls.Messages;
 
 public class EarlyExitHandler implements RecognitionExceptionHandler {

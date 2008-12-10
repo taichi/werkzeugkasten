@@ -1,5 +1,6 @@
 package werkzeugkasten.twowaysql.error;
 
+import werkzeugkasten.twowaysql.error.handler.EarlyExitHandler;
 import werkzeugkasten.twowaysql.nls.Messages;
 
 public class ElseNodeExceptionMapper extends AbstractExceptionMapper {

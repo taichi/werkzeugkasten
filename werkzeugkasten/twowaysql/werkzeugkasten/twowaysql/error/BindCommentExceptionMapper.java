@@ -1,5 +1,6 @@
 package werkzeugkasten.twowaysql.error;
 
+import werkzeugkasten.twowaysql.error.handler.MismatchedTokenHandler;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser;
 import werkzeugkasten.twowaysql.nls.Messages;
 
