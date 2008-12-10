@@ -136,7 +136,6 @@ public class TwoWaySqlParserTest {
 		assertBeginComment(MissingTokenException.class, "/*BEGIN*");
 		assertBeginComment(MismatchedTokenException.class, "-- BEGIN ");
 
-		// same as endcomment test.
 		assertBeginComment(NoViableAltException.class, "/*BEGIN*/aaaa");
 
 		assertBeginComment(EarlyExitException.class, "/*BEGIN*/");
@@ -260,8 +259,6 @@ public class TwoWaySqlParserTest {
 		assertInBind(MismatchedTokenException.class, "IN/*?hoge");
 		assertInBind(MismatchedTokenException.class, "IN/*?hoge*/");
 
-		// XXX 呼出し元があるルールは、
-		// 呼出し元からの呼出しによってエラーの出方が変化する可能性があるので、テストする
 		assertInBind(MismatchedTokenException.class, "IN/*?hoge*/(aaa");
 		assertInBind(MismatchedTokenException.class, "IN/*?hoge*/(aaa /*");
 	}
