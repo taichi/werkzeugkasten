@@ -10,6 +10,7 @@ options {
 package werkzeugkasten.twowaysql.grammar;
 
 import werkzeugkasten.twowaysql.error.*;
+import werkzeugkasten.twowaysql.error.mapper.*;
 import werkzeugkasten.twowaysql.tree.*;
 
 }
