@@ -252,6 +252,26 @@ public class TwoWaySqlParserTest {
 	}
 
 	@Test
+	public void testInBind() throws Exception {
+		assertInBind(MismatchedTokenException.class, "I/*?hoge*/(aaa,bbb)");
+		assertInBind(MissingTokenException.class, "IN/* hoge*/(aaa,bbb)");
+		assertInBind(MismatchedTokenException.class, "IN/*?hoge (aaa,bbb)");
+		assertInBind(MismatchedTokenException.class, "IN/*?hoge");
+		assertInBind(MismatchedTokenException.class, "IN/*?hoge*/");
+
+		// XXX 呼出し元があるルールは、
+		// 呼出し元からの呼出しによってエラーの出方が変化する可能性があるので、テストする
+		assertInBind(MismatchedTokenException.class, "IN/*?hoge*/(aaa");
+		assertInBind(MismatchedTokenException.class, "IN/*?hoge*/(aaa /*");
+	}
+
+	protected void assertInBind(Class<?> expected, String sql) throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.inbind();
+		assertParser(expected, parser);
+	}
+
+	@Test
 	public void testInBindSkipped() throws Exception {
 		assertInBindSkipped(MissingTokenException.class, "?");
 		assertInBindSkipped(MissingTokenException.class, "? aaa)");
