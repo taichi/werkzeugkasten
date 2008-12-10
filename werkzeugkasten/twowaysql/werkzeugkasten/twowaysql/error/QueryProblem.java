@@ -1,5 +1,7 @@
 package werkzeugkasten.twowaysql.error;
 
+import org.antlr.runtime.RecognitionException;
+
 public interface QueryProblem {
 
 	int getLine();
@@ -8,5 +10,5 @@ public interface QueryProblem {
 
 	String getMessage();
 
-	Exception getCause();
+	RecognitionException getCause();
 }

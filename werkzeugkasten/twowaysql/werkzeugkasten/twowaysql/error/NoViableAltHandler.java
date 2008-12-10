@@ -20,9 +20,8 @@ public class NoViableAltHandler implements RecognitionExceptionHandler {
 
 	public QueryProblem handle(final RecognitionException ex) {
 		DefaultQueryProblem qp = new DefaultQueryProblem(ex);
-		String msg = String.format(Messages.NO_VIABLE_ALT, qp.getLine(), qp
-				.getCharPositionInLine(), rulename, this.viable, Messages
-				.getTokenErrorDisplay(ex.token));
+		String msg = String.format(Messages.NO_VIABLE_ALT, rulename,
+				this.viable, Messages.getTokenErrorDisplay(ex.token));
 		qp.setMessage(msg);
 		return qp;
 	}

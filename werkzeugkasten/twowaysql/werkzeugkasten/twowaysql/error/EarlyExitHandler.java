@@ -19,9 +19,8 @@ public class EarlyExitHandler implements RecognitionExceptionHandler {
 
 	public QueryProblem handle(final RecognitionException ex) {
 		DefaultQueryProblem qp = new DefaultQueryProblem(ex);
-		String msg = String.format(Messages.EARLY_EXIT, qp.getLine(), qp
-				.getCharPositionInLine(), ruleName, required, Messages
-				.getTokenErrorDisplay(ex.token));
+		String msg = String.format(Messages.EARLY_EXIT, ruleName, required,
+				Messages.getTokenErrorDisplay(ex.token));
 		qp.setMessage(msg);
 		return qp;
 	}

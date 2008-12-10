@@ -13,6 +13,7 @@ import org.antlr.runtime.EarlyExitException;
 import org.antlr.runtime.MismatchedTokenException;
 import org.antlr.runtime.MissingTokenException;
 import org.antlr.runtime.NoViableAltException;
+import org.antlr.runtime.UnwantedTokenException;
 import org.junit.Test;
 
 import werkzeugkasten.twowaysql.error.ProblemCoordinator;
@@ -289,15 +290,81 @@ public class TwoWaySqlParserTest {
 		assertParser(expected, parser);
 	}
 
+	@Test
+	public void testIfComment() throws Exception {
+		assertIfComment(MismatchedTokenException.class, "/");
+		assertIfComment(MismatchedTokenException.class, "/* ");
+		assertIfComment(MissingTokenException.class, "/*I ");
+		assertIfComment(MissingTokenException.class, "/*I a");
+		assertIfComment(MissingTokenException.class, "/*I a*/");
+		assertIfComment(MissingTokenException.class, "/*I a*/");
+		assertIfComment(EarlyExitException.class, "/*IF a*/");
+		assertIfComment(EarlyExitException.class, "/*IF a*/ /*END*/");
+		assertIfComment(NoViableAltException.class, "/*IF a*/b");
+		assertIfComment(MismatchedTokenException.class, "/*IF a*/b/*en");
+		assertIfComment(MismatchedTokenException.class, "/*IF a*/b/*END");
+		assertIfComment(MismatchedTokenException.class, "/*IF a*/b--END");
+
+		assertIfComment(EarlyExitException.class, "/*IF a*/AAA/*ELSEIF ");
+		assertIfComment(MismatchedTokenException.class, "/*IF a*/AAA/*ELSEIF *");
+		assertIfComment(EarlyExitException.class, "/*IF a*/AAA/*ELSEIF */");
+		assertIfComment(MismatchedTokenException.class,
+				"/*IF a*/AAA/*ELSEIF aa");
+		assertIfComment(EarlyExitException.class, "/*IF a*/AAA/*ELSEIF aa*/");
+		assertIfComment(NoViableAltException.class,
+				"/*IF a*/AAA/*ELSEIF aa*/aaa");
+		assertIfComment(MismatchedTokenException.class,
+				"/*IF a*/AAA/*ELSEIF aa*/aaa/*");
+		assertIfComment(MismatchedTokenException.class,
+				"/*IF a*/AAA/*ELSEIF aa*/aaa/*END");
+		assertIfComment(MismatchedTokenException.class,
+				"/*IF a*/AAA/*ELSEIF aa*/aaa/*END*");
+
+		assertIfComment(MismatchedTokenException.class, "/*IF a*/AAA/*ELSE");
+		assertIfComment(MissingTokenException.class, "/*IF a*/AAA/*ELSE*");
+		assertIfComment(MissingTokenException.class, "/*IF a*/AAA/*ELSE a");
+		assertIfComment(EarlyExitException.class, "/*IF a*/AAA --ELSE\n");
+		assertIfComment(EarlyExitException.class, "/*IF a*/AAA/*ELSE*/ /*END*/");
+
+		assertIfComment(EarlyExitException.class,
+				"/*IF a*/AAA/*ELSEIF aaa*/ /*ELSE*/");
+		assertIfComment(EarlyExitException.class,
+				"/*IF a*/AAA/*ELSEIF aaa*/ /*ELSE*//*END*/");
+		assertIfComment(EarlyExitException.class,
+				"/*IF a*/AAA/*ELSEIF aaa*/bb/*ELSE*/");
+		assertIfComment(NoViableAltException.class,
+				"/*IF a*/AAA/*ELSEIF aaa*/bbb/*ELSE*/cc");
+		assertIfComment(MismatchedTokenException.class,
+				"/*IF a*/AAA/*ELSEIF aaa*/bbb/*ELSE*/cc/*");
+		assertIfComment(UnwantedTokenException.class,
+				"/*IF 000 */AAA/*ELSE IF */bbb/*ELSE*/cc/*END*/");
+	}
+
+	protected void assertIfComment(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.ifcomment();
+		assertParser(expected, parser);
+	}
+
 	protected void assertParser(Class<?> expected, TwoWaySqlParser parser) {
 		ProblemCoordinator pc = parser.getProblemCoordinator();
 		Iterator<QueryProblem> iterator = pc.getAll().iterator();
+		assertTrue(iterator.hasNext());
 		QueryProblem qp = iterator.next();
+		if (qp.getMessage() == null) {
+			qp.getCause().printStackTrace();
+			throw new AssertionError();
+		}
 		System.err.println(qp.getMessage());
 		assertEquals(expected, qp.getCause().getClass());
 		while (iterator.hasNext()) {
 			qp = iterator.next();
 			System.err.println("++" + qp.getMessage());
+			if (qp.getMessage() == null) {
+				qp.getCause().printStackTrace();
+				throw new AssertionError();
+			}
 		}
 	}
 }

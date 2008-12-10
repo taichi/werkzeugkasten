@@ -22,7 +22,7 @@ public class RecognitionExceptionAdapter implements QueryProblem {
 		return this.cause.getMessage();
 	}
 
-	public Exception getCause() {
+	public RecognitionException getCause() {
 		return this.cause;
 	}
 }

@@ -9,13 +9,38 @@ public class ElseCommentExceptionMapper extends AbstractExceptionMapper {
 				Messages.VIABLE_ELSECOMMENT));
 		add(new MismatchedTokenHandler(Messages.LABEL_ELSECOMMENT) {
 			protected String selectExpected(int expecting) {
-				if (TwoWaySqlParser.ELSE == expecting) {
+				switch (expecting) {
+				case TwoWaySqlParser.ELSE: {
 					return "ELSE";
 				}
-				throw new IllegalStateException();
+				case TwoWaySqlParser.C_ED: {
+					return "*/";
+				}
+				case TwoWaySqlParser.C_LN_ED: {
+					return "\\n";
+				}
+				default: {
+					throw new IllegalStateException();
+				}
+				}
 			}
 		});
 		add(new MissingTokenHandler(Messages.LABEL_ELSECOMMENT) {
+			protected String selectExpected(int expecting) {
+				switch (expecting) {
+				case TwoWaySqlParser.C_ED: {
+					return "*/";
+				}
+				case TwoWaySqlParser.C_LN_ED: {
+					return "\\n";
+				}
+				default: {
+					throw new IllegalStateException();
+				}
+				}
+			}
+		});
+		add(new UnwantedTokenHandler(Messages.LABEL_ELSECOMMENT) {
 			protected String selectExpected(int expecting) {
 				switch (expecting) {
 				case TwoWaySqlParser.C_ED: {

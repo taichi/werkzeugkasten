@@ -15,7 +15,7 @@ import werkzeugkasten.twowaysql.tree.*;
 }
 @parser::rulecatch {
 catch (RecognitionException ex) {
-	reportErrorDbg(ex);
+	reportError(ex);
 	recover(input,ex);
 	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
 }
@@ -35,11 +35,6 @@ public void pop() {
 	this.coordinator.pop();
 }
 
-public void reportErrorDbg(RecognitionException ex) {
-	this.coordinator.report(ex);
-	ex.printStackTrace();
-	super.reportError(ex);
-}
 public void reportError(RecognitionException ex) {
 	if ( state.errorRecovery ) {
 		return;
@@ -54,6 +49,7 @@ protected static final ExceptionMapper EM_EXPRESSION = new ExpressionExceptionMa
 protected static final ExceptionMapper EM_BLOCKCOMMENT = new BlockCommentExceptionMapper();
 protected static final ExceptionMapper EM_LINECOMMENT = new LineCommentExceptionMapper();
 protected static final ExceptionMapper EM_BEGINCOMMENT = new BeginCommentExceptionMapper();
+protected static final ExceptionMapper EM_IFCOMMENT = new IfCommentExceptionMapper();
 protected static final ExceptionMapper EM_ELSEIFNODE = new ElseIfNodeExceptionMapper();
 protected static final ExceptionMapper EM_ELSEIFBLOCKCOMMENT = new ElseIfBlockCommentExceptionMapper();
 protected static final ExceptionMapper EM_ELSEIFLINECOMMENT = new ElseIfLineCommentExceptionMapper();
@@ -99,23 +95,12 @@ nodelist returns[ArrayList<QueryNode> list]
 	| txt {$list.add($txt.node);}
 	)+
 	;
-	catch [RecognitionException ex] {
-		reportError(ex);
-		recover(input,ex);
-		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
-	}
-
 
 charactors
 	// caller rule handles exceptions
 	:
 	(IDENT | QUOTED | SYMBOLS | SYM_BIND | SYM_C | SYM_LP | SYM_RP)+ 
 	;
-	catch [RecognitionException ex] {
-		reportError(ex);
-		recover(input,ex);
-		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
-	}
 
 txt returns[TxtNode node]
 	@init {
@@ -171,6 +156,7 @@ linecomment returns[TxtNode node]
 
 ifcomment returns[IfNode node]
 	@init {
+		push(EM_IFCOMMENT);
 		$node = new IfNode();
 	}
 	@after {
@@ -186,6 +172,7 @@ ifcomment returns[IfNode node]
 		endcomment
 	)
 	;
+	finally { pop(); }
 
 elseifnode	 returns[IfNode node]
 	@init {
@@ -219,11 +206,6 @@ elseifblockcomment returns[ExpressionNode node]
 	}
 	: C_ST ELSEIF expression C_ED { $node = $expression.node; }
 	;
-	catch [RecognitionException ex] {
-		reportError(ex);
-		recover(input,ex);
-		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
-	}
 	finally { pop(); }
 
 elseiflinecomment returns[ExpressionNode node]
@@ -232,11 +214,6 @@ elseiflinecomment returns[ExpressionNode node]
 	}
 	: C_LN_ST ELSEIF expression C_LN_ED { $node = $expression.node; }
 	;
-	catch [RecognitionException ex] {
-		reportError(ex);
-		recover(input,ex);
-		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
-	}
 	finally { pop(); }
 
 elsenode returns[List<QueryNode> list]
@@ -246,11 +223,6 @@ elsenode returns[List<QueryNode> list]
 	:
 	elsecomment nodelist { $list = $nodelist.list; }
 	;
-	catch [RecognitionException ex] {
-		reportError(ex);
-		recover(input,ex);
-		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
-	}
 	finally { pop(); }
 
 elsecomment 
@@ -260,11 +232,6 @@ elsecomment
 	:
 	(C_ST ELSE C_ED | C_LN_ST ELSE C_LN_ED)
 	;
-	catch [RecognitionException ex] {
-		reportError(ex);
-		recover(input,ex);
-		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
-	}
 	finally { pop(); }
 
 expression returns[ExpressionNode node]
@@ -298,11 +265,6 @@ begincomment returns[BeginNode node]
 		$node.setChildren($nodelist.list);
 	}
 	;
-	catch [RecognitionException ex] {
-		reportError(ex);
-		recover(input,ex);
-		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
-	}
 	finally { pop(); }
 
 endcomment
@@ -312,11 +274,6 @@ endcomment
 	:
 	C_ST END C_ED | C_LN_ST END C_LN_ED
 	;
-	catch [RecognitionException ex] {
-		reportError(ex);
-		recover(input,ex);
-		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
-	}
 	finally { pop(); }
 
 bindcomment returns[BindNode node]
@@ -335,11 +292,6 @@ bindcomment returns[BindNode node]
 		$node.setSkipped($txt.node);
 	}
 	;
-	catch [RecognitionException ex] {
-		reportError(ex);
-		recover(input,ex);
-		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
-	}
 	finally { pop(); }
 
 inbind returns[InBindNode node]
@@ -358,11 +310,6 @@ inbind returns[InBindNode node]
 		$node.setSkipped($inbindskipped.node);
 	}
 	;
-	catch [RecognitionException ex] {
-		reportError(ex);
-		recover(input,ex);
-		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
-	}
 	finally { pop(); }
 
 inbindskipped returns[TxtNode node]
@@ -377,24 +324,15 @@ inbindskipped returns[TxtNode node]
 	:
 	SYM_LP inbindchars (SYM_C inbindchars)* SYM_RP
 	;
-	catch [RecognitionException ex] {
-		reportError(ex);
-		recover(input,ex);
-		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
-	}
 	finally { pop(); }
 
 inbindchars
+	// caller rule handles exceptions
 	:
 	(IDENT | QUOTED | SYMBOLS | SYM_BIND)+
 	;
 	catch [EarlyExitException ex] {
 		throw ex;
-	}
-	catch [RecognitionException ex] {
-		reportError(ex);
-		recover(input,ex);
-		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
 	}
 
 // $>

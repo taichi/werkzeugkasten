@@ -41,6 +41,9 @@ public class Messages {
 	public static String LABEL_INBINDSKIPPED;
 	public static String LABEL_INBIND;
 	public static String REQUIRED_INBINDSKIPPED;
+	public static String LABEL_IFCOMMENT;
+	public static String REQUIRED_IFCOMMENT;
+	public static String UNWANTED_TOKEN;
 
 	static {
 		Class<?> clazz = Messages.class;

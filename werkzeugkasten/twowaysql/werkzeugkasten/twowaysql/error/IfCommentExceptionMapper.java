@@ -2,12 +2,15 @@ package werkzeugkasten.twowaysql.error;
 
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser;
 
-public class ElseIfBlockCommentExceptionMapper extends AbstractExceptionMapper {
+public class IfCommentExceptionMapper extends AbstractExceptionMapper {
 
-	public ElseIfBlockCommentExceptionMapper() {
-		add(new MismatchedTokenHandler(Messages.LABEL_ELSEIFBLOCKCOMMENT) {
+	public IfCommentExceptionMapper() {
+		add(new MismatchedTokenHandler(Messages.LABEL_IFCOMMENT) {
 			protected String selectExpected(int expecting) {
 				switch (expecting) {
+				case TwoWaySqlParser.IF: {
+					return "IF";
+				}
 				case TwoWaySqlParser.C_ST: {
 					return "/*";
 				}
@@ -20,11 +23,14 @@ public class ElseIfBlockCommentExceptionMapper extends AbstractExceptionMapper {
 				}
 			}
 		});
-		add(new MissingTokenHandler(Messages.LABEL_ELSEIFBLOCKCOMMENT) {
+		add(new MissingTokenHandler(Messages.LABEL_IFCOMMENT) {
 			protected String selectExpected(int expecting) {
 				switch (expecting) {
-				case TwoWaySqlParser.ELSEIF: {
-					return "ELSEIF";
+				case TwoWaySqlParser.IF: {
+					return "IF";
+				}
+				case TwoWaySqlParser.C_ST: {
+					return "/*";
 				}
 				case TwoWaySqlParser.C_ED: {
 					return "*/";
@@ -35,5 +41,7 @@ public class ElseIfBlockCommentExceptionMapper extends AbstractExceptionMapper {
 				}
 			}
 		});
+		add(new EarlyExitHandler(Messages.LABEL_IFCOMMENT,
+				Messages.REQUIRED_IFCOMMENT));
 	}
 }

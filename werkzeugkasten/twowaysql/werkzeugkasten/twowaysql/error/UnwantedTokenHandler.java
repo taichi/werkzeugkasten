@@ -1,25 +1,25 @@
 package werkzeugkasten.twowaysql.error;
 
-import org.antlr.runtime.MismatchedTokenException;
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.UnwantedTokenException;
 
-public abstract class MismatchedTokenHandler implements
+public abstract class UnwantedTokenHandler implements
 		RecognitionExceptionHandler {
 
 	protected String ruleName;
 
-	public MismatchedTokenHandler(String ruleName) {
+	public UnwantedTokenHandler(String ruleName) {
 		this.ruleName = ruleName;
 	}
 
 	public Class<? extends RecognitionException> getHadleType() {
-		return MismatchedTokenException.class;
+		return UnwantedTokenException.class;
 	}
 
 	public QueryProblem handle(RecognitionException cause) {
-		MismatchedTokenException ex = (MismatchedTokenException) cause;
+		UnwantedTokenException ex = (UnwantedTokenException) cause;
 		DefaultQueryProblem qp = new DefaultQueryProblem(ex);
-		String msg = String.format(Messages.MISMATCHED_TOKEN, ruleName,
+		String msg = String.format(Messages.UNWANTED_TOKEN, ruleName,
 				selectExpected(ex.expecting), Messages
 						.getTokenErrorDisplay(ex.token));
 		qp.setMessage(msg);
