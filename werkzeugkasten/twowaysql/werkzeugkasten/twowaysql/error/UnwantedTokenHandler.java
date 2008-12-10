@@ -3,6 +3,8 @@ package werkzeugkasten.twowaysql.error;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.UnwantedTokenException;
 
+import werkzeugkasten.twowaysql.nls.Messages;
+
 public abstract class UnwantedTokenHandler implements
 		RecognitionExceptionHandler {
 

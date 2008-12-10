@@ -3,6 +3,8 @@ package werkzeugkasten.twowaysql.error;
 import org.antlr.runtime.MismatchedTokenException;
 import org.antlr.runtime.RecognitionException;
 
+import werkzeugkasten.twowaysql.nls.Messages;
+
 public abstract class MismatchedTokenHandler implements
 		RecognitionExceptionHandler {
 

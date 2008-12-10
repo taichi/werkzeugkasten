@@ -1,7 +1,7 @@
 /**
  * 
  */
-package werkzeugkasten.twowaysql.error;
+package werkzeugkasten.twowaysql.nls;
 
 import org.antlr.runtime.Token;
 
@@ -50,7 +50,7 @@ public class Messages {
 		SingleLocaleStrings.load(clazz);
 	}
 
-	protected static String getTokenErrorDisplay(Token t) {
+	public static String getTokenErrorDisplay(Token t) {
 		String s = t.getText();
 		if (s == null) {
 			if (t.getType() == Token.EOF) {

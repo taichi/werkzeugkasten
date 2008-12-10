@@ -3,6 +3,8 @@ package werkzeugkasten.twowaysql.error;
 import org.antlr.runtime.NoViableAltException;
 import org.antlr.runtime.RecognitionException;
 
+import werkzeugkasten.twowaysql.nls.Messages;
+
 public class NoViableAltHandler implements RecognitionExceptionHandler {
 
 	protected String rulename;

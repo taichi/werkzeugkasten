@@ -3,6 +3,8 @@ package werkzeugkasten.twowaysql.error;
 import org.antlr.runtime.EarlyExitException;
 import org.antlr.runtime.RecognitionException;
 
+import werkzeugkasten.twowaysql.nls.Messages;
+
 public class EarlyExitHandler implements RecognitionExceptionHandler {
 
 	protected String ruleName;

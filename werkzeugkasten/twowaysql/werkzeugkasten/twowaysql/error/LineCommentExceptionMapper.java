@@ -1,6 +1,7 @@
 package werkzeugkasten.twowaysql.error;
 
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser;
+import werkzeugkasten.twowaysql.nls.Messages;
 
 public class LineCommentExceptionMapper extends AbstractExceptionMapper {
 

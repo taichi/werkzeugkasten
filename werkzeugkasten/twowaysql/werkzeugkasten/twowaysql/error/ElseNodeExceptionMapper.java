@@ -1,5 +1,7 @@
 package werkzeugkasten.twowaysql.error;
 
+import werkzeugkasten.twowaysql.nls.Messages;
+
 public class ElseNodeExceptionMapper extends AbstractExceptionMapper {
 
 	public ElseNodeExceptionMapper() {
