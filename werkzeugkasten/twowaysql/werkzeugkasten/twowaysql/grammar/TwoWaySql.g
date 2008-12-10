@@ -21,7 +21,7 @@ catch (RecognitionException ex) {
 }
 }
 @parser::members {
-protected ProblemCoordinator coordinator = new ProblemCoordinator();
+protected ProblemCoordinator coordinator;
 public void setProblemCoordinator(ProblemCoordinator pc) {
 	this.coordinator = pc;
 }
@@ -358,6 +358,11 @@ inbind returns[InBindNode node]
 		$node.setSkipped($inbindskipped.node);
 	}
 	;
+	catch [RecognitionException ex] {
+		reportError(ex);
+		recover(input,ex);
+		retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
+	}
 	finally { pop(); }
 
 inbindskipped returns[TxtNode node]

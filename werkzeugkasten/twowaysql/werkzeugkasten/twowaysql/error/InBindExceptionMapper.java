@@ -1,8 +1,39 @@
 package werkzeugkasten.twowaysql.error;
 
+import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser;
+
 public class InBindExceptionMapper extends AbstractExceptionMapper {
 
 	public InBindExceptionMapper() {
-		// TODO Auto-generated constructor stub
+		add(new MismatchedTokenHandler(Messages.LABEL_INBIND) {
+			protected String selectExpected(int expecting) {
+				switch (expecting) {
+				case TwoWaySqlParser.IN: {
+					return "IN";
+				}
+				case TwoWaySqlParser.C_ST: {
+					return "/*";
+				}
+				case TwoWaySqlParser.C_ED: {
+					return "*/";
+				}
+				default: {
+					throw new IllegalStateException();
+				}
+				}
+			}
+		});
+		add(new MissingTokenHandler(Messages.LABEL_INBIND) {
+			protected String selectExpected(int expecting) {
+				switch (expecting) {
+				case TwoWaySqlParser.SYM_BIND: {
+					return "?";
+				}
+				default: {
+					throw new IllegalStateException();
+				}
+				}
+			}
+		});
 	}
 }

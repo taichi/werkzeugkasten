@@ -9,7 +9,10 @@ public class EndCommentExceptionMapper extends AbstractExceptionMapper {
 				Messages.VIABLE_ENDCOMMENT));
 		add(new MismatchedTokenHandler(Messages.LABEL_ENDCOMMENT) {
 			protected String selectExpected(int expecting) {
-				return "END";
+				if (TwoWaySqlParser.END == expecting) {
+					return "END";
+				}
+				throw new IllegalStateException();
 			}
 		});
 		add(new MissingTokenHandler(Messages.LABEL_ENDCOMMENT) {
