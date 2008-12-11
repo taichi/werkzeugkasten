@@ -27,6 +27,7 @@ import org.osgi.framework.Bundle;
 
 import werkzeugkasten.common.debug.LaunchConfigurationFactory;
 import werkzeugkasten.common.resource.ProjectUtil;
+import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.weblauncher.Activator;
@@ -75,30 +76,25 @@ public class TomcatLaunchConfigurationBuilder implements
 		stb
 				.append(" -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager");
 
-		stb.append(" -Djava.util.logging.config.file=\"");
-		stb.append(tomcatbase);
-		stb.append("/conf/logging.properties\"");
+		stb.append(" -Djava.util.logging.config.file=");
+		stb.append(ResourceUtil.quote(tomcatbase + "/conf/logging.properties"));
 
-		stb.append(" -Djava.endorsed.dirs=\"");
-		stb.append(tomcatbase);
-		stb.append("/endorsed\"");
+		stb.append(" -Djava.endorsed.dirs=");
+		stb.append(ResourceUtil.quote(tomcatbase + "/endorsed"));
 
-		stb.append(" -Dcatalina.base=\"");
-		stb.append(tomcatbase);
-		stb.append("\"");
-		stb.append(" -Dcatalina.home=\"");
-		stb.append(tomcatbase);
-		stb.append("\"");
+		stb.append(" -Dcatalina.base=");
+		stb.append(ResourceUtil.quote(tomcatbase));
+		stb.append(" -Dcatalina.home=");
+		stb.append(ResourceUtil.quote(tomcatbase));
 
-		stb.append(" -Ddoc_base=\"");
+		stb.append(" -Ddoc_base=");
 		IPath p = getProject().getLocation().removeLastSegments(1).append(
 				preferences.getBaseDir());
-		stb.append(p.toOSString());
-		stb.append("\"");
+		stb.append(ResourceUtil.quote(p.toOSString()));
 
-		stb.append(" -Dweblauncher.ctx.loc=\"");
-		stb.append(getProject().getLocation().append(CONTEXT_XML).toOSString());
-		stb.append("\"");
+		stb.append(" -Dweblauncher.ctx.loc=");
+		stb.append(ResourceUtil.quote(getProject().getLocation().append(
+				CONTEXT_XML).toOSString()));
 		stb.append(" -Dweblauncher.ctx.name=");
 		stb.append(preferences.getContextName());
 		return stb.toString();
