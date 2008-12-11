@@ -26,6 +26,7 @@ import org.osgi.framework.Bundle;
 
 import werkzeugkasten.common.debug.LaunchConfigurationFactory;
 import werkzeugkasten.common.resource.ProjectUtil;
+import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.weblauncher.Activator;
@@ -69,19 +70,17 @@ public class Jetty6LaunchConfigurationBuilder implements
 
 		StringBuilder stb = new StringBuilder();
 
-		stb.append(" -Djetty.home=\"");
-		stb.append(jettybase);
-		stb.append("\"");
+		stb.append(" -Djetty.home=");
+		stb.append(ResourceUtil.quote(jettybase));
 
-		stb.append(" -Ddoc_base=\"");
+		stb.append(" -Ddoc_base=");
 		IPath p = getProject().getLocation().removeLastSegments(1).append(
 				preferences.getBaseDir());
-		stb.append(p.toOSString());
-		stb.append("\"");
+		stb.append(ResourceUtil.quote(p.toString()));
 
-		stb.append(" -Dweblauncher.ctx.loc=\"");
-		stb.append(getProject().getLocation().append(CONTEXT_XML).toOSString());
-		stb.append("\"");
+		stb.append(" -Dweblauncher.ctx.loc=");
+		stb.append(ResourceUtil.quote(getProject().getLocation().append(
+				CONTEXT_XML).toString()));
 		return stb.toString();
 	}
 
