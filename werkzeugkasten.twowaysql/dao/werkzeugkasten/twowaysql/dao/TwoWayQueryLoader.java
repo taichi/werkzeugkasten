@@ -1,8 +1,10 @@
 package werkzeugkasten.twowaysql.dao;
 
-public interface StringLoader {
+import werkzeugkasten.twowaysql.tree.TwoWayQuery;
 
-	String load(String path);
+public interface TwoWayQueryLoader {
+
+	TwoWayQuery load(String path);
 }
 // TODO implement candidate is
 // . ClassLoader based
