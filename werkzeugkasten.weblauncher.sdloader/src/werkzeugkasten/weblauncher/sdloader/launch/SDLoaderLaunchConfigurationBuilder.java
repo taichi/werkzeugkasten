@@ -24,6 +24,7 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.osgi.framework.Bundle;
 
 import werkzeugkasten.common.debug.LaunchConfigurationFactory;
+import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.weblauncher.Activator;
@@ -60,13 +61,13 @@ public class SDLoaderLaunchConfigurationBuilder implements
 
 		stb.append("-Dweblauncher.port=");
 		stb.append(preferences.getWebPortNo());
-		stb.append(" -Dweblauncher.ctx.loc=\"");
-		stb.append(getProject().getLocation().append(CONTEXT_XML).toString()
-				+ "\"");
-		stb.append(" -Dweblauncher.ctx.doc_base=\"");
+		stb.append(" -Dweblauncher.ctx.loc=");
+		stb.append(ResourceUtil.quote(getProject().getLocation().append(
+				CONTEXT_XML).toString()));
+		stb.append(" -Dweblauncher.ctx.doc_base=");
 		IPath docBase = getProject().getLocation().removeLastSegments(1)
 				.append(preferences.getBaseDir());
-		stb.append(docBase.toString() + "\"");
+		stb.append(ResourceUtil.quote(docBase.toString()));
 		return stb.toString();
 	}
 

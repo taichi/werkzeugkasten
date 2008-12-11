@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
 Bundle-SymbolicName: werkzeugkasten.weblauncher.sdloader;singleton:=true
-Bundle-Version: 0.0.9
+Bundle-Version: 0.0.10
 Bundle-Localization: plugin
 Bundle-Activator: werkzeugkasten.weblauncher.sdloader.Activator
 Require-Bundle: org.eclipse.ui,
