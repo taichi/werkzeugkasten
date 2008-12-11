@@ -20,7 +20,6 @@ public class LaunchConfigurationFacetRegistryTest {
 		for (int i = 0; i < 10; i++) {
 			final int count = 999000 - i * 90000;
 			rs.add(new R() {
-				@Override
 				public void run() {
 					try {
 						Thread.sleep(0, count);
@@ -86,7 +85,6 @@ public class LaunchConfigurationFacetRegistryTest {
 					return null;
 				};
 
-				@Override
 				public String getDescription() {
 					return null;
 				}
