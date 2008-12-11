@@ -101,12 +101,10 @@ public class XMLEventParser {
 			this.tag = tag;
 		}
 
-		@Override
 		public String getTagName() {
 			return tag;
 		}
 
-		@Override
 		public void handle(XMLStreamReader reader) throws XMLStreamException {
 		}
 	}

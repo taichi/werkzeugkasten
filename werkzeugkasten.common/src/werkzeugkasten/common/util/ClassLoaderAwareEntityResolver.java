@@ -22,7 +22,6 @@ public class ClassLoaderAwareEntityResolver implements EntityResolver {
 		this.classLoader = classLoader;
 	}
 
-	@Override
 	public InputSource resolveEntity(String publicId, String systemId)
 			throws SAXException, IOException {
 		String path = this.paths.get(publicId);
