@@ -43,7 +43,6 @@ public class JettyLauncher {
 			final Set<String> urls = new HashSet<String>();
 			ExtensionAcceptor.accept(Activator.PLUGIN_ID, "servlet",
 					new ExtensionAcceptor.ExtensionVisitor() {
-						@Override
 						public boolean visit(IConfigurationElement e) {
 							if ("servlet".equals(e.getName())) {
 								try {
