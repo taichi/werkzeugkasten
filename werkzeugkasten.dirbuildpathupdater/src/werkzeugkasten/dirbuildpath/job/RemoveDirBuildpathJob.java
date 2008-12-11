@@ -60,7 +60,6 @@ public class RemoveDirBuildpathJob extends WorkspaceJob {
 						IResource r = root.findMember(p);
 						if (r != null && r.exists()) {
 							r.accept(new IResourceVisitor() {
-								@Override
 								public boolean visit(IResource resource)
 										throws CoreException {
 									if (AddDirBuildpathJob.isLib.matcher(

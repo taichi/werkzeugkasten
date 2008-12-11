@@ -18,7 +18,6 @@ import werkzeugkasten.dirbuildpath.job.AddDirBuildpathJob;
 public class DirBuildpathResourceChangeListener implements
 		IResourceChangeListener {
 
-	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		try {
 			IResourceDelta delta = event.getDelta();
@@ -27,7 +26,6 @@ public class DirBuildpathResourceChangeListener implements
 					protected IProject current;
 					protected ScopedPreferenceStore currentPref;
 
-					@Override
 					public boolean visit(IResourceDelta delta)
 							throws CoreException {
 						IResource r = delta.getResource();

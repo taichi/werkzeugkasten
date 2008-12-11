@@ -110,7 +110,6 @@ public class AddDirBuildpathJob extends WorkspaceJob {
 		IContainer c = AdaptableUtil.to(rootDir, IContainer.class);
 		if (c != null) {
 			c.accept(new IResourceVisitor() {
-				@Override
 				public boolean visit(IResource resource) throws CoreException {
 					IPath full = resource.getFullPath();
 					if (isSrc.matcher(full.toString()).matches() == false
@@ -118,8 +117,7 @@ public class AddDirBuildpathJob extends WorkspaceJob {
 							&& isLib.matcher(full.lastSegment()).matches()) {
 						IPath src = findSource(full);
 						IClasspathEntry ce = JavaCore.newLibraryEntry(full,
-								src, new Path("."),
-								NO_ACCESS_RULES,
+								src, new Path("."), NO_ACCESS_RULES,
 								NO_EXTRA_ATTRIBUTES, true);
 						result.put(full.toString(), ce);
 					}

@@ -18,7 +18,6 @@ public class RemoveClasspathDirAction implements IActionDelegate {
 
 	protected ISelection selection;
 
-	@Override
 	public void run(IAction action) {
 		if (this.selection.isEmpty()) {
 			return;
@@ -35,7 +34,6 @@ public class RemoveClasspathDirAction implements IActionDelegate {
 
 	}
 
-	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}

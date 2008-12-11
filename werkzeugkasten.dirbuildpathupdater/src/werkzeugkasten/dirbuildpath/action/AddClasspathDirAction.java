@@ -25,7 +25,6 @@ public class AddClasspathDirAction implements IActionDelegate {
 	public AddClasspathDirAction() {
 	}
 
-	@Override
 	public void run(IAction action) {
 		if (this.selection.isEmpty()) {
 			return;
@@ -49,7 +48,6 @@ public class AddClasspathDirAction implements IActionDelegate {
 		}
 	}
 
-	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}

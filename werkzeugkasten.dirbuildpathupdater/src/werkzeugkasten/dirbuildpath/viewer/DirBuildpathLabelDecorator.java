@@ -16,7 +16,6 @@ import werkzeugkasten.dirbuildpath.nls.Images;
 public class DirBuildpathLabelDecorator extends
 		AbstractLightweightLabelDecorator {
 
-	@Override
 	public void decorate(Object element, IDecoration decoration) {
 		IContainer c = AdaptableUtil.to(element, IContainer.class);
 		if (c != null) {
