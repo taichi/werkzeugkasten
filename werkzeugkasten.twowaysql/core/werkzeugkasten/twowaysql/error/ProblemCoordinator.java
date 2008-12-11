@@ -27,4 +27,8 @@ public class ProblemCoordinator {
 	public Iterable<QueryProblem> getAll() {
 		return this.problems;
 	}
+
+	public void raise() throws QueryProblemException {
+		throw new QueryProblemException(this.problems);
+	}
 }
