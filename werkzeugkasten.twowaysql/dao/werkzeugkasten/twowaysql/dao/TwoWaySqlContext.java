@@ -4,7 +4,7 @@ public interface TwoWaySqlContext<EC> {
 
 	EC getExpressionContext();
 
-	ParsedTwoWayQuery getTwoWayQuery();
+	TwoWayQueryWrapper getTwoWayQuery();
 
 	void append(String partOfQuery);
 

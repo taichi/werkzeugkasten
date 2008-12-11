@@ -2,7 +2,7 @@ package werkzeugkasten.twowaysql.dao;
 
 import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
-public interface ParsedTwoWayQuery {
+public interface TwoWayQueryWrapper {
 
 	String getSource();
 

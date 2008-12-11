@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import werkzeugkasten.twowaysql.dao.Binder;
-import werkzeugkasten.twowaysql.dao.ParsedTwoWayQuery;
+import werkzeugkasten.twowaysql.dao.TwoWayQueryWrapper;
 import werkzeugkasten.twowaysql.dao.TwoWaySqlContext;
 
 public class DefaultTwoWaySqlContext<EC> implements TwoWaySqlContext<EC> {
 
 	protected EC expressionContext;
-	protected ParsedTwoWayQuery twoWayQuery;
+	protected TwoWayQueryWrapper twoWayQuery;
 	protected StringBuilder allOfQuery = new StringBuilder();
 	protected List<Binder> binders = new ArrayList<Binder>();
 
-	protected DefaultTwoWaySqlContext(EC context, ParsedTwoWayQuery twoWayQuery) {
+	protected DefaultTwoWaySqlContext(EC context, TwoWayQueryWrapper twoWayQuery) {
 		this.expressionContext = context;
 		this.twoWayQuery = twoWayQuery;
 	}
@@ -25,7 +25,7 @@ public class DefaultTwoWaySqlContext<EC> implements TwoWaySqlContext<EC> {
 	}
 
 	@Override
-	public ParsedTwoWayQuery getTwoWayQuery() {
+	public TwoWayQueryWrapper getTwoWayQuery() {
 		return this.twoWayQuery;
 	}
 
