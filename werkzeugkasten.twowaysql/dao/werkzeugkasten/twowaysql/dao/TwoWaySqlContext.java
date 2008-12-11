@@ -6,7 +6,4 @@ public interface TwoWaySqlContext {
 
 	void add(Binder binder);
 
-	void execute();
-
-	<R> R execute(ResultSetHandler<R> handler);
 }
