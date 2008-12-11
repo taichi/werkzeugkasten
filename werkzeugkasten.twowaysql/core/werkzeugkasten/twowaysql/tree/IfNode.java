@@ -9,7 +9,7 @@ import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 public class IfNode extends AbstractQueryNode {
 
 	protected ExpressionNode expression;
-	protected String maybeSkip;
+	protected TxtNode maybeSkip;
 	protected List<QueryNode> elseIfNodes = new ArrayList<QueryNode>();
 	protected Iterable<QueryNode> elseNode = Collections.emptyList();
 
@@ -25,11 +25,11 @@ public class IfNode extends AbstractQueryNode {
 		return this.expression;
 	}
 
-	public void setMaybeSkip(String skip) {
+	public void setMaybeSkip(TxtNode skip) {
 		this.maybeSkip = skip;
 	}
 
-	public String getMaybeSkip() {
+	public TxtNode getMaybeSkip() {
 		return this.maybeSkip;
 	}
 

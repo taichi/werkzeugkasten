@@ -166,7 +166,12 @@ ifcomment returns[IfNode node]
 	}
 	:
 	(C_ST IF expression C_ED { $node.setExpression($expression.node); }
-		(MAYBE_SKIP {$node.setMaybeSkip($MAYBE_SKIP.getText());} )?
+		(MAYBE_SKIP {
+			TxtNode skip = new TxtNode();
+			skip.update($MAYBE_SKIP);
+			skip.freeze();
+			$node.setMaybeSkip(skip);
+		} )?
 		nodelist { $node.setChildren($nodelist.list);}
 		(elseifnode { $node.addElseIf($elseifnode.node); })* 
 		(elsenode { $node.setElse($elsenode.list); })?

@@ -8,8 +8,22 @@ import werkzeugkasten.twowaysql.tree.InBindNode;
 import werkzeugkasten.twowaysql.tree.QueryNode;
 import werkzeugkasten.twowaysql.tree.TwoWayQuery;
 import werkzeugkasten.twowaysql.tree.TxtNode;
+import werkzeugkasten.twowaysql.tree.loc.TextLocation;
 
 public class ToStringVisitor implements QueryTreeVisitor<StringBuilder> {
+
+	protected String allOfString;
+
+	public ToStringVisitor(String allOfString) {
+		this.allOfString = allOfString;
+	}
+
+	protected String getTxt(QueryNode node) {
+		TextLocation loc = node.getLocation();
+		return "{"
+				+ this.allOfString.substring(loc.startIndex(),
+						loc.endIndex() + 1) + "}";
+	}
 
 	public void postVisit(QueryNode node, StringBuilder context) {
 		context.append(')');
@@ -30,11 +44,13 @@ public class ToStringVisitor implements QueryTreeVisitor<StringBuilder> {
 
 	public boolean visit(TxtNode node, StringBuilder context) {
 		defaultVisit(node, context);
+		context.append(getTxt(node));
 		return true;
 	}
 
 	public boolean visit(ExpressionNode node, StringBuilder context) {
 		defaultVisit(node, context);
+		context.append(getTxt(node));
 		return true;
 	}
 
@@ -46,10 +62,10 @@ public class ToStringVisitor implements QueryTreeVisitor<StringBuilder> {
 	public boolean visit(IfNode node, StringBuilder context) {
 		defaultVisit(node, context);
 		this.visit(node.getExpression(), context);
-		String s = node.getMaybeSkip();
-		if (s != null && 0 < s.length()) {
+		TxtNode maybeSkip = node.getMaybeSkip();
+		if (maybeSkip != null) {
 			context.append("<MAYBESKIP[");
-			context.append(s);
+			this.visit(maybeSkip, context);
 			context.append("]>");
 		}
 		if (node.getElseIfNodes().iterator().hasNext()) {
