@@ -34,7 +34,7 @@ public class ResourceUtil {
 		} else if ("macosx".equals(os)) {
 			PATH_QUOTATION = "'";
 		} else {
-			PATH_QUOTATION = "\\";
+			PATH_QUOTATION = "\"";
 		}
 	}
 
