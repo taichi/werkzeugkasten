@@ -2,7 +2,7 @@ package werkzeugkasten.twowaysql.dao;
 
 public interface TwoWaySqlContext<EC> {
 
-	void setExpressionContext();
+	void setExpressionContext(EC context);
 
 	EC getExpressionContext();
 

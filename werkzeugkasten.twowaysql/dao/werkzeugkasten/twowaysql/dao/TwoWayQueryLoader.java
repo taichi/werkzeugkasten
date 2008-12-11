@@ -2,9 +2,9 @@ package werkzeugkasten.twowaysql.dao;
 
 import werkzeugkasten.twowaysql.tree.TwoWayQuery;
 
-public interface TwoWayQueryLoader<C> {
+public interface TwoWayQueryLoader<LC> {
 
-	TwoWayQuery load(C context);
+	TwoWayQuery load(LC context);
 }
 // TODO implement candidate is
 // . ClassLoader based
