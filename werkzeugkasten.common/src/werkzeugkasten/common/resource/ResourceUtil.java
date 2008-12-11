@@ -22,8 +22,31 @@ import org.eclipse.core.runtime.Path;
 
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.runtime.LogUtil;
+import werkzeugkasten.common.util.StringUtil;
 
 public class ResourceUtil {
+
+	public static final String PATH_QUOTATION;
+	static {
+		String os = System.getProperty("osgi.os");
+		if ("win32".equals(os)) {
+			PATH_QUOTATION = "\"";
+		} else if ("macosx".equals(os)) {
+			PATH_QUOTATION = "'";
+		} else {
+			PATH_QUOTATION = "\\";
+		}
+	}
+
+	public static String quote(String path) {
+		if (StringUtil.isEmpty(path)) {
+			return "";
+		}
+		if (0 < path.indexOf(" ")) {
+			return PATH_QUOTATION + path + PATH_QUOTATION;
+		}
+		return path;
+	}
 
 	public static IFile findFile(final String name, IContainer root) {
 		final IFile[] file = new IFile[1];
