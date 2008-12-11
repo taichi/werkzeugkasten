@@ -34,7 +34,6 @@ public class NLSAction implements IActionDelegate {
 
 	protected List<IFile> selectedFiles;
 
-	@Override
 	public void run(IAction action) {
 		if (this.selectedFiles != null && 0 < this.selectedFiles.size()) {
 			final List<IFile> files = new ArrayList<IFile>(this.selectedFiles);
@@ -64,7 +63,6 @@ public class NLSAction implements IActionDelegate {
 		}
 	}
 
-	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection.isEmpty()) {
 			return;

@@ -104,7 +104,6 @@ public class Activator extends Plugin {
 		final Map<String, ResourceGeneratorDesc> map = new LinkedHashMap<String, ResourceGeneratorDesc>();
 		ExtensionAcceptor.accept(ID_PLUGIN, EXT_RESOURCE_GENERATOR,
 				new ExtensionAcceptor.ExtensionVisitor() {
-					@Override
 					public boolean visit(IConfigurationElement e) {
 						ResourceGeneratorDesc desc = new ResourceGeneratorDesc(
 								e);

@@ -24,7 +24,6 @@ import werkzeugkasten.nlsgen.ResourceGenerator;
 
 public class PropertiesChangeListener implements IResourceChangeListener {
 
-	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
 		int flag = IResourceDelta.ADDED | IResourceDelta.CHANGED;
@@ -47,7 +46,6 @@ public class PropertiesChangeListener implements IResourceChangeListener {
 				throws CoreException {
 			monitor.beginTask(GENERATE_CLASSES, IProgressMonitor.UNKNOWN);
 			this.delta.accept(new IResourceDeltaVisitor() {
-				@Override
 				public boolean visit(IResourceDelta delta) throws CoreException {
 					if (monitor.isCanceled() == false) {
 						IFile r = AdaptableUtil.to(delta.getResource(),

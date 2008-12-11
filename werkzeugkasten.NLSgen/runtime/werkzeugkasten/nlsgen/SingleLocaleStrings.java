@@ -26,13 +26,12 @@ public class SingleLocaleStrings {
 		for (Field field : holder.getDeclaredFields()) {
 			if (validateMask(field) == false) {
 				String key = field.getName();
-				if (rb.containsKey(key) == false) {
-					notfound(key, bundlename);
-				}
 				try {
 					if (String.class.isAssignableFrom(field.getType())) {
 						field.set(null, rb.getString(key));
 					}
+				} catch (MissingResourceException e) {
+					notfound(key, bundlename);
 				} catch (Exception e) {
 					error(e);
 				}

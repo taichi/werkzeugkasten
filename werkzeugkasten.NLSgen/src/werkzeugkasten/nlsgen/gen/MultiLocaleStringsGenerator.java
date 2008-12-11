@@ -55,7 +55,6 @@ import werkzeugkasten.nlsgen.nls.Strings;
 
 public class MultiLocaleStringsGenerator implements ResourceGenerator {
 
-	@Override
 	public boolean verifyRuntime(IJavaProject javap) {
 		try {
 			IType type = javap.findType(MultiLocaleStrings.class.getName());
@@ -66,7 +65,6 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 		}
 	}
 
-	@Override
 	public void addRuntime(IContainer container) {
 		try {
 			Bundle bundle = Activator.getDefault().getBundle();
@@ -86,7 +84,6 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 		}
 	}
 
-	@Override
 	public void generateFrom(IFile properties, IProgressMonitor monitor) {
 		try {
 			monitor = ProgressMonitorUtil.care(monitor);
@@ -317,8 +314,8 @@ public class MultiLocaleStringsGenerator implements ResourceGenerator {
 		}
 
 		ProgressMonitorUtil.isCanceled(monitor, 1);
-
-		for (String s : props.stringPropertyNames()) {
+		for (Object key : props.keySet()) {
+			String s = key.toString();
 			ProgressMonitorUtil.isCanceled(monitor, 1);
 			if (methodNames.contains(s) == false && isJavaIdentifier(s)) {
 				String contents = createMethodContent(type, s);

@@ -109,7 +109,8 @@ public class SingleLocaleStringsGenerator extends MultiLocaleStringsGenerator {
 			}
 		}
 
-		for (String s : props.stringPropertyNames()) {
+		for (Object key : props.keySet()) {
+			String s = key.toString();
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
