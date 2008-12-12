@@ -11,7 +11,8 @@ public interface TwoWaySqlEnviroment {
 
 	<LC> TwoWayQueryLoader<LC> createLoader(Class<LC> contextType);
 
-	<EC> TwoWaySqlContext<EC> createContext(EC expressionContext);
+	<EC> TwoWaySqlContext<EC> createContext(EC expressionContext,
+			TwoWayQueryWrapper twoWayQuery);
 
 	TwoWaySqlExecutor createExecutor();
 
