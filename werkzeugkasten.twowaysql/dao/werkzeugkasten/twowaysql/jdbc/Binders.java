@@ -1,4 +1,4 @@
-package werkzeugkasten.twowaysql.dao.binder;
+package werkzeugkasten.twowaysql.jdbc;
 
 import werkzeugkasten.twowaysql.dao.Binder;
 
