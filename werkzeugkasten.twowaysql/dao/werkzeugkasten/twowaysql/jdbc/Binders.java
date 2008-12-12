@@ -2,9 +2,10 @@ package werkzeugkasten.twowaysql.jdbc;
 
 import werkzeugkasten.twowaysql.dao.Binder;
 
+// TODO implement some of binders.
 public class Binders {
 
-	public Binder find(Class<?> type) {
+	public static Binder find(Object context) {
 		return null;
 	}
 }
