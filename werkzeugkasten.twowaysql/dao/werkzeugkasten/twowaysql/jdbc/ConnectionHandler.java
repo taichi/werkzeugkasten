@@ -1,7 +1,7 @@
 /**
  * 
  */
-package werkzeugkasten.twowaysql.dao;
+package werkzeugkasten.twowaysql.jdbc;
 
 import java.sql.Connection;
 import java.sql.SQLException;

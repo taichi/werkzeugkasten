@@ -1,5 +1,6 @@
 package werkzeugkasten.twowaysql.dao;
 
+import werkzeugkasten.twowaysql.dao.el.ExpressionParser;
 import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
 /**
@@ -13,6 +14,8 @@ public interface TwoWaySqlEnviroment {
 
 	<EC> TwoWaySqlContext<EC> createContext(EC expressionContext,
 			TwoWayQueryWrapper twoWayQuery);
+
+	ExpressionParser createELParser();
 
 	TwoWaySqlExecutor createExecutor();
 
