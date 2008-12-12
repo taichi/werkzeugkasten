@@ -23,17 +23,16 @@ public class DefaultTwoWaySqlProcessor implements TwoWaySqlProcessor {
 	@Override
 	public <LC, EC> Integer process(LC loadingContext, EC expressionContext)
 			throws QueryProblemException, SQLRuntimeException {
-		TwoWaySqlContext<EC> context = setupContext(loadingContext,
+		TwoWaySqlContext<EC> context = setUpContext(loadingContext,
 				expressionContext);
 		TwoWaySqlExecutor exec = this.enviroment.getExecutor();
 		return exec.execute(context);
 	}
 
-	protected <EC, LC> TwoWaySqlContext<EC> setupContext(LC loadingContext,
+	protected <EC, LC> TwoWaySqlContext<EC> setUpContext(LC loadingContext,
 			EC expressionContext) {
-		@SuppressWarnings("unchecked")
-		Class<LC> clazz = (Class<LC>) loadingContext.getClass();
-		TwoWayQueryLoader<LC> loader = this.enviroment.getLoader(clazz);
+		TwoWayQueryLoader<LC> loader = this.enviroment
+				.getLoader(loadingContext);
 		TwoWayQueryWrapper query = loader.load(loadingContext);
 		TwoWaySqlContext<EC> context = this.enviroment.createContext(
 				expressionContext, query);
@@ -48,7 +47,7 @@ public class DefaultTwoWaySqlProcessor implements TwoWaySqlProcessor {
 	public <LC, EC, R> R process(LC loadingContext, EC expressionContext,
 			ResultSetMapper<R> rsm) throws QueryProblemException,
 			SQLRuntimeException {
-		TwoWaySqlContext<EC> context = setupContext(loadingContext,
+		TwoWaySqlContext<EC> context = setUpContext(loadingContext,
 				expressionContext);
 		TwoWaySqlExecutor exec = this.enviroment.getExecutor();
 		return exec.execute(context, rsm);

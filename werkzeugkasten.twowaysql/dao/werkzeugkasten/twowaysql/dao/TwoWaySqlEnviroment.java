@@ -10,7 +10,7 @@ import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
  */
 public interface TwoWaySqlEnviroment {
 
-	<LC> TwoWayQueryLoader<LC> getLoader(Class<LC> contextType);
+	<LC> TwoWayQueryLoader<LC> getLoader(LC context);
 
 	<EC> TwoWaySqlContext<EC> createContext(EC expressionContext,
 			TwoWayQueryWrapper twoWayQuery);
