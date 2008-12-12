@@ -84,6 +84,9 @@ twowaySQL returns[TwoWayQuery query]
 		$query.setChildren($nodelist.list);
 	}
 	;
+	finally {
+		coordinator.raise();
+	}
 
 nodelist returns[ArrayList<QueryNode> list]
 	// caller rule handles exceptions
