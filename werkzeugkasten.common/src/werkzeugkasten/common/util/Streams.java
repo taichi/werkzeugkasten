@@ -64,14 +64,11 @@ public class Streams {
 	public static void copy(InputStream in, OutputStream out) {
 		byte[] buf = new byte[BUF_SIZE];
 		try {
-			while (true) {
-				int len = in.read(buf, 0, BUF_SIZE);
-				if (-1 < len) {
-					out.write(buf, 0, len);
-				} else {
-					break;
-				}
-			}
+			int len = 0;
+			do {
+				len = in.read(buf, 0, BUF_SIZE);
+				out.write(buf, 0, len);
+			} while (0 < len);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
