@@ -17,7 +17,7 @@ public interface TwoWaySqlEnviroment {
 
 	ExpressionParser getELParser();
 
-	<EC> QueryTreeVisitor<TwoWaySqlContext<EC>> getVisitor(
+	<EC> QueryTreeVisitor<TwoWaySqlContext<EC>> createVisitor(
 			ExpressionParser parser);
 
 	TwoWaySqlExecutor getExecutor();

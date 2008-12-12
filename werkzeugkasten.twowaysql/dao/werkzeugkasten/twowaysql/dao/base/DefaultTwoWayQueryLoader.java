@@ -18,10 +18,6 @@ import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 public class DefaultTwoWayQueryLoader implements TwoWayQueryLoader<String> {
 
 	public static final int BUF_SIZE = 128 * 128;
-	public static final String LINE_SEP;
-	static {
-		LINE_SEP = System.getProperty("line.separator");
-	}
 
 	@Override
 	public TwoWayQueryWrapper load(String context) {
@@ -42,7 +38,6 @@ public class DefaultTwoWayQueryLoader implements TwoWayQueryLoader<String> {
 				parser.setProblemCoordinator(pc);
 				try {
 					TwoWaySqlParser.twowaySQL_return ret = parser.twowaySQL();
-					pc.raise(); // XXX parser will raise exception.
 					ret.query.accept(visitor, context);
 				} catch (RecognitionException e) {
 					// do nothing.

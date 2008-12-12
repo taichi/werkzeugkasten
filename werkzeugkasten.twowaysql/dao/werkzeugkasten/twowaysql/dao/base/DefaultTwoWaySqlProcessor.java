@@ -38,7 +38,7 @@ public class DefaultTwoWaySqlProcessor implements TwoWaySqlProcessor {
 				expressionContext, query);
 		ExpressionParser el = this.enviroment.getELParser();
 		QueryTreeVisitor<TwoWaySqlContext<EC>> visitor = this.enviroment
-				.getVisitor(el);
+				.createVisitor(el);
 		query.accept(visitor, context);
 		return context;
 	}
