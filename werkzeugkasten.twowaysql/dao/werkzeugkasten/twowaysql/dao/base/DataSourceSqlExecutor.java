@@ -12,17 +12,17 @@ import org.slf4j.LoggerFactory;
 
 import werkzeugkasten.twowaysql.dao.Binder;
 import werkzeugkasten.twowaysql.dao.ResultSetMapper;
-import werkzeugkasten.twowaysql.dao.TwoWaySqlContext;
-import werkzeugkasten.twowaysql.dao.TwoWaySqlExecutor;
+import werkzeugkasten.twowaysql.dao.SqlContext;
+import werkzeugkasten.twowaysql.dao.SqlExecutor;
 import werkzeugkasten.twowaysql.jdbc.ConnectionHandler;
 import werkzeugkasten.twowaysql.jdbc.JdbcFunctors;
 import werkzeugkasten.twowaysql.jdbc.ResultSetHandler;
 import werkzeugkasten.twowaysql.jdbc.SQLRuntimeException;
 import werkzeugkasten.twowaysql.jdbc.StatementHandler;
 
-public class DataSourceTwoWaySqlExecutor implements TwoWaySqlExecutor {
+public class DataSourceSqlExecutor implements SqlExecutor {
 
-	static final Logger LOG = LoggerFactory.getLogger(TwoWaySqlExecutor.class);
+	static final Logger LOG = LoggerFactory.getLogger(SqlExecutor.class);
 
 	protected DataSource dataSource;
 
@@ -32,11 +32,11 @@ public class DataSourceTwoWaySqlExecutor implements TwoWaySqlExecutor {
 
 	protected static abstract class PreparedSQLExecutor<EC, R> implements
 			ConnectionHandler<R>, StatementHandler<PreparedStatement, R> {
-		protected TwoWaySqlContext<EC> context;
+		protected SqlContext<EC> context;
 		protected DataSource ds;
 		protected Connection c;
 
-		public PreparedSQLExecutor(DataSource ds, TwoWaySqlContext<EC> context) {
+		public PreparedSQLExecutor(DataSource ds, SqlContext<EC> context) {
 			this.ds = ds;
 			this.context = context;
 		}
@@ -74,7 +74,7 @@ public class DataSourceTwoWaySqlExecutor implements TwoWaySqlExecutor {
 	}
 
 	@Override
-	public <EC, C extends TwoWaySqlContext<EC>> Integer execute(final C context)
+	public <EC, C extends SqlContext<EC>> Integer execute(final C context)
 			throws SQLRuntimeException {
 		return JdbcFunctors
 				.handleConnection(new PreparedSQLExecutor<EC, Integer>(
@@ -88,7 +88,7 @@ public class DataSourceTwoWaySqlExecutor implements TwoWaySqlExecutor {
 	}
 
 	@Override
-	public <EC, C extends TwoWaySqlContext<EC>, R> R execute(final C context,
+	public <EC, C extends SqlContext<EC>, R> R execute(final C context,
 			final ResultSetMapper<R> rsm) throws SQLRuntimeException {
 		return JdbcFunctors.handleConnection(new PreparedSQLExecutor<EC, R>(
 				this.dataSource, context) {

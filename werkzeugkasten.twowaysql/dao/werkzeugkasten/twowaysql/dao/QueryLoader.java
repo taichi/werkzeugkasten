@@ -1,8 +1,8 @@
 package werkzeugkasten.twowaysql.dao;
 
-public interface TwoWayQueryLoader<LC> {
+public interface QueryLoader<LC> {
 
-	TwoWayQueryWrapper load(LC context);
+	QueryWrapper load(LC context);
 }
 // TODO implement candidate is
 // . ClassLoader based

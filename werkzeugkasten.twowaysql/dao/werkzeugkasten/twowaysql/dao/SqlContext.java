@@ -1,10 +1,10 @@
 package werkzeugkasten.twowaysql.dao;
 
-public interface TwoWaySqlContext<EC> {
+public interface SqlContext<EC> {
 
 	EC getExpressionContext();
 
-	TwoWayQueryWrapper getTwoWayQuery();
+	QueryWrapper getTwoWayQuery();
 
 	void append(String partOfQuery);
 

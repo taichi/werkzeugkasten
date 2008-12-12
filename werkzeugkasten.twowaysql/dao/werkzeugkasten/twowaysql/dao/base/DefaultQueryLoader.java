@@ -8,21 +8,21 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
 import werkzeugkasten.common.util.Streams;
-import werkzeugkasten.twowaysql.dao.TwoWayQueryLoader;
-import werkzeugkasten.twowaysql.dao.TwoWayQueryWrapper;
+import werkzeugkasten.twowaysql.dao.QueryLoader;
+import werkzeugkasten.twowaysql.dao.QueryWrapper;
 import werkzeugkasten.twowaysql.error.ProblemCoordinator;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser;
 import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
-public class DefaultTwoWayQueryLoader implements TwoWayQueryLoader<String> {
+public class DefaultQueryLoader implements QueryLoader<String> {
 
 	public static final int BUF_SIZE = 128 * 128;
 
 	@Override
-	public TwoWayQueryWrapper load(String context) {
+	public QueryWrapper load(String context) {
 		final String source = loadSource(context);
-		return new TwoWayQueryWrapper() {
+		return new QueryWrapper() {
 			@Override
 			public String getSource() {
 				return source;

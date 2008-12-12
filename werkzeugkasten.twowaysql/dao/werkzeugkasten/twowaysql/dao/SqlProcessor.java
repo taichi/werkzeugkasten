@@ -3,7 +3,7 @@ package werkzeugkasten.twowaysql.dao;
 import werkzeugkasten.twowaysql.error.QueryProblemException;
 import werkzeugkasten.twowaysql.jdbc.SQLRuntimeException;
 
-public interface TwoWaySqlProcessor {
+public interface SqlProcessor {
 
 	<LC, EC> Integer process(LC loadingContext, EC expressionContext)
 			throws QueryProblemException, SQLRuntimeException;
