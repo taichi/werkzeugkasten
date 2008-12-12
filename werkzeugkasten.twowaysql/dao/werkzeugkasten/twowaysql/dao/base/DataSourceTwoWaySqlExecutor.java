@@ -105,9 +105,7 @@ public class DataSourceTwoWaySqlExecutor implements TwoWaySqlExecutor {
 						return rsm.map(rs);
 					}
 				});
-
 			};
 		});
 	}
-
 }
