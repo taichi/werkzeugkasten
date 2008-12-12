@@ -15,4 +15,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  sdloader/lib/sdloader-jsp20.jar,
  sdloader/lib/weblauncher.enhance.sdloader.jar
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
