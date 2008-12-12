@@ -29,6 +29,8 @@ public class ProblemCoordinator {
 	}
 
 	public void raise() throws QueryProblemException {
-		throw new QueryProblemException(this.problems);
+		if (0 < this.problems.size()) {
+			throw new QueryProblemException(this.problems);
+		}
 	}
 }
