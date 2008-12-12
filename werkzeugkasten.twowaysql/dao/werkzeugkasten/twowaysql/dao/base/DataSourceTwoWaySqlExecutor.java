@@ -30,94 +30,83 @@ public class DataSourceTwoWaySqlExecutor implements TwoWaySqlExecutor {
 		this.dataSource = ds;
 	}
 
-	public Connection getConnection() throws SQLException {
-		return this.dataSource.getConnection();
+	protected static abstract class PreparedSQLExecutor<EC, R> implements
+			ConnectionHandler<R>, StatementHandler<PreparedStatement, R> {
+		protected TwoWaySqlContext<EC> context;
+		protected DataSource ds;
+		protected Connection c;
+
+		public PreparedSQLExecutor(DataSource ds, TwoWaySqlContext<EC> context) {
+			this.ds = ds;
+			this.context = context;
+		}
+
+		@Override
+		public Connection getConnection() throws SQLException {
+			this.c = this.ds.getConnection();
+			return this.c;
+		}
+
+		@Override
+		public R handle(Connection c) throws SQLException {
+			return JdbcFunctors.handleStatement(this);
+		}
+
+		@Override
+		public PreparedStatement prepare() throws SQLException {
+			String sql = this.context.getSql();
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(sql);
+			}
+			return this.c.prepareStatement(sql);
+		}
+
+		@Override
+		public R handle(PreparedStatement statement) throws SQLException {
+			int index = 1;
+			for (Binder b : context.getBinders()) {
+				b.bind(statement, index++);
+			}
+			return execute(statement);
+		}
+
+		protected abstract R execute(PreparedStatement ps) throws SQLException;
 	}
 
 	@Override
 	public <EC, C extends TwoWaySqlContext<EC>> Integer execute(final C context)
 			throws SQLRuntimeException {
-		return JdbcFunctors.execute(new ConnectionHandler<Integer>() {
-			@Override
-			public Connection getConnection() throws SQLException {
-				return DataSourceTwoWaySqlExecutor.this.getConnection();
-			}
-
-			@Override
-			public Integer handle(final Connection c) throws SQLException {
-				return JdbcFunctors
-						.execute(new StatementHandler<PreparedStatement, Integer>() {
-							@Override
-							public PreparedStatement prepare()
-									throws SQLException {
-								String sql = context.getSql();
-								if (LOG.isDebugEnabled()) {
-									LOG.debug(sql);
-								}
-								return c.prepareStatement(sql);
-							}
-
-							@Override
-							public Integer handle(PreparedStatement statement)
-									throws SQLException {
-								int index = 1;
-								for (Binder b : context.getBinders()) {
-									b.bind(statement, index++);
-								}
-								return statement.executeUpdate();
-							}
-						});
-			}
-		});
+		return JdbcFunctors
+				.handleConnection(new PreparedSQLExecutor<EC, Integer>(
+						this.dataSource, context) {
+					@Override
+					protected Integer execute(PreparedStatement ps)
+							throws SQLException {
+						return ps.executeUpdate();
+					};
+				});
 	}
 
 	@Override
 	public <EC, C extends TwoWaySqlContext<EC>, R> R execute(final C context,
 			final ResultSetMapper<R> rsm) throws SQLRuntimeException {
-		return JdbcFunctors.execute(new ConnectionHandler<R>() {
+		return JdbcFunctors.handleConnection(new PreparedSQLExecutor<EC, R>(
+				this.dataSource, context) {
 			@Override
-			public Connection getConnection() throws SQLException {
-				return DataSourceTwoWaySqlExecutor.this.getConnection();
-			}
+			protected R execute(final PreparedStatement ps) throws SQLException {
+				return JdbcFunctors.handleResultSet(new ResultSetHandler<R>() {
+					@Override
+					public ResultSet executeQuery() throws SQLException {
+						return ps.executeQuery();
+					}
 
-			@Override
-			public R handle(final Connection c) throws SQLException {
-				return JdbcFunctors
-						.execute(new StatementHandler<PreparedStatement, R>() {
-							@Override
-							public PreparedStatement prepare()
-									throws SQLException {
-								String sql = context.getSql();
-								if (LOG.isDebugEnabled()) {
-									LOG.debug(sql);
-								}
-								return c.prepareStatement(sql);
-							}
+					@Override
+					public R handle(ResultSet rs) throws SQLException {
+						return rsm.map(rs);
+					}
+				});
 
-							@Override
-							public R handle(final PreparedStatement statement)
-									throws SQLException {
-								int index = 1;
-								for (Binder b : context.getBinders()) {
-									b.bind(statement, index++);
-								}
-								return JdbcFunctors
-										.execute(new ResultSetHandler<R>() {
-											@Override
-											public ResultSet executeQuery()
-													throws SQLException {
-												return null;
-											}
-
-											@Override
-											public R handle(ResultSet rs)
-													throws SQLException {
-												return rsm.map(rs);
-											}
-										});
-							}
-						});
-			}
+			};
 		});
 	}
 
