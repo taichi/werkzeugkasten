@@ -6,7 +6,13 @@ public interface SqlContext<EC> {
 
 	QueryWrapper getTwoWayQuery();
 
+	void begin();
+
+	void conclude();
+
 	void append(String partOfQuery);
+
+	void end();
 
 	String getSql();
 

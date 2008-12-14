@@ -21,9 +21,8 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 	}
 
 	@Override
-	public <EC> QueryTreeVisitor<SqlContext<EC>> createVisitor(
-			ExpressionParser parser) {
-		return new SqlTreeVisitor<EC>();
+	public <EC> QueryTreeVisitor<SqlContext<EC>> createVisitor() {
+		return new SqlTreeVisitor<EC>(getELParser());
 	}
 
 	@Override
@@ -32,8 +31,7 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 		return (QueryLoader<LC>) this.queryLoader;
 	}
 
-	@Override
-	public ExpressionParser getELParser() {
+	protected ExpressionParser getELParser() {
 		return this.elparser;
 	}
 
