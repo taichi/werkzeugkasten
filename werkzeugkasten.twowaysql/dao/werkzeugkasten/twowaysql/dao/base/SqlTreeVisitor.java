@@ -31,11 +31,11 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 
 	protected static final String SPC = " ";
 	protected ExpressionParser parser;
-	protected BinderProducer factory;
+	protected BinderProducer producer;
 
-	public SqlTreeVisitor(ExpressionParser parser, BinderProducer factory) {
+	public SqlTreeVisitor(ExpressionParser parser, BinderProducer producer) {
 		this.parser = parser;
-		this.factory = factory;
+		this.producer = producer;
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 			context.append(" null ");
 		} else {
 			context.append(" ? ");
-			context.add(this.factory.produce(o));
+			context.add(this.producer.produce(context, node, o));
 		}
 		return false;
 	}
@@ -144,7 +144,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 		context.append(" IN(");
 		if (list != null && 0 < list.size()) {
 			for (Iterator<?> i = list.iterator(); i.hasNext();) {
-				context.add(factory.produce(i.next()));
+				context.add(producer.produce(context, node, i.next()));
 				context.append("?");
 				if (i.hasNext()) {
 					context.append(",");

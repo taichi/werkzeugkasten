@@ -13,7 +13,7 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 
 	protected QueryLoader<?> queryLoader = new DefaultQueryLoader();
 	protected ExpressionParser elparser;
-	protected BinderProducer binderFactory;
+	protected BinderProducer binderProducer;
 	protected SqlExecutor executor;
 
 	@Override
@@ -37,17 +37,17 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 	}
 
 	@Override
-	public BinderProducer getBinderFactory() {
-		return this.binderFactory;
+	public BinderProducer getBinderProducer() {
+		return this.binderProducer;
 	}
 
-	public void setBinderFactory(BinderProducer factory) {
-		this.binderFactory = factory;
+	public void setBinderProducer(BinderProducer producer) {
+		this.binderProducer = producer;
 	}
 
 	@Override
 	public <EC> QueryTreeVisitor<SqlContext<EC>> createVisitor() {
-		return new SqlTreeVisitor<EC>(getELParser(), getBinderFactory());
+		return new SqlTreeVisitor<EC>(getELParser(), getBinderProducer());
 	}
 
 	@Override
