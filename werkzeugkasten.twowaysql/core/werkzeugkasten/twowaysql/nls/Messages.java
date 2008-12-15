@@ -44,7 +44,8 @@ public class Messages {
 	public static String LABEL_IFCOMMENT;
 	public static String REQUIRED_IFCOMMENT;
 	public static String UNWANTED_TOKEN;
-
+	public static String EXPRESSION_RESULT;
+	public static String NULL_OR_EMPTY;
 	static {
 		Class<?> clazz = Messages.class;
 		SingleLocaleStrings.load(clazz);

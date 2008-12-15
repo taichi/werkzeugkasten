@@ -11,6 +11,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 import werkzeugkasten.twowaysql.dao.SqlContext;
 import werkzeugkasten.twowaysql.dao.el.Expression;
 import werkzeugkasten.twowaysql.dao.el.ExpressionParser;
+import werkzeugkasten.twowaysql.nls.Messages;
 import werkzeugkasten.twowaysql.tree.BeginNode;
 import werkzeugkasten.twowaysql.tree.BindNode;
 import werkzeugkasten.twowaysql.tree.ExpressionNode;
@@ -64,8 +65,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 		Object bool = eval(node, context);
 		if (LOG.isDebugEnabled()) {
 			String s = getString(context, node.getLocation());
-			// TODO external string
-			LOG.debug("expression [" + s + "] returns [" + bool + "]");
+			LOG.debug(String.format(Messages.EXPRESSION_RESULT, s, bool));
 		}
 		if (bool instanceof Boolean) {
 			return ((Boolean) bool).booleanValue();
@@ -137,8 +137,8 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 	public boolean visit(InBindNode node, SqlContext<EC> context) {
 		Object maybeList = eval(node, context);
 		List<?> list = CollectionUtil.toList(maybeList);
+		context.append(" IN(");
 		if (list != null && 0 < list.size()) {
-			context.append(" IN(");
 			for (Iterator<?> i = list.iterator(); i.hasNext();) {
 				context.add(factory.wrap(i.next()));
 				context.append("?");
@@ -146,11 +146,14 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 					context.append(",");
 				}
 			}
-			context.append(") ");
 		} else {
-			LOG.debug("{" + getString(context, node.getLocation())
-					+ "} is skipped."); // XXX to external strings.
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(String.format(Messages.EXPRESSION_RESULT, getString(
+						context, node.getLocation()), Messages.NULL_OR_EMPTY));
+			}
+			context.append("null");
 		}
+		context.append(") ");
 		return false;
 	}
 
