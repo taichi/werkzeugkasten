@@ -2,7 +2,7 @@ package werkzeugkasten.twowaysql.dao;
 
 import werkzeugkasten.twowaysql.jdbc.SQLRuntimeException;
 
-public interface BinderFactory {
+public interface BinderProducer {
 
-	Binder wrap(Object object) throws SQLRuntimeException;
+	Binder produce(Object object) throws SQLRuntimeException;
 }

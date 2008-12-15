@@ -1,6 +1,6 @@
 package werkzeugkasten.twowaysql.dao.base;
 
-import werkzeugkasten.twowaysql.dao.BinderFactory;
+import werkzeugkasten.twowaysql.dao.BinderProducer;
 import werkzeugkasten.twowaysql.dao.QueryLoader;
 import werkzeugkasten.twowaysql.dao.QueryWrapper;
 import werkzeugkasten.twowaysql.dao.SqlContext;
@@ -13,7 +13,7 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 
 	protected QueryLoader<?> queryLoader = new DefaultQueryLoader();
 	protected ExpressionParser elparser;
-	protected BinderFactory binderFactory;
+	protected BinderProducer binderFactory;
 	protected SqlExecutor executor;
 
 	@Override
@@ -37,11 +37,11 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 	}
 
 	@Override
-	public BinderFactory getBinderFactory() {
+	public BinderProducer getBinderFactory() {
 		return this.binderFactory;
 	}
 
-	public void setBinderFactory(BinderFactory factory) {
+	public void setBinderFactory(BinderProducer factory) {
 		this.binderFactory = factory;
 	}
 

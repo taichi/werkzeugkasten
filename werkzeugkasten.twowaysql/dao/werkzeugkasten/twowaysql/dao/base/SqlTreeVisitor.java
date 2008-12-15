@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import werkzeugkasten.common.util.CollectionUtil;
-import werkzeugkasten.twowaysql.dao.BinderFactory;
+import werkzeugkasten.twowaysql.dao.BinderProducer;
 import werkzeugkasten.twowaysql.dao.SqlContext;
 import werkzeugkasten.twowaysql.dao.el.Expression;
 import werkzeugkasten.twowaysql.dao.el.ExpressionParser;
@@ -31,9 +31,9 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 
 	protected static final String SPC = " ";
 	protected ExpressionParser parser;
-	protected BinderFactory factory;
+	protected BinderProducer factory;
 
-	public SqlTreeVisitor(ExpressionParser parser, BinderFactory factory) {
+	public SqlTreeVisitor(ExpressionParser parser, BinderProducer factory) {
 		this.parser = parser;
 		this.factory = factory;
 	}
@@ -113,7 +113,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 	public boolean visit(BindNode node, SqlContext<EC> context) {
 		context.append(" ? ");
 		Object o = eval(node, context);
-		context.add(this.factory.wrap(o));
+		context.add(this.factory.produce(o));
 		return false;
 	}
 
@@ -140,7 +140,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 		context.append(" IN(");
 		if (list != null && 0 < list.size()) {
 			for (Iterator<?> i = list.iterator(); i.hasNext();) {
-				context.add(factory.wrap(i.next()));
+				context.add(factory.produce(i.next()));
 				context.append("?");
 				if (i.hasNext()) {
 					context.append(",");
