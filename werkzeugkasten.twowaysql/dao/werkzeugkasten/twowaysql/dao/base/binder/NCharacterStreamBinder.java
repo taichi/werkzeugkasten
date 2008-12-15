@@ -1,21 +1,27 @@
 package werkzeugkasten.twowaysql.dao.base.binder;
 
+import java.io.Reader;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.twowaysql.dao.Binder;
 
-public class ObjectBinder implements Binder {
+public class NCharacterStreamBinder implements Binder {
 
-	protected Object value;
+	protected Reader value;
 
-	public ObjectBinder(Object value) {
+	public NCharacterStreamBinder(Reader value) {
 		this.value = value;
 	}
 
 	@Override
 	public void bind(PreparedStatement ps, int index) throws SQLException {
-		ps.setObject(index, value);
+		try {
+			ps.setNCharacterStream(index, value);
+		} finally {
+			Streams.close(value);
+		}
 	}
 
 }

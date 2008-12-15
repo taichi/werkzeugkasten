@@ -2,20 +2,21 @@ package werkzeugkasten.twowaysql.dao.base.binder;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import werkzeugkasten.twowaysql.dao.Binder;
 
-public class ObjectBinder implements Binder {
+public class TimestampBinder implements Binder {
 
-	protected Object value;
+	protected Timestamp value;
 
-	public ObjectBinder(Object value) {
+	public TimestampBinder(Timestamp value) {
 		this.value = value;
 	}
 
 	@Override
 	public void bind(PreparedStatement ps, int index) throws SQLException {
-		ps.setObject(index, value);
+		ps.setTimestamp(index, value);
 	}
 
 }

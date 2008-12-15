@@ -1,21 +1,22 @@
 package werkzeugkasten.twowaysql.dao.base.binder;
 
+import java.sql.NClob;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import werkzeugkasten.twowaysql.dao.Binder;
 
-public class ObjectBinder implements Binder {
+public class NClobBinder implements Binder {
 
-	protected Object value;
+	protected NClob value;
 
-	public ObjectBinder(Object value) {
+	public NClobBinder(NClob value) {
 		this.value = value;
 	}
 
 	@Override
 	public void bind(PreparedStatement ps, int index) throws SQLException {
-		ps.setObject(index, value);
+		ps.setNClob(index, value);
 	}
 
 }

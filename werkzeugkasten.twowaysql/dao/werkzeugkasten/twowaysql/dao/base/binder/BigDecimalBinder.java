@@ -1,21 +1,22 @@
 package werkzeugkasten.twowaysql.dao.base.binder;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import werkzeugkasten.twowaysql.dao.Binder;
 
-public class ObjectBinder implements Binder {
+public class BigDecimalBinder implements Binder {
 
-	protected Object value;
+	protected BigDecimal value;
 
-	public ObjectBinder(Object value) {
+	public BigDecimalBinder(BigDecimal value) {
 		this.value = value;
 	}
 
 	@Override
 	public void bind(PreparedStatement ps, int index) throws SQLException {
-		ps.setObject(index, value);
+		ps.setBigDecimal(index, value);
 	}
 
 }

@@ -1,21 +1,26 @@
 package werkzeugkasten.twowaysql.dao.base.binder;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import werkzeugkasten.twowaysql.dao.Binder;
 
-public class ObjectBinder implements Binder {
+public class DateBinder implements Binder {
 
-	protected Object value;
+	protected Date value;
 
-	public ObjectBinder(Object value) {
+	public DateBinder(Date value) {
 		this.value = value;
+	}
+
+	public DateBinder(java.util.Date value) {
+		this(new Date(value.getTime()));
 	}
 
 	@Override
 	public void bind(PreparedStatement ps, int index) throws SQLException {
-		ps.setObject(index, value);
+		ps.setDate(index, value);
 	}
 
 }

@@ -111,9 +111,13 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 
 	@Override
 	public boolean visit(BindNode node, SqlContext<EC> context) {
-		context.append(" ? ");
 		Object o = eval(node, context);
-		context.add(this.factory.produce(o));
+		if (o == null) {
+			context.append(" null ");
+		} else {
+			context.append(" ? ");
+			context.add(this.factory.produce(o));
+		}
 		return false;
 	}
 

@@ -5,17 +5,17 @@ import java.sql.SQLException;
 
 import werkzeugkasten.twowaysql.dao.Binder;
 
-public class ObjectBinder implements Binder {
+public class BytesBinder implements Binder {
 
-	protected Object value;
+	protected byte[] value;
 
-	public ObjectBinder(Object value) {
+	public BytesBinder(byte[] value) {
 		this.value = value;
 	}
 
 	@Override
 	public void bind(PreparedStatement ps, int index) throws SQLException {
-		ps.setObject(index, value);
+		ps.setBytes(index, value);
 	}
 
 }

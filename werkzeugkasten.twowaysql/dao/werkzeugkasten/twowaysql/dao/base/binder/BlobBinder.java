@@ -1,21 +1,22 @@
 package werkzeugkasten.twowaysql.dao.base.binder;
 
+import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import werkzeugkasten.twowaysql.dao.Binder;
 
-public class ObjectBinder implements Binder {
+public class BlobBinder implements Binder {
 
-	protected Object value;
+	protected Blob value;
 
-	public ObjectBinder(Object value) {
+	public BlobBinder(Blob value) {
 		this.value = value;
 	}
 
 	@Override
 	public void bind(PreparedStatement ps, int index) throws SQLException {
-		ps.setObject(index, value);
+		ps.setBlob(index, value);
 	}
 
 }
