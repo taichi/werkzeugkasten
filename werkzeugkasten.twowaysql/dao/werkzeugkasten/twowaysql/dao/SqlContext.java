@@ -10,6 +10,8 @@ public interface SqlContext<EC> {
 
 	void conclude();
 
+	boolean isConcluded();
+
 	void append(String partOfQuery);
 
 	void end();

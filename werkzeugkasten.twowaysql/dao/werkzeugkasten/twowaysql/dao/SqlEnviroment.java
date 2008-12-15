@@ -14,6 +14,8 @@ public interface SqlEnviroment {
 	<EC> SqlContext<EC> createContext(EC expressionContext,
 			QueryWrapper twoWayQuery);
 
+	BinderFactory getBinderFactory();
+
 	<EC> QueryTreeVisitor<SqlContext<EC>> createVisitor();
 
 	SqlExecutor getExecutor();

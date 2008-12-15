@@ -10,7 +10,7 @@ public class IfNode extends AbstractQueryNode {
 
 	protected ExpressionNode expression;
 	protected TxtNode maybeSkip;
-	protected List<QueryNode> elseIfNodes = new ArrayList<QueryNode>();
+	protected List<IfNode> elseIfNodes = new ArrayList<IfNode>();
 	protected Iterable<QueryNode> elseNode = Collections.emptyList();
 
 	public NodeType getType() {
@@ -39,7 +39,7 @@ public class IfNode extends AbstractQueryNode {
 		}
 	}
 
-	public Iterable<QueryNode> getElseIfNodes() {
+	public Iterable<IfNode> getElseIfNodes() {
 		return this.elseIfNodes;
 	}
 

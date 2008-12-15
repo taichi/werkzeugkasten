@@ -1,5 +1,6 @@
 package werkzeugkasten.twowaysql.dao.base;
 
+import werkzeugkasten.twowaysql.dao.BinderFactory;
 import werkzeugkasten.twowaysql.dao.QueryLoader;
 import werkzeugkasten.twowaysql.dao.QueryWrapper;
 import werkzeugkasten.twowaysql.dao.SqlContext;
@@ -12,23 +13,19 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 
 	protected QueryLoader<?> queryLoader = new DefaultQueryLoader();
 	protected ExpressionParser elparser;
+	protected BinderFactory binderFactory;
 	protected SqlExecutor executor;
-
-	@Override
-	public <EC> SqlContext<EC> createContext(EC expressionContext,
-			QueryWrapper twoWayQuery) {
-		return new DefaultSqlContext<EC>(expressionContext, twoWayQuery);
-	}
-
-	@Override
-	public <EC> QueryTreeVisitor<SqlContext<EC>> createVisitor() {
-		return new SqlTreeVisitor<EC>(getELParser());
-	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <LC> QueryLoader<LC> getLoader(LC context) {
 		return (QueryLoader<LC>) this.queryLoader;
+	}
+
+	@Override
+	public <EC> SqlContext<EC> createContext(EC expressionContext,
+			QueryWrapper twoWayQuery) {
+		return new DefaultSqlContext<EC>(expressionContext, twoWayQuery);
 	}
 
 	protected ExpressionParser getELParser() {
@@ -37,6 +34,20 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 
 	public void setELParser(ExpressionParser elparser) {
 		this.elparser = elparser;
+	}
+
+	@Override
+	public BinderFactory getBinderFactory() {
+		return this.binderFactory;
+	}
+
+	public void setBinderFactory(BinderFactory factory) {
+		this.binderFactory = factory;
+	}
+
+	@Override
+	public <EC> QueryTreeVisitor<SqlContext<EC>> createVisitor() {
+		return new SqlTreeVisitor<EC>(getELParser(), getBinderFactory());
 	}
 
 	@Override

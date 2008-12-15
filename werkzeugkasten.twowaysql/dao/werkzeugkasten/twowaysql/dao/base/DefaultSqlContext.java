@@ -13,10 +13,14 @@ public class DefaultSqlContext<EC> implements SqlContext<EC> {
 
 	protected EC expressionContext;
 	protected QueryWrapper twoWayQuery;
-	protected Queue<StringBuilder> beginStack = new ArrayDeque<StringBuilder>();
-	protected boolean concluded = false;
+	protected Queue<BeginStackElement> beginStack = new ArrayDeque<BeginStackElement>();
 	protected StringBuilder allOfQuery = new StringBuilder();
 	protected List<Binder> binders = new ArrayList<Binder>();
+
+	protected static class BeginStackElement {
+		protected StringBuilder structured;
+		protected boolean concluded = false;
+	}
 
 	protected DefaultSqlContext(EC context, QueryWrapper twoWayQuery) {
 		this.expressionContext = context;
@@ -35,19 +39,27 @@ public class DefaultSqlContext<EC> implements SqlContext<EC> {
 
 	@Override
 	public void begin() {
-		this.beginStack.add(this.allOfQuery);
+		BeginStackElement e = new BeginStackElement();
+		e.structured = this.allOfQuery;
+		this.beginStack.add(e);
 		this.allOfQuery = new StringBuilder();
 	}
 
 	@Override
 	public void conclude() {
-		this.concluded = true;
+		this.beginStack.peek().concluded = true;
+	}
+
+	@Override
+	public boolean isConcluded() {
+		return this.beginStack.peek().concluded;
 	}
 
 	@Override
 	public void end() {
-		StringBuilder parent = this.beginStack.remove();
-		if (concluded) {
+		BeginStackElement e = this.beginStack.remove();
+		StringBuilder parent = e.structured;
+		if (e.concluded) {
 			parent.append(this.allOfQuery);
 		}
 		this.allOfQuery = parent;
