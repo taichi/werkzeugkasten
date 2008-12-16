@@ -1,0 +1,1 @@
+INSERT INTO TEST VALUES(3, /*? aaa*/'Hello' );
