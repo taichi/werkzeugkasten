@@ -12,5 +12,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/mvel2-2.0.5.jar" sourcepath="lib/mvel2-2.0.5-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/nlsgen-runtime.jar" sourcepath="lib/nlsgen-runtime.src.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.5.6.jar" sourcepath="lib/slf4j-api-1.5.6-sources.jar"/>
+	<classpathentry kind="var" path="H2" rootpath="./" sourcepath="H2_SRC"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

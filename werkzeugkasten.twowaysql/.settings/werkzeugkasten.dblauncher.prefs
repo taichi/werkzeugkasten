@@ -1,0 +1,5 @@
+#Tue Dec 16 18:24:02 JST 2008
+baseDir=/werkzeugkasten.twowaysql/bin/data
+dbType=H2
+eclipse.preferences.version=1
+useInternalWebBrowser=true
