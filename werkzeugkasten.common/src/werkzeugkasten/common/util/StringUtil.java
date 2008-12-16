@@ -18,6 +18,23 @@ public class StringUtil {
 		return isEmpty(s) ? r : s.toString();
 	}
 
+	public static String replace(String txt, String from, String to) {
+		String result = "";
+		if (isEmpty(txt) == false && isEmpty(from) == false) {
+			Pattern p = Pattern.compile(from);
+			StringBuilder stb = new StringBuilder(txt);
+			Matcher m = p.matcher(stb);
+			int index = 0;
+			while (index < stb.length() && m.find(index)) {
+				index = m.start() + to.length();
+				stb.replace(m.start(), m.end(), to);
+				m = p.matcher(stb);
+			}
+			result = stb.toString();
+		}
+		return result;
+	}
+
 	public static String replace(String template, Map<String, String> context) {
 		String result = "";
 		if (StringUtil.isEmpty(template) == false) {

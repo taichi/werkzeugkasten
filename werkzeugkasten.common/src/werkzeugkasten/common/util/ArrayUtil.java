@@ -19,11 +19,12 @@ public class ArrayUtil {
 	 * @param obj
 	 * @return オブジェクトが追加された結果の配列
 	 */
-	public static Object[] add(Object[] array, Object obj) {
+	@SuppressWarnings("unchecked")
+	public static <T> T[] add(T[] array, T obj) {
 		if (array == null) {
 			throw new IllegalStateException("array");
 		}
-		Object[] newArray = (Object[]) Array.newInstance(array.getClass()
+		T[] newArray = (T[]) Array.newInstance(array.getClass()
 				.getComponentType(), array.length + 1);
 		System.arraycopy(array, 0, newArray, 0, array.length);
 		newArray[array.length] = obj;
