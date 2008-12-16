@@ -21,9 +21,9 @@ public class DefaultBinderProducerTest {
 		DefaultBinderProducer dbp = new DefaultBinderProducer();
 		dbp.initialize();
 
-		BinderFactory b = dbp.find(MyDate.class);
+		BinderFactory b = dbp.findByType(MyDate.class);
 		assertEquals(UtilDateBinderFactory.class, b.getClass());
-		b = dbp.find(MyRef.class);
+		b = dbp.findByType(MyRef.class);
 		assertEquals(RefBinderFactory.class, b.getClass());
 	}
 
