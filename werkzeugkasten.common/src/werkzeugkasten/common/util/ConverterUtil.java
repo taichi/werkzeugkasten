@@ -14,6 +14,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -23,6 +25,8 @@ import java.util.regex.Pattern;
  * @author taichi
  */
 public class ConverterUtil {
+
+	static final Logger LOG = Logger.getLogger(ConverterUtil.class.getName());
 
 	public static final Pattern YES_PATTERN = Pattern.compile("(yes|true|y|1)",
 			Pattern.CASE_INSENSITIVE);
@@ -273,7 +277,8 @@ public class ConverterUtil {
 			try {
 				return sdf.parse(s);
 			} catch (ParseException ex) {
-				throw new IllegalStateException(ex);
+				LOG.log(Level.CONFIG, ex.getMessage(), ex);
+				return null;
 			}
 		}
 
@@ -661,8 +666,9 @@ public class ConverterUtil {
 					return new URL(url);
 				}
 				return null;
-			} catch (MalformedURLException e) {
-				throw new IllegalArgumentException(e);
+			} catch (MalformedURLException ex) {
+				LOG.log(Level.CONFIG, ex.getMessage(), ex);
+				return null;
 			}
 		}
 
