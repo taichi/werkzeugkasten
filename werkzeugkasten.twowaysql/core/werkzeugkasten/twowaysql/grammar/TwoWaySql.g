@@ -126,9 +126,13 @@ comment returns[QueryNode node]:
 	begincomment {$node = $begincomment.node;}
 	| ifcomment {$node = $ifcomment.node;}
 	| bindcomment {$node = $bindcomment.node;}
-	| blockcomment {$node = $blockcomment.node;}
-	| linecomment {$node = $linecomment.node;}
+	| txtcomment {$node = $txtcomment.node;}
 	;
+
+txtcomment returns[TxtNode node]
+	: blockcomment {$node = $blockcomment.node;}
+	| linecomment {$node = $linecomment.node;}
+	;	
 
 blockcomment returns[TxtNode node]
 	@init {
@@ -295,10 +299,10 @@ bindcomment returns[BindNode node]
 		$node.freeze();
 	}
 	:
-	(C_ST SYM_BIND expression C_ED txt)
+	(C_ST SYM_BIND expression C_ED inbindchars)
 	{
 		$node.setExpression($expression.node);
-		$node.setSkipped($txt.node);
+		$node.setSkipped($inbindchars.node);
 	}
 	;
 	finally { pop(); }
@@ -331,12 +335,24 @@ inbindskipped returns[TxtNode node]
 		$node.freeze();
 	}
 	:
-	SYM_LP inbindchars (SYM_C inbindchars)* SYM_RP
+	SYM_LP 
+		txtcomment* inbindchars txtcomment*
+		(SYM_C 
+			txtcomment* inbindchars txtcomment*
+		)*
+	SYM_RP
 	;
 	finally { pop(); }
 
-inbindchars
+inbindchars  returns[TxtNode node]
 	// caller rule handles exceptions
+	@init {
+		$node = new TxtNode();
+	}
+	@after {
+		$node.update(retval);
+		$node.freeze();
+	}
 	:
 	(IDENT | QUOTED | SYMBOLS | SYM_BIND)+
 	;
