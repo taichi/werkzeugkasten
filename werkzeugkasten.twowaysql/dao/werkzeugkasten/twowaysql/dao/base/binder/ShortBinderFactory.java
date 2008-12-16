@@ -1,5 +1,6 @@
 package werkzeugkasten.twowaysql.dao.base.binder;
 
+import werkzeugkasten.common.util.ConverterUtil;
 import werkzeugkasten.twowaysql.dao.Binder;
 import werkzeugkasten.twowaysql.dao.BinderFactory;
 
@@ -7,15 +8,9 @@ public class ShortBinderFactory implements BinderFactory {
 
 	@Override
 	public Binder create(Object value) {
-		if (value instanceof Short) {
-			Short v = (Short) value;
+		Short v = ConverterUtil.convert(value, Short.class);
+		if (v != null) {
 			return new ShortBinder(v);
-		} else if (value instanceof Number) {
-			Number v = (Number) value;
-			return new ShortBinder(v.shortValue());
-		} else if (value instanceof String) {
-			String v = (String) value;
-			return new ShortBinder(Short.parseShort(v));
 		}
 		throw new IllegalArgumentException();
 	}
