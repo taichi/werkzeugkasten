@@ -88,16 +88,17 @@ public class ConverterUtil {
 		init();
 	}
 
-	public static Object convert(Object target, Class<?> convertClass) {
+	public static <T> T convert(Object target, Class<T> convertClass) {
 		return convert(target, convertClass, NULL_PATTERN);
 	}
 
-	public static Object convert(Object target, Class<?> convertClass,
+	@SuppressWarnings("unchecked")
+	public static <T> T convert(Object target, Class<T> convertClass,
 			String pattern) {
 		init();
-		Converter<?> converter = map.get(convertClass);
-		if (converter == null) {
-			return target;
+		Converter<T> converter = (Converter<T>) map.get(convertClass);
+		if (converter == null && convertClass.isInstance(target)) {
+			return (T) target;
 		}
 		return converter.convert(target, pattern);
 	}
