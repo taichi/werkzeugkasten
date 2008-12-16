@@ -1,11 +1,11 @@
 package werkzeugkasten.common.util;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,28 +61,35 @@ public class Streams {
 	 * @param out
 	 * @see FileUtil#copy(InputStream, java.io.File)
 	 */
-	public static void copy(InputStream in, OutputStream out) {
+	public static void copy(InputStream in, OutputStream out)
+			throws IORuntimeException {
 		byte[] buf = new byte[BUF_SIZE];
 		try {
 			int len = 0;
 			do {
 				len = in.read(buf, 0, BUF_SIZE);
-				out.write(buf, 0, len);
-			} while (0 < len);
+				if (0 < len) {
+					out.write(buf, 0, len);
+				} else {
+					break;
+				}
+			} while (true);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
 
-	public static String readText(InputStream in) {
+	public static String readText(InputStream in) throws IORuntimeException {
+		return readText(in, "UTF-8");
+	}
+
+	public static String readText(InputStream in, String charset)
+			throws IORuntimeException {
 		try {
-			StringBuilder stb = new StringBuilder();
-			BufferedReader buf = new BufferedReader(new InputStreamReader(in));
-			while (buf.ready()) {
-				stb.append(buf.readLine());
-			}
-			return stb.toString();
-		} catch (IOException e) {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			copy(in, out);
+			return out.toString(charset);
+		} catch (UnsupportedEncodingException e) {
 			throw new IORuntimeException(e);
 		}
 	}
