@@ -46,6 +46,8 @@ public class Messages {
 	public static String UNWANTED_TOKEN;
 	public static String EXPRESSION_RESULT;
 	public static String NULL_OR_EMPTY;
+	public static String SKIPPED_TEXT;
+
 	static {
 		Class<?> clazz = Messages.class;
 		SingleLocaleStrings.load(clazz);
