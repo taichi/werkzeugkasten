@@ -11,6 +11,10 @@ public class AsciiStreamBinder implements Binder {
 
 	protected InputStream value;
 
+	public AsciiStreamBinder(InputStream value) {
+		this.value = value;
+	}
+
 	@Override
 	public void bind(PreparedStatement ps, int index) throws SQLException {
 		try {
