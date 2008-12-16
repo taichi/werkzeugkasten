@@ -1,11 +1,11 @@
 package werkzeugkasten.twowaysql.dao.base;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -19,6 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import werkzeugkasten.common.util.Streams;
+import werkzeugkasten.twowaysql.dao.ResultSetMapper;
 import werkzeugkasten.twowaysql.dao.el.mvel.MVELExpressionParser;
 import werkzeugkasten.twowaysql.jdbc.ConnectionHandler;
 import werkzeugkasten.twowaysql.jdbc.JdbcFunctors;
@@ -111,7 +112,7 @@ public class DefaultSqlProcessorTest {
 
 	@Test
 	public void testProcess() {
-		String path = "werkzeugkasten/twowaysql/dao/base/testQuery.sql";
+		String path = "werkzeugkasten/twowaysql/dao/base/testInsertQuery.sql";
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("aaa", "testtest");
 		int act = target.process(path, map);
@@ -120,7 +121,16 @@ public class DefaultSqlProcessorTest {
 
 	@Test
 	public void testProcessMapping() {
-		fail("Not yet implemented");
+		String path = "werkzeugkasten/twowaysql/dao/base/testSelectQuery.sql";
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("aaa", 2);
+		String s = target.process(path, map, new ResultSetMapper<String>() {
+			@Override
+			public String map(ResultSet rs) throws SQLException {
+				return rs.next() ? rs.getString(2) : null;
+			}
+		});
+		assertEquals("World", s);
 	}
 
 }
