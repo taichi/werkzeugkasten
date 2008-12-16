@@ -1,10 +1,9 @@
 package werkzeugkasten.twowaysql.dao;
 
 import java.sql.ResultSet;
-
-import werkzeugkasten.twowaysql.jdbc.SQLRuntimeException;
+import java.sql.SQLException;
 
 public interface ResultSetMapper<R> {
 
-	R map(ResultSet rs) throws SQLRuntimeException;
+	R map(ResultSet rs) throws SQLException;
 }
