@@ -24,8 +24,6 @@ import java.util.regex.Pattern;
  */
 public class ConverterUtil {
 
-	public static final String NULL_PATTERN = null;
-
 	public static final Pattern YES_PATTERN = Pattern.compile("(yes|true|y|1)",
 			Pattern.CASE_INSENSITIVE);
 
@@ -57,7 +55,7 @@ public class ConverterUtil {
 	}
 
 	public static <T> T convert(Object target, Class<T> convertClass) {
-		return convert(target, convertClass, NULL_PATTERN);
+		return convert(target, convertClass, null);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -137,7 +135,7 @@ public class ConverterUtil {
 
 		@Override
 		public BigDecimal convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 
 	};
@@ -161,7 +159,7 @@ public class ConverterUtil {
 
 		@Override
 		public BigInteger convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 
 	};
@@ -170,7 +168,7 @@ public class ConverterUtil {
 
 		@Override
 		public Byte convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 
 		@Override
@@ -258,7 +256,7 @@ public class ConverterUtil {
 
 		@Override
 		public Calendar convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 
 	};
@@ -397,7 +395,7 @@ public class ConverterUtil {
 
 		@Override
 		public java.util.Date convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 
 	};
@@ -406,7 +404,7 @@ public class ConverterUtil {
 
 		@Override
 		public Double convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 
 		@Override
@@ -455,7 +453,7 @@ public class ConverterUtil {
 
 		@Override
 		public Float convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 
 	};
@@ -484,7 +482,7 @@ public class ConverterUtil {
 
 		@Override
 		public Integer convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 
 	};
@@ -515,7 +513,7 @@ public class ConverterUtil {
 
 		@Override
 		public Long convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 
 	};
@@ -544,7 +542,7 @@ public class ConverterUtil {
 
 		@Override
 		public Short convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 
 	};
@@ -565,7 +563,7 @@ public class ConverterUtil {
 
 		@Override
 		public java.sql.Date convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 	};
 
@@ -607,7 +605,7 @@ public class ConverterUtil {
 
 		@Override
 		public String convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 	};
 
@@ -615,7 +613,7 @@ public class ConverterUtil {
 
 		@Override
 		public Time convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 
 		@Override
@@ -635,7 +633,7 @@ public class ConverterUtil {
 
 		@Override
 		public Timestamp convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return convert(o, null);
 		}
 
 		@Override
