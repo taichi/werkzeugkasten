@@ -2,6 +2,8 @@ package werkzeugkasten.common.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -9,7 +11,6 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -23,69 +24,36 @@ import java.util.regex.Pattern;
  */
 public class ConverterUtil {
 
-	public static final Integer INT_DEFAULT_VALUE = new Integer(0);
-
-	public static final Double DOUBLE_DEFAULT_VALUE = new Double(0);
-
-	public static final Long LONG_DEFAULT_VALUE = new Long(0);
-
-	public static final Float FLOAT_DEFAULT_VALUE = new Float(0);
-
-	public static final Short SHORT_DEFAULT_VALUE = new Short((short) 0);
-
-	public static final Boolean BOOLEAN_DEFAULT_VALUE = Boolean.FALSE;
-
-	public static final Byte BYTE_DEFAULT_VALUE = Byte.valueOf((byte) 0);
-
-	public static final Character CHAR_DEFAULT_VALUE = Character
-			.valueOf((char) 0);
-
 	public static final String NULL_PATTERN = null;
 
-	public static final Pattern YES_PATTERN = Pattern.compile("(yes|true|y|0)",
+	public static final Pattern YES_PATTERN = Pattern.compile("(yes|true|y|1)",
 			Pattern.CASE_INSENSITIVE);
 
-	private static Map<Class<?>, Converter<?>> map = new HashMap<Class<?>, Converter<?>>();
+	private static Map<Class<?>, Converter<?>> map = new HashMap<Class<?>, Converter<?>>(
+			17);
 
-	private static boolean initialized = false;
-
-	public static void init() {
-		if (!initialized) {
-			synchronized (ConverterUtil.class) {
-				init0();
-			}
-		}
+	static {
+		init();
 	}
 
-	private static void init0() {
+	private static void init() {
 		map.put(BigDecimal.class, BIGDECIMAL_CONVERTER);
 		map.put(BigInteger.class, BIGINTEGER_CONVERTER);
 		map.put(Byte.class, BYTE_CONVERTER);
-		map.put(byte.class, PRIMITIVE_BYTE_CONVERTER);
 		map.put(byte[].class, BINARY_CONVERTER);
 		map.put(Boolean.class, BOOLEAN_CONVERTER);
-		map.put(boolean.class, PRIMITIVE_BOOLEAN_CONVERTER);
 		map.put(Calendar.class, CALENDAR_CONVERTER);
-		map.put(Date.class, DATE_CONVERTER);
+		map.put(java.util.Date.class, DATE_CONVERTER);
 		map.put(Double.class, DOUBLE_CONVERTER);
-		map.put(double.class, PRIMITIVE_DOUBLE_CONVERTER);
 		map.put(Float.class, FLOAT_CONVERTER);
-		map.put(float.class, PRIMITIVE_FLOAT_CONVERTER);
 		map.put(Integer.class, INTEGER_CONVERTER);
-		map.put(int.class, PRIMITIVE_INTEGER_CONVERTER);
 		map.put(Long.class, LONG_CONVERTER);
-		map.put(long.class, PRIMITIVE_LONG_CONVERTER);
 		map.put(Short.class, SHORT_CONVERTER);
-		map.put(short.class, PRIMITIVE_SHORT_CONVERTER);
 		map.put(java.sql.Date.class, SQLDATE_CONVERTER);
 		map.put(String.class, STRING_CONVERTER);
 		map.put(Time.class, TIME_CONVERTER);
 		map.put(Timestamp.class, TIMESTAMP_CONVERTER);
-	}
-
-	public static void clear() {
-		map.clear();
-		init();
+		map.put(URL.class, URL_CONVERTER);
 	}
 
 	public static <T> T convert(Object target, Class<T> convertClass) {
@@ -95,202 +63,34 @@ public class ConverterUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T convert(Object target, Class<T> convertClass,
 			String pattern) {
-		init();
 		Converter<T> converter = (Converter<T>) map.get(convertClass);
-		if (converter == null && convertClass.isInstance(target)) {
-			return (T) target;
+		if (converter == null) {
+			if (convertClass.isInstance(target)) {
+				return (T) target;
+			}
+			return null;
 		}
 		return converter.convert(target, pattern);
 	}
 
-	public static String convertAsString(Object o) {
-		return convertAsString(o, NULL_PATTERN);
-	}
-
-	public static String convertAsString(Object o, String pattern) {
-		return STRING_CONVERTER.convert(o, pattern);
-	}
-
-	public static BigDecimal convertAsBigDecimal(Object o) {
-		return convertAsBigDecimal(o, NULL_PATTERN);
-	}
-
-	public static BigDecimal convertAsBigDecimal(Object o, String pattern) {
-		return BIGDECIMAL_CONVERTER.convert(o, pattern);
-	}
-
-	public static BigInteger convertAsBigInteger(Object o) {
-		return convertAsBigInteger(o, NULL_PATTERN);
-	}
-
-	public static BigInteger convertAsBigInteger(Object o, String pattern) {
-		return BIGINTEGER_CONVERTER.convert(o, pattern);
-	}
-
-	public static byte[] convertAsBinary(Object o) {
-		return convertAsBinary(o, NULL_PATTERN);
-	}
-
-	public static byte[] convertAsBinary(Object o, String pattern) {
-		return BINARY_CONVERTER.convert(o, pattern);
-	}
-
-	public static Boolean convertAsBoolean(Object o) {
-		return convertAsBoolean(o, NULL_PATTERN);
-	}
-
-	public static Boolean convertAsBoolean(Object o, String pattern) {
-		return BOOLEAN_CONVERTER.convert(o, pattern);
-	}
-
-	public static Boolean convertAsPrimitiveBoolean(Object o) {
-		return convertAsPrimitiveBoolean(o, NULL_PATTERN);
-	}
-
-	public static Boolean convertAsPrimitiveBoolean(Object o, String pattern) {
-		return PRIMITIVE_BOOLEAN_CONVERTER.convert(o, pattern);
-	}
-
-	public static Byte convertAsByte(Object o) {
-		return convertAsByte(o, NULL_PATTERN);
-	}
-
-	public static Byte convertAsByte(Object o, String pattern) {
-		return BYTE_CONVERTER.convert(o, pattern);
-	}
-
-	public static Byte convertAsPrimitiveByte(Object o) {
-		return convertAsPrimitiveByte(o, NULL_PATTERN);
-	}
-
-	public static Byte convertAsPrimitiveByte(Object o, String pattern) {
-		return PRIMITIVE_BYTE_CONVERTER.convert(o, pattern);
-	}
-
-	public static Double convertAsDouble(Object o) {
-		return convertAsDouble(o, NULL_PATTERN);
-	}
-
-	public static Double convertAsDouble(Object o, String pattern) {
-		return DOUBLE_CONVERTER.convert(o, pattern);
-	}
-
-	public static Double convertAsPrimitiveDouble(Object o) {
-		return convertAsPrimitiveDouble(o, NULL_PATTERN);
-	}
-
-	public static Double convertAsPrimitiveDouble(Object o, String pattern) {
-		return PRIMITIVE_DOUBLE_CONVERTER.convert(o, pattern);
-	}
-
-	public static Float convertAsFloat(Object o) {
-		return convertAsFloat(o, NULL_PATTERN);
-	}
-
-	public static Float convertAsFloat(Object o, String pattern) {
-		return FLOAT_CONVERTER.convert(o, pattern);
-	}
-
-	public static Float convertAsPrimitiveFloat(Object o) {
-		return convertAsPrimitiveFloat(o, NULL_PATTERN);
-	}
-
-	public static Float convertAsPrimitiveFloat(Object o, String pattern) {
-		return PRIMITIVE_FLOAT_CONVERTER.convert(o, pattern);
-	}
-
-	public static Integer convertAsInteger(Object o) {
-		return convertAsInteger(o, NULL_PATTERN);
-	}
-
-	public static Integer convertAsInteger(Object o, String pattern) {
-		return INTEGER_CONVERTER.convert(o, pattern);
-	}
-
-	public static Integer convertAsPrimitiveInteger(Object o) {
-		return convertAsPrimitiveInteger(o, NULL_PATTERN);
-	}
-
-	public static Integer convertAsPrimitiveInteger(Object o, String pattern) {
-		return PRIMITIVE_INTEGER_CONVERTER.convert(o, pattern);
-	}
-
-	public static Long convertAsLong(Object o) {
-		return convertAsLong(o, NULL_PATTERN);
-	}
-
-	public static Long convertAsLong(Object o, String pattern) {
-		return LONG_CONVERTER.convert(o, pattern);
-	}
-
-	public static Long convertAsPrimitiveLong(Object o) {
-		return convertAsPrimitiveLong(o, NULL_PATTERN);
-	}
-
-	public static Long convertAsPrimitiveLong(Object o, String pattern) {
-		return PRIMITIVE_LONG_CONVERTER.convert(o, pattern);
-	}
-
-	public static Short convertAsShort(Object o) {
-		return convertAsShort(o, NULL_PATTERN);
-	}
-
-	public static Short convertAsShort(Object o, String pattern) {
-		return SHORT_CONVERTER.convert(o, pattern);
-	}
-
-	public static Short convertAsPrimitiveShort(Object o) {
-		return convertAsPrimitiveShort(o, NULL_PATTERN);
-	}
-
-	public static Short convertAsPrimitiveShort(Object o, String pattern) {
-		return PRIMITIVE_SHORT_CONVERTER.convert(o, pattern);
-	}
-
-	public static java.sql.Date convertAsSqlDate(Object o) {
-		return convertAsSqlDate(o, NULL_PATTERN);
-	}
-
-	public static java.sql.Date convertAsSqlDate(Object o, String pattern) {
-		return SQLDATE_CONVERTER.convert(o, pattern);
-	}
-
-	public static Timestamp convertAsTimestamp(Object o) {
-		return convertAsTimestamp(o, NULL_PATTERN);
-	}
-
-	public static Timestamp convertAsTimestamp(Object o, String pattern) {
-		return TIMESTAMP_CONVERTER.convert(o, pattern);
-	}
-
-	public static Time convertAsTime(Object o) {
-		return convertAsTime(o, NULL_PATTERN);
-	}
-
-	public static Time convertAsTime(Object o, String pattern) {
-		return TIME_CONVERTER.convert(o, pattern);
-	}
-
-	public static Calendar convertAsCalendar(Object o) {
-		return convertAsCalendar(o, NULL_PATTERN);
-	}
-
-	public static Calendar convertAsCalendar(Object o, String pattern) {
-		return CALENDAR_CONVERTER.convert(o, pattern);
-	}
-
-	public static Date convertAsDate(Object o) {
-		return convertAsDate(o, NULL_PATTERN);
-	}
-
-	public static Date convertAsDate(Object o, String pattern) {
-		return DATE_CONVERTER.convert(o, pattern);
-	}
-
 	public static interface Converter<T> {
 
+		/**
+		 * convert to T from o. if conversion is failed, return null.
+		 * 
+		 * @param o
+		 * @return
+		 * */
 		T convert(Object o);
 
+		/**
+		 * convert to T from o. if conversion is failed, return null.
+		 * 
+		 * @param o
+		 * @param pattern
+		 *            some of type needly conversion format.
+		 * @return converted object, or null.
+		 */
 		T convert(Object o, String pattern);
 
 	}
@@ -301,16 +101,10 @@ public class ConverterUtil {
 		public BigDecimal convert(Object o, String pattern) {
 			if (o == null) {
 				return null;
-			}
-			if (BigDecimal.class.isInstance(o)) {
+			} else if (BigDecimal.class.isInstance(o)) {
 				return (BigDecimal) o;
 			} else if (o instanceof java.util.Date) {
-				if (pattern != null) {
-					return new BigDecimal(new SimpleDateFormat(pattern)
-							.format(o));
-				} else {
-					return new BigDecimal(((java.util.Date) o).getTime());
-				}
+				return new BigDecimal(((java.util.Date) o).getTime());
 			} else if (Integer.class.isInstance(o)) {
 				int i = Integer.class.cast(o).intValue();
 				return new BigDecimal(i);
@@ -330,15 +124,13 @@ public class ConverterUtil {
 				BigInteger bi = BigInteger.class.cast(o);
 				return new BigDecimal(bi);
 			} else if (String.class.isInstance(o)) {
-				String s = DecimalFormatUtil.normalize((String) o);
-				if (StringUtil.isEmpty(s)) {
-					return null;
-				} else {
+				String s = DecimalFormatUtil.normalize(String.class.cast(o));
+				if (StringUtil.isEmpty(s) == false) {
 					return new BigDecimal(s);
 				}
+				return null;
 			} else {
-				String s = DecimalFormatUtil.normalize((String) o);
-				return new BigDecimal(s);
+				return null;
 			}
 
 		}
@@ -358,16 +150,18 @@ public class ConverterUtil {
 				return null;
 			} else if (o instanceof BigInteger) {
 				return (BigInteger) o;
-			} else {
-				long l = PRIMITIVE_LONG_CONVERTER.convert(o, pattern)
-						.longValue();
-				return BigInteger.valueOf(l);
+			} else if (o instanceof String) {
+				String s = DecimalFormatUtil.normalize(String.class.cast(o));
+				if (StringUtil.isEmpty(s) == false) {
+					return new BigInteger(s);
+				}
 			}
+			return null;
 		}
 
 		@Override
 		public BigInteger convert(Object o) {
-			return convert(o, null);
+			return convert(o, NULL_PATTERN);
 		}
 
 	};
@@ -379,13 +173,6 @@ public class ConverterUtil {
 			return convert(o, NULL_PATTERN);
 		}
 
-		protected Byte toByte(String s) {
-			if (StringUtil.isEmpty(s)) {
-				return null;
-			}
-			return new Byte(DecimalFormatUtil.normalize(s));
-		}
-
 		@Override
 		public Byte convert(Object o, String pattern) {
 			if (o == null) {
@@ -395,53 +182,28 @@ public class ConverterUtil {
 			} else if (o instanceof Number) {
 				return new Byte(((Number) o).byteValue());
 			} else if (o instanceof String) {
-				return toByte((String) o);
-			} else if (o instanceof java.util.Date) {
-				if (pattern != null) {
-					return new Byte(new SimpleDateFormat(pattern).format(o));
+				String s = DecimalFormatUtil.normalize(String.class.cast(o));
+				if (StringUtil.isEmpty(s) == false) {
+					return Byte.valueOf(s);
 				}
-				return new Byte((byte) ((java.util.Date) o).getTime());
-			} else if (o instanceof Boolean) {
-				return ((Boolean) o).booleanValue() ? new Byte((byte) 1)
-						: new Byte((byte) 0);
-			} else {
-				return toByte(o.toString());
+				return null;
 			}
+			return null;
 		}
-	};
-
-	public static Converter<Byte> PRIMITIVE_BYTE_CONVERTER = new Converter<Byte>() {
-
-		@Override
-		public Byte convert(Object o) {
-			return convert(o, NULL_PATTERN);
-		}
-
-		@Override
-		public Byte convert(Object o, String pattern) {
-			Byte convert = BYTE_CONVERTER.convert(o, pattern);
-			if (convert == null) {
-				return BYTE_DEFAULT_VALUE;
-			}
-			return convert;
-		}
-
 	};
 
 	public static Converter<byte[]> BINARY_CONVERTER = new Converter<byte[]>() {
 
 		@Override
 		public byte[] convert(Object o) {
-			if (o instanceof byte[]) {
-				return (byte[]) o;
-			} else if (o == null) {
+			if (o == null) {
 				return null;
-			} else {
-				if (o instanceof String) {
-					return ((String) o).getBytes();
-				}
-				throw new IllegalArgumentException(o.getClass().toString());
+			} else if (o instanceof byte[]) {
+				return (byte[]) o;
+			} else if (o instanceof String) {
+				return Base64Util.decode(String.class.cast(o));
 			}
+			return null;
 		}
 
 		@Override
@@ -454,39 +216,19 @@ public class ConverterUtil {
 	public static Converter<Boolean> BOOLEAN_CONVERTER = new Converter<Boolean>() {
 
 		@Override
-		public Boolean convert(Object value) {
-			if (value == null) {
-				return null;
-			}
-			if (Boolean.class.isInstance(value)) {
-				return Boolean.class.cast(value);
-			} else if (String.class.isInstance(value)) {
-				String s = String.class.cast(value);
-				return Boolean.valueOf(YES_PATTERN.matcher(s).matches());
-			} else if (Number.class.isInstance(value)) {
-				Number n = Number.class.cast(value);
-				return Boolean.valueOf(n.intValue() != 0);
-			} else {
-				return Boolean.TRUE;
-			}
-		}
-
-		@Override
-		public Boolean convert(Object o, String pattern) {
-			return convert(o);
-		}
-
-	};
-
-	public static Converter<Boolean> PRIMITIVE_BOOLEAN_CONVERTER = new Converter<Boolean>() {
-
-		@Override
 		public Boolean convert(Object o) {
-			Boolean convert = BOOLEAN_CONVERTER.convert(o);
-			if (convert == null) {
-				return BOOLEAN_DEFAULT_VALUE;
+			if (o == null) {
+				return null;
+			} else if (Boolean.class.isInstance(o)) {
+				return Boolean.class.cast(o);
+			} else if (String.class.isInstance(o)) {
+				String s = String.class.cast(o);
+				return Boolean.valueOf(YES_PATTERN.matcher(s).matches());
+			} else if (Number.class.isInstance(o)) {
+				Number n = Number.class.cast(o);
+				return Boolean.valueOf(n.intValue() != 0);
 			}
-			return convert;
+			return null;
 		}
 
 		@Override
@@ -500,7 +242,9 @@ public class ConverterUtil {
 
 		@Override
 		public Calendar convert(Object o, String pattern) {
-			if (o instanceof Calendar) {
+			if (o == null) {
+				return null;
+			} else if (o instanceof Calendar) {
 				return (Calendar) o;
 			}
 			java.util.Date date = DATE_CONVERTER.convert(o, pattern);
@@ -519,13 +263,14 @@ public class ConverterUtil {
 
 	};
 
-	public abstract static class DateConverter implements Converter<Date> {
+	public abstract static class DateConverter implements
+			Converter<java.util.Date> {
 
-		public Date toDate(String s, String pattern) {
+		public java.util.Date toDate(String s, String pattern) {
 			return toDate(s, pattern, Locale.getDefault());
 		}
 
-		public Date toDate(String s, String pattern, Locale locale) {
+		public java.util.Date toDate(String s, String pattern, Locale locale) {
 			SimpleDateFormat sdf = getDateFormat(s, pattern, locale);
 			try {
 				return sdf.parse(s);
@@ -635,22 +380,23 @@ public class ConverterUtil {
 	public static DateConverter DATE_CONVERTER = new DateConverter() {
 
 		@Override
-		public Date convert(Object o, String pattern) {
+		public java.util.Date convert(Object o, String pattern) {
 			if (o == null) {
 				return null;
 			} else if (o instanceof String) {
 				return toDate((String) o, pattern);
-			} else if (o instanceof Date) {
-				return (Date) o;
+			} else if (o instanceof java.util.Date) {
+				return (java.util.Date) o;
 			} else if (o instanceof Calendar) {
 				return ((Calendar) o).getTime();
-			} else {
-				return toDate(o.toString(), pattern);
+			} else if (o instanceof Number) {
+				return new java.util.Date(((Number) o).longValue());
 			}
+			return null;
 		}
 
 		@Override
-		public Date convert(Object o) {
+		public java.util.Date convert(Object o) {
 			return convert(o, NULL_PATTERN);
 		}
 
@@ -670,39 +416,17 @@ public class ConverterUtil {
 			} else if (o instanceof Double) {
 				return (Double) o;
 			} else if (o instanceof Number) {
-				return new Double(((Number) o).doubleValue());
+				return ((Number) o).doubleValue();
 			} else if (o instanceof String) {
-				return toDouble((String) o);
-			} else if (o instanceof java.util.Date) {
-				if (pattern != null) {
-					return new Double(new SimpleDateFormat(pattern).format(o));
+				String s = DecimalFormatUtil.normalize(String.class.cast(o));
+				if (StringUtil.isEmpty(s) == false) {
+					return Double.valueOf(s);
 				}
-				return new Double(((java.util.Date) o).getTime());
-			} else {
-				return toDouble(o.toString());
+				return null;
+			} else if (o instanceof Boolean) {
+				return ((Boolean) o).booleanValue() ? 1.0 : 0.0;
 			}
-		}
-
-		protected Double toDouble(String s) {
-			return new Double(DecimalFormatUtil.normalize(s));
-		}
-
-	};
-
-	public static Converter<Double> PRIMITIVE_DOUBLE_CONVERTER = new Converter<Double>() {
-
-		@Override
-		public Double convert(Object o, String pattern) {
-			Double convert = DOUBLE_CONVERTER.convert(o, pattern);
-			if (convert == null) {
-				return DOUBLE_DEFAULT_VALUE;
-			}
-			return convert;
-		}
-
-		@Override
-		public Double convert(Object o) {
-			return convert(o, NULL_PATTERN);
+			return null;
 		}
 
 	};
@@ -718,19 +442,15 @@ public class ConverterUtil {
 			} else if (o instanceof Number) {
 				return new Float(((Number) o).floatValue());
 			} else if (o instanceof String) {
-				return toFloat((String) o);
-			} else if (o instanceof java.util.Date) {
-				if (pattern != null) {
-					return new Float(new SimpleDateFormat(pattern).format(o));
+				String s = DecimalFormatUtil.normalize(String.class.cast(o));
+				if (StringUtil.isEmpty(s) == false) {
+					return Float.valueOf(s);
 				}
-				return new Float(((java.util.Date) o).getTime());
-			} else {
-				return toFloat(o.toString());
+				return null;
+			} else if (o instanceof Boolean) {
+				return ((Boolean) o).booleanValue() ? 1.0f : 0.0f;
 			}
-		}
-
-		protected Float toFloat(String s) {
-			return new Float(DecimalFormatUtil.normalize(s));
+			return null;
 		}
 
 		@Override
@@ -738,23 +458,6 @@ public class ConverterUtil {
 			return convert(o, NULL_PATTERN);
 		}
 
-	};
-
-	public static Converter<Float> PRIMITIVE_FLOAT_CONVERTER = new Converter<Float>() {
-
-		@Override
-		public Float convert(Object o, String pattern) {
-			Float convert = FLOAT_CONVERTER.convert(o, pattern);
-			if (convert == null) {
-				return FLOAT_DEFAULT_VALUE;
-			}
-			return convert;
-		}
-
-		@Override
-		public Float convert(Object o) {
-			return convert(o, NULL_PATTERN);
-		}
 	};
 
 	public static Converter<Integer> INTEGER_CONVERTER = new Converter<Integer>() {
@@ -766,24 +469,17 @@ public class ConverterUtil {
 			} else if (o instanceof Integer) {
 				return (Integer) o;
 			} else if (o instanceof Number) {
-				return new Integer(((Number) o).intValue());
+				return ((Number) o).intValue();
 			} else if (o instanceof String) {
-				return toInteger((String) o);
-			} else if (o instanceof java.util.Date) {
-				if (pattern != null) {
-					return new Integer(new SimpleDateFormat(pattern).format(o));
+				String s = DecimalFormatUtil.normalize(String.class.cast(o));
+				if (StringUtil.isEmpty(s) == false) {
+					return Integer.valueOf(s);
 				}
-				return new Integer((int) ((java.util.Date) o).getTime());
+				return null;
 			} else if (o instanceof Boolean) {
-				return ((Boolean) o).booleanValue() ? new Integer(1)
-						: new Integer(0);
-			} else {
-				return toInteger(o.toString());
+				return ((Boolean) o).booleanValue() ? 1 : 0;
 			}
-		}
-
-		protected Integer toInteger(String s) {
-			return new Integer(DecimalFormatUtil.normalize(s));
+			return null;
 		}
 
 		@Override
@@ -791,23 +487,6 @@ public class ConverterUtil {
 			return convert(o, NULL_PATTERN);
 		}
 
-	};
-
-	public static Converter<Integer> PRIMITIVE_INTEGER_CONVERTER = new Converter<Integer>() {
-
-		@Override
-		public Integer convert(Object o, String pattern) {
-			Integer convert = INTEGER_CONVERTER.convert(o, pattern);
-			if (convert == null) {
-				return INT_DEFAULT_VALUE;
-			}
-			return convert;
-		}
-
-		@Override
-		public Integer convert(Object o) {
-			return convert(o, NULL_PATTERN);
-		}
 	};
 
 	public static Converter<Long> LONG_CONVERTER = new Converter<Long>() {
@@ -819,23 +498,19 @@ public class ConverterUtil {
 			} else if (o instanceof Long) {
 				return (Long) o;
 			} else if (o instanceof Number) {
-				return new Long(((Number) o).longValue());
+				return ((Number) o).longValue();
 			} else if (o instanceof String) {
-				return toLong((String) o);
-			} else if (o instanceof java.util.Date) {
-				if (pattern != null) {
-					return new Long(new SimpleDateFormat(pattern).format(o));
+				String s = DecimalFormatUtil.normalize(String.class.cast(o));
+				if (StringUtil.isEmpty(s) == false) {
+					return Long.valueOf(s);
 				}
-				return new Long(((java.util.Date) o).getTime());
+				return null;
+			} else if (o instanceof java.util.Date) {
+				return ((java.util.Date) o).getTime();
 			} else if (o instanceof Boolean) {
-				return ((Boolean) o).booleanValue() ? new Long(1) : new Long(0);
-			} else {
-				return toLong(o.toString());
+				return ((Boolean) o).booleanValue() ? 1L : 0L;
 			}
-		}
-
-		protected Long toLong(String s) {
-			return new Long(DecimalFormatUtil.normalize(s));
+			return null;
 		}
 
 		@Override
@@ -843,23 +518,6 @@ public class ConverterUtil {
 			return convert(o, NULL_PATTERN);
 		}
 
-	};
-
-	public static Converter<Long> PRIMITIVE_LONG_CONVERTER = new Converter<Long>() {
-
-		@Override
-		public Long convert(Object o, String pattern) {
-			Long convert = LONG_CONVERTER.convert(o, pattern);
-			if (convert == null) {
-				return LONG_DEFAULT_VALUE;
-			}
-			return convert;
-		}
-
-		@Override
-		public Long convert(Object o) {
-			return convert(o, NULL_PATTERN);
-		}
 	};
 
 	public static Converter<Short> SHORT_CONVERTER = new Converter<Short>() {
@@ -873,22 +531,15 @@ public class ConverterUtil {
 			} else if (o instanceof Number) {
 				return new Short(((Number) o).shortValue());
 			} else if (o instanceof String) {
-				return toShort((String) o);
-			} else if (o instanceof java.util.Date) {
-				if (pattern != null) {
-					return new Short(new SimpleDateFormat(pattern).format(o));
+				String s = DecimalFormatUtil.normalize(String.class.cast(o));
+				if (StringUtil.isEmpty(s) == false) {
+					return Short.valueOf(s);
 				}
-				return new Short((short) ((java.util.Date) o).getTime());
+				return null;
 			} else if (o instanceof Boolean) {
-				return ((Boolean) o).booleanValue() ? new Short((short) 1)
-						: new Short((short) 0);
-			} else {
-				return toShort(o.toString());
+				return ((Boolean) o).booleanValue() ? (short) 1 : (short) 0;
 			}
-		}
-
-		protected Short toShort(String s) {
-			return new Short(DecimalFormatUtil.normalize(s));
+			return null;
 		}
 
 		@Override
@@ -896,33 +547,16 @@ public class ConverterUtil {
 			return convert(o, NULL_PATTERN);
 		}
 
-	};
-
-	public static Converter<Short> PRIMITIVE_SHORT_CONVERTER = new Converter<Short>() {
-
-		@Override
-		public Short convert(Object o, String pattern) {
-			Short convert = SHORT_CONVERTER.convert(o, pattern);
-			if (convert == null) {
-				return SHORT_DEFAULT_VALUE;
-			}
-			return convert;
-		}
-
-		@Override
-		public Short convert(Object o) {
-			return convert(o, NULL_PATTERN);
-		}
 	};
 
 	public static Converter<java.sql.Date> SQLDATE_CONVERTER = new Converter<java.sql.Date>() {
 
 		@Override
 		public java.sql.Date convert(Object o, String pattern) {
-			if (o instanceof Date) {
+			if (o instanceof java.sql.Date) {
 				return (java.sql.Date) o;
 			}
-			Date date = DATE_CONVERTER.convert(o, pattern);
+			java.util.Date date = DATE_CONVERTER.convert(o, pattern);
 			if (date != null) {
 				return new java.sql.Date(date.getTime());
 			}
@@ -965,13 +599,10 @@ public class ConverterUtil {
 		}
 
 		protected String toString(java.util.Date value, String pattern) {
-			if (value != null) {
-				if (pattern != null) {
-					return new SimpleDateFormat(pattern).format(value);
-				}
-				return value.toString();
+			if (pattern != null) {
+				return new SimpleDateFormat(pattern).format(value);
 			}
-			return null;
+			return value.toString();
 		}
 
 		@Override
@@ -992,7 +623,7 @@ public class ConverterUtil {
 			if (o instanceof Time) {
 				return (Time) o;
 			}
-			Date date = DATE_CONVERTER.convert(o, pattern);
+			java.util.Date date = DATE_CONVERTER.convert(o, pattern);
 			if (date != null) {
 				return new Time(date.getTime());
 			}
@@ -1012,7 +643,7 @@ public class ConverterUtil {
 			if (o instanceof Timestamp) {
 				return (Timestamp) o;
 			}
-			Date date = DATE_CONVERTER.convert(o, pattern);
+			java.util.Date date = DATE_CONVERTER.convert(o, pattern);
 			if (date != null) {
 				return new Timestamp(date.getTime());
 			}
@@ -1020,4 +651,26 @@ public class ConverterUtil {
 		}
 	};
 
+	public static Converter<URL> URL_CONVERTER = new Converter<URL>() {
+		@Override
+		public URL convert(Object o) {
+			if (o instanceof URL) {
+				return (URL) o;
+			}
+			try {
+				String url = STRING_CONVERTER.convert(o);
+				if (url != null) {
+					return new URL(url);
+				}
+				return null;
+			} catch (MalformedURLException e) {
+				throw new IllegalArgumentException(e);
+			}
+		}
+
+		@Override
+		public URL convert(Object o, String pattern) {
+			return convert(o);
+		}
+	};
 }
