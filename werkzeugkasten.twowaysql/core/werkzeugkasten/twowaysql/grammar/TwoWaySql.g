@@ -58,6 +58,7 @@ protected static final ExceptionMapper EM_ELSENODE = new ElseNodeExceptionMapper
 protected static final ExceptionMapper EM_ELSECOMMENT = new ElseCommentExceptionMapper();
 protected static final ExceptionMapper EM_ENDCOMMENT = new EndCommentExceptionMapper();
 protected static final ExceptionMapper EM_BINDCOMMENT = new BindCommentExceptionMapper();
+protected static final ExceptionMapper EM_BINDINGNAME = new BindingNameExceptionMapper();
 protected static final ExceptionMapper EM_INBIND = new InBindExceptionMapper();
 protected static final ExceptionMapper EM_INBINDSKIPPED = new InBindSkippedExceptionMapper();
 
@@ -299,13 +300,29 @@ bindcomment returns[BindNode node]
 		$node.freeze();
 	}
 	:
-	(C_ST SYM_BIND expression C_ED inbindchars)
+	(C_ST 
+		(bindingname {$node.setBindingName($bindingname.node); })?
+		SYM_BIND expression C_ED bindchars)
 	{
 		$node.setExpression($expression.node);
-		$node.setSkipped($inbindchars.node);
+		$node.setSkipped($bindchars.node);
 	}
 	;
 	finally { pop(); }
+
+bindingname returns[TxtNode node]
+	@init {
+		push(EM_BINDINGNAME);
+		$node = new TxtNode();
+	}
+	@after {
+		$node.freeze();
+	}
+	:
+	(SYM_BIND IDENT { $node.update($IDENT); })
+	;
+	finally { pop(); }
+
 
 inbind returns[InBindNode node]
 	@init {
@@ -317,7 +334,9 @@ inbind returns[InBindNode node]
 		$node.freeze();
 	}
 	:
-	IN C_ST SYM_BIND expression C_ED inbindskipped
+	IN C_ST 
+		(bindingname {$node.setBindingName($bindingname.node); })? 
+		SYM_BIND expression C_ED inbindskipped
 	{
 		$node.setExpression($expression.node);
 		$node.setSkipped($inbindskipped.node);
@@ -336,15 +355,15 @@ inbindskipped returns[TxtNode node]
 	}
 	:
 	SYM_LP 
-		txtcomment* inbindchars txtcomment*
+		txtcomment* bindchars txtcomment*
 		(SYM_C 
-			txtcomment* inbindchars txtcomment*
+			txtcomment* bindchars txtcomment*
 		)*
 	SYM_RP
 	;
 	finally { pop(); }
 
-inbindchars  returns[TxtNode node]
+bindchars  returns[TxtNode node]
 	// caller rule handles exceptions
 	@init {
 		$node = new TxtNode();

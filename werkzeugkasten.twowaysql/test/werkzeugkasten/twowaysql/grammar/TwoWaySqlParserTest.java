@@ -239,12 +239,27 @@ public class TwoWaySqlParserTest {
 		assertBindComment(MismatchedTokenException.class, "/*? hoge");
 		assertBindComment(MismatchedTokenException.class, "/*?hoge*");
 		assertBindComment(EarlyExitException.class, "/*?hoge*/");
+		assertBindComment(EarlyExitException.class, "/*?aa*?hoge*/");
 	}
 
 	protected void assertBindComment(Class<?> expected, String sql)
 			throws Exception {
 		TwoWaySqlParser parser = createParser(sql);
 		parser.bindcomment();
+		assertParser(expected, parser);
+	}
+
+	@Test
+	public void testBindingName() throws Exception {
+		assertBindingName(MismatchedTokenException.class, "");
+		assertBindingName(MissingTokenException.class, "?");
+		assertBindingName(MissingTokenException.class, "?*");
+	}
+
+	protected void assertBindingName(Class<?> expected, String sql)
+			throws Exception {
+		TwoWaySqlParser parser = createParser(sql);
+		parser.bindingname();
 		assertParser(expected, parser);
 	}
 
@@ -257,7 +272,7 @@ public class TwoWaySqlParserTest {
 		assertInBind(MismatchedTokenException.class, "IN/*?hoge*/");
 
 		assertInBind(MismatchedTokenException.class, "IN/*?hoge*/(aaa");
-		assertInBind(MismatchedTokenException.class, "IN/*?hoge*/(aaa /*");
+		assertInBind(EarlyExitException.class, "IN/*?hoge*/(aaa /*");
 	}
 
 	protected void assertInBind(Class<?> expected, String sql) throws Exception {

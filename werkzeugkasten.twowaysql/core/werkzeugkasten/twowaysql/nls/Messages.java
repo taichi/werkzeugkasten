@@ -47,6 +47,8 @@ public class Messages {
 	public static String EXPRESSION_RESULT;
 	public static String NULL_OR_EMPTY;
 	public static String SKIPPED_TEXT;
+	public static String LABEL_BINDINGNAME;
+	public static String LABEL_IDENT;
 
 	static {
 		Class<?> clazz = Messages.class;

@@ -1,3 +1,5 @@
+INSERT INTO TEST VALUES(3, /*? aaa*/'Hello'  # ぬは。
+);
 ada.cec のしのし / 30 d/*aa hoge,(
  piro*/  vvぎゃぼー
 -- BeGiN
@@ -5,11 +7,13 @@ ada.cec のしのし / 30 d/*aa hoge,(
  dd*/moge piro /*eLsEIF ccc + 44 '*/' */cccd
 	-- elSEif fuga < '0'
 		dfdze /*? dfd*/ vvvvvdfded
+		dfdze /*?ccc? ddd*/ zzzzzzzzeaiぐ
 	-- ElSe 
-	 zzz "-- fugafuga" iN/* ? hoge In(aa,bbb)*/('hoge',40)
+	 zzz "-- fugafuga" iN/*?aaa ? hoge In(aa,bbb)*/('hoge',40,*
+	, # ぬは。
+	'fuga'
+)
  -- eNd
- /*iF pp.is()*/	or
 	-- moge うぼぁ zz
 	doie5 #ccccc
- /*end*/
 /* EnD*/

@@ -4,11 +4,20 @@ import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
 public class BindNode extends AbstractQueryNode {
 
+	protected TxtNode bindingName;
 	protected ExpressionNode expression;
 	protected TxtNode skippedTxt;
 
 	public NodeType getType() {
 		return NodeType.BINDNODE;
+	}
+
+	public void setBindingName(TxtNode node) {
+		this.bindingName = node;
+	}
+
+	public TxtNode getBindingName() {
+		return this.bindingName;
 	}
 
 	public void setExpression(ExpressionNode node) {
