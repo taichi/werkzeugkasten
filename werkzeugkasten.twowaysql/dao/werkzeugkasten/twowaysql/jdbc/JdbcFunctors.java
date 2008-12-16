@@ -12,8 +12,8 @@ public class JdbcFunctors {
 
 	static final Logger LOG = LoggerFactory.getLogger(JdbcFunctors.class);
 
-	public static <R> R handleConnection(ConnectionHandler<R> handle)
-			throws SQLRuntimeException {
+	public static <RESULT> RESULT handleConnection(
+			ConnectionHandler<RESULT> handle) throws SQLRuntimeException {
 		Connection con = null;
 		try {
 			con = handle.getConnection();
@@ -39,9 +39,10 @@ public class JdbcFunctors {
 		}
 	}
 
-	public static <S extends Statement, R> R handleStatement(
-			StatementHandler<S, R> handler) throws SQLRuntimeException {
-		S statement = null;
+	public static <STATEMENT extends Statement, RESULT> RESULT handleStatement(
+			StatementHandler<STATEMENT, RESULT> handler)
+			throws SQLRuntimeException {
+		STATEMENT statement = null;
 		try {
 			statement = handler.prepare();
 			return handler.handle(statement);
@@ -62,8 +63,8 @@ public class JdbcFunctors {
 		}
 	}
 
-	public static <R> R handleResultSet(ResultSetHandler<R> handler)
-			throws SQLRuntimeException {
+	public static <RESULT> RESULT handleResultSet(
+			ResultSetHandler<RESULT> handler) throws SQLRuntimeException {
 		ResultSet rs = null;
 		try {
 			rs = handler.executeQuery();

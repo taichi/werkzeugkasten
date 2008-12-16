@@ -6,8 +6,8 @@ package werkzeugkasten.twowaysql.jdbc;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public interface StatementHandler<S extends Statement, R> {
-	S prepare() throws SQLException;
+public interface StatementHandler<STATEMENT extends Statement, RESULT> {
+	STATEMENT prepare() throws SQLException;
 
-	R handle(S statement) throws SQLException;
+	RESULT handle(STATEMENT statement) throws SQLException;
 }

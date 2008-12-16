@@ -111,6 +111,10 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 
 	@Override
 	public boolean visit(BindNode node, SqlContext<EC> context) {
+		if (LOG.isDebugEnabled()) {
+			String s = getString(context, node.getSkipped().getLocation());
+			LOG.debug(String.format(Messages.SKIPPED_TEXT, s));
+		}
 		Object o = eval(node, context);
 		if (o == null) {
 			context.append(" null ");
@@ -139,6 +143,10 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 
 	@Override
 	public boolean visit(InBindNode node, SqlContext<EC> context) {
+		if (LOG.isDebugEnabled()) {
+			String s = getString(context, node.getSkipped().getLocation());
+			LOG.debug(String.format(Messages.SKIPPED_TEXT, s));
+		}
 		Object maybeList = eval(node, context);
 		List<?> list = CollectionUtil.toList(maybeList);
 		context.append(" IN(");

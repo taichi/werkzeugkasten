@@ -1,6 +1,5 @@
 package werkzeugkasten.twowaysql.dao.base;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
 
 import org.antlr.runtime.ANTLRStringStream;
@@ -13,6 +12,7 @@ import werkzeugkasten.twowaysql.dao.QueryWrapper;
 import werkzeugkasten.twowaysql.error.ProblemCoordinator;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser;
+import werkzeugkasten.twowaysql.tree.visitor.QueryTreeAcceptor;
 import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
 public class DefaultQueryLoader implements QueryLoader<String> {
@@ -38,7 +38,7 @@ public class DefaultQueryLoader implements QueryLoader<String> {
 				parser.setProblemCoordinator(pc);
 				try {
 					TwoWaySqlParser.twowaySQL_return ret = parser.twowaySQL();
-					ret.query.accept(visitor, context);
+					QueryTreeAcceptor.accept(ret.query, visitor, context);
 				} catch (RecognitionException e) {
 					// do nothing.
 				}
@@ -47,7 +47,7 @@ public class DefaultQueryLoader implements QueryLoader<String> {
 	}
 
 	protected String loadSource(final String context) {
-		final StringBuilder stb = new StringBuilder();
+		final String[] result = new String[1];
 		new Streams.using<InputStream, Exception>(Exception.class) {
 			@Override
 			public InputStream open() throws Exception {
@@ -57,13 +57,7 @@ public class DefaultQueryLoader implements QueryLoader<String> {
 
 			@Override
 			public void handle(InputStream stream) throws Exception {
-				BufferedInputStream in = new BufferedInputStream(stream);
-				byte[] buf = new byte[BUF_SIZE];
-				int len = 0;
-				do {
-					len = in.read(buf, 0, BUF_SIZE);
-					stb.append(buf);
-				} while (0 < len);
+				result[0] = Streams.readText(stream);
 			}
 
 			@Override
@@ -71,6 +65,6 @@ public class DefaultQueryLoader implements QueryLoader<String> {
 				throw new IllegalStateException(exception);
 			}
 		};
-		return new String(stb);
+		return result[0];
 	}
 }
