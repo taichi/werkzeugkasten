@@ -3,6 +3,9 @@ package werkzeugkasten.twowaysql.dao.base;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import werkzeugkasten.twowaysql.dao.Binder;
 import werkzeugkasten.twowaysql.dao.BinderFactory;
 import werkzeugkasten.twowaysql.dao.BinderProducer;
@@ -33,11 +36,16 @@ import werkzeugkasten.twowaysql.dao.base.binder.TimeBinderFactory;
 import werkzeugkasten.twowaysql.dao.base.binder.TimestampBinderFactory;
 import werkzeugkasten.twowaysql.dao.base.binder.URLBinderFactory;
 import werkzeugkasten.twowaysql.dao.base.binder.UtilDateBinderFactory;
+import werkzeugkasten.twowaysql.nls.Messages;
 import werkzeugkasten.twowaysql.tree.BindNode;
+import werkzeugkasten.twowaysql.tree.ExpressionNode;
 import werkzeugkasten.twowaysql.tree.TxtNode;
-import werkzeugkasten.twowaysql.tree.loc.TextLocation;
+import werkzeugkasten.twowaysql.tree.loc.TextLocationUtil;
 
 public class DefaultBinderProducer implements BinderProducer {
+
+	protected static final Logger LOG = LoggerFactory
+			.getLogger(DefaultBinderProducer.class);
 
 	protected Map<Class<?>, BinderFactory> typeRegistory = new HashMap<Class<?>, BinderFactory>();
 	protected Map<String, BinderFactory> nameRegistory = new HashMap<String, BinderFactory>();
@@ -117,23 +125,34 @@ public class DefaultBinderProducer implements BinderProducer {
 	@Override
 	public <EC> Binder produce(SqlContext<EC> context, BindNode node,
 			Object object) {
-		if (object == null) {
-			throw new IllegalArgumentException();
+		String binderName = "";
+		try {
+			if (object == null) {
+				throw new IllegalArgumentException();
+			}
+			BinderFactory factory = null;
+			TxtNode nameNode = node.getBindingName();
+			if (nameNode != null) {
+				String src = context.getTwoWayQuery().getSource();
+				binderName = TextLocationUtil.substring(src, nameNode);
+				factory = findByName(binderName);
+			}
+			if (factory == null) {
+				factory = findByType(object.getClass());
+			}
+			if (factory == null) {
+				throw new IllegalStateException();
+			}
+			return factory.create(object);
+		} catch (RuntimeException e) {
+			if (LOG.isDebugEnabled()) {
+				ExpressionNode en = node.getExpression();
+				String exp = TextLocationUtil.substring(context
+						.getTwoWayQuery().getSource(), en);
+				LOG.debug(String.format(Messages.BINDERFACTORY_FAILED,
+						binderName, exp, object));
+			}
+			throw e;
 		}
-		BinderFactory factory = null;
-		TxtNode bindingName = node.getBindingName();
-		if (bindingName != null) {
-			TextLocation loc = bindingName.getLocation();
-			String src = context.getTwoWayQuery().getSource();
-			String name = src.substring(loc.startIndex(), loc.endIndex() + 1);
-			factory = findByName(name);
-		}
-		if (factory == null) {
-			factory = findByType(object.getClass());
-		}
-		if (factory == null) {
-			throw new IllegalStateException();
-		}
-		return factory.create(object);
 	}
 }

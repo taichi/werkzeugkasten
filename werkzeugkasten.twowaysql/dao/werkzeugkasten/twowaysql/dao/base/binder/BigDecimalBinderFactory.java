@@ -9,7 +9,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 public class BigDecimalBinderFactory implements BinderFactory {
 
 	@Override
-	public Binder create(Object value) {
+	public Binder create(Object value) throws IllegalArgumentException {
 		BigDecimal v = ConverterUtil.convert(value, BigDecimal.class);
 		if (v != null) {
 			return new BigDecimalBinder(v);

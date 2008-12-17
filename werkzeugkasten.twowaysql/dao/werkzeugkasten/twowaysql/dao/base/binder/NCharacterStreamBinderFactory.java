@@ -10,7 +10,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 public class NCharacterStreamBinderFactory implements BinderFactory {
 
 	@Override
-	public Binder create(Object value) {
+	public Binder create(Object value) throws IllegalArgumentException {
 		if (value instanceof Reader) {
 			Reader v = (Reader) value;
 			return new NCharacterStreamBinder(v);

@@ -7,7 +7,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 public class BooleanBinderFactory implements BinderFactory {
 
 	@Override
-	public Binder create(Object value) {
+	public Binder create(Object value) throws IllegalArgumentException {
 		Boolean v = ConverterUtil.convert(value, Boolean.class);
 		if (v != null) {
 			return new BooleanBinder(v);

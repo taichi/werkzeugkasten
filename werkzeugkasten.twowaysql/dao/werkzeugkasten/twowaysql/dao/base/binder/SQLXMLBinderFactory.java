@@ -8,7 +8,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 public class SQLXMLBinderFactory implements BinderFactory {
 
 	@Override
-	public Binder create(Object value) {
+	public Binder create(Object value) throws IllegalArgumentException {
 		if (value instanceof SQLXML) {
 			SQLXML v = (SQLXML) value;
 			return new SQLXMLBinder(v);

@@ -6,6 +6,6 @@ public interface BinderFactory {
 
 	String bindingTypeName();
 
-	Binder create(Object value);
+	Binder create(Object value) throws IllegalArgumentException;
 
 }

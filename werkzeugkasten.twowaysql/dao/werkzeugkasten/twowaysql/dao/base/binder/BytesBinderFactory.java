@@ -7,7 +7,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 public class BytesBinderFactory implements BinderFactory {
 
 	@Override
-	public Binder create(Object value) {
+	public Binder create(Object value) throws IllegalArgumentException {
 		byte[] v = ConverterUtil.convert(value, byte[].class);
 		if (v != null) {
 			return new BytesBinder(v);

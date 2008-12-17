@@ -8,7 +8,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 public class BlobBinderFactory implements BinderFactory {
 
 	@Override
-	public Binder create(Object value) {
+	public Binder create(Object value) throws IllegalArgumentException {
 		if (value instanceof Blob) {
 			Blob v = (Blob) value;
 			return new BlobBinder(v);

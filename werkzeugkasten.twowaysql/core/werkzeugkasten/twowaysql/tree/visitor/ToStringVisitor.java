@@ -8,7 +8,7 @@ import werkzeugkasten.twowaysql.tree.InBindNode;
 import werkzeugkasten.twowaysql.tree.QueryNode;
 import werkzeugkasten.twowaysql.tree.TwoWayQuery;
 import werkzeugkasten.twowaysql.tree.TxtNode;
-import werkzeugkasten.twowaysql.tree.loc.TextLocation;
+import werkzeugkasten.twowaysql.tree.loc.TextLocationUtil;
 
 public class ToStringVisitor implements QueryTreeVisitor<StringBuilder> {
 
@@ -19,10 +19,8 @@ public class ToStringVisitor implements QueryTreeVisitor<StringBuilder> {
 	}
 
 	protected String getTxt(QueryNode node) {
-		TextLocation loc = node.getLocation();
-		return "{"
-				+ this.allOfString.substring(loc.startIndex(),
-						loc.endIndex() + 1) + "}";
+		String txt = TextLocationUtil.substring(allOfString, node);
+		return "{" + txt + "}";
 	}
 
 	public void postVisit(QueryNode node, StringBuilder context) {

@@ -6,7 +6,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 public class ObjectBinderFactory implements BinderFactory {
 
 	@Override
-	public Binder create(Object value) {
+	public Binder create(Object value) throws IllegalArgumentException {
 		return new ObjectBinder(value);
 	}
 

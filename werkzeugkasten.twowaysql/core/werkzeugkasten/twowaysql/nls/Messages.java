@@ -49,7 +49,7 @@ public class Messages {
 	public static String SKIPPED_TEXT;
 	public static String LABEL_BINDINGNAME;
 	public static String LABEL_IDENT;
-
+	public static String BINDERFACTORY_FAILED;
 	static {
 		Class<?> clazz = Messages.class;
 		SingleLocaleStrings.load(clazz);

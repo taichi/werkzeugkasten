@@ -135,4 +135,21 @@ public class DefaultSqlProcessorTest {
 		assertEquals("World", s);
 	}
 
+	@Test
+	public void testBeginContains() throws Exception {
+		String path = "werkzeugkasten/twowaysql/dao/base/testBeginQuery.sql";
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("aaa", 1);
+		int count = target.process(path, map, new ResultSetMapper<Integer>() {
+			@Override
+			public Integer map(ResultSet rs) throws SQLException {
+				int count = 0;
+				while (rs.next()) {
+					count++;
+				}
+				return count;
+			}
+		});
+		assertEquals(3, count);
+	}
 }

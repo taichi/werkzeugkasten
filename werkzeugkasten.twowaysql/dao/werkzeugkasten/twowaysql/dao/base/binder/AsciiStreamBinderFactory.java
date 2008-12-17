@@ -8,7 +8,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 public class AsciiStreamBinderFactory implements BinderFactory {
 
 	@Override
-	public Binder create(Object value) {
+	public Binder create(Object value) throws IllegalArgumentException {
 		if (value instanceof InputStream) {
 			InputStream v = (InputStream) value;
 			return new AsciiStreamBinder(v);

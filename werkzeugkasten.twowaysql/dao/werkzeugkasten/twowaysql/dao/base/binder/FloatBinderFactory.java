@@ -7,7 +7,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 public class FloatBinderFactory implements BinderFactory {
 
 	@Override
-	public Binder create(Object value) {
+	public Binder create(Object value) throws IllegalArgumentException {
 		Float v = ConverterUtil.convert(value, Float.class);
 		if (v != null) {
 			return new FloatBinder(v);

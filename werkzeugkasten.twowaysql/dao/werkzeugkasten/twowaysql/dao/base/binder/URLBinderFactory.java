@@ -9,7 +9,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 public class URLBinderFactory implements BinderFactory {
 
 	@Override
-	public Binder create(Object value) {
+	public Binder create(Object value) throws IllegalArgumentException {
 		URL v = ConverterUtil.convert(value, URL.class);
 		if (v != null) {
 			return new URLBinder(v);

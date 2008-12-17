@@ -8,7 +8,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 public class NClobBinderFactory implements BinderFactory {
 
 	@Override
-	public Binder create(Object value) {
+	public Binder create(Object value) throws IllegalArgumentException {
 		if (value instanceof NClob) {
 			NClob v = (NClob) value;
 			return new NClobBinder(v);

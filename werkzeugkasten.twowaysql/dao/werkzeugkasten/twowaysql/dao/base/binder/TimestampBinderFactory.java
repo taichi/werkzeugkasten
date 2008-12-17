@@ -9,7 +9,7 @@ import werkzeugkasten.twowaysql.dao.BinderFactory;
 public class TimestampBinderFactory implements BinderFactory {
 
 	@Override
-	public Binder create(Object value) {
+	public Binder create(Object value) throws IllegalArgumentException {
 		Timestamp v = ConverterUtil.convert(value, Timestamp.class);
 		if (v != null) {
 			return new TimestampBinder(v);

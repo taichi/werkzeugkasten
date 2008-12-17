@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import werkzeugkasten.common.util.CollectionUtil;
+import werkzeugkasten.common.util.ConverterUtil;
 import werkzeugkasten.twowaysql.dao.BinderProducer;
 import werkzeugkasten.twowaysql.dao.SqlContext;
 import werkzeugkasten.twowaysql.dao.el.Expression;
@@ -21,7 +22,8 @@ import werkzeugkasten.twowaysql.tree.NodeType;
 import werkzeugkasten.twowaysql.tree.QueryNode;
 import werkzeugkasten.twowaysql.tree.TwoWayQuery;
 import werkzeugkasten.twowaysql.tree.TxtNode;
-import werkzeugkasten.twowaysql.tree.loc.TextLocation;
+import werkzeugkasten.twowaysql.tree.loc.Locatable;
+import werkzeugkasten.twowaysql.tree.loc.TextLocationUtil;
 import werkzeugkasten.twowaysql.tree.visitor.QueryTreeAcceptor;
 import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
@@ -56,7 +58,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 
 	@Override
 	public boolean visit(TxtNode node, SqlContext<EC> context) {
-		context.append(getString(context, node.getLocation()));
+		context.append(getString(context, node));
 		return false;
 	}
 
@@ -64,16 +66,11 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 	public boolean visit(ExpressionNode node, SqlContext<EC> context) {
 		Object bool = eval(node, context);
 		if (LOG.isDebugEnabled()) {
-			String s = getString(context, node.getLocation());
+			String s = getString(context, node);
 			LOG.debug(String.format(Messages.EXPRESSION_RESULT, s, bool));
 		}
-		if (bool instanceof Boolean) {
-			return ((Boolean) bool).booleanValue();
-		} else if (bool instanceof String) {
-			String str = (String) bool;
-			return Boolean.parseBoolean(str);
-		}
-		return false;
+		Boolean is = ConverterUtil.convert(bool, Boolean.class);
+		return is != null ? is : false;
 	}
 
 	@Override
@@ -88,9 +85,11 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 		context.append(SPC);
 		if (visit(node.getExpression(), context)) {
 			if (context.isConcluded() == false) {
-				context.append(getString(context, node.getMaybeSkip()
-						.getLocation()));
-				context.append(SPC);
+				TxtNode maybeSkip = node.getMaybeSkip();
+				if (maybeSkip != null) {
+					context.append(getString(context, maybeSkip));
+					context.append(SPC);
+				}
 			}
 			context.conclude();
 			return true;
@@ -112,7 +111,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 	@Override
 	public boolean visit(BindNode node, SqlContext<EC> context) {
 		if (LOG.isDebugEnabled()) {
-			String s = getString(context, node.getSkipped().getLocation());
+			String s = getString(context, node.getSkipped());
 			LOG.debug(String.format(Messages.SKIPPED_TEXT, s));
 		}
 		Object o = eval(node, context);
@@ -130,21 +129,20 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 	}
 
 	protected Object eval(ExpressionNode node, SqlContext<EC> context) {
-		String part = getString(context, node.getLocation());
+		String part = getString(context, node);
 		Expression<EC> e = parser.parse(part);
 		return e.eval(context.getExpressionContext());
 	}
 
-	protected static <EC> String getString(SqlContext<EC> context,
-			TextLocation loc) {
+	protected static <EC> String getString(SqlContext<EC> context, Locatable loc) {
 		String src = context.getTwoWayQuery().getSource();
-		return src.substring(loc.startIndex(), loc.endIndex() + 1);
+		return TextLocationUtil.substring(src, loc);
 	}
 
 	@Override
 	public boolean visit(InBindNode node, SqlContext<EC> context) {
 		if (LOG.isDebugEnabled()) {
-			String s = getString(context, node.getSkipped().getLocation());
+			String s = getString(context, node.getSkipped());
 			LOG.debug(String.format(Messages.SKIPPED_TEXT, s));
 		}
 		Object maybeList = eval(node, context);
@@ -161,7 +159,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 		} else {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(String.format(Messages.EXPRESSION_RESULT, getString(
-						context, node.getLocation()), Messages.NULL_OR_EMPTY));
+						context, node), Messages.NULL_OR_EMPTY));
 			}
 			context.append("null");
 		}
