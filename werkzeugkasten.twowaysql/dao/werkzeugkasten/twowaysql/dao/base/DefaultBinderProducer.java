@@ -23,6 +23,7 @@ import werkzeugkasten.twowaysql.dao.base.binder.ClobBinderFactory;
 import werkzeugkasten.twowaysql.dao.base.binder.DateBinderFactory;
 import werkzeugkasten.twowaysql.dao.base.binder.DoubleBinderFactory;
 import werkzeugkasten.twowaysql.dao.base.binder.FloatBinderFactory;
+import werkzeugkasten.twowaysql.dao.base.binder.IntBinderFactory;
 import werkzeugkasten.twowaysql.dao.base.binder.NCharacterStreamBinderFactory;
 import werkzeugkasten.twowaysql.dao.base.binder.NClobBinderFactory;
 import werkzeugkasten.twowaysql.dao.base.binder.NStringBinderFactory;
@@ -63,6 +64,7 @@ public class DefaultBinderProducer implements BinderProducer {
 		registerAll(new DateBinderFactory());
 		registerAll(new DoubleBinderFactory());
 		registerAll(new FloatBinderFactory());
+		registerAll(new IntBinderFactory());
 		registerAll(new NClobBinderFactory());
 		registerAll(new ObjectBinderFactory());
 		registerAll(new RefBinderFactory());

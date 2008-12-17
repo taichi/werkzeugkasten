@@ -84,7 +84,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 	public boolean visit(IfNode node, SqlContext<EC> context) {
 		context.append(SPC);
 		if (visit(node.getExpression(), context)) {
-			if (context.isConcluded() == false) {
+			if (context.isConcluded()) {
 				TxtNode maybeSkip = node.getMaybeSkip();
 				if (maybeSkip != null) {
 					context.append(getString(context, maybeSkip));

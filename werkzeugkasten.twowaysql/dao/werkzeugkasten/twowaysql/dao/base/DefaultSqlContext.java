@@ -1,9 +1,7 @@
 package werkzeugkasten.twowaysql.dao.base;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 import werkzeugkasten.twowaysql.dao.Binder;
 import werkzeugkasten.twowaysql.dao.QueryWrapper;
@@ -13,18 +11,20 @@ public class DefaultSqlContext<EC> implements SqlContext<EC> {
 
 	protected EC expressionContext;
 	protected QueryWrapper twoWayQuery;
-	protected Queue<BeginStackElement> beginStack = new ArrayDeque<BeginStackElement>();
-	protected StringBuilder allOfQuery = new StringBuilder();
+	protected List<BeginStackElement> beginStack = new ArrayList<BeginStackElement>();
 	protected List<Binder> binders = new ArrayList<Binder>();
 
 	protected static class BeginStackElement {
-		protected StringBuilder structured;
+		protected StringBuilder structured = new StringBuilder();
 		protected boolean concluded = false;
 	}
 
 	protected DefaultSqlContext(EC context, QueryWrapper twoWayQuery) {
 		this.expressionContext = context;
 		this.twoWayQuery = twoWayQuery;
+		BeginStackElement e = new BeginStackElement();
+		e.structured = new StringBuilder();
+		this.beginStack.add(e);
 	}
 
 	@Override
@@ -40,34 +40,38 @@ public class DefaultSqlContext<EC> implements SqlContext<EC> {
 	@Override
 	public void begin() {
 		BeginStackElement e = new BeginStackElement();
-		e.structured = this.allOfQuery;
 		this.beginStack.add(e);
-		this.allOfQuery = new StringBuilder();
+	}
+
+	protected BeginStackElement getLast() {
+		int last = this.beginStack.size() - 1;
+		return this.beginStack.get(last);
 	}
 
 	@Override
 	public void conclude() {
-		this.beginStack.peek().concluded = true;
+		BeginStackElement e = getLast();
+		e.concluded = true;
 	}
 
 	@Override
 	public boolean isConcluded() {
-		return this.beginStack.peek().concluded;
+		return getLast().concluded;
 	}
 
 	@Override
 	public void end() {
-		BeginStackElement e = this.beginStack.remove();
-		StringBuilder parent = e.structured;
-		if (e.concluded) {
-			parent.append(this.allOfQuery);
+		BeginStackElement c = this.beginStack
+				.remove(this.beginStack.size() - 1);
+		BeginStackElement p = getLast();
+		if (c.concluded) {
+			p.structured.append(c.structured);
 		}
-		this.allOfQuery = parent;
 	}
 
 	@Override
 	public void append(String partOfQuery) {
-		this.allOfQuery.append(partOfQuery);
+		getLast().structured.append(partOfQuery);
 	}
 
 	@Override
@@ -77,7 +81,7 @@ public class DefaultSqlContext<EC> implements SqlContext<EC> {
 
 	@Override
 	public String getSql() {
-		return new String(this.allOfQuery);
+		return new String(getLast().structured);
 	}
 
 	@Override

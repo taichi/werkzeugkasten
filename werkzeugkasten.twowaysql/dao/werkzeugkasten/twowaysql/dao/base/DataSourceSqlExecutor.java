@@ -22,7 +22,8 @@ import werkzeugkasten.twowaysql.jdbc.StatementHandler;
 
 public class DataSourceSqlExecutor implements SqlExecutor {
 
-	static final Logger LOG = LoggerFactory.getLogger(SqlExecutor.class);
+	static final Logger LOG = LoggerFactory
+			.getLogger(DataSourceSqlExecutor.class);
 
 	protected DataSource dataSource;
 
