@@ -29,7 +29,10 @@ import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
 public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 
-	static final Logger LOG = LoggerFactory.getLogger(SqlTreeVisitor.class);
+	static final Logger LOG_RESULT = LoggerFactory
+			.getLogger(SqlTreeVisitor.class + ".result");
+	static final Logger LOG_SKIPPED = LoggerFactory
+			.getLogger(SqlTreeVisitor.class + ".skipped");
 
 	protected static final String SPC = " ";
 	protected ExpressionParser parser;
@@ -65,9 +68,10 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 	@Override
 	public boolean visit(ExpressionNode node, SqlContext<EC> context) {
 		Object bool = eval(node, context);
-		if (LOG.isDebugEnabled()) {
+		if (LOG_RESULT.isDebugEnabled()) {
 			String s = getString(context, node);
-			LOG.debug(String.format(Messages.EXPRESSION_RESULT, s, bool));
+			LOG_RESULT
+					.debug(String.format(Messages.EXPRESSION_RESULT, s, bool));
 		}
 		Boolean is = ConverterUtil.convert(bool, Boolean.class);
 		return is != null ? is : false;
@@ -92,13 +96,20 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 				}
 			}
 			context.conclude();
+			skipped(node.getElseIfNodes(), context);
+			skipped(node.getElse(), context);
 			return true;
+		} else {
+			skipped(node.getChildren(), context);
 		}
 		for (IfNode in : node.getElseIfNodes()) {
 			if (visit(in.getExpression(), context)) {
 				context.conclude();
 				QueryTreeAcceptor.accept(in.getChildren(), this, context);
+				skipped(node.getElse(), context);
 				return false;
+			} else {
+				skipped(in, context);
 			}
 		}
 		if (node.getElse().iterator().hasNext()) {
@@ -108,12 +119,26 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 		return false;
 	}
 
+	protected void skipped(Iterable<? extends Locatable> list,
+			SqlContext<EC> context) {
+		if (LOG_SKIPPED.isDebugEnabled()) {
+			for (Locatable node : list) {
+				skipped(node, context);
+			}
+		}
+	}
+
+	protected void skipped(Locatable node, SqlContext<EC> context) {
+		if (LOG_SKIPPED.isDebugEnabled()) {
+			String s = getString(context, node);
+			LOG_SKIPPED.debug(String.format(Messages.SKIPPED_TEXT, s));
+		}
+	}
+
 	@Override
 	public boolean visit(BindNode node, SqlContext<EC> context) {
-		if (LOG.isDebugEnabled()) {
-			String s = getString(context, node.getSkipped());
-			LOG.debug(String.format(Messages.SKIPPED_TEXT, s));
-		}
+		skipped(node.getSkipped(), context);
+
 		Object o = eval(node, context);
 		if (o == null) {
 			context.append(" null ");
@@ -141,10 +166,8 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 
 	@Override
 	public boolean visit(InBindNode node, SqlContext<EC> context) {
-		if (LOG.isDebugEnabled()) {
-			String s = getString(context, node.getSkipped());
-			LOG.debug(String.format(Messages.SKIPPED_TEXT, s));
-		}
+		skipped(node.getSkipped(), context);
+
 		Object maybeList = eval(node, context);
 		List<?> list = CollectionUtil.toList(maybeList);
 		context.append(" IN(");
@@ -157,9 +180,9 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 				}
 			}
 		} else {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(String.format(Messages.EXPRESSION_RESULT, getString(
-						context, node), Messages.NULL_OR_EMPTY));
+			if (LOG_RESULT.isDebugEnabled()) {
+				LOG_RESULT.debug(String.format(Messages.EXPRESSION_RESULT,
+						getString(context, node), Messages.NULL_OR_EMPTY));
 			}
 			context.append("null");
 		}

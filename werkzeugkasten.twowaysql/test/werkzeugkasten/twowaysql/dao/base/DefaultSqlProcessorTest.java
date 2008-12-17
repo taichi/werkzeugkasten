@@ -1,6 +1,7 @@
 package werkzeugkasten.twowaysql.dao.base;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.InputStream;
 import java.sql.Connection;
@@ -166,9 +167,9 @@ public class DefaultSqlProcessorTest {
 	@Test
 	public void testContainsMaybeSkippedTxt() throws Exception {
 		String path = "werkzeugkasten/twowaysql/dao/base/maybeSkipQuery.sql";
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("aaa", 1);
-		map.put("bbb", 2);
+		map.put("bbb", new String[] { "2" });
 		String name = target.process(path, map, new ResultSetMapper<String>() {
 			@Override
 			public String map(ResultSet rs) throws SQLException {
@@ -176,5 +177,28 @@ public class DefaultSqlProcessorTest {
 			}
 		});
 		assertEquals("World", name);
+	}
+
+	@Test
+	public void testConditions() throws Exception {
+		Map<String, Integer> cond = new HashMap<String, Integer>();
+		cond.put("aaa", 0);
+		assertNull(executeConditionsQuery(cond));
+		cond.put("aaa", 1);
+		assertEquals("Hello", executeConditionsQuery(cond));
+		cond.put("aaa", 2);
+		assertEquals("World", executeConditionsQuery(cond));
+	}
+
+	protected String executeConditionsQuery(Map<String, Integer> cond)
+			throws Exception {
+		String path = "werkzeugkasten/twowaysql/dao/base/testElseIfQuery.sql";
+		String name = target.process(path, cond, new ResultSetMapper<String>() {
+			@Override
+			public String map(ResultSet rs) throws SQLException {
+				return rs.next() ? rs.getString(2) : null;
+			}
+		});
+		return name;
 	}
 }
