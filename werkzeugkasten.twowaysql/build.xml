@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="jar" name="werkzeugkasten.twowaysql">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../../../Tools/eclipse/eclipse3.4.1"/>
+    <property name="H2" value="${ECLIPSE_HOME}/configuration/org.eclipse.osgi/bundles/238/1/.cp/lib/h2-2008-10-04.jar"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+	<property name="dest-version" value="0.0.1" />
+	<property name="dest-root" value="target" />
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.junit4_4.3.1/junit.jar"/>
+    </path>
+    <path id="werkzeugkasten.twowaysql.classpath">
+    	<path path="${dest-root}/core" />
+    	<path path="${dest-root}/dao" />
+      	<path path="${dest-root}/mvel" />
+      	<path path="${dest-root}/test" />
+        <path refid="JUnit 4.libraryclasspath"/>
+        <pathelement location="lib/logback-classic-0.9.13.jar"/>
+        <pathelement location="lib/logback-core-0.9.13.jar"/>
+        <pathelement location="lib/antlr-3.1.1-runtime.jar"/>
+        <pathelement location="lib/mvel2-2.0.5.jar"/>
+        <pathelement location="lib/nlsgen-runtime.jar"/>
+        <pathelement location="lib/slf4j-api-1.5.6.jar"/>
+        <pathelement location="${H2}"/>
+    </path>
+    <target name="init">
+        <mkdir dir="${dest-root}/core"/>
+        <mkdir dir="${dest-root}/dao"/>
+        <mkdir dir="${dest-root}/mvel"/>
+        <mkdir dir="${dest-root}/test"/>
+        <copy includeemptydirs="false" todir="${dest-root}/core">
+            <fileset dir="core" excludes="**/*.launch, **/*.java"/>
+        </copy>
+        <copy includeemptydirs="false" todir="${dest-root}/dao">
+            <fileset dir="dao" excludes="**/*.launch, **/*.java"/>
+        </copy>
+        <copy includeemptydirs="false" todir="${dest-root}/mvel">
+            <fileset dir="mvel" excludes="**/*.launch, **/*.java"/>
+        </copy>
+        <copy includeemptydirs="false" todir="${dest-root}/test">
+            <fileset dir="test" excludes="**/*.launch, **/*.java"/>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="${dest-root}" />
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${dest-root}/core" source="${source}" target="${target}">
+            <src path="core"/>
+            <classpath refid="werkzeugkasten.twowaysql.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${dest-root}/dao" source="${source}" target="${target}">
+            <src path="dao"/>
+            <classpath refid="werkzeugkasten.twowaysql.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${dest-root}/mvel" source="${source}" target="${target}">
+            <src path="mvel"/>
+            <classpath refid="werkzeugkasten.twowaysql.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${dest-root}/test" source="${source}" target="${target}">
+            <src path="test"/>
+            <classpath refid="werkzeugkasten.twowaysql.classpath"/>
+        </javac>
+    </target>
+	<target depends="clean,build" name="jar">
+		<jar basedir="${dest-root}/core" destfile="${dest-root}/werkzeugkasten.twowaysql.core-${dest-version}.jar" />
+		<jar basedir="core" destfile="${dest-root}/werkzeugkasten.twowaysql.core-${dest-version}-sources.jar"/>
+		<jar basedir="${dest-root}/dao" destfile="${dest-root}/werkzeugkasten.twowaysql.dao-${dest-version}.jar" />
+		<jar basedir="dao" includes="**/**" destfile="${dest-root}/werkzeugkasten.twowaysql.dao-${dest-version}-sources.jar"/>
+		<jar basedir="${dest-root}/mvel" destfile="${dest-root}/werkzeugkasten.twowaysql.mvel-${dest-version}.jar" />
+		<jar basedir="mvel" destfile="${dest-root}/werkzeugkasten.twowaysql.mvel-${dest-version}-sources.jar" />
+	</target>	
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="DefaultBinderProducerTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="werkzeugkasten.twowaysql.dao.base.DefaultBinderProducerTest" todir="${junit.output.dir}"/>
+            <classpath refid="werkzeugkasten.twowaysql.classpath"/>
+        </junit>
+    </target>
+    <target name="DefaultSqlProcessorTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="werkzeugkasten.twowaysql.dao.base.DefaultSqlProcessorTest" todir="${junit.output.dir}"/>
+            <classpath refid="werkzeugkasten.twowaysql.classpath"/>
+        </junit>
+    </target>
+    <target name="TwoWaySqlParserTest_en_US">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="werkzeugkasten.twowaysql.grammar.TwoWaySqlParserTest" todir="${junit.output.dir}"/>
+            <jvmarg line="-Duser.language=en -Duser.country=US"/>
+            <classpath refid="werkzeugkasten.twowaysql.classpath"/>
+        </junit>
+    </target>
+    <target name="TwoWaySqlParserTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="werkzeugkasten.twowaysql.grammar.TwoWaySqlParserTest" todir="${junit.output.dir}"/>
+            <classpath refid="werkzeugkasten.twowaysql.classpath"/>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>
