@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.h2.jdbcx.JdbcDataSource;
 import org.h2.tools.Server;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -35,6 +36,10 @@ public class DefaultSqlProcessorTest {
 	public static void bootDb() throws Exception {
 		tcp = Server.createTcpServer(null);
 		tcp.start();
+		executeSql("werkzeugkasten/twowaysql/dao/base/testdata.sql");
+	}
+
+	private static void executeSql(final String path) {
 		JdbcFunctors.handleConnection(new ConnectionHandler<Void>() {
 			@Override
 			public Connection getConnection() throws SQLException {
@@ -50,8 +55,7 @@ public class DefaultSqlProcessorTest {
 					public InputStream open() throws Exception {
 						ClassLoader cl = Thread.currentThread()
 								.getContextClassLoader();
-						return cl
-								.getResourceAsStream("werkzeugkasten/twowaysql/dao/base/testdata.sql");
+						return cl.getResourceAsStream(path);
 					}
 
 					@Override
@@ -109,7 +113,13 @@ public class DefaultSqlProcessorTest {
 
 		target = new DefaultSqlProcessor();
 		target.setEnviroment(env);
+		executeSql("werkzeugkasten/twowaysql/dao/base/initdata.sql");
 
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		executeSql("werkzeugkasten/twowaysql/dao/base/destroydata.sql");
 	}
 
 	@Test
@@ -150,6 +160,6 @@ public class DefaultSqlProcessorTest {
 				return count;
 			}
 		});
-		assertEquals(3, count);
+		assertEquals(2, count);
 	}
 }
