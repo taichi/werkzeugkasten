@@ -3,6 +3,7 @@ package werkzeugkasten.common.util;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigInteger;
+import java.net.URL;
 
 import org.junit.Test;
 
@@ -18,6 +19,9 @@ public class ConverterUtilTest {
 		s = "300000000000000000";
 		assertEquals(new BigInteger(s), ConverterUtil.convert(s,
 				BigInteger.class));
+
+		s = "file://" + this.getClass().getName();
+		assertEquals(s, ConverterUtil.convert(s, URL.class).toExternalForm());
 	}
 
 }

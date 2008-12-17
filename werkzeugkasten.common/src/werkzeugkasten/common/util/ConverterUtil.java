@@ -582,6 +582,8 @@ public class ConverterUtil {
 				return toString((Number) value, pattern);
 			} else if (value instanceof byte[]) {
 				return Base64Util.encode((byte[]) value);
+			} else if (value instanceof URL) {
+				return ((URL) value).toExternalForm();
 			} else {
 				return value.toString();
 			}
