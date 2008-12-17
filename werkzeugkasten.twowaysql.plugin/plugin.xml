@@ -11,5 +11,13 @@
             name="TwoWaySqlEditor">
       </editor>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors.documentProviders">
+      <provider
+            class="werkzeugkasten.twowaysql.editor.TwoWaySqlDocumentProvider"
+            extensions=".sql"
+            id="werkzeugkasten.twowaysql.provider">
+      </provider>
+   </extension>
 
 </plugin>
