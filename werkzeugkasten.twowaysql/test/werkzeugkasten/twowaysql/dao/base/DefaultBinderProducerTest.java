@@ -35,27 +35,21 @@ public class DefaultBinderProducerTest {
 
 		@Override
 		public String getBaseTypeName() throws SQLException {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public Object getObject() throws SQLException {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public Object getObject(Map<String, Class<?>> map) throws SQLException {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public void setObject(Object value) throws SQLException {
-			// TODO Auto-generated method stub
-
 		}
-
 	}
 }
