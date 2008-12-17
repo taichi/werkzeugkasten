@@ -16,7 +16,7 @@ public class LazyLoadingReference<T> {
 		this.factory = factory;
 	}
 
-	T get() throws IllegalStateException {
+	public T get() throws IllegalStateException {
 		while (true) {
 			WeakReference<Future<T>> ref = reference.get();
 			boolean valid = true;
