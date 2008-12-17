@@ -162,4 +162,19 @@ public class DefaultSqlProcessorTest {
 		});
 		assertEquals(2, count);
 	}
+
+	@Test
+	public void testContainsMaybeSkippedTxt() throws Exception {
+		String path = "werkzeugkasten/twowaysql/dao/base/maybeSkipQuery.sql";
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("aaa", 1);
+		map.put("bbb", 2);
+		String name = target.process(path, map, new ResultSetMapper<String>() {
+			@Override
+			public String map(ResultSet rs) throws SQLException {
+				return rs.next() ? rs.getString(2) : null;
+			}
+		});
+		assertEquals("World", name);
+	}
 }
