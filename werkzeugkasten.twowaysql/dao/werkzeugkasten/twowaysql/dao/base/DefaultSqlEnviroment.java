@@ -11,7 +11,7 @@ import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
 public class DefaultSqlEnviroment implements SqlEnviroment {
 
-	protected QueryLoader<?> queryLoader = new DefaultQueryLoader();
+	protected QueryLoader<?> queryLoader;
 	protected ExpressionParser elparser;
 	protected BinderProducer binderProducer;
 	protected SqlExecutor executor;
@@ -20,6 +20,10 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 	@SuppressWarnings("unchecked")
 	public <LC> QueryLoader<LC> getLoader(LC context) {
 		return (QueryLoader<LC>) this.queryLoader;
+	}
+
+	public void setLoader(QueryLoader<?> loader) {
+		this.queryLoader = loader;
 	}
 
 	@Override

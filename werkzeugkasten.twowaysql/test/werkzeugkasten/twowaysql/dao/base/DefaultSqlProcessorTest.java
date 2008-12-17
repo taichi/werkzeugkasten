@@ -94,6 +94,8 @@ public class DefaultSqlProcessorTest {
 	@Before
 	public void setUp() throws Exception {
 		DefaultSqlEnviroment env = new DefaultSqlEnviroment();
+		DefaultQueryLoader loader = new DefaultQueryLoader();
+		env.setLoader(loader);
 		DefaultBinderProducer pro = new DefaultBinderProducer();
 		pro.initialize();
 		env.setBinderProducer(pro);

@@ -17,8 +17,6 @@ import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
 public class DefaultQueryLoader implements QueryLoader<String> {
 
-	public static final int BUF_SIZE = 128 * 128;
-
 	@Override
 	public QueryWrapper load(String context) {
 		final String source = loadSource(context);
