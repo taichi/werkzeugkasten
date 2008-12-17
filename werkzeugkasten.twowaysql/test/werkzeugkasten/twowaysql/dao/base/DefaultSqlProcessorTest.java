@@ -34,6 +34,7 @@ public class DefaultSqlProcessorTest {
 
 	@BeforeClass
 	public static void bootDb() throws Exception {
+		org.h2.Driver.load();
 		tcp = Server.createTcpServer(null);
 		tcp.start();
 		executeSql("werkzeugkasten/twowaysql/dao/base/testdata.sql");
@@ -43,7 +44,6 @@ public class DefaultSqlProcessorTest {
 		JdbcFunctors.handleConnection(new ConnectionHandler<Void>() {
 			@Override
 			public Connection getConnection() throws SQLException {
-				org.h2.Driver.load();
 				return DriverManager.getConnection(url, "sa", "");
 			}
 
