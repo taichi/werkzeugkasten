@@ -34,10 +34,6 @@ public class ConverterUtil {
 	private static Map<Class<?>, Converter<?>> map = new HashMap<Class<?>, Converter<?>>(
 			17);
 
-	static {
-		init();
-	}
-
 	private static void init() {
 		map.put(BigDecimal.class, BIGDECIMAL_CONVERTER);
 		map.put(BigInteger.class, BIGINTEGER_CONVERTER);
@@ -677,4 +673,9 @@ public class ConverterUtil {
 			return convert(o);
 		}
 	};
+
+	static {
+		init();
+	}
+
 }
