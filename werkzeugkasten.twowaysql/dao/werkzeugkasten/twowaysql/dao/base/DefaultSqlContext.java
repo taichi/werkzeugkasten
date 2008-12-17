@@ -11,10 +11,10 @@ public class DefaultSqlContext<EC> implements SqlContext<EC> {
 
 	protected EC expressionContext;
 	protected QueryWrapper twoWayQuery;
-	protected List<BeginStackElement> beginStack = new ArrayList<BeginStackElement>();
+	protected List<QueryStackElement> queryStack = new ArrayList<QueryStackElement>();
 	protected List<Binder> binders = new ArrayList<Binder>();
 
-	protected static class BeginStackElement {
+	protected static class QueryStackElement {
 		protected StringBuilder structured = new StringBuilder();
 		protected boolean concluded = false;
 	}
@@ -22,9 +22,9 @@ public class DefaultSqlContext<EC> implements SqlContext<EC> {
 	protected DefaultSqlContext(EC context, QueryWrapper twoWayQuery) {
 		this.expressionContext = context;
 		this.twoWayQuery = twoWayQuery;
-		BeginStackElement e = new BeginStackElement();
+		QueryStackElement e = new QueryStackElement();
 		e.structured = new StringBuilder();
-		this.beginStack.add(e);
+		this.queryStack.add(e);
 	}
 
 	@Override
@@ -39,18 +39,18 @@ public class DefaultSqlContext<EC> implements SqlContext<EC> {
 
 	@Override
 	public void begin() {
-		BeginStackElement e = new BeginStackElement();
-		this.beginStack.add(e);
+		QueryStackElement e = new QueryStackElement();
+		this.queryStack.add(e);
 	}
 
-	protected BeginStackElement getLast() {
-		int last = this.beginStack.size() - 1;
-		return this.beginStack.get(last);
+	protected QueryStackElement getLast() {
+		int last = this.queryStack.size() - 1;
+		return this.queryStack.get(last);
 	}
 
 	@Override
 	public void conclude() {
-		BeginStackElement e = getLast();
+		QueryStackElement e = getLast();
 		e.concluded = true;
 	}
 
@@ -61,9 +61,9 @@ public class DefaultSqlContext<EC> implements SqlContext<EC> {
 
 	@Override
 	public void end() {
-		BeginStackElement c = this.beginStack
-				.remove(this.beginStack.size() - 1);
-		BeginStackElement p = getLast();
+		QueryStackElement c = this.queryStack
+				.remove(this.queryStack.size() - 1);
+		QueryStackElement p = getLast();
 		if (c.concluded) {
 			p.structured.append(c.structured);
 		}
