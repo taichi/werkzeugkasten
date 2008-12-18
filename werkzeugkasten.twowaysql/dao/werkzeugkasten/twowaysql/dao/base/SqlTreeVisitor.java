@@ -109,7 +109,10 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 				skipped(in, context);
 			}
 		}
-		this.visit(node.getElse(), context);
+		ElseNode e = node.getElse();
+		if (e != null) {
+			this.visit(e, context);
+		}
 		return false;
 	}
 
@@ -126,11 +129,9 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 
 	@Override
 	public boolean visit(ElseNode node, SqlContext<EC> context) {
-		if (node != null) {
-			processSkippable(node, context);
-			context.conclude();
-			QueryTreeAcceptor.accept(node.getChildren(), this, context);
-		}
+		processSkippable(node, context);
+		context.conclude();
+		QueryTreeAcceptor.accept(node.getChildren(), this, context);
 		return false;
 	}
 

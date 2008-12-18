@@ -68,7 +68,10 @@ public class ToStringVisitor implements QueryTreeVisitor<StringBuilder> {
 			QueryTreeAcceptor.accept(node.getElseIfNodes(), this, context);
 			context.append(">");
 		}
-		this.visit(node.getElse(), context);
+		ElseNode e = node.getElse();
+		if (e != null) {
+			this.visit(e, context);
+		}
 		return true;
 	}
 
@@ -83,12 +86,10 @@ public class ToStringVisitor implements QueryTreeVisitor<StringBuilder> {
 
 	@Override
 	public boolean visit(ElseNode node, StringBuilder context) {
-		if (node != null) {
-			context.append("<ELSE ");
-			processMaybeSkip(context, node);
-			QueryTreeAcceptor.accept(node.getChildren(), this, context);
-			context.append(">");
-		}
+		context.append("<ELSE ");
+		processMaybeSkip(context, node);
+		QueryTreeAcceptor.accept(node.getChildren(), this, context);
+		context.append(">");
 		return false;
 	}
 
