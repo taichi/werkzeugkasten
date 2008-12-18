@@ -104,7 +104,7 @@ nodelist returns[ArrayList<QueryNode> list]
 charactors
 	// caller rule handles exceptions
 	:
-	(IDENT | QUOTED | SYMBOLS | SYM_BIND | SYM_C | SYM_LP | SYM_RP)+ 
+	(IDENT | QUOTED | MAYBE_SKIP | SYMBOLS | SYM_BIND | SYM_C | SYM_LP | SYM_RP)+ 
 	;
 
 txt returns[TxtNode node]

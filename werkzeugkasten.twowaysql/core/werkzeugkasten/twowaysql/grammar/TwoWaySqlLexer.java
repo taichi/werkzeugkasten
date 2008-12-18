@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 C:\\development\\java\\workspace_3.4.1\\werkzeugkasten.twowaysql\\core\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g 2008-12-18 23:09:19
+// $ANTLR 3.1.1 C:\\development\\java\\workspace_3.4.1\\werkzeugkasten.twowaysql\\core\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g 2008-12-19 00:26:36
 
 package werkzeugkasten.twowaysql.grammar;
 
@@ -10,17 +10,17 @@ import java.util.ArrayList;
 
 public class TwoWaySqlLexer extends Lexer {
     public static final int LT=29;
-    public static final int C_ST=11;
-    public static final int SYM_RP=10;
+    public static final int C_ST=12;
+    public static final int SYM_RP=11;
     public static final int QUOTED=5;
     public static final int ELSE=18;
-    public static final int SYM_LP=9;
+    public static final int SYM_LP=10;
     public static final int CHAR=27;
-    public static final int C_LN_ST=13;
+    public static final int C_LN_ST=14;
     public static final int AND=25;
     public static final int EOF=-1;
-    public static final int C_ED=12;
-    public static final int IF=15;
+    public static final int C_ED=13;
+    public static final int IF=16;
     public static final int WHITE_SPACES=30;
     public static final int ELSEIF=17;
     public static final int WS=28;
@@ -29,12 +29,12 @@ public class TwoWaySqlLexer extends Lexer {
     public static final int BEGIN=19;
     public static final int OR=26;
     public static final int IDENT=4;
-    public static final int MAYBE_SKIP=16;
-    public static final int SYM_C=8;
-    public static final int SYMBOLS=6;
-    public static final int SYM_BIND=7;
+    public static final int MAYBE_SKIP=6;
+    public static final int SYM_C=9;
+    public static final int SYMBOLS=7;
+    public static final int SYM_BIND=8;
     public static final int END=20;
-    public static final int C_LN_ED=14;
+    public static final int C_LN_ED=15;
     public static final int LN_N=24;
     public static final int LN_R=23;
 

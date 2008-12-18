@@ -4,12 +4,13 @@ ada.cec のしのし / 30 d/*aa hoge,(
  piro*/  vvぎゃぼー
 -- BeGiN
  /* If aa - bb
- dd*/moge piro /*eLsEIF ccc + 44 '*/' */cccd
+ dd*/ moge piro /*eLsEIF ccc + 44 '*/' */AND cccd
 	-- elSEif fuga < '0'
+		and
 		dfdze /*? dfd*/ vvvvvdfded
-		dfdze /*?ccc? ddd*/ zzzzzzzzeaiぐ
+		or	dfdze /*?ccc? ddd*/ zzzzzzzzeaiぐ
 	-- ElSe 
-	 zzz "-- fugafuga" iN/*?aaa ? hoge In(aa,bbb)*/('hoge',40,*
+	or zzz "-- fugafuga" iN/*?aaa ? hoge In(aa,bbb)*/('hoge',40,*
 	, # ぬは。
 	'fuga'
 )
