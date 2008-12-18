@@ -1,5 +1,11 @@
 package werkzeugkasten.common.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -32,7 +38,7 @@ public class ConverterUtil {
 			Pattern.CASE_INSENSITIVE);
 
 	private static Map<Class<?>, Converter<?>> map = new HashMap<Class<?>, Converter<?>>(
-			17);
+			19);
 
 	private static void init() {
 		map.put(BigDecimal.class, BIGDECIMAL_CONVERTER);
@@ -52,6 +58,8 @@ public class ConverterUtil {
 		map.put(Time.class, TIME_CONVERTER);
 		map.put(Timestamp.class, TIMESTAMP_CONVERTER);
 		map.put(URL.class, URL_CONVERTER);
+		map.put(InputStream.class, INPUTSTREAM_CONVERTER);
+		map.put(Reader.class, READER_CONVERTER);
 	}
 
 	public static <T> T convert(Object target, Class<T> convertClass) {
@@ -93,7 +101,7 @@ public class ConverterUtil {
 
 	}
 
-	public static Converter<BigDecimal> BIGDECIMAL_CONVERTER = new Converter<BigDecimal>() {
+	public static final Converter<BigDecimal> BIGDECIMAL_CONVERTER = new Converter<BigDecimal>() {
 
 		@Override
 		public BigDecimal convert(Object o, String pattern) {
@@ -140,7 +148,7 @@ public class ConverterUtil {
 
 	};
 
-	public static Converter<BigInteger> BIGINTEGER_CONVERTER = new Converter<BigInteger>() {
+	public static final Converter<BigInteger> BIGINTEGER_CONVERTER = new Converter<BigInteger>() {
 
 		@Override
 		public BigInteger convert(Object o, String pattern) {
@@ -164,7 +172,7 @@ public class ConverterUtil {
 
 	};
 
-	public static Converter<Byte> BYTE_CONVERTER = new Converter<Byte>() {
+	public static final Converter<Byte> BYTE_CONVERTER = new Converter<Byte>() {
 
 		@Override
 		public Byte convert(Object o) {
@@ -190,7 +198,7 @@ public class ConverterUtil {
 		}
 	};
 
-	public static Converter<byte[]> BINARY_CONVERTER = new Converter<byte[]>() {
+	public static final Converter<byte[]> BINARY_CONVERTER = new Converter<byte[]>() {
 
 		@Override
 		public byte[] convert(Object o) {
@@ -211,7 +219,7 @@ public class ConverterUtil {
 
 	};
 
-	public static Converter<Boolean> BOOLEAN_CONVERTER = new Converter<Boolean>() {
+	public static final Converter<Boolean> BOOLEAN_CONVERTER = new Converter<Boolean>() {
 
 		@Override
 		public Boolean convert(Object o) {
@@ -236,7 +244,7 @@ public class ConverterUtil {
 
 	};
 
-	public static Converter<Calendar> CALENDAR_CONVERTER = new Converter<Calendar>() {
+	public static final Converter<Calendar> CALENDAR_CONVERTER = new Converter<Calendar>() {
 
 		@Override
 		public Calendar convert(Object o, String pattern) {
@@ -376,7 +384,7 @@ public class ConverterUtil {
 
 	}
 
-	public static DateConverter DATE_CONVERTER = new DateConverter() {
+	public static final DateConverter DATE_CONVERTER = new DateConverter() {
 
 		@Override
 		public java.util.Date convert(Object o, String pattern) {
@@ -401,7 +409,7 @@ public class ConverterUtil {
 
 	};
 
-	public static Converter<Double> DOUBLE_CONVERTER = new Converter<Double>() {
+	public static final Converter<Double> DOUBLE_CONVERTER = new Converter<Double>() {
 
 		@Override
 		public Double convert(Object o) {
@@ -430,7 +438,7 @@ public class ConverterUtil {
 
 	};
 
-	public static Converter<Float> FLOAT_CONVERTER = new Converter<Float>() {
+	public static final Converter<Float> FLOAT_CONVERTER = new Converter<Float>() {
 
 		@Override
 		public Float convert(Object o, String pattern) {
@@ -459,7 +467,7 @@ public class ConverterUtil {
 
 	};
 
-	public static Converter<Integer> INTEGER_CONVERTER = new Converter<Integer>() {
+	public static final Converter<Integer> INTEGER_CONVERTER = new Converter<Integer>() {
 
 		@Override
 		public Integer convert(Object o, String pattern) {
@@ -488,7 +496,7 @@ public class ConverterUtil {
 
 	};
 
-	public static Converter<Long> LONG_CONVERTER = new Converter<Long>() {
+	public static final Converter<Long> LONG_CONVERTER = new Converter<Long>() {
 
 		@Override
 		public Long convert(Object o, String pattern) {
@@ -519,7 +527,7 @@ public class ConverterUtil {
 
 	};
 
-	public static Converter<Short> SHORT_CONVERTER = new Converter<Short>() {
+	public static final Converter<Short> SHORT_CONVERTER = new Converter<Short>() {
 
 		@Override
 		public Short convert(Object o, String pattern) {
@@ -548,7 +556,7 @@ public class ConverterUtil {
 
 	};
 
-	public static Converter<java.sql.Date> SQLDATE_CONVERTER = new Converter<java.sql.Date>() {
+	public static final Converter<java.sql.Date> SQLDATE_CONVERTER = new Converter<java.sql.Date>() {
 
 		@Override
 		public java.sql.Date convert(Object o, String pattern) {
@@ -568,7 +576,7 @@ public class ConverterUtil {
 		}
 	};
 
-	public static Converter<String> STRING_CONVERTER = new Converter<String>() {
+	public static final Converter<String> STRING_CONVERTER = new Converter<String>() {
 
 		@Override
 		public String convert(Object value, String pattern) {
@@ -612,7 +620,7 @@ public class ConverterUtil {
 		}
 	};
 
-	public static Converter<Time> TIME_CONVERTER = new Converter<Time>() {
+	public static final Converter<Time> TIME_CONVERTER = new Converter<Time>() {
 
 		@Override
 		public Time convert(Object o) {
@@ -632,7 +640,7 @@ public class ConverterUtil {
 		}
 	};
 
-	public static Converter<Timestamp> TIMESTAMP_CONVERTER = new Converter<Timestamp>() {
+	public static final Converter<Timestamp> TIMESTAMP_CONVERTER = new Converter<Timestamp>() {
 
 		@Override
 		public Timestamp convert(Object o) {
@@ -652,13 +660,16 @@ public class ConverterUtil {
 		}
 	};
 
-	public static Converter<URL> URL_CONVERTER = new Converter<URL>() {
+	public static final Converter<URL> URL_CONVERTER = new Converter<URL>() {
 		@Override
 		public URL convert(Object o) {
 			if (o instanceof URL) {
 				return (URL) o;
 			}
 			try {
+				if (o instanceof File) {
+					return ((File) o).toURI().toURL();
+				}
 				String url = STRING_CONVERTER.convert(o);
 				if (url != null) {
 					return new URL(url);
@@ -672,6 +683,58 @@ public class ConverterUtil {
 
 		@Override
 		public URL convert(Object o, String pattern) {
+			return convert(o);
+		}
+	};
+
+	public static final Converter<InputStream> INPUTSTREAM_CONVERTER = new Converter<InputStream>() {
+
+		@Override
+		public InputStream convert(Object o) {
+			if (o == null) {
+				return null;
+			}
+			if (o instanceof InputStream) {
+				return (InputStream) o;
+			}
+			try {
+				if (o instanceof File) {
+					return new FileInputStream((File) o);
+				}
+				URL url = URL_CONVERTER.convert(o);
+				if (url != null) {
+					return url.openStream();
+				}
+			} catch (IOException ex) {
+				LOG.log(Level.CONFIG, ex.getMessage(), ex);
+			}
+			return null;
+		}
+
+		@Override
+		public InputStream convert(Object o, String pattern) {
+			return convert(o);
+		}
+	};
+
+	public static final Converter<Reader> READER_CONVERTER = new Converter<Reader>() {
+		@Override
+		public Reader convert(Object o) {
+			if (o == null) {
+				return null;
+			}
+			if (o instanceof Reader) {
+				return (Reader) o;
+			}
+			InputStream in = INPUTSTREAM_CONVERTER.convert(o);
+			if (o != null) {
+				return new InputStreamReader(in);
+			}
+			return null;
+		}
+
+		@Override
+		public Reader convert(Object o, String pattern) {
 			return convert(o);
 		}
 	};
