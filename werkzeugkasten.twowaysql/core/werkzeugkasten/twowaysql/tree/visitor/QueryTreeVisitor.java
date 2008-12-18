@@ -2,6 +2,7 @@ package werkzeugkasten.twowaysql.tree.visitor;
 
 import werkzeugkasten.twowaysql.tree.BeginNode;
 import werkzeugkasten.twowaysql.tree.BindNode;
+import werkzeugkasten.twowaysql.tree.ElseNode;
 import werkzeugkasten.twowaysql.tree.ExpressionNode;
 import werkzeugkasten.twowaysql.tree.IfNode;
 import werkzeugkasten.twowaysql.tree.InBindNode;
@@ -24,6 +25,8 @@ public interface QueryTreeVisitor<C> {
 	boolean visit(BeginNode node, C context);
 
 	boolean visit(IfNode node, C context);
+
+	boolean visit(ElseNode node, C context);
 
 	boolean visit(BindNode node, C context);
 

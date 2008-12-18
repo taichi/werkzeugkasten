@@ -15,6 +15,8 @@ import werkzeugkasten.twowaysql.dao.el.ExpressionParser;
 import werkzeugkasten.twowaysql.nls.Messages;
 import werkzeugkasten.twowaysql.tree.BeginNode;
 import werkzeugkasten.twowaysql.tree.BindNode;
+import werkzeugkasten.twowaysql.tree.ContainSkippable;
+import werkzeugkasten.twowaysql.tree.ElseNode;
 import werkzeugkasten.twowaysql.tree.ExpressionNode;
 import werkzeugkasten.twowaysql.tree.IfNode;
 import werkzeugkasten.twowaysql.tree.InBindNode;
@@ -88,13 +90,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 	public boolean visit(IfNode node, SqlContext<EC> context) {
 		context.append(SPC);
 		if (visit(node.getExpression(), context)) {
-			if (context.isConcluded()) {
-				TxtNode maybeSkip = node.getMaybeSkip();
-				if (maybeSkip != null) {
-					context.append(getString(context, maybeSkip));
-					context.append(SPC);
-				}
-			}
+			processSkippable(node, context);
 			context.conclude();
 			skipped(node.getElseIfNodes(), context);
 			skipped(node.getElse(), context);
@@ -104,6 +100,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 		}
 		for (IfNode in : node.getElseIfNodes()) {
 			if (visit(in.getExpression(), context)) {
+				processSkippable(node, context);
 				context.conclude();
 				QueryTreeAcceptor.accept(in.getChildren(), this, context);
 				skipped(node.getElse(), context);
@@ -112,9 +109,27 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 				skipped(in, context);
 			}
 		}
-		if (node.getElse().iterator().hasNext()) {
+		this.visit(node.getElse(), context);
+		return false;
+	}
+
+	protected void processSkippable(ContainSkippable node,
+			SqlContext<EC> context) {
+		if (context.isConcluded()) {
+			TxtNode maybeSkip = node.getMaybeSkip();
+			if (maybeSkip != null) {
+				context.append(getString(context, maybeSkip));
+				context.append(SPC);
+			}
+		}
+	}
+
+	@Override
+	public boolean visit(ElseNode node, SqlContext<EC> context) {
+		if (node != null) {
+			processSkippable(node, context);
 			context.conclude();
-			QueryTreeAcceptor.accept(node.getElse(), this, context);
+			QueryTreeAcceptor.accept(node.getChildren(), this, context);
 		}
 		return false;
 	}
@@ -129,7 +144,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 	}
 
 	protected void skipped(Locatable node, SqlContext<EC> context) {
-		if (LOG_SKIPPED.isDebugEnabled()) {
+		if (LOG_SKIPPED.isDebugEnabled() && node != null) {
 			String s = getString(context, node);
 			LOG_SKIPPED.debug(String.format(Messages.SKIPPED_TEXT, s));
 		}

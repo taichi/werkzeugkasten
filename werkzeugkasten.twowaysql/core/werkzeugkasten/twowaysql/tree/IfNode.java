@@ -1,17 +1,16 @@
 package werkzeugkasten.twowaysql.tree;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
-public class IfNode extends AbstractQueryNode {
+public class IfNode extends AbstractQueryNode implements ContainSkippable {
 
 	protected ExpressionNode expression;
 	protected TxtNode maybeSkip;
 	protected List<IfNode> elseIfNodes = new ArrayList<IfNode>();
-	protected Iterable<QueryNode> elseNode = Collections.emptyList();
+	protected ElseNode elseNode;
 
 	public NodeType getType() {
 		return NodeType.IFNODE;
@@ -43,13 +42,13 @@ public class IfNode extends AbstractQueryNode {
 		return this.elseIfNodes;
 	}
 
-	public void setElse(Iterable<QueryNode> tree) {
+	public void setElse(ElseNode tree) {
 		if (tree != null) {
 			this.elseNode = tree;
 		}
 	}
 
-	public Iterable<QueryNode> getElse() {
+	public ElseNode getElse() {
 		return this.elseNode;
 	}
 

@@ -2,6 +2,8 @@ package werkzeugkasten.twowaysql.tree.visitor;
 
 import werkzeugkasten.twowaysql.tree.BeginNode;
 import werkzeugkasten.twowaysql.tree.BindNode;
+import werkzeugkasten.twowaysql.tree.ContainSkippable;
+import werkzeugkasten.twowaysql.tree.ElseNode;
 import werkzeugkasten.twowaysql.tree.ExpressionNode;
 import werkzeugkasten.twowaysql.tree.IfNode;
 import werkzeugkasten.twowaysql.tree.InBindNode;
@@ -60,23 +62,34 @@ public class ToStringVisitor implements QueryTreeVisitor<StringBuilder> {
 	public boolean visit(IfNode node, StringBuilder context) {
 		defaultVisit(node, context);
 		this.visit(node.getExpression(), context);
+		processMaybeSkip(context, node);
+		if (node.getElseIfNodes().iterator().hasNext()) {
+			context.append("<ELSEIF ");
+			QueryTreeAcceptor.accept(node.getElseIfNodes(), this, context);
+			context.append(">");
+		}
+		this.visit(node.getElse(), context);
+		return true;
+	}
+
+	protected void processMaybeSkip(StringBuilder context, ContainSkippable node) {
 		TxtNode maybeSkip = node.getMaybeSkip();
 		if (maybeSkip != null) {
 			context.append("<MAYBESKIP[");
 			this.visit(maybeSkip, context);
 			context.append("]>");
 		}
-		if (node.getElseIfNodes().iterator().hasNext()) {
-			context.append("<ELSEIF ");
-			QueryTreeAcceptor.accept(node.getElseIfNodes(), this, context);
-			context.append(">");
-		}
-		if (node.getElse().iterator().hasNext()) {
+	}
+
+	@Override
+	public boolean visit(ElseNode node, StringBuilder context) {
+		if (node != null) {
 			context.append("<ELSE ");
-			QueryTreeAcceptor.accept(node.getElse(), this, context);
+			processMaybeSkip(context, node);
+			QueryTreeAcceptor.accept(node.getChildren(), this, context);
 			context.append(">");
 		}
-		return true;
+		return false;
 	}
 
 	public boolean visit(BindNode node, StringBuilder context) {

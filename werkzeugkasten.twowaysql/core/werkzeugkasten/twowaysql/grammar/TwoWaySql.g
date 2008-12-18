@@ -182,7 +182,7 @@ ifcomment returns[IfNode node]
 		} )?
 		nodelist { $node.setChildren($nodelist.list);}
 		(elseifnode { $node.addElseIf($elseifnode.node); })* 
-		(elsenode { $node.setElse($elsenode.list); })?
+		(elsenode { $node.setElse($elsenode.node); })?
 		endcomment
 	)
 	;
@@ -198,7 +198,15 @@ elseifnode	 returns[IfNode node]
 		$node.freeze();
 	}
 	:
-	elseifcomment nodelist 
+	elseifcomment
+	(MAYBE_SKIP
+	{
+		TxtNode skip = new TxtNode();
+		skip.update($MAYBE_SKIP);
+		skip.freeze();
+		$node.setMaybeSkip(skip);
+	})?
+	 nodelist 
 	{
 		$node.setExpression($elseifcomment.node);
 		$node.setChildren($nodelist.list);
@@ -230,12 +238,26 @@ elseiflinecomment returns[ExpressionNode node]
 	;
 	finally { pop(); }
 
-elsenode returns[List<QueryNode> list]
+elsenode returns[ElseNode node]
 	@init {
 		push(EM_ELSENODE);
+		$node = new ElseNode();
+	}
+	@after {
+		$node.update(retval);
+		$node.freeze();
 	}
 	:
-	elsecomment nodelist { $list = $nodelist.list; }
+	elsecomment
+	(MAYBE_SKIP
+	{
+		TxtNode skip = new TxtNode();
+		skip.update($MAYBE_SKIP);
+		skip.freeze();
+		$node.setMaybeSkip(skip);
+	})?
+
+	 nodelist { $node.setChildren($nodelist.list);}
 	;
 	finally { pop(); }
 
