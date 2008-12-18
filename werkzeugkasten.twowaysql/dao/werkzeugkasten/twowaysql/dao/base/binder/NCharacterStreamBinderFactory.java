@@ -1,9 +1,9 @@
 package werkzeugkasten.twowaysql.dao.base.binder;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.io.Reader;
 
+import werkzeugkasten.common.util.ConverterUtil;
 import werkzeugkasten.twowaysql.dao.Binder;
 import werkzeugkasten.twowaysql.dao.BinderFactory;
 
@@ -14,9 +14,10 @@ public class NCharacterStreamBinderFactory implements BinderFactory {
 		if (value instanceof Reader) {
 			Reader v = (Reader) value;
 			return new NCharacterStreamBinder(v);
-		} else if (value instanceof InputStream) {
-			InputStream v = (InputStream) value;
-			return new NCharacterStreamBinder(new InputStreamReader(v));
+		}
+		Reader v = ConverterUtil.convert(value, Reader.class);
+		if (v != null) {
+			return new NCharacterStreamBinder(new BufferedReader(v));
 		}
 		throw new IllegalArgumentException();
 	}
