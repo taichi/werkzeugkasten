@@ -1,0 +1,6 @@
+#Thu Dec 18 16:49:17 JST 2008
+baseDir=/werkzeugkasten.twowaysql.plugin.test/bin/data
+dbPortNo=9094
+dbType=H2
+eclipse.preferences.version=1
+webPortNo=8084
