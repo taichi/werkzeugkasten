@@ -128,11 +128,11 @@ public class DefaultBinderProducer implements BinderProducer {
 	public <EC> Binder produce(SqlContext<EC> context, BindNode node,
 			Object object) {
 		String binderName = "";
+		BinderFactory factory = null;
 		try {
 			if (object == null) {
 				throw new IllegalArgumentException();
 			}
-			BinderFactory factory = null;
 			TxtNode nameNode = node.getBindingName();
 			if (nameNode != null) {
 				String src = context.getTwoWayQuery().getSource();
@@ -148,11 +148,15 @@ public class DefaultBinderProducer implements BinderProducer {
 			return factory.create(object);
 		} catch (RuntimeException e) {
 			if (LOG.isDebugEnabled()) {
+				String template = Messages.BINDERFACTORY_FAILED;
+				if (factory == null) {
+					template = Messages.MISSING_BINDERFACTORY;
+				}
 				ExpressionNode en = node.getExpression();
 				String exp = TextLocationUtil.substring(context
 						.getTwoWayQuery().getSource(), en);
-				LOG.debug(String.format(Messages.BINDERFACTORY_FAILED,
-						binderName, exp, object));
+				String msg = String.format(template, binderName, exp, object);
+				LOG.debug(msg);
 			}
 			throw e;
 		}
