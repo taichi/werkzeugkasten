@@ -2,20 +2,20 @@ package werkzeugkasten.twowaysql.editor;
 
 import org.eclipse.ui.editors.text.TextEditor;
 
-import werkzeugkasten.twowaysql.editor.conf.ColorManager;
+import werkzeugkasten.twowaysql.Activator;
 
 public class TwoWaySqlEditor extends TextEditor {
 
-	public TwoWaySqlEditor() {
+	protected TwoWaySqlConfiguration configuration = new TwoWaySqlConfiguration();
 
-		setSourceViewerConfiguration(new TwoWaySqlConfiguration(ColorManager
-				.getDefault()));
-		setDocumentProvider(new TwoWaySqlDocumentProvider());
+	public TwoWaySqlEditor() {
+		setSourceViewerConfiguration(configuration);
+		setDocumentProvider(Activator.getDocumentProvider());
 	}
 
 	@Override
 	public void dispose() {
-		ColorManager.getDefault().dispose();
+		this.configuration.dispose();
 		super.dispose();
 	}
 }

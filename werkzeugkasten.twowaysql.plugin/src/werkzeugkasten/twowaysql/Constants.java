@@ -27,4 +27,8 @@ public class Constants {
 		}
 		LEGAL_CONTENT_TYPES = list.toArray(new String[list.size()]);
 	}
+
+	public enum COLORING {
+		KEYWORD, EXPRESSION, COMMENT, SKIP, MAYBE_SKIP, TXT;
+	}
 }
