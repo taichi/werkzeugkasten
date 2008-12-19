@@ -727,7 +727,7 @@ public class ConverterUtil {
 				return (Reader) o;
 			}
 			InputStream in = INPUTSTREAM_CONVERTER.convert(o);
-			if (o != null) {
+			if (in != null) {
 				return new InputStreamReader(in);
 			}
 			return null;
