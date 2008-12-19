@@ -74,7 +74,7 @@
             <classpath refid="werkzeugkasten.twowaysql.classpath"/>
         </javac>
     </target>
-	<target depends="clean,build" name="jar">
+	<target depends="clean,build,alltest" name="jar">
 		<jar basedir="${dest-root}/core" destfile="${dest-root}/werkzeugkasten.twowaysql.core-${dest-version}.jar" />
 		<jar basedir="core" destfile="${dest-root}/werkzeugkasten.twowaysql.core-${dest-version}-sources.jar"/>
 		<jar basedir="${dest-root}/dao" destfile="${dest-root}/werkzeugkasten.twowaysql.dao-${dest-version}.jar" />
@@ -129,7 +129,20 @@
             <classpath refid="werkzeugkasten.twowaysql.classpath"/>
         </junit>
     </target>
-    <target name="junitreport">
+    <target depends="build" name="alltest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr" reloading="true">
+            <formatter type="xml"/>
+            <classpath refid="werkzeugkasten.twowaysql.classpath"/>
+        	<batchtest todir="${junit.output.dir}" fork="true">
+        		<fileset dir="${dest-root}/test">
+					<include name="**/*Test.class"/>
+					<exclude name="**/AllTests*.class"/>
+				</fileset>
+    		</batchtest>
+        </junit>
+    </target>
+    <target depends="alltest" name="junitreport">
         <junitreport todir="${junit.output.dir}">
             <fileset dir="${junit.output.dir}">
                 <include name="TEST-*.xml"/>
