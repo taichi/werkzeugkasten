@@ -5,13 +5,13 @@
 	<classpathentry kind="src" path="mvel"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry exported="true" kind="lib" path="lib/logback-classic-0.9.13.jar" sourcepath="lib/logback-classic-0.9.13-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/logback-core-0.9.13.jar" sourcepath="lib/logback-core-0.9.13-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/antlr-3.1.1-runtime.jar" sourcepath="lib/antlr-3.1.1-runtime-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/mvel2-2.0.5.jar" sourcepath="lib/mvel2-2.0.5-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/nlsgen-runtime.jar" sourcepath="lib/nlsgen-runtime.src.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.5.6.jar" sourcepath="lib/slf4j-api-1.5.6-sources.jar"/>
-	<classpathentry kind="var" path="H2" rootpath="./" sourcepath="H2_SRC"/>
+	<classpathentry exported="true" kind="lib" path="lib-test/h2-2008-10-04.jar" sourcepath="lib-test/h2-2008-10-04.src.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib-test/junit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

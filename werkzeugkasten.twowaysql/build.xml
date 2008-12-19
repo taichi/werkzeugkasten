@@ -6,8 +6,7 @@
               as the first entry and export the buildfile again. -->
 <project basedir="." default="jar" name="werkzeugkasten.twowaysql">
     <property environment="env"/>
-    <property name="ECLIPSE_HOME" value="../../../../Tools/eclipse/eclipse3.4.1"/>
-    <property name="H2" value="${ECLIPSE_HOME}/configuration/org.eclipse.osgi/bundles/238/1/.cp/lib/h2-2008-10-04.jar"/>
+    <property name="H2" value="lib-test/h2-2008-10-04.jar"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
@@ -15,7 +14,7 @@
 	<property name="dest-root" value="target" />
     <property name="junit.output.dir" value="${dest-root}/junit"/>
     <path id="JUnit 4.libraryclasspath">
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.junit4_4.3.1/junit.jar"/>
+        <pathelement location="lib-test/junit.jar"/>
     </path>
     <path id="werkzeugkasten.twowaysql.classpath">
     	<path path="${dest-root}/core" />
@@ -74,28 +73,15 @@
             <classpath refid="werkzeugkasten.twowaysql.classpath"/>
         </javac>
     </target>
-	<target depends="clean,build,alltest" name="jar">
+	<target depends="cleanall,alltest" name="jar">
 		<jar basedir="${dest-root}/core" destfile="${dest-root}/werkzeugkasten.twowaysql.core-${dest-version}.jar" />
 		<jar basedir="core" destfile="${dest-root}/werkzeugkasten.twowaysql.core-${dest-version}-sources.jar"/>
 		<jar basedir="${dest-root}/dao" destfile="${dest-root}/werkzeugkasten.twowaysql.dao-${dest-version}.jar" />
 		<jar basedir="dao" includes="**/**" destfile="${dest-root}/werkzeugkasten.twowaysql.dao-${dest-version}-sources.jar"/>
 		<jar basedir="${dest-root}/mvel" destfile="${dest-root}/werkzeugkasten.twowaysql.mvel-${dest-version}.jar" />
 		<jar basedir="mvel" destfile="${dest-root}/werkzeugkasten.twowaysql.mvel-${dest-version}-sources.jar" />
-	</target>	
+	</target>
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
-        <copy todir="${ant.library.dir}">
-            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
-        </copy>
-        <unzip dest="${ant.library.dir}">
-            <patternset includes="jdtCompilerAdapter.jar"/>
-            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
-        </unzip>
-    </target>
-    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
-        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-        <antcall target="build"/>
-    </target>
     <target name="DefaultBinderProducerTest">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
