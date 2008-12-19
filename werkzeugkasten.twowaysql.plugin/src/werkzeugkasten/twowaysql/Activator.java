@@ -5,6 +5,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import werkzeugkasten.common.runtime.LogUtil;
+import werkzeugkasten.twowaysql.editor.TwoWaySqlDocumentProvider;
 import werkzeugkasten.twowaysql.editor.conf.ColorManager;
 
 /**
@@ -17,6 +18,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+
+	private TwoWaySqlDocumentProvider documentProvider;
 
 	/**
 	 * The constructor
@@ -31,6 +34,7 @@ public class Activator extends AbstractUIPlugin {
 	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
 	 * )
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
@@ -43,8 +47,10 @@ public class Activator extends AbstractUIPlugin {
 	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
 	 * )
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		ColorManager.getDefault().dispose();
+		getGlobalPreference().removePropertyChangeListener(documentProvider);
 		plugin = null;
 		super.stop(context);
 	}
@@ -59,7 +65,16 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public static IPreferenceStore getGlobalPreference() {
-		return null; // TODO
+		return getDefault().getPreferenceStore();
+	}
+
+	public static TwoWaySqlDocumentProvider getDocumentProvider() {
+		Activator a = getDefault();
+		if (a.documentProvider == null) {
+			a.documentProvider = new TwoWaySqlDocumentProvider();
+			getGlobalPreference().addPropertyChangeListener(a.documentProvider);
+		}
+		return a.documentProvider;
 	}
 
 	public static void log(Throwable t) {

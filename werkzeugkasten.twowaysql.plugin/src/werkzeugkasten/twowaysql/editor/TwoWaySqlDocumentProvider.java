@@ -1,19 +1,26 @@
 package werkzeugkasten.twowaysql.editor;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.ui.editors.text.FileDocumentProvider;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.editors.text.ForwardingDocumentProvider;
+import org.eclipse.ui.editors.text.TextFileDocumentProvider;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 
-public class TwoWaySqlDocumentProvider extends FileDocumentProvider {
+import werkzeugkasten.twowaysql.Constants;
+
+public class TwoWaySqlDocumentProvider extends TextFileDocumentProvider
+		implements IPropertyChangeListener {
+
+	public TwoWaySqlDocumentProvider() {
+		IDocumentProvider provider = new TextFileDocumentProvider();
+		provider = new ForwardingDocumentProvider(Constants.CT_TWOWAYSQL,
+				new TwoWaySqlDocumentSetupParticipant(), provider);
+		setParentDocumentProvider(provider);
+	}
 
 	@Override
-	protected IDocument createDocument(Object element) throws CoreException {
-		IDocument document = super.createDocument(element);
-		if (document != null) {
-			IDocumentPartitioner partitioner = null;
-			partitioner.connect(document);
-		}
-		return document;
+	public void propertyChange(PropertyChangeEvent event) {
+		// TODO Auto-generated method stub
+
 	}
 }
