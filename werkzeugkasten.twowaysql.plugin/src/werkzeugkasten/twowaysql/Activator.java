@@ -13,13 +13,11 @@ import werkzeugkasten.twowaysql.editor.conf.ColorManager;
  */
 public class Activator extends AbstractUIPlugin {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "werkzeugkasten.twowaysql.plugin";
-
 	// The shared instance
 	private static Activator plugin;
 
 	private TwoWaySqlDocumentProvider documentProvider;
+	private ColorManager colorManager;
 
 	/**
 	 * The constructor
@@ -49,7 +47,6 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		ColorManager.getDefault().dispose();
 		getGlobalPreference().removePropertyChangeListener(documentProvider);
 		plugin = null;
 		super.stop(context);
@@ -68,13 +65,21 @@ public class Activator extends AbstractUIPlugin {
 		return getDefault().getPreferenceStore();
 	}
 
-	public static TwoWaySqlDocumentProvider getDocumentProvider() {
+	public static synchronized TwoWaySqlDocumentProvider getDocumentProvider() {
 		Activator a = getDefault();
 		if (a.documentProvider == null) {
 			a.documentProvider = new TwoWaySqlDocumentProvider();
 			getGlobalPreference().addPropertyChangeListener(a.documentProvider);
 		}
 		return a.documentProvider;
+	}
+
+	public static synchronized ColorManager getColorManager() {
+		Activator a = getDefault();
+		if (a.colorManager == null) {
+			a.colorManager = new ColorManager();
+		}
+		return a.colorManager;
 	}
 
 	public static void log(Throwable t) {

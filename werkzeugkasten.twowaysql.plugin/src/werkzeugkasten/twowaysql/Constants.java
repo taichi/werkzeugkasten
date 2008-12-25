@@ -7,6 +7,9 @@ import werkzeugkasten.twowaysql.tree.NodeType;
 
 public class Constants {
 
+	// The plug-in ID
+	public static final String ID_PLUGIN = "werkzeugkasten.twowaysql.plugin";
+
 	/*
 	 * content types of twowaysql
 	 */
@@ -30,5 +33,13 @@ public class Constants {
 
 	public enum COLORING {
 		KEYWORD, EXPRESSION, COMMENT, SKIP, MAYBE_SKIP, TXT;
+
+		public String getPrefColorKey() {
+			return "PREF_COLOR_" + name();
+		}
+
+		public String getPrefStyleKey() {
+			return "PREF_STYLE_" + name();
+		}
 	}
 }

@@ -11,5 +11,11 @@
             name="TwoWaySqlEditor">
       </editor>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="werkzeugkasten.twowaysql.editor.conf.PreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>
