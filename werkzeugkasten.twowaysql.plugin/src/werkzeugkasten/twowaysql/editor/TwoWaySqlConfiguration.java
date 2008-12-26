@@ -2,6 +2,8 @@ package werkzeugkasten.twowaysql.editor;
 
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
+import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
+import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
@@ -13,6 +15,9 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 		implements Disposable {
 
 	protected ColorDefineFactory colorFactory;
+	protected ITokenScanner textScanner;
+	protected ITokenScanner lineCommentScanner;
+	protected ITokenScanner blockCommentScanner;
 
 	public TwoWaySqlConfiguration() {
 		this.colorFactory = new ColorDefineFactory();
@@ -23,6 +28,9 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 			ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
 		reconciler.setDocumentPartitioning(Constants.CT_TWOWAYSQL);
+		// TODO setup DamagerRepairer
+		// cf. org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration
+		DefaultDamagerRepairer dr = null;
 
 		return reconciler;
 	}
