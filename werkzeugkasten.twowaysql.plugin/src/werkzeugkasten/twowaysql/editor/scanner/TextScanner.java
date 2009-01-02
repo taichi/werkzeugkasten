@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.jface.text.rules.BufferedRuleBasedScanner;
 import org.eclipse.jface.text.rules.IRule;
+import org.eclipse.jface.text.rules.WhitespaceRule;
 
 import werkzeugkasten.common.util.Initializable;
 import werkzeugkasten.twowaysql.Constants.COLORING;
@@ -24,6 +25,7 @@ public class TextScanner extends BufferedRuleBasedScanner implements
 		setDefaultReturnToken(colors.getToken(COLORING.TXT));
 		List<IRule> list = new ArrayList<IRule>();
 
+		list.add(new WhitespaceRule(new WhitespaceDetector()));
 		setRules(list.toArray(new IRule[list.size()]));
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.jface.text.rules.BufferedRuleBasedScanner;
 import org.eclipse.jface.text.rules.IRule;
+import org.eclipse.jface.text.rules.WhitespaceRule;
 
 import werkzeugkasten.common.util.Initializable;
 import werkzeugkasten.twowaysql.Constants.COLORING;
@@ -21,10 +22,13 @@ public class BlockCommentScanner extends BufferedRuleBasedScanner implements
 
 	@Override
 	public void initialize() {
-		setDefaultReturnToken(colors.getToken(COLORING.COMMENT));
+		setDefaultReturnToken(this.colors.getToken(COLORING.COMMENT));
 		List<IRule> list = new ArrayList<IRule>();
+		list.add(new WhitespaceRule(new WhitespaceDetector()));
+
+		list.add(new KeywordRule(this.colors.getToken(COLORING.COMMENT),
+				this.colors.getToken(COLORING.KEYWORD)));
 
 		setRules(list.toArray(new IRule[list.size()]));
-
 	}
 }
