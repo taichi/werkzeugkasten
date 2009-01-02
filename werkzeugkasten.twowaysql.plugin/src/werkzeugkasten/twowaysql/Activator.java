@@ -47,7 +47,10 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		getGlobalPreference().removePropertyChangeListener(documentProvider);
+		if (documentProvider != null) {
+			getGlobalPreference()
+					.removePropertyChangeListener(documentProvider);
+		}
 		plugin = null;
 		super.stop(context);
 	}

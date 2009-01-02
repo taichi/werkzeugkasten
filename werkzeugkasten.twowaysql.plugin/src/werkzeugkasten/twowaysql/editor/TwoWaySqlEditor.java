@@ -9,6 +9,7 @@ public class TwoWaySqlEditor extends TextEditor {
 	protected TwoWaySqlConfiguration configuration = new TwoWaySqlConfiguration();
 
 	public TwoWaySqlEditor() {
+		configuration.initialize();
 		setSourceViewerConfiguration(configuration);
 		setDocumentProvider(Activator.getDocumentProvider());
 	}

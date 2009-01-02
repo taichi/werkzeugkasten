@@ -14,3 +14,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.ui;bundle-version="3.4.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: lib/werkzeugkasten.twowaysql.core-0.0.1.jar,
+ lib/werkzeugkasten.twowaysql.dao-0.0.1.jar,
+ lib/werkzeugkasten.twowaysql.mvel-0.0.1.jar,
+ .

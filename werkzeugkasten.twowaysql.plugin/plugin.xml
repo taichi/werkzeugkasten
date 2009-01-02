@@ -17,5 +17,12 @@
             class="werkzeugkasten.twowaysql.editor.conf.PreferenceInitializer">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.core.filebuffers.documentSetup">
+      <participant
+            class="werkzeugkasten.twowaysql.editor.TwoWaySqlDocumentSetupParticipant"
+            extensions="sql">
+      </participant>
+   </extension>
 
 </plugin>
