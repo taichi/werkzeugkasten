@@ -1,7 +1,9 @@
 package werkzeugkasten.twowaysql.editor.conf;
 
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -22,6 +24,13 @@ public class ColorDefineFactory implements IPropertyChangeListener,
 
 	protected Map<COLORING, IToken> configs = new EnumMap<COLORING, IToken>(
 			COLORING.class);
+	protected static final Set<String> COLORINGS;
+	static {
+		COLORINGS = new HashSet<String>();
+		for (COLORING c : COLORING.values()) {
+			COLORINGS.add(c.name());
+		}
+	}
 
 	public ColorDefineFactory() {
 		Activator.getGlobalPreference().addPropertyChangeListener(this);
@@ -40,16 +49,12 @@ public class ColorDefineFactory implements IPropertyChangeListener,
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
-		for (COLORING c : COLORING.values()) {
-			if (c.name().equals(property)) {
-				Object newone = event.getNewValue();
-				if (newone instanceof ColorConfig) {
-					ColorConfig cc = (ColorConfig) newone;
-					configs
-							.put(
-									c,
-									createToken(c.getPrefColorKey(), cc.style()));
-				}
+		if (COLORINGS.contains(property)) {
+			Object newone = event.getNewValue();
+			if (newone instanceof ColorConfig) {
+				ColorConfig cc = (ColorConfig) newone;
+				COLORING c = COLORING.valueOf(property);
+				configs.put(c, createToken(c.getPrefColorKey(), cc.style()));
 			}
 		}
 	}
