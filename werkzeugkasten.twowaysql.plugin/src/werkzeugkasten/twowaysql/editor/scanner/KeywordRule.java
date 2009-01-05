@@ -1,6 +1,7 @@
 package werkzeugkasten.twowaysql.editor.scanner;
 
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.jface.text.rules.ICharacterScanner;
 import org.eclipse.jface.text.rules.IRule;
@@ -8,33 +9,46 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.WordRule;
 
-class KeywordRule implements IRule, IWordDetector {
-	static final char[] starts = { 'B', 'I', 'E', 'b', 'i', 'e' };
-	static final char[] parts = { 'E', 'G', 'I', 'N', 'F', 'L', 'S', 'D', 'e',
-			'g', 'i', 'n', 'f', 'l', 's', 'd' };
+import werkzeugkasten.common.util.StringUtil;
+
+public class KeywordRule implements IRule, IWordDetector {
+
+	Set<Character> startSet = new HashSet<Character>();
+	Set<Character> partSet = new HashSet<Character>();
 
 	WordRule delegate;
 
 	public KeywordRule(IToken defaultToken, IToken keyword) {
-		Arrays.sort(starts);
-		Arrays.sort(parts);
 		this.delegate = new WordRule(this, defaultToken, true);
-		this.delegate.addWord("BEGIN", keyword);
-		this.delegate.addWord("IF", keyword);
-		this.delegate.addWord("ELSE", keyword);
-		this.delegate.addWord("ELSEIF", keyword);
-		this.delegate.addWord("END", keyword);
+		addWord("BEGIN", keyword);
+		addWord("IF", keyword);
+		addWord("ELSE", keyword);
+		addWord("ELSEIF", keyword);
+		addWord("END", keyword);
+		addWord("?", keyword);
+	}
 
+	public void addWord(String string, IToken token) {
+		if (StringUtil.isEmpty(string) == false) {
+			this.delegate.addWord(string, token);
+			char[] chars = string.toCharArray();
+			startSet.add(chars[0]);
+			if (1 < chars.length) {
+				for (int i = 1; i < chars.length; i++) {
+					partSet.add(chars[i]);
+				}
+			}
+		}
 	}
 
 	@Override
 	public boolean isWordStart(char c) {
-		return -1 < Arrays.binarySearch(starts, c);
+		return this.startSet.contains(c);
 	}
 
 	@Override
 	public boolean isWordPart(char c) {
-		return -1 < Arrays.binarySearch(parts, c);
+		return this.partSet.contains(c);
 	}
 
 	@Override
