@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.Iterator;
 
 import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.EarlyExitException;
 import org.antlr.runtime.MismatchedTokenException;
@@ -62,6 +63,21 @@ public class TwoWaySqlParserTest {
 	}
 
 	@Test
+	public void testLex() throws Exception {
+		String aaa = "/*IF hoge != null */";
+		TwoWaySqlLexer lex = new TwoWaySqlLexer(new ANTLRStringStream(aaa));
+		CommonTokenStream tokens = new CommonTokenStream(lex);
+		CommonToken ct = (CommonToken) tokens.LT(1);
+		tokens.consume();
+		while (ct.getType() != CommonToken.EOF) {
+			System.out.printf("%d %d %s %n", ct.getStartIndex(), ct
+					.getStopIndex(), ct.getText());
+			ct = (CommonToken) tokens.LT(1);
+			tokens.consume();
+		}
+	}
+
+	@Test
 	public void testfull() throws Exception {
 		String sql = data("werkzeugkasten/twowaysql/grammar/test.txt");
 		twowaySQL_return ret = runParser(sql);
@@ -100,6 +116,8 @@ public class TwoWaySqlParserTest {
 		assertBlockComment(MissingTokenException.class, "/");
 		assertBlockComment(MissingTokenException.class, "/*hoge");
 		assertBlockComment(MissingTokenException.class, "/*hoge*");
+		assertBlockComment(MissingTokenException.class, "/*hoge/*");
+
 	}
 
 	protected void assertBlockComment(Class<?> expected, String sql)

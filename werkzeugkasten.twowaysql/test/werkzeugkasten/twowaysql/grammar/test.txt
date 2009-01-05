@@ -14,7 +14,7 @@ ada.cec のしのし / 30 d/*aa hoge,(
 	, # ぬは。
 	'fuga'
 )
- -- eNd
+ -- eNd --
 	-- moge うぼぁ zz
 	doie5 #ccccc
 /* EnD*/
