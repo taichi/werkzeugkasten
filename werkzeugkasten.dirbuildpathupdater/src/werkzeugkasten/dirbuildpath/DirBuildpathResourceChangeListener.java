@@ -32,16 +32,21 @@ public class DirBuildpathResourceChangeListener implements
 						switch (r.getType()) {
 						case IResource.PROJECT: {
 							IProject p = r.getProject();
-							this.current = p;
-							this.currentPref = new ScopedPreferenceStore(
-									new ProjectScope(p), Constants.ID_PLUGIN);
-							return true;
+							if (p.exists()) {
+								this.current = p;
+								this.currentPref = new ScopedPreferenceStore(
+										new ProjectScope(p),
+										Constants.ID_PLUGIN);
+								return true;
+							}
+							return false;
 						}
 						case IResource.FOLDER: {
 							IPath path = r.getFullPath();
 							String s = this.currentPref.getString(path
 									.toString());
-							if (StringUtil.isEmpty(s) == false
+							if (this.current != null
+									&& StringUtil.isEmpty(s) == false
 									&& Boolean.parseBoolean(s)) {
 								new AddDirBuildpathJob(JavaCore
 										.create(this.current),
