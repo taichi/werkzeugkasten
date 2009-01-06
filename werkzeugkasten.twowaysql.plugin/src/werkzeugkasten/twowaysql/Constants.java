@@ -1,6 +1,5 @@
 package werkzeugkasten.twowaysql;
 
-
 public class Constants {
 
 	// The plug-in ID
@@ -21,7 +20,7 @@ public class Constants {
 			CT_LINECOMMENT, CT_BLOCKCOMMENT };
 
 	public enum COLORING {
-		KEYWORD, EXPRESSION, COMMENT, SKIP, MAYBE_SKIP, TXT;
+		KEYWORD, EXPRESSION, BIND_TYPE, COMMENT, SKIP, MAYBE_SKIP, TXT;
 
 		public String getPrefColorKey() {
 			return "PREF_COLOR_" + name();

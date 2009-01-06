@@ -33,6 +33,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				.asString(new RGB(100, 70, 50))); // Chacoal
 		pref.putInt(COLORING.EXPRESSION.getPrefStyleKey(), SWT.BOLD);
 
+		pref.put(COLORING.BIND_TYPE.getPrefColorKey(), StringConverter
+				.asString(new RGB(0, 0, 254)));
+		pref.putInt(COLORING.BIND_TYPE.getPrefStyleKey(), SWT.NONE);
+
 		pref.put(COLORING.COMMENT.getPrefColorKey(), StringConverter
 				.asString(new RGB(63, 127, 95))); // Green
 		pref.putInt(COLORING.COMMENT.getPrefStyleKey(), SWT.NONE);

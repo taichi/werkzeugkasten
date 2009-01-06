@@ -11,9 +11,9 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import werkzeugkasten.common.util.Disposable;
 import werkzeugkasten.common.util.Initializable;
 import werkzeugkasten.twowaysql.Constants;
+import werkzeugkasten.twowaysql.Constants.COLORING;
 import werkzeugkasten.twowaysql.editor.conf.ColorDefineFactory;
-import werkzeugkasten.twowaysql.editor.scanner.BlockCommentScanner;
-import werkzeugkasten.twowaysql.editor.scanner.LineCommentScanner;
+import werkzeugkasten.twowaysql.editor.scanner.LexerBasedColoringScanner;
 import werkzeugkasten.twowaysql.editor.scanner.TextScanner;
 
 public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
@@ -21,8 +21,8 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 
 	protected ColorDefineFactory colorFactory;
 	protected TextScanner textScanner;
-	protected LineCommentScanner lineCommentScanner;
-	protected BlockCommentScanner blockCommentScanner;
+	protected LexerBasedColoringScanner lineCommentScanner;
+	protected LexerBasedColoringScanner blockCommentScanner;
 
 	public TwoWaySqlConfiguration() {
 		this.colorFactory = new ColorDefineFactory();
@@ -33,10 +33,10 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 	public void initialize() {
 		this.textScanner = new TextScanner(getColorFactory());
 		this.textScanner.initialize();
-		this.lineCommentScanner = new LineCommentScanner(getColorFactory());
-		this.lineCommentScanner.initialize();
-		this.blockCommentScanner = new BlockCommentScanner(getColorFactory());
-		this.blockCommentScanner.initialize();
+		this.lineCommentScanner = new LexerBasedColoringScanner(
+				COLORING.COMMENT, getColorFactory());
+		this.blockCommentScanner = new LexerBasedColoringScanner(
+				COLORING.COMMENT, getColorFactory());
 	}
 
 	protected ColorDefineFactory getColorFactory() {
