@@ -5,7 +5,7 @@ ada.cec のしのし / 30 d/*aa hoge,(
 -- BeGiN
  /* If aa - bb
  dd*/ moge piro /*eLsEIF ccc + 44 '*/' */AND cccd
-	-- elSEif fuga < '0'
+	-- elSEif fuga < '0' --
 		and
 		dfdze /*? dfd*/ vvvvvdfded
 		or	dfdze /*?ccc? ddd*/ zzzzzzzzeaiぐ
@@ -14,7 +14,7 @@ ada.cec のしのし / 30 d/*aa hoge,(
 	, # ぬは。
 	'fuga'
 )
- -- eNd --
+ -- eNd
 	-- moge うぼぁ zz
 	doie5 #ccccc
 /* EnD*/

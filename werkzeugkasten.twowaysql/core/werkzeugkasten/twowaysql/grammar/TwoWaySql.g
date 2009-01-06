@@ -71,6 +71,42 @@ package werkzeugkasten.twowaysql.grammar;
 @lexer::members {
 boolean inComment = false;
 boolean inLineComment = false;
+
+public Token nextToken() {
+	while (true) {
+		state.token = null;
+		state.channel = Token.DEFAULT_CHANNEL;
+		state.tokenStartCharIndex = input.index();
+		state.tokenStartCharPositionInLine = input.getCharPositionInLine();
+		state.tokenStartLine = input.getLine();
+		state.text = null;
+		if ( input.LA(1)==CharStream.EOF ) {
+			return Token.EOF_TOKEN;
+		}
+		try {
+			try {
+				mTokens();
+			} catch (FailedPredicateException fpe) {
+				mSYMBOLS();
+			}
+			if ( state.token==null ) {
+				emit();
+			}
+			else if ( state.token==Token.SKIP_TOKEN ) {
+				continue;
+			}
+			return state.token;
+		}
+		catch (NoViableAltException nva) {
+			reportError(nva);
+			recover(nva); // throw out current char and try again
+		}
+		catch (RecognitionException re) {
+			reportError(re);
+			// match() routine has already called recover()
+		}
+	}
+}
 }
 
 twowaySQL returns[TwoWayQuery query]

@@ -15,6 +15,7 @@ import org.antlr.runtime.EarlyExitException;
 import org.antlr.runtime.MismatchedTokenException;
 import org.antlr.runtime.MissingTokenException;
 import org.antlr.runtime.NoViableAltException;
+import org.antlr.runtime.Token;
 import org.antlr.runtime.UnwantedTokenException;
 import org.junit.Test;
 
@@ -69,7 +70,7 @@ public class TwoWaySqlParserTest {
 		CommonTokenStream tokens = new CommonTokenStream(lex);
 		CommonToken ct = (CommonToken) tokens.LT(1);
 		tokens.consume();
-		while (ct.getType() != CommonToken.EOF) {
+		while (ct.getType() != Token.EOF) {
 			System.out.printf("%d %d %s %n", ct.getStartIndex(), ct
 					.getStopIndex(), ct.getText());
 			ct = (CommonToken) tokens.LT(1);
@@ -133,6 +134,7 @@ public class TwoWaySqlParserTest {
 		assertLineComment(EarlyExitException.class, "#");
 		assertLineComment(MissingTokenException.class, "-");
 		assertLineComment(MissingTokenException.class, "--hoge");
+		assertLineComment(MissingTokenException.class, "#hoge --");
 		assertLineComment(MissingTokenException.class, "#hoge ");
 	}
 
@@ -149,6 +151,7 @@ public class TwoWaySqlParserTest {
 		assertBeginComment(MismatchedTokenException.class, "/*BEGI");
 		assertBeginComment(MismatchedTokenException.class, "/*BEGIN");
 		assertBeginComment(MissingTokenException.class, "/*BEGIN*");
+		assertBeginComment(MissingTokenException.class, "/*BEGIN/*");
 		assertBeginComment(MismatchedTokenException.class, "-- BEGIN ");
 
 		assertBeginComment(NoViableAltException.class, "/*BEGIN*/aaaa");
