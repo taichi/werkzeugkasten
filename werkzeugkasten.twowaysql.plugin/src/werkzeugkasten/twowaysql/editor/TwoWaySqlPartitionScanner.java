@@ -58,6 +58,7 @@ public class TwoWaySqlPartitionScanner implements IPartitionTokenScanner {
 
 		IToken result = PT_TXT;
 		CommonToken stop = null;
+		// TODO 式を含むコメントとそうでないコメントを分ける事に意味があるか、考慮する。
 		switch (type) {
 		case C_ST: {
 			stop = consume(C_ED_bits, 1);

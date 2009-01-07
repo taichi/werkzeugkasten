@@ -13,6 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core;bundle-version="3.4.2",
  org.eclipse.jdt.ui;bundle-version="3.4.1"
 Bundle-ActivationPolicy: lazy
+Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/antlr-3.1.1-runtime.jar,
  lib/nlsgen-runtime.jar,
