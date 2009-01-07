@@ -10,11 +10,14 @@ public class Constants {
 	 */
 	public static final String CT_TWOWAYSQL = "__twowaysql_";
 
-	public static final String CT_TEXT = "__twowaysql_text_";
+	public static final String CT_TEXT = CT_TWOWAYSQL + "text_";
 
-	public static final String CT_LINECOMMENT = "__twowaysql_linecomment_";
+	public static final String CT_SEMANTIC_COMMENT = CT_TWOWAYSQL
+			+ "semantic_comment_";
 
-	public static final String CT_BLOCKCOMMENT = "__twowaysql_blockcomment_";
+	public static final String CT_LINECOMMENT = CT_TWOWAYSQL + "linecomment_";
+
+	public static final String CT_BLOCKCOMMENT = CT_TWOWAYSQL + "blockcomment_";
 
 	public static final String[] LEGAL_CONTENT_TYPES = { CT_TEXT,
 			CT_LINECOMMENT, CT_BLOCKCOMMENT };
