@@ -17,7 +17,7 @@ public class TwoWaySqlDocumentSetupParticipant implements
 		IDocumentPartitioner dp = createDocumentPartitioner();
 		if (document instanceof IDocumentExtension3) {
 			IDocumentExtension3 de3 = (IDocumentExtension3) document;
-			de3.setDocumentPartitioner(Constants.CT_TWOWAYSQL, dp);
+			de3.setDocumentPartitioner(Constants.PARTITION_TYPE_TWOWAYSQL, dp);
 		} else {
 			document.setDocumentPartitioner(dp);
 		}

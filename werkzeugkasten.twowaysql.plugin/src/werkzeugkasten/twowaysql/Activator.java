@@ -1,5 +1,6 @@
 package werkzeugkasten.twowaysql;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -83,6 +84,16 @@ public class Activator extends AbstractUIPlugin {
 			a.colorManager = new ColorManager();
 		}
 		return a.colorManager;
+	}
+
+	public static IDialogSettings getSettings(String section) {
+		Activator a = getDefault();
+		IDialogSettings ds = a.getDialogSettings();
+		IDialogSettings result = ds.getSection(section);
+		if (result == null) {
+			result = ds.addNewSection(section);
+		}
+		return result;
 	}
 
 	public static void log(Throwable t) {

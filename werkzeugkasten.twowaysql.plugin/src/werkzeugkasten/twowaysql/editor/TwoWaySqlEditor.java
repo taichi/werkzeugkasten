@@ -10,6 +10,8 @@ import werkzeugkasten.twowaysql.nls.Strings;
 
 public class TwoWaySqlEditor extends TextEditor {
 
+	private static final String ACTION_ID_CONTENTASSIST_PROPOSALS = "ContentAssistProposal";
+
 	protected TwoWaySqlConfiguration configuration = new TwoWaySqlConfiguration();
 
 	public TwoWaySqlEditor() {
@@ -22,11 +24,11 @@ public class TwoWaySqlEditor extends TextEditor {
 	protected void createActions() {
 		super.createActions();
 		IAction action = new ContentAssistAction(Strings.getBundle(),
-				"ContentAssistProposal_", this);
+				ACTION_ID_CONTENTASSIST_PROPOSALS + "_", this);
 		action
 				.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-		setAction("ContentAssistProposal", action);
-		markAsStateDependentAction("ContentAssistProposal", true);
+		setAction(ACTION_ID_CONTENTASSIST_PROPOSALS, action);
+		// markAsStateDependentAction("ContentAssistProposal", true);
 	}
 
 	@Override

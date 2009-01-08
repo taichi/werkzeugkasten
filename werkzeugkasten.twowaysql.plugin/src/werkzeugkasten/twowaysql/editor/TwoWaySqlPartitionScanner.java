@@ -21,11 +21,12 @@ import werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer;
 public class TwoWaySqlPartitionScanner implements IPartitionTokenScanner {
 	// TODO will be tune. cf. FastJavaPartitionScanner
 
-	protected static final IToken PT_TXT = new Token(Constants.CT_TEXT);
+	protected static final IToken PT_TXT = new Token(
+			Constants.CONTENT_TYPE_TEXT);
 	protected static final IToken PT_BLOCKCOMMENT = new Token(
-			Constants.CT_BLOCKCOMMENT);
+			Constants.CONTENT_TYPE_BLOCKCOMMENT);
 	protected static final IToken PT_LINECOMMENT = new Token(
-			Constants.CT_LINECOMMENT);
+			Constants.CONTENT_TYPE_LINECOMMENT);
 	protected static final BitSet C_ED_bits = BitSet.of(C_ED);
 	protected static final BitSet C_LN_ED_bits = BitSet.of(C_LN_ED);
 	protected static final BitSet TXT_bits = BitSet.of(C_ST, C_LN_ST);
@@ -121,6 +122,7 @@ public class TwoWaySqlPartitionScanner implements IPartitionTokenScanner {
 
 	@Override
 	public void setRange(IDocument document, int offset, int length) {
-		setPartialRange(document, offset, length, Constants.CT_TEXT, 0);
+		setPartialRange(document, offset, length, Constants.CONTENT_TYPE_TEXT,
+				0);
 	}
 }

@@ -13,7 +13,7 @@ public class TwoWaySqlDocumentProvider extends TextFileDocumentProvider
 
 	public TwoWaySqlDocumentProvider() {
 		IDocumentProvider provider = new TextFileDocumentProvider();
-		provider = new ForwardingDocumentProvider(Constants.CT_TWOWAYSQL,
+		provider = new ForwardingDocumentProvider(Constants.PARTITION_TYPE_TWOWAYSQL,
 				new TwoWaySqlDocumentSetupParticipant(), provider);
 		setParentDocumentProvider(provider);
 	}
