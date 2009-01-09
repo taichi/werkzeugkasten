@@ -1,11 +1,11 @@
 package werkzeugkasten.twowaysql.editor.contentassist;
 
-import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.BEGIN;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.ELSE;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.ELSEIF;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.IDENT;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.IF;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.LT;
+import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.SYM_BIND;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.WHITE_SPACES;
 
 import java.util.ArrayList;
@@ -38,8 +38,8 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor {
 			"ELSE" };
 
 	protected static final BitSet WHITESPACE_bits = BitSet.of(LT, WHITE_SPACES);
-	protected static final BitSet KEYWORD_bits = BitSet.of(BEGIN, IF, ELSEIF,
-			ELSE);
+	protected static final BitSet WILLBE_EXPRESSION_bits = BitSet.of(IF,
+			ELSEIF, SYM_BIND);
 	protected static final BitSet KEYWORDPART_bits = BitSet.of(IDENT, ELSE);
 
 	@Override
@@ -60,24 +60,24 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor {
 							0, KEYWORDS[i].length());
 					proposals.add(cp);
 				}
-			} else {
-				CommonToken second = before.get(1);
+			} else if (1 < before.size()) {
+				CommonToken last = before.get(before.size() - 1);
 				// キーワード部分(開始位置にいくつか文字列がある。キーワードリストからフィルタして渡す)
-				if (KEYWORDPART_bits.member(second.getType())) {
-					String txt = second.getText().toUpperCase();
+				if (KEYWORDPART_bits.member(last.getType())) {
+					String txt = last.getText().toUpperCase();
 					for (int i = 0; i < KEYWORDS.length; i++) {
 						String s = KEYWORDS[i];
-						if (s.startsWith(txt) && txt.endsWith(s) == false) {
+						if (s.startsWith(txt)) {
 							CompletionProposal cp = new CompletionProposal(s,
 									partition.getOffset()
-											+ second.getStartIndex(), txt
+											+ last.getStartIndex(), txt
 											.length(), s.length());
 							proposals.add(cp);
 						}
 					}
 				}
 				// キーワードが既に完成している。(式言語の入力補完)
-				if (KEYWORD_bits.member(second.getType())) {
+				if (WILLBE_EXPRESSION_bits.member(last.getType())) {
 					// TODO 式言語の入力補完
 				}
 			}
