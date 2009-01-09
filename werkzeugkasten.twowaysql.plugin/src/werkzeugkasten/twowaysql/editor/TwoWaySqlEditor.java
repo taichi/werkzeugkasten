@@ -28,7 +28,7 @@ public class TwoWaySqlEditor extends TextEditor {
 		action
 				.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction(ACTION_ID_CONTENTASSIST_PROPOSALS, action);
-		// markAsStateDependentAction("ContentAssistProposal", true);
+		markAsStateDependentAction("ContentAssistProposal", true);
 	}
 
 	@Override

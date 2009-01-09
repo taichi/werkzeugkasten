@@ -2,12 +2,12 @@ package werkzeugkasten.twowaysql.editor;
 
 import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 
 import werkzeugkasten.twowaysql.Constants;
+import werkzeugkasten.twowaysql.util.DocumentUtil;
 
 public class TwoWaySqlDocumentSetupParticipant implements
 		IDocumentSetupParticipant {
@@ -15,12 +15,8 @@ public class TwoWaySqlDocumentSetupParticipant implements
 	@Override
 	public void setup(IDocument document) {
 		IDocumentPartitioner dp = createDocumentPartitioner();
-		if (document instanceof IDocumentExtension3) {
-			IDocumentExtension3 de3 = (IDocumentExtension3) document;
-			de3.setDocumentPartitioner(Constants.PARTITION_TYPE_TWOWAYSQL, dp);
-		} else {
-			document.setDocumentPartitioner(dp);
-		}
+		DocumentUtil.setDocumentPartitioner(document,
+				Constants.PARTITION_TYPE_TWOWAYSQL, dp);
 		dp.connect(document);
 	}
 

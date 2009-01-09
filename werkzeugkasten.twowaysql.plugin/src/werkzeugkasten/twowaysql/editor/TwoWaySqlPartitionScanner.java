@@ -16,7 +16,7 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
 import werkzeugkasten.twowaysql.Constants;
-import werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer;
+import werkzeugkasten.twowaysql.grammar.NoChannelLexer;
 
 public class TwoWaySqlPartitionScanner implements IPartitionTokenScanner {
 	// TODO will be tune. cf. FastJavaPartitionScanner
@@ -78,7 +78,7 @@ public class TwoWaySqlPartitionScanner implements IPartitionTokenScanner {
 		}
 		}
 		emit(start, stop);
-		// System.out.printf("start[%s %s] stop[%s %s] [%d:%d]%n", start,
+		// System.out.printf("$PT$ start[%s %s] stop[%s %s] [%d:%d]%n", start,
 		// TwoWaySqlParser.tokenNames[start.getType()], stop,
 		// TwoWaySqlParser.tokenNames[stop.getType()], this.tokenOffset,
 		// this.tokenLength);
@@ -110,11 +110,12 @@ public class TwoWaySqlPartitionScanner implements IPartitionTokenScanner {
 			String contentType, int partitionOffset) {
 		try {
 			String string = document.get(offset, length);
-			// System.out.printf("$PT$ [%s] %n", string);
+			// System.out.printf("$PT$[%d:%d:%s:%d] [%s] %n", offset, length,
+			// contentType, partitionOffset, string);
 			rangeOffset = offset;
 			tokenLength = 0;
 			tokenOffset = 0;
-			tokens = new CommonTokenStream(new TwoWaySqlLexer(
+			tokens = new CommonTokenStream(new NoChannelLexer(
 					new ANTLRStringStream(string)));
 		} catch (BadLocationException e) {
 		}

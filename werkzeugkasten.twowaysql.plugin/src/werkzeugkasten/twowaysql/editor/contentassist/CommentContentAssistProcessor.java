@@ -17,7 +17,6 @@ import org.antlr.runtime.CommonToken;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPartitioningException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
@@ -29,12 +28,13 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import werkzeugkasten.twowaysql.Constants;
 import werkzeugkasten.twowaysql.grammar.NoChannelLexer;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer;
+import werkzeugkasten.twowaysql.util.DocumentUtil;
 
 public class CommentContentAssistProcessor implements IContentAssistProcessor {
 
 	protected String errorMessage;
 
-	protected static final String[] KEYWORDS = { "BEGIN", "IF", "ELSEIF",
+	protected static final String[] KEYWORDS = { "?", "BEGIN", "IF", "ELSEIF",
 			"ELSE" };
 
 	protected static final BitSet WHITESPACE_bits = BitSet.of(LT, WHITE_SPACES);
@@ -48,32 +48,9 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor {
 		List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
 		try {
 			IDocument doc = viewer.getDocument();
-			ITypedRegion partition = null;
-			if (doc instanceof IDocumentExtension3) {
-				IDocumentExtension3 de3 = (IDocumentExtension3) doc;
-				partition = de3.getPartition(
-						Constants.PARTITION_TYPE_TWOWAYSQL, offset, true);
-			} else {
-				partition = doc.getPartition(offset);
-			}
-
-			int cursor = offset - partition.getOffset() - 1;
-			String string = doc.get(partition.getOffset(), partition
-					.getLength());
-			TwoWaySqlLexer lex = new NoChannelLexer(new ANTLRStringStream(
-					string));
-			List<CommonToken> before = new ArrayList<CommonToken>();
-			CommonToken ct = (CommonToken) lex.nextToken();
-			while (true) {
-				if (WHITESPACE_bits.member(ct.getType()) == false) {
-					before.add(ct);
-				}
-				if (ct.getStopIndex() < cursor) {
-					ct = (CommonToken) lex.nextToken();
-				} else {
-					break;
-				}
-			}
+			ITypedRegion partition = DocumentUtil.getPartition(doc,
+					Constants.PARTITION_TYPE_TWOWAYSQL, offset);
+			List<CommonToken> before = getBeforeTokens(offset, doc, partition);
 			if (before.size() < 2) {
 				// キーワード全部(コメント開始位置もしくは、その内側にカーソルがある)
 				CommonToken first = before.get(0);
@@ -106,10 +83,32 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor {
 			}
 			return proposals.toArray(new ICompletionProposal[proposals.size()]);
 		} catch (BadPartitioningException e) {
+			this.errorMessage = e.getMessage();
 			return null;
 		} catch (BadLocationException e) {
+			this.errorMessage = e.getMessage();
 			return null;
 		}
+	}
+
+	protected List<CommonToken> getBeforeTokens(int offset, IDocument doc,
+			ITypedRegion partition) throws BadLocationException {
+		int cursor = offset - partition.getOffset() - 1;
+		String string = doc.get(partition.getOffset(), partition.getLength());
+		TwoWaySqlLexer lex = new NoChannelLexer(new ANTLRStringStream(string));
+		List<CommonToken> before = new ArrayList<CommonToken>();
+		CommonToken ct = (CommonToken) lex.nextToken();
+		while (true) {
+			if (WHITESPACE_bits.member(ct.getType()) == false) {
+				before.add(ct);
+			}
+			if (ct.getStopIndex() < cursor) {
+				ct = (CommonToken) lex.nextToken();
+			} else {
+				break;
+			}
+		}
+		return before;
 	}
 
 	@Override

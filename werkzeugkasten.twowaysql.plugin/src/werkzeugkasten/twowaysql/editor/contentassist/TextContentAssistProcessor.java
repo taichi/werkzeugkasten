@@ -7,44 +7,40 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 
 public class TextContentAssistProcessor implements IContentAssistProcessor {
+	protected String errorMessage;
+
+	protected static final String[] KEYWORDS = { "/*IF  */", "--ELSE " };
 
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
-		System.out.println("#######################");
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IContextInformation[] computeContextInformation(ITextViewer viewer,
 			int offset) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public char[] getCompletionProposalAutoActivationCharacters() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public char[] getContextInformationAutoActivationCharacters() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IContextInformationValidator getContextInformationValidator() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getErrorMessage() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.errorMessage;
 	}
 
 }
