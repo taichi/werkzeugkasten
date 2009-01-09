@@ -7,6 +7,7 @@ import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 
 import werkzeugkasten.twowaysql.Constants;
+import werkzeugkasten.twowaysql.editor.scanner.TwoWaySqlPartitionScanner;
 import werkzeugkasten.twowaysql.util.DocumentUtil;
 
 public class TwoWaySqlDocumentSetupParticipant implements

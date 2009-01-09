@@ -1,4 +1,4 @@
-package werkzeugkasten.twowaysql.editor;
+package werkzeugkasten.twowaysql.editor.scanner;
 
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.C_ED;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.C_LN_ED;
