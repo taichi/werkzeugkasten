@@ -7,7 +7,7 @@ import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 
 import werkzeugkasten.twowaysql.Constants;
-import werkzeugkasten.twowaysql.editor.scanner.TwoWaySqlPartitionScanner;
+import werkzeugkasten.twowaysql.editor.scanner.PartitionScanner;
 import werkzeugkasten.twowaysql.util.DocumentUtil;
 
 public class TwoWaySqlDocumentSetupParticipant implements
@@ -27,7 +27,7 @@ public class TwoWaySqlDocumentSetupParticipant implements
 	}
 
 	protected IPartitionTokenScanner createPartitionScanner() {
-		return new TwoWaySqlPartitionScanner();
+		return new PartitionScanner();
 	}
 
 }

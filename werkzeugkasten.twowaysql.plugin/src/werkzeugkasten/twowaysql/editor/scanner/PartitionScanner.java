@@ -18,7 +18,7 @@ import org.eclipse.jface.text.rules.Token;
 import werkzeugkasten.twowaysql.Constants;
 import werkzeugkasten.twowaysql.grammar.NoChannelLexer;
 
-public class TwoWaySqlPartitionScanner implements IPartitionTokenScanner {
+public class PartitionScanner implements IPartitionTokenScanner {
 	// TODO will be tune. cf. FastJavaPartitionScanner
 
 	protected static final IToken PT_TXT = new Token(
@@ -36,7 +36,7 @@ public class TwoWaySqlPartitionScanner implements IPartitionTokenScanner {
 	protected int tokenLength = 0;
 	protected int tokenOffset = 0;
 
-	public TwoWaySqlPartitionScanner() {
+	public PartitionScanner() {
 	}
 
 	@Override
