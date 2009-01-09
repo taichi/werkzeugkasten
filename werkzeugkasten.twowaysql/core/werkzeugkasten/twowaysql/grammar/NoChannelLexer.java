@@ -6,6 +6,9 @@ import org.antlr.runtime.Token;
 
 public class NoChannelLexer extends TwoWaySqlLexer {
 
+	public NoChannelLexer() {
+	}
+
 	public NoChannelLexer(CharStream input) {
 		this(input, new RecognizerSharedState());
 	}
