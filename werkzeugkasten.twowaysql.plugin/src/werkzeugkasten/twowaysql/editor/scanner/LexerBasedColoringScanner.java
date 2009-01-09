@@ -30,7 +30,7 @@ import org.eclipse.jface.text.rules.Token;
 
 import werkzeugkasten.twowaysql.Constants.COLORING;
 import werkzeugkasten.twowaysql.editor.conf.ColorDefineFactory;
-import werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer;
+import werkzeugkasten.twowaysql.grammar.NoChannelLexer;
 
 public class LexerBasedColoringScanner implements ITokenScanner {
 
@@ -81,14 +81,8 @@ public class LexerBasedColoringScanner implements ITokenScanner {
 			tokenOffset = 0;
 			inExpression = false;
 			inBindType = false;
-			tokens = new CommonTokenStream(new TwoWaySqlLexer(
-					new ANTLRStringStream(string)) {
-				@Override
-				public org.antlr.runtime.Token emit() {
-					state.channel = org.antlr.runtime.Token.DEFAULT_CHANNEL;
-					return super.emit();
-				}
-			});
+			tokens = new CommonTokenStream(new NoChannelLexer(
+					new ANTLRStringStream(string)));
 		} catch (BadLocationException e) {
 		}
 	}

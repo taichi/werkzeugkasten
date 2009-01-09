@@ -14,8 +14,6 @@ import java.util.List;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.BitSet;
 import org.antlr.runtime.CommonToken;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.Token;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPartitioningException;
 import org.eclipse.jface.text.IDocument;
@@ -29,6 +27,7 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 
 import werkzeugkasten.twowaysql.Constants;
+import werkzeugkasten.twowaysql.grammar.NoChannelLexer;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer;
 
 public class CommentContentAssistProcessor implements IContentAssistProcessor {
@@ -61,23 +60,16 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor {
 			int cursor = offset - partition.getOffset() - 1;
 			String string = doc.get(partition.getOffset(), partition
 					.getLength());
-			CommonTokenStream tokens = new CommonTokenStream(
-					new TwoWaySqlLexer(new ANTLRStringStream(string)) {
-						@Override
-						public Token emit() {
-							state.channel = org.antlr.runtime.Token.DEFAULT_CHANNEL;
-							return super.emit();
-						}
-					});
+			TwoWaySqlLexer lex = new NoChannelLexer(new ANTLRStringStream(
+					string));
 			List<CommonToken> before = new ArrayList<CommonToken>();
-			CommonToken ct = (CommonToken) tokens.LT(1);
+			CommonToken ct = (CommonToken) lex.nextToken();
 			while (true) {
 				if (WHITESPACE_bits.member(ct.getType()) == false) {
 					before.add(ct);
 				}
 				if (ct.getStopIndex() < cursor) {
-					tokens.consume();
-					ct = (CommonToken) tokens.LT(1);
+					ct = (CommonToken) lex.nextToken();
 				} else {
 					break;
 				}
