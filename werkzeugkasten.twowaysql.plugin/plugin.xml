@@ -7,6 +7,7 @@
             class="werkzeugkasten.twowaysql.editor.TwoWaySqlEditor"
             default="false"
             extensions="sql"
+            icon="icons/sql.gif"
             id="werkzeugkasten.twowaysql.editor"
             name="TwoWaySqlEditor">
       </editor>
