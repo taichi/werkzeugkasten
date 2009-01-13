@@ -17,6 +17,7 @@ public class Strings {
 
 	static final ResourceBundle bundle;
 	public static String ContentAssistProposal_label;
+	public static String ContextPage_label;
 
 	static {
 		Object o = Activator.getDefault().getBundle().getHeaders().get(

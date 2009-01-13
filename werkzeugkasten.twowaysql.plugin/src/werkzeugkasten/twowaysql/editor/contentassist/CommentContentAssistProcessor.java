@@ -14,6 +14,7 @@ import java.util.List;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.BitSet;
 import org.antlr.runtime.CommonToken;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPartitioningException;
 import org.eclipse.jface.text.IDocument;
@@ -24,13 +25,17 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 
+import werkzeugkasten.twowaysql.Activator;
 import werkzeugkasten.twowaysql.Constants;
 import werkzeugkasten.twowaysql.grammar.NoChannelLexer;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer;
 import werkzeugkasten.twowaysql.util.DocumentUtil;
 
-public class CommentContentAssistProcessor implements IContentAssistProcessor {
+public class CommentContentAssistProcessor implements IContentAssistProcessor,
+		IPropertyChangeListener {
 
 	protected String errorMessage;
 
@@ -41,6 +46,16 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor {
 	protected static final BitSet WILLBE_EXPRESSION_bits = BitSet.of(IF,
 			ELSEIF, SYM_BIND);
 	protected static final BitSet KEYWORDPART_bits = BitSet.of(IDENT, ELSE);
+
+	public CommentContentAssistProcessor() {
+		IPreferenceStore store = Activator.getGlobalPreference();
+		store.addPropertyChangeListener(this);
+		// TODO read from preference
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+	}
 
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
