@@ -24,7 +24,7 @@ import werkzeugkasten.common.util.StringUtil;
 
 /**
  * @author taichi
- * 
+ * @see org.eclipse.jdt.core.Signature
  */
 public class TypeUtil {
 
