@@ -50,12 +50,13 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 		// メソッド名のコンボボックス
 		// クラスを検索するダイアログを出すBrowseボタン
 
-		// グリッド
+		// グリッド(全カラム編集可)
 		// - 型名
 		// - 変数名
 		// TODO - デバッグ用サンプルデータ
 
 		// メソッドからは類推出来ない変数名を登録する為のボタン
+		// 変数名を削除するボタン
 
 		return composite;
 	}
@@ -77,13 +78,5 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 	@Override
 	public boolean isSaveAsAllowed() {
 		return this.delegate != null ? this.delegate.isSaveAsAllowed() : false;
-	}
-
-	@Override
-	public void dispose() {
-		if (this.delegate != null) {
-			this.delegate.dispose();
-		}
-		super.dispose();
 	}
 }
