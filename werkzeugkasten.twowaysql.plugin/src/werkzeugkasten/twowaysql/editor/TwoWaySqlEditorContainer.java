@@ -1,19 +1,23 @@
 package werkzeugkasten.twowaysql.editor;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
+import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.twowaysql.Activator;
+import werkzeugkasten.twowaysql.editor.widget.ContextPage;
 import werkzeugkasten.twowaysql.nls.Strings;
 
 public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 
 	protected TwoWaySqlEditor delegate;
+
+	protected ContextPage contextPage;
 
 	@Override
 	protected void createPages() {
@@ -34,31 +38,20 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 	}
 
 	protected void setUpContextPage() {
-		Composite composite = createContextPage();
+		this.contextPage = new ContextPage(getProject(), getSite()
+				.getWorkbenchWindow());
+		Composite composite = this.contextPage.layout(getContainer());
 		int index = addPage(composite);
 		setPageText(index, Strings.ContextPage_label);
 	}
 
-	protected Composite createContextPage() {
-		// TODO implement context page
-		Composite composite = new Composite(getContainer(), SWT.NONE);
-		GridLayout layout = new GridLayout();
-		composite.setLayout(layout);
-		layout.numColumns = 2;
-
-		// クラス名のテキストエリア
-		// メソッド名のコンボボックス
-		// クラスを検索するダイアログを出すBrowseボタン
-
-		// グリッド(全カラム編集可)
-		// - 型名
-		// - 変数名
-		// TODO - デバッグ用サンプルデータ
-
-		// メソッドからは類推出来ない変数名を登録する為のボタン
-		// 変数名を削除するボタン
-
-		return composite;
+	protected IProject getProject() {
+		IFileEditorInput input = AdaptableUtil.to(getEditorInput(),
+				IFileEditorInput.class);
+		if (input != null) {
+			return input.getFile().getProject();
+		}
+		return null;
 	}
 
 	@Override
@@ -72,6 +65,8 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 	public void doSaveAs() {
 		if (this.delegate != null) {
 			this.delegate.doSaveAs();
+			setPageText(0, this.delegate.getTitle());
+			setInput(this.delegate.getEditorInput());
 		}
 	}
 
