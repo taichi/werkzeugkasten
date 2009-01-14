@@ -1,4 +1,4 @@
-package werkzeugkasten.common.wiget;
+package werkzeugkasten.common.widget;
 
 import java.util.ArrayList;
 import java.util.List;
