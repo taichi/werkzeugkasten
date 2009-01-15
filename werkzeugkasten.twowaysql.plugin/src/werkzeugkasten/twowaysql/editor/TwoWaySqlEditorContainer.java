@@ -1,15 +1,18 @@
 package werkzeugkasten.twowaysql.editor;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.MultiPageEditorPart;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.twowaysql.Activator;
+import werkzeugkasten.twowaysql.Constants;
 import werkzeugkasten.twowaysql.editor.widget.ContextPage;
 import werkzeugkasten.twowaysql.nls.Strings;
 
@@ -19,15 +22,19 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 
 	protected ContextPage contextPage;
 
+	protected ScopedPreferenceStore store;
+
 	@Override
 	protected void createPages() {
+		this.store = new ScopedPreferenceStore(new ProjectScope(getProject()),
+				Constants.ID_PLUGIN);
 		setUpEditorPage();
 		setUpContextPage();
 	}
 
 	protected void setUpEditorPage() {
 		try {
-			this.delegate = new TwoWaySqlEditor();
+			this.delegate = new TwoWaySqlEditor(this.store);
 			int index = addPage(this.delegate, getEditorInput());
 			setPageText(index, this.delegate.getTitle());
 		} catch (PartInitException e) {

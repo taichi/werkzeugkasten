@@ -1,6 +1,11 @@
 package werkzeugkasten.twowaysql;
 
+import werkzeugkasten.common.util.StringUtil;
+
 public class Constants {
+
+	public static final String BUNDLE_VERSION = StringUtil.toString(Activator
+			.getBundleHeaders().get("Bundle-Version"), "0.0.0");
 
 	// The plug-in ID
 	public static final String ID_PLUGIN = "werkzeugkasten.twowaysql.plugin";

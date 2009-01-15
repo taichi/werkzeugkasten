@@ -1,6 +1,7 @@
 package werkzeugkasten.twowaysql.editor;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
@@ -12,9 +13,10 @@ public class TwoWaySqlEditor extends TextEditor {
 
 	private static final String ACTION_ID_CONTENTASSIST_PROPOSALS = "ContentAssistProposal";
 
-	protected TwoWaySqlConfiguration configuration = new TwoWaySqlConfiguration();
+	protected TwoWaySqlConfiguration configuration;
 
-	public TwoWaySqlEditor() {
+	public TwoWaySqlEditor(IPreferenceStore pref) {
+		configuration = new TwoWaySqlConfiguration(pref);
 		configuration.initialize();
 		setSourceViewerConfiguration(configuration);
 		setDocumentProvider(Activator.getDocumentProvider());

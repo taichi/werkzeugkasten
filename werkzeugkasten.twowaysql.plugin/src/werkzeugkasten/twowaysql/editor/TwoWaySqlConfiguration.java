@@ -1,5 +1,6 @@
 package werkzeugkasten.twowaysql.editor;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -25,12 +26,14 @@ import werkzeugkasten.twowaysql.editor.scanner.TextScanner;
 public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 		implements Initializable, Disposable {
 
+	protected IPreferenceStore preferenceStore;
 	protected ColorDefineFactory colorFactory;
 	protected TextScanner textScanner;
 	protected LexerBasedColoringScanner lineCommentScanner;
 	protected LexerBasedColoringScanner blockCommentScanner;
 
-	public TwoWaySqlConfiguration() {
+	public TwoWaySqlConfiguration(IPreferenceStore pref) {
+		this.preferenceStore = pref;
 		this.colorFactory = new ColorDefineFactory();
 		this.colorFactory.initialize();
 	}

@@ -15,6 +15,7 @@ import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -76,10 +77,17 @@ public class ContextPage {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		composite.setLayout(layout);
-		layout.numColumns = 3;
+		layout.numColumns = 4;
+		GridData data = new GridData(GridData.FILL);
+		data.grabExcessHorizontalSpace = true;
+		composite.setLayoutData(data);
 
+		// クラス名のテキストエリア
 		this.className = new Text(composite, SWT.READ_ONLY | SWT.BORDER);
+		// メソッド名のコンボボックス
 		this.methods = new Combo(composite, SWT.READ_ONLY | SWT.BORDER);
+
+		// クラスを検索するダイアログを出すBrowseボタン
 		Button browse = new Button(composite, SWT.PUSH);
 		browse.setText(Strings.Browse);
 		browse.addSelectionListener(new SelectionAdapter() {
@@ -112,10 +120,9 @@ public class ContextPage {
 			}
 		});
 
-		// クラス名のテキストエリア
-		// メソッド名のコンボボックス
-		// クラスを検索するダイアログを出すBrowseボタン
 		// 選択されているクラス名とメソッド名で、変数をリフレッシュするボタン。(基本は自動動作するが…)
+		Button refresh = new Button(composite, SWT.PUSH);
+		refresh.setText(Strings.Refresh);
 
 		// グリッド(全カラム編集可)
 		// - 型名

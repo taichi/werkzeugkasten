@@ -4,8 +4,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="werkzeugkasten.twowaysql.editor.TwoWaySqlEditor"
-            default="false"
+            class="werkzeugkasten.twowaysql.editor.TwoWaySqlEditorContainer"
             extensions="sql"
             icon="icons/sql.gif"
             id="werkzeugkasten.twowaysql.editor"

@@ -1,5 +1,7 @@
 package werkzeugkasten.twowaysql;
 
+import java.util.Dictionary;
+
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -94,6 +96,10 @@ public class Activator extends AbstractUIPlugin {
 			result = ds.addNewSection(section);
 		}
 		return result;
+	}
+
+	public static Dictionary<?, ?> getBundleHeaders() {
+		return getDefault().getBundle().getHeaders();
 	}
 
 	public static void log(Throwable t) {

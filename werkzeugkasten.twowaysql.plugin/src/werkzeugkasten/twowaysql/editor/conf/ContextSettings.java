@@ -3,17 +3,19 @@ package werkzeugkasten.twowaysql.editor.conf;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.XMLMemento;
 
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.twowaysql.Activator;
-import werkzeugkasten.twowaysql.nls.Strings;
+import werkzeugkasten.twowaysql.Constants;
 
 public class ContextSettings {
 
@@ -25,7 +27,9 @@ public class ContextSettings {
 	static final String ATR_NAME = "name";
 	static final String ATR_SEQ = "seq";
 
-	protected XMLMemento delegate;
+	protected XMLMemento old;
+	protected XMLMemento newone;
+	protected List<Var> vars;
 
 	protected ContextSettings() {
 	}
@@ -57,28 +61,40 @@ public class ContextSettings {
 				.toPortableString());
 		try {
 			if (StringUtil.isEmpty(memento) == false) {
-				result.delegate = XMLMemento.createReadRoot(new StringReader(
-						memento));
+				result.old = XMLMemento
+						.createReadRoot(new StringReader(memento));
+				IMemento[] kids = result.old.getChildren(TAG_VAR);
+				if (kids != null) {
+					List<Var> vs = new ArrayList<Var>(kids.length);
+					for (IMemento m : kids) {
+						Var v = new Var();
+						v.type = m.getString(ATR_TYPE);
+						v.name = m.getString(ATR_NAME);
+						vs.add(v);
+					}
+				}
 			}
 		} catch (WorkbenchException e) {
 			Activator.log(e);
 		}
-		if (result.delegate == null) {
-			result.delegate = XMLMemento.createWriteRoot(TAG_ROOT);
-			result.delegate.putString(ATR_VERSION, Strings.BUNDLE_VERSION);
-			// XXX バージョンがズレている時の挙動について、あとで考える。
-		}
+		result.newone = XMLMemento.createWriteRoot(TAG_ROOT);
+		result.newone.putString(ATR_VERSION, Constants.BUNDLE_VERSION);
+		// XXX バージョンがズレている時の挙動について、あとで考える。
 		return result;
 	}
-
-	// ScopedPreferenceStore store = new ScopedPreferenceStore(
-	// new ProjectScope(readTarget.getProject()), Constants.ID_PLUGIN);
 
 	public static void save(IPersistentPreferenceStore store, IFile saveTarget,
 			ContextSettings settings) {
 		try {
 			StringWriter writer = new StringWriter();
-			settings.delegate.save(writer);
+			for (int i = 0, length = settings.vars.size(); i < length; i++) {
+				Var v = settings.vars.get(i);
+				IMemento mnmt = settings.newone.createChild(TAG_VAR);
+				mnmt.putString(ATR_NAME, v.getName());
+				mnmt.putString(ATR_TYPE, v.getType());
+				mnmt.putInteger(ATR_SEQ, i);
+			}
+			settings.newone.save(writer);
 			store.setValue(saveTarget.getFullPath().toPortableString(), writer
 					.toString());
 		} catch (IOException e) {
@@ -87,15 +103,26 @@ public class ContextSettings {
 	}
 
 	public void setType(String fqn) {
-		this.delegate.putString(ATR_TYPE, fqn);
+		this.newone.putString(ATR_TYPE, fqn);
+	}
+
+	public String getType() {
+		return this.old.getString(ATR_TYPE);
 	}
 
 	public void setMethod(String signature) {
-		this.delegate.putString(ATR_METHOD, signature);
+		this.newone.putString(ATR_METHOD, signature);
+	}
+
+	public String getMethod() {
+		return this.old.getString(ATR_METHOD);
 	}
 
 	public void setVariables(List<Var> vars) {
-		for (Var v : vars) {
-		}
+		this.vars = vars;
+	}
+
+	public List<Var> getVariables() {
+		return this.vars;
 	}
 }
