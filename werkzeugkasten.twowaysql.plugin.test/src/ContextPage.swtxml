@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Composite
+    xmlns="http://www.swtxml.com/swt"
+    xmlns:on="http://www.swtxml.com/events"
+    layout="layout:grid;numColumns:2;">
+	<Table style="BORDER" headerVisible="true" linesVisible="true"
+		layoutData="verticalSpan:5;grabExcessHorizontalSpace:true;grabExcessVerticalSpace:true;verticalAlignment:FILL;horizontalAlignment:FILL;">
+		<TableColumn text="Type" width="300"/>
+		<TableColumn text="Variable" width="100"/>
+		<TableColumn text="Exmaple" width="200"/>
+	</Table>
+	<Button text="Browse" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;" toolTipText="select class and method"/>
+	<Button text="Add" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;"/>
+	<Button text="Remove" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;"/>
+	<Button text="Clear" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;"/>
+	<Button text="Refresh" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;"/>
+</Composite>
