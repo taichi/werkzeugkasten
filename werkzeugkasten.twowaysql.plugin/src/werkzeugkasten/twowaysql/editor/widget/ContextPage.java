@@ -1,13 +1,8 @@
 package werkzeugkasten.twowaysql.editor.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -18,9 +13,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
 import werkzeugkasten.common.runtime.AdaptableUtil;
@@ -31,10 +26,6 @@ public class ContextPage {
 
 	protected IProject project;
 	protected IRunnableContext context;
-
-	protected Text className;
-	protected Combo methods;
-	protected List<String> methodSignatures;
 
 	public ContextPage(IProject project, IRunnableContext context) {
 		this.project = project;
@@ -50,46 +41,83 @@ public class ContextPage {
 	}
 
 	protected void setSelectedDatas(IType type) throws CoreException {
-		this.className.setText(type.getFullyQualifiedName());
-		this.methodSignatures = new ArrayList<String>();
-		List<String> methodView = new ArrayList<String>();
-		for (IMethod mtd : type.getMethods()) {
-			this.methodSignatures.add(mtd.getSignature());
-			StringBuilder stb = new StringBuilder();
-			String[] types = mtd.getParameterTypes();
-			stb.append(mtd.getElementName());
-			stb.append("(");
-			for (int i = 0, length = types.length; i < length;) {
-				stb.append(Signature.toString(types[i]));
-				if (++i < length) {
-					stb.append(",");
-				}
-			}
-			stb.append(")");
-			methodView.add(stb.toString());
-		}
-		this.methods
-				.setItems(methodView.toArray(new String[methodView.size()]));
+		// this.className.setText(type.getFullyQualifiedName());
+		// this.methodSignatures = new ArrayList<String>();
+		// List<String> methodView = new ArrayList<String>();
+		// for (IMethod mtd : type.getMethods()) {
+		// this.methodSignatures.add(mtd.getSignature());
+		// StringBuilder stb = new StringBuilder();
+		// String[] types = mtd.getParameterTypes();
+		// stb.append(mtd.getElementName());
+		// stb.append("(");
+		// for (int i = 0, length = types.length; i < length;) {
+		// stb.append(Signature.toString(types[i]));
+		// if (++i < length) {
+		// stb.append(",");
+		// }
+		// }
+		// stb.append(")");
+		// methodView.add(stb.toString());
+		// }
+		// this.methods
+		// .setItems(methodView.toArray(new String[methodView.size()]));
 
 	}
 
 	public Composite layout(final Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
 		composite.setLayout(layout);
-		layout.numColumns = 4;
-		GridData data = new GridData(GridData.FILL);
-		data.grabExcessHorizontalSpace = true;
-		composite.setLayoutData(data);
 
-		// クラス名のテキストエリア
-		this.className = new Text(composite, SWT.READ_ONLY | SWT.BORDER);
-		// メソッド名のコンボボックス
-		this.methods = new Combo(composite, SWT.READ_ONLY | SWT.BORDER);
+		Table t = new Table(composite, SWT.BORDER);
+		t.setHeaderVisible(true);
+		t.setLinesVisible(true);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.VERTICAL_ALIGN_FILL | GridData.GRAB_VERTICAL);
+		data.verticalSpan = 5;
+		t.setLayoutData(data);
+		// グリッド(全カラム編集可)
+		// - 型名
+		// - 変数名
+		// - デバッグ用サンプルデータ
+		TableColumn type = new TableColumn(t, SWT.NONE);
+		type.setText("Type");
+		type.setWidth(300);
+		TableColumn var = new TableColumn(t, SWT.NONE);
+		var.setText("Variable");
+		var.setWidth(100);
+		TableColumn ex = new TableColumn(t, SWT.NONE);
+		ex.setText("Example");
+		ex.setWidth(200);
+
+		// メソッドからは類推出来ない変数名を登録する為のボタン
+		Button add = new Button(composite, SWT.PUSH);
+		add.setText("Add");
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.VERTICAL_ALIGN_BEGINNING);
+		add.setLayoutData(data);
+
+		// 変数名を削除するボタン
+		Button remove = new Button(composite, SWT.PUSH);
+		remove.setText("Remove");
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.VERTICAL_ALIGN_BEGINNING);
+		remove.setLayoutData(data);
+
+		// 変数名を全部削除するボタン
+		Button clear = new Button(composite, SWT.PUSH);
+		clear.setText("Clear");
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.VERTICAL_ALIGN_BEGINNING);
+		clear.setLayoutData(data);
 
 		// クラスを検索するダイアログを出すBrowseボタン
 		Button browse = new Button(composite, SWT.PUSH);
 		browse.setText(Strings.Browse);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.VERTICAL_ALIGN_BEGINNING);
+		browse.setLayoutData(data);
 		browse.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -123,22 +151,10 @@ public class ContextPage {
 		// 選択されているクラス名とメソッド名で、変数をリフレッシュするボタン。(基本は自動動作するが…)
 		Button refresh = new Button(composite, SWT.PUSH);
 		refresh.setText(Strings.Refresh);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.VERTICAL_ALIGN_BEGINNING);
+		refresh.setLayoutData(data);
 
-		// グリッド(全カラム編集可)
-		// - 型名
-		// - 変数名
-		// TODO - デバッグ用サンプルデータ
-
-		// メソッドからは類推出来ない変数名を登録する為のボタン
-		// 変数名を削除するボタン
-		return null;
-	}
-
-	public String getClassName() {
-		return this.className.getText();
-	}
-
-	public String getMethodSignature() {
-		return methodSignatures.get(methods.getSelectionIndex());
+		return composite;
 	}
 }
