@@ -2,16 +2,26 @@
 <Composite
     xmlns="http://www.swtxml.com/swt"
     xmlns:on="http://www.swtxml.com/events"
-    layout="layout:grid;numColumns:2;">
+    layout="layout:grid;numColumns:3;">
+    <Composite 
+    	layoutData="horizontalAlignment:FILL;horizontalSpan:3;"
+    	layout="layout:grid;numColumns:6;marginWidth:0;marginHeight:0;">
+    	<Label text="Class :" />
+	    <Text style="BORDER" layoutData="horizontalAlignment:FILL;grabExcessHorizontalSpace:true;"/>
+	    <Label text="Method :" />
+		<Combo style="BORDER" layoutData="horizontalAlignment:FILL;grabExcessHorizontalSpace:true;"/>    
+		<Button text="Browse" />
+		<Button text="Refresh" />
+    </Composite>
 	<Table style="BORDER" headerVisible="true" linesVisible="true"
-		layoutData="verticalSpan:5;grabExcessHorizontalSpace:true;grabExcessVerticalSpace:true;verticalAlignment:FILL;horizontalAlignment:FILL;">
+		layoutData="verticalSpan:5;grabExcessVerticalSpace:true;verticalAlignment:FILL;horizontalAlignment:FILL;">
 		<TableColumn text="Type" width="300"/>
 		<TableColumn text="Variable" width="100"/>
 		<TableColumn text="Exmaple" width="200"/>
 	</Table>
-	<Button text="Browse" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;" toolTipText="select class and method"/>
-	<Button text="Add" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;"/>
-	<Button text="Remove" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;"/>
-	<Button text="Clear" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;"/>
-	<Button text="Refresh" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;"/>
+	<Composite layout="layout:grid;marginWidth:0;">
+		<Button text="Add" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;"/>
+		<Button text="Remove" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;"/>
+		<Button text="Clear" layoutData="horizontalAlignment:FILL;verticalAlignment:BEGINNING;"/>
+	</Composite>
 </Composite>
