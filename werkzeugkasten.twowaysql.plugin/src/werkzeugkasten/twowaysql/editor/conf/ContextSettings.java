@@ -37,21 +37,30 @@ public class ContextSettings {
 	public static class Var {
 		String name;
 		String type;
+		String example;
 
-		public String getName() {
+		public String name() {
 			return name;
 		}
 
-		public void setName(String name) {
+		public void name(String name) {
 			this.name = name;
 		}
 
-		public String getType() {
+		public String type() {
 			return type;
 		}
 
-		public void setType(String type) {
+		public void type(String type) {
 			this.type = type;
+		}
+
+		public String example() {
+			return this.example;
+		}
+
+		public void example(String example) {
+			this.example = example;
 		}
 	}
 
@@ -72,6 +81,7 @@ public class ContextSettings {
 						v.name = m.getString(ATR_NAME);
 						vs.add(v);
 					}
+					result.variables(vs);
 				}
 			}
 		} catch (WorkbenchException e) {
@@ -90,8 +100,8 @@ public class ContextSettings {
 			for (int i = 0, length = settings.vars.size(); i < length; i++) {
 				Var v = settings.vars.get(i);
 				IMemento mnmt = settings.newone.createChild(TAG_VAR);
-				mnmt.putString(ATR_NAME, v.getName());
-				mnmt.putString(ATR_TYPE, v.getType());
+				mnmt.putString(ATR_NAME, v.name());
+				mnmt.putString(ATR_TYPE, v.type());
 				mnmt.putInteger(ATR_SEQ, i);
 			}
 			settings.newone.save(writer);
@@ -102,27 +112,27 @@ public class ContextSettings {
 		}
 	}
 
-	public void setType(String fqn) {
+	public void type(String fqn) {
 		this.newone.putString(ATR_TYPE, fqn);
 	}
 
-	public String getType() {
+	public String type() {
 		return this.old.getString(ATR_TYPE);
 	}
 
-	public void setMethod(String signature) {
+	public void method(String signature) {
 		this.newone.putString(ATR_METHOD, signature);
 	}
 
-	public String getMethod() {
+	public String method() {
 		return this.old.getString(ATR_METHOD);
 	}
 
-	public void setVariables(List<Var> vars) {
+	public void variables(List<Var> vars) {
 		this.vars = vars;
 	}
 
-	public List<Var> getVariables() {
+	public List<Var> variables() {
 		return this.vars;
 	}
 }

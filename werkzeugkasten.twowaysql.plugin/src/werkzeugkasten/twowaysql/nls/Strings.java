@@ -22,6 +22,14 @@ public class Strings {
 	public static String ContextPage_label;
 	public static String Browse;
 	public static String Refresh;
+	public static String Column_Type;
+	public static String Column_Example;
+	public static String Column_Variable;
+	public static String label_Add;
+	public static String label_Clear;
+	public static String label_Remove;
+	public static String label_Method;
+	public static String label_Class;
 	static {
 		Dictionary<?, ?> dic = Activator.getDefault().getBundle().getHeaders();
 		Object o = dic.get("Bundle-Localization");

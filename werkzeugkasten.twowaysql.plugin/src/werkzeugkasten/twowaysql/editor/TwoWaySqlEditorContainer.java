@@ -1,5 +1,6 @@
 package werkzeugkasten.twowaysql.editor;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -13,6 +14,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.twowaysql.Activator;
 import werkzeugkasten.twowaysql.Constants;
+import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
 import werkzeugkasten.twowaysql.editor.widget.ContextPage;
 import werkzeugkasten.twowaysql.nls.Strings;
 
@@ -22,12 +24,15 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 
 	protected ContextPage contextPage;
 
+	protected ContextSettings settings;
+
 	protected ScopedPreferenceStore store;
 
 	@Override
 	protected void createPages() {
 		this.store = new ScopedPreferenceStore(new ProjectScope(getProject()),
 				Constants.ID_PLUGIN);
+		this.settings = ContextSettings.read(this.store, getFile());
 		setUpEditorPage();
 		setUpContextPage();
 	}
@@ -45,18 +50,26 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 	}
 
 	protected void setUpContextPage() {
-		this.contextPage = new ContextPage(getProject(), getSite()
-				.getWorkbenchWindow());
+		this.contextPage = new ContextPage(getProject(), settings,
+				getEditorSite());
 		Composite composite = this.contextPage.layout(getContainer());
 		int index = addPage(composite);
 		setPageText(index, Strings.ContextPage_label);
 	}
 
-	protected IProject getProject() {
+	protected IFile getFile() {
 		IFileEditorInput input = AdaptableUtil.to(getEditorInput(),
 				IFileEditorInput.class);
 		if (input != null) {
-			return input.getFile().getProject();
+			return input.getFile();
+		}
+		return null;
+	}
+
+	protected IProject getProject() {
+		IFile file = getFile();
+		if (file != null) {
+			return file.getProject();
 		}
 		return null;
 	}
@@ -65,6 +78,7 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 	public void doSave(IProgressMonitor monitor) {
 		if (this.delegate != null) {
 			this.delegate.doSave(monitor);
+			ContextSettings.save(this.store, getFile(), this.settings);
 		}
 	}
 
@@ -72,6 +86,7 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 	public void doSaveAs() {
 		if (this.delegate != null) {
 			this.delegate.doSaveAs();
+			ContextSettings.save(this.store, getFile(), this.settings);
 			setPageText(0, this.delegate.getTitle());
 			setInput(this.delegate.getEditorInput());
 		}
