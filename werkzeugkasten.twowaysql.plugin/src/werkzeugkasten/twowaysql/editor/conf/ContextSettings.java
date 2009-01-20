@@ -27,8 +27,7 @@ public class ContextSettings {
 	static final String ATR_NAME = "name";
 	static final String ATR_SEQ = "seq";
 
-	protected XMLMemento old;
-	protected XMLMemento newone;
+	protected XMLMemento memento;
 	protected List<Var> vars;
 
 	protected ContextSettings() {
@@ -66,13 +65,18 @@ public class ContextSettings {
 
 	public static ContextSettings read(IPreferenceStore store, IFile readTarget) {
 		ContextSettings result = new ContextSettings();
-		String memento = store.getString(readTarget.getFullPath()
+		result.memento = XMLMemento.createWriteRoot(TAG_ROOT);
+		result.memento.putString(ATR_VERSION, Constants.BUNDLE_VERSION);
+		// XXX バージョンがズレている時の挙動について、あとで考える。
+		String oldString = store.getString(readTarget.getFullPath()
 				.toPortableString());
 		try {
-			if (StringUtil.isEmpty(memento) == false) {
-				result.old = XMLMemento
-						.createReadRoot(new StringReader(memento));
-				IMemento[] kids = result.old.getChildren(TAG_VAR);
+			if (StringUtil.isEmpty(oldString) == false) {
+				XMLMemento old = XMLMemento.createReadRoot(new StringReader(
+						oldString));
+				result.memento.putString(ATR_TYPE, old.getString(ATR_TYPE));
+				result.memento.putString(ATR_METHOD, old.getString(ATR_METHOD));
+				IMemento[] kids = old.getChildren(TAG_VAR);
 				if (kids != null) {
 					List<Var> vs = new ArrayList<Var>(kids.length);
 					for (IMemento m : kids) {
@@ -87,9 +91,6 @@ public class ContextSettings {
 		} catch (WorkbenchException e) {
 			Activator.log(e);
 		}
-		result.newone = XMLMemento.createWriteRoot(TAG_ROOT);
-		result.newone.putString(ATR_VERSION, Constants.BUNDLE_VERSION);
-		// XXX バージョンがズレている時の挙動について、あとで考える。
 		return result;
 	}
 
@@ -99,12 +100,12 @@ public class ContextSettings {
 			StringWriter writer = new StringWriter();
 			for (int i = 0, length = settings.vars.size(); i < length; i++) {
 				Var v = settings.vars.get(i);
-				IMemento mnmt = settings.newone.createChild(TAG_VAR);
+				IMemento mnmt = settings.memento.createChild(TAG_VAR);
 				mnmt.putString(ATR_NAME, v.name());
 				mnmt.putString(ATR_TYPE, v.type());
 				mnmt.putInteger(ATR_SEQ, i);
 			}
-			settings.newone.save(writer);
+			settings.memento.save(writer);
 			store.setValue(saveTarget.getFullPath().toPortableString(), writer
 					.toString());
 		} catch (IOException e) {
@@ -113,19 +114,19 @@ public class ContextSettings {
 	}
 
 	public void type(String fqn) {
-		this.newone.putString(ATR_TYPE, fqn);
+		this.memento.putString(ATR_TYPE, fqn);
 	}
 
 	public String type() {
-		return this.old.getString(ATR_TYPE);
+		return this.memento.getString(ATR_TYPE);
 	}
 
 	public void method(String signature) {
-		this.newone.putString(ATR_METHOD, signature);
+		this.memento.putString(ATR_METHOD, signature);
 	}
 
 	public String method() {
-		return this.old.getString(ATR_METHOD);
+		return this.memento.getString(ATR_METHOD);
 	}
 
 	public void variables(List<Var> vars) {
