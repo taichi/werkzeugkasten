@@ -79,6 +79,7 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 		if (this.delegate != null) {
 			this.delegate.doSave(monitor);
 			ContextSettings.save(this.store, getFile(), this.settings);
+			this.contextPage.modified(false);
 		}
 	}
 
@@ -89,7 +90,14 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 			ContextSettings.save(this.store, getFile(), this.settings);
 			setPageText(0, this.delegate.getTitle());
 			setInput(this.delegate.getEditorInput());
+			this.contextPage.modified(false);
 		}
+	}
+
+	@Override
+	public boolean isDirty() {
+		return this.delegate == null ? false : this.delegate.isDirty()
+				|| this.contextPage.modified();
 	}
 
 	@Override

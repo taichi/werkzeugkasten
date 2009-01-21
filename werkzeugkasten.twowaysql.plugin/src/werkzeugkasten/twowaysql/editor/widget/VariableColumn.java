@@ -59,7 +59,7 @@ public class VariableColumn implements ColumnDescriptor<ContextSettings.Var> {
 
 	@Override
 	public void setValue(Var element, Object value) {
-		String s = AdaptableUtil.to(element, String.class);
+		String s = AdaptableUtil.to(value, String.class);
 		element.name(s);
 	}
 }

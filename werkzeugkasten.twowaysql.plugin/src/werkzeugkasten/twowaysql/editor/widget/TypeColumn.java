@@ -59,7 +59,7 @@ public class TypeColumn implements ColumnDescriptor<ContextSettings.Var> {
 
 	@Override
 	public void setValue(Var element, Object value) {
-		String v = AdaptableUtil.to(element, String.class);
+		String v = AdaptableUtil.to(value, String.class);
 		element.type(v);
 	}
 }

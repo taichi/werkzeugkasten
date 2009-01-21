@@ -66,8 +66,8 @@ public class ContextSettings {
 	public static ContextSettings read(IPreferenceStore store, IFile readTarget) {
 		ContextSettings result = new ContextSettings();
 		result.memento = XMLMemento.createWriteRoot(TAG_ROOT);
-		result.memento.putString(ATR_VERSION, Constants.BUNDLE_VERSION);
 		// XXX バージョンがズレている時の挙動について、あとで考える。
+		result.memento.putString(ATR_VERSION, Constants.BUNDLE_VERSION);
 		String oldString = store.getString(readTarget.getFullPath()
 				.toPortableString());
 		try {
@@ -87,6 +87,8 @@ public class ContextSettings {
 					}
 					result.variables(vs);
 				}
+			} else {
+				result.variables(new ArrayList<Var>());
 			}
 		} catch (WorkbenchException e) {
 			Activator.log(e);
