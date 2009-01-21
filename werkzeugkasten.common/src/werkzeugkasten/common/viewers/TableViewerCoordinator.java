@@ -11,6 +11,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Item;
 
 public class TableViewerCoordinator<T> extends LabelProvider implements
 		ITableLabelProvider, ICellModifier {
@@ -56,6 +57,7 @@ public class TableViewerCoordinator<T> extends LabelProvider implements
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		ColumnDescriptor<T> cd = getDescriptor(columnIndex);
+		element = unwrap(element);
 		return cd != null && this.rowType.isInstance(element) ? cd
 				.getImage((T) element) : null;
 	}
@@ -64,31 +66,43 @@ public class TableViewerCoordinator<T> extends LabelProvider implements
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		ColumnDescriptor<T> cd = getDescriptor(columnIndex);
-		return cd != null && this.rowType.isInstance(element) ? cd
-				.getText((T) element) : null;
+		element = unwrap(element);
+		return cd != null && this.rowType.isInstance(unwrap(element)) ? cd
+				.getText((T) element) : "";
 	}
 
 	@Override
 	public boolean canModify(Object element, String property) {
 		ColumnDescriptor<T> cd = getDescriptor(property);
-		return cd != null && this.rowType.isInstance(element) ? cd.canModify()
-				: null;
+		return cd != null && this.rowType.isInstance(unwrap(element)) ? cd
+				.canModify() : false;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object getValue(Object element, String property) {
 		ColumnDescriptor<T> cd = getDescriptor(property);
+		element = unwrap(element);
 		return cd != null && this.rowType.isInstance(element) ? cd
-				.getValue((T) element) : null;
+				.getValue((T) element) : "";
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void modify(Object element, String property, Object value) {
+	public void modify(Object item, String property, Object value) {
 		ColumnDescriptor<T> cd = getDescriptor(property);
+		Object element = unwrap(item);
 		if (cd != null && this.rowType.isInstance(element)) {
 			cd.setValue((T) element, value);
+			this.viewer.update(element, new String[] { property });
 		}
+	}
+
+	protected Object unwrap(Object o) {
+		if (o instanceof Item) {
+			Item i = (Item) o;
+			return i.getData();
+		}
+		return o;
 	}
 }
