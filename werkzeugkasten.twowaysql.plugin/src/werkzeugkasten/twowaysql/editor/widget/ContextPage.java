@@ -40,6 +40,7 @@ import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.viewers.ColumnDescriptor;
 import werkzeugkasten.common.viewers.TableViewerCoordinator;
 import werkzeugkasten.twowaysql.Activator;
+import werkzeugkasten.twowaysql.editor.TwoWaySqlEditorContainer;
 import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
 import werkzeugkasten.twowaysql.editor.conf.ContextSettings.Var;
 import werkzeugkasten.twowaysql.nls.Strings;
@@ -47,6 +48,7 @@ import werkzeugkasten.twowaysql.nls.Strings;
 public class ContextPage {
 
 	protected IProject project;
+	protected TwoWaySqlEditorContainer part;
 	protected IEditorSite site;
 
 	protected Text className;
@@ -59,8 +61,9 @@ public class ContextPage {
 	protected boolean modified;
 
 	public ContextPage(IProject project, ContextSettings settings,
-			IEditorSite site) {
+			TwoWaySqlEditorContainer part, IEditorSite site) {
 		this.project = project;
+		this.part = part;
 		this.settings = settings;
 		this.site = site;
 	}
@@ -75,6 +78,7 @@ public class ContextPage {
 
 	public void modified(boolean is) {
 		this.modified = is;
+		this.part.editorDirtyStateChanged();
 	}
 
 	protected IRunnableContext getContext() {
@@ -84,6 +88,7 @@ public class ContextPage {
 	protected void setSelectedDatas(IType selected) {
 		try {
 			this.className.setText(selected.getFullyQualifiedName());
+			this.settings.type(selected.getFullyQualifiedName());
 			this.methodSignatures = new ArrayList<String>();
 			IProgressMonitor monitor = this.site.getActionBars()
 					.getStatusLineManager().getProgressMonitor();
@@ -331,6 +336,7 @@ public class ContextPage {
 		this.methods.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				settings.method(methods.getText());
 				doRefresh();
 			}
 		});

@@ -110,6 +110,7 @@ public class ContextSettings {
 			settings.memento.save(writer);
 			store.setValue(saveTarget.getFullPath().toPortableString(), writer
 					.toString());
+			store.save();
 		} catch (IOException e) {
 			Activator.log(e);
 		}

@@ -50,11 +50,15 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 	}
 
 	protected void setUpContextPage() {
-		this.contextPage = new ContextPage(getProject(), settings,
+		this.contextPage = new ContextPage(getProject(), settings, this,
 				getEditorSite());
 		Composite composite = this.contextPage.layout(getContainer());
 		int index = addPage(composite);
 		setPageText(index, Strings.ContextPage_label);
+	}
+
+	public void editorDirtyStateChanged() {
+		firePropertyChange(PROP_DIRTY);
 	}
 
 	protected IFile getFile() {
@@ -77,27 +81,34 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		if (this.delegate != null) {
-			this.delegate.doSave(monitor);
-			ContextSettings.save(this.store, getFile(), this.settings);
-			this.contextPage.modified(false);
+			if (this.delegate.isDirty()) {
+				this.delegate.doSave(monitor);
+			}
+			if (this.contextPage.modified()) {
+				this.contextPage.modified(false);
+				ContextSettings.save(this.store, getFile(), this.settings);
+			}
 		}
 	}
 
 	@Override
 	public void doSaveAs() {
 		if (this.delegate != null) {
-			this.delegate.doSaveAs();
-			ContextSettings.save(this.store, getFile(), this.settings);
-			setPageText(0, this.delegate.getTitle());
-			setInput(this.delegate.getEditorInput());
-			this.contextPage.modified(false);
+			if (this.delegate.isDirty()) {
+				this.delegate.doSaveAs();
+				setPageText(0, this.delegate.getTitle());
+				setInput(this.delegate.getEditorInput());
+			}
+			if (this.contextPage.modified()) {
+				ContextSettings.save(this.store, getFile(), this.settings);
+				this.contextPage.modified(false);
+			}
 		}
 	}
 
 	@Override
 	public boolean isDirty() {
-		return this.delegate == null ? false : this.delegate.isDirty()
-				|| this.contextPage.modified();
+		return this.delegate.isDirty() || this.contextPage.modified();
 	}
 
 	@Override

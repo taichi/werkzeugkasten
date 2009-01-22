@@ -23,7 +23,6 @@ public class TypeColumn implements ColumnDescriptor<ContextSettings.Var> {
 		TableColumn c = new TableColumn(table, SWT.LEFT);
 		c.setText(Strings.Column_Type);
 		c.setWidth(300);
-		// TODO 入力補完できる様にする？しないんなら、Addボタンおした時に型は選ぶ感じで。
 		this.editor = new TextCellEditor(table);
 	}
 
@@ -49,7 +48,7 @@ public class TypeColumn implements ColumnDescriptor<ContextSettings.Var> {
 
 	@Override
 	public boolean canModify() {
-		return true;
+		return false;
 	}
 
 	@Override
