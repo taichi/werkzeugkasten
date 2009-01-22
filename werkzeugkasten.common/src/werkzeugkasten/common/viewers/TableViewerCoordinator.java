@@ -67,7 +67,7 @@ public class TableViewerCoordinator<T> extends LabelProvider implements
 	public String getColumnText(Object element, int columnIndex) {
 		ColumnDescriptor<T> cd = getDescriptor(columnIndex);
 		element = unwrap(element);
-		return cd != null && this.rowType.isInstance(unwrap(element)) ? cd
+		return cd != null && this.rowType.isInstance(element) ? cd
 				.getText((T) element) : "";
 	}
 
