@@ -98,9 +98,10 @@ public class ContextPage {
 						public boolean apply(IType type, IMethod method)
 								throws JavaModelException {
 							String[] names = method.getParameterNames();
-							String sig = Signature.toString(method
-									.getSignature(), method.getElementName(),
-									names, true, false);
+							String sig = Signature
+									.toString(method.getSignature(),
+											method.getElementName(), names,
+											true, false).replace('/', '.');
 							if (method.isConstructor() == false
 									&& methodSignatures.contains(sig) == false
 									&& 0 < names.length) {
@@ -187,6 +188,14 @@ public class ContextPage {
 		layoutModifyButtons(composite);
 
 		fillSettings();
+
+		this.methods.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				settings.method(methods.getText());
+				// doRefresh();
+			}
+		});
 
 		return composite;
 	}
@@ -291,6 +300,7 @@ public class ContextPage {
 							settings.variables().remove(var);
 						}
 					}
+					modified(true);
 					variables.refresh();
 				}
 			}
@@ -333,13 +343,6 @@ public class ContextPage {
 		this.methods = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		this.methods.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		this.methods.setVisibleItemCount(12);
-		this.methods.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				settings.method(methods.getText());
-				doRefresh();
-			}
-		});
 
 		// クラスを検索するダイアログを出すBrowseボタン
 		this.browse = new Button(composite, SWT.PUSH);
@@ -367,6 +370,7 @@ public class ContextPage {
 				doRefresh();
 			}
 		});
+
 	}
 
 	protected IType selectType() {
