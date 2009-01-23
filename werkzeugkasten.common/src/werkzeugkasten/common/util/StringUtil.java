@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 public class StringUtil {
 
+	public static final String[] EMPTY_ARRAY = {};
+
 	public static boolean isEmpty(Object s) {
 		return s == null || s.toString().length() < 1;
 	}
