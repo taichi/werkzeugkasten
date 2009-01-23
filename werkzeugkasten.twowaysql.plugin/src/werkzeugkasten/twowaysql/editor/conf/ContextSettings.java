@@ -34,16 +34,16 @@ public class ContextSettings {
 	}
 
 	public static class Var {
-		String name;
-		String type;
-		String example;
+		String name = "";
+		String type = "";
+		String example = "";
 
 		public String name() {
 			return name;
 		}
 
 		public void name(String name) {
-			this.name = name;
+			this.name = StringUtil.toString(name);
 		}
 
 		public String type() {
@@ -51,7 +51,7 @@ public class ContextSettings {
 		}
 
 		public void type(String type) {
-			this.type = type;
+			this.type = StringUtil.toString(type);
 		}
 
 		public String example() {
@@ -59,7 +59,13 @@ public class ContextSettings {
 		}
 
 		public void example(String example) {
-			this.example = example;
+			this.example = StringUtil.toString(example);
+		}
+
+		@Override
+		public String toString() {
+			return String.format("{name=[%s] type=[%s] example=[%s]}", name,
+					type, example);
 		}
 	}
 

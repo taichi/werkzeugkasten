@@ -16,9 +16,10 @@ import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.operation.IRunnableContext;
-import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -45,7 +46,7 @@ import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
 import werkzeugkasten.twowaysql.editor.conf.ContextSettings.Var;
 import werkzeugkasten.twowaysql.nls.Strings;
 
-public class ContextPage {
+public class ContextPage implements IStructuredContentProvider {
 
 	protected IProject project;
 	protected TwoWaySqlEditorContainer part;
@@ -85,7 +86,7 @@ public class ContextPage {
 		return this.site.getWorkbenchWindow();
 	}
 
-	protected void setSelectedDatas(IType selected) {
+	protected void setSelectedDatas(IType selected, boolean modified) {
 		try {
 			this.className.setText(selected.getFullyQualifiedName());
 			this.settings.type(selected.getFullyQualifiedName());
@@ -112,6 +113,7 @@ public class ContextPage {
 					});
 			this.methods.setItems(methodSignatures
 					.toArray(new String[methodSignatures.size()]));
+			modified(modified);
 		} catch (CoreException ex) {
 			Activator.log(ex);
 		}
@@ -132,10 +134,12 @@ public class ContextPage {
 							public boolean apply(IType type, IMethod method)
 									throws JavaModelException {
 								String[] names = method.getParameterNames();
-								String s = Signature.toString(method
-										.getSignature(), method
-										.getElementName(), names, true, false);
+								String s = Signature.toString(
+										method.getSignature(),
+										method.getElementName(), names, true,
+										false).replace('/', '.');
 								if (s.equals(sig)) {
+									variables.getTable().clearAll();
 									settings.variables().clear();
 									String[] types = Signature
 											.getParameterTypes(method
@@ -163,9 +167,8 @@ public class ContextPage {
 								return true;
 							}
 						});
-				this.variables.setInput(settings.variables());
-				this.variables.refresh();
 				this.modified(true);
+				variables.setInput(settings.variables());
 			}
 		} catch (CoreException ex) {
 			Activator.log(ex);
@@ -192,8 +195,11 @@ public class ContextPage {
 		this.methods.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				settings.method(methods.getText());
-				// doRefresh();
+				if (settings.method().equals(methods.getText()) == false) {
+					settings.method(methods.getText());
+					modified(true);
+					// doRefresh();
+				}
 			}
 		});
 
@@ -207,7 +213,7 @@ public class ContextPage {
 				IJavaProject javap = JavaCore.create(getProject());
 				IType t = javap.findType(type);
 				if (t != null) {
-					setSelectedDatas(t);
+					setSelectedDatas(t, false);
 				}
 				String sig = this.settings.method();
 				if (StringUtil.isEmpty(sig) == false) {
@@ -217,7 +223,6 @@ public class ContextPage {
 					}
 				}
 				this.variables.setInput(this.settings.variables());
-				this.variables.refresh();
 			}
 		} catch (CoreException ex) {
 			Activator.log(ex);
@@ -234,7 +239,7 @@ public class ContextPage {
 				| GridData.VERTICAL_ALIGN_FILL | GridData.GRAB_VERTICAL);
 		data.verticalSpan = 5;
 		t.setLayoutData(data);
-		this.variables.setContentProvider(new ArrayContentProvider());
+		this.variables.setContentProvider(this);
 		List<ColumnDescriptor<ContextSettings.Var>> list = buildColumns(t);
 		new TableViewerCoordinator<Var>(this.variables,
 				ContextSettings.Var.class, list);
@@ -298,10 +303,11 @@ public class ContextPage {
 						if (o instanceof ContextSettings.Var) {
 							ContextSettings.Var var = (ContextSettings.Var) o;
 							settings.variables().remove(var);
+							variables.remove(var);
 						}
 					}
-					modified(true);
 					variables.refresh();
+					modified(true);
 				}
 			}
 		});
@@ -321,7 +327,6 @@ public class ContextPage {
 				settings.type("");
 				settings.method("");
 				variables.setInput(settings.variables());
-				variables.refresh();
 				modified(true);
 			}
 		});
@@ -354,7 +359,7 @@ public class ContextPage {
 			public void widgetSelected(SelectionEvent e) {
 				IType type = selectType();
 				if (type != null) {
-					setSelectedDatas(type);
+					setSelectedDatas(type, true);
 				}
 			}
 		});
@@ -397,4 +402,17 @@ public class ContextPage {
 		return null;
 	}
 
+	@Override
+	public Object[] getElements(Object inputElement) {
+		return settings.variables().toArray();
+	}
+
+	@Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	}
+
+	@Override
+	public void dispose() {
+		// do nothing
+	}
 }
