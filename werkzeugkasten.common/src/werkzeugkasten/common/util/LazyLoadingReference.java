@@ -50,6 +50,6 @@ public class LazyLoadingReference<T> {
 	}
 
 	public interface Factory<T> {
-		T create();
+		T create() throws CancellationException;
 	}
 }
