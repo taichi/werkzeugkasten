@@ -1,5 +1,16 @@
 package werkzeugkasten.twowaysql.jdbc;
 
+import static werkzeugkasten.twowaysql.Markers.DETAIL;
+import static werkzeugkasten.twowaysql.nls.Messages.JDBC_CONNECTION_CLOSE;
+import static werkzeugkasten.twowaysql.nls.Messages.JDBC_CONNECTION_GET;
+import static werkzeugkasten.twowaysql.nls.Messages.JDBC_CONNECTION_HANDLE;
+import static werkzeugkasten.twowaysql.nls.Messages.JDBC_RESULTSET_CLOSE;
+import static werkzeugkasten.twowaysql.nls.Messages.JDBC_RESULTSET_EXECUTE;
+import static werkzeugkasten.twowaysql.nls.Messages.JDBC_RESULTSET_HANDLE;
+import static werkzeugkasten.twowaysql.nls.Messages.JDBC_STATEMENT_CLOSE;
+import static werkzeugkasten.twowaysql.nls.Messages.JDBC_STATEMENT_HANDLE;
+import static werkzeugkasten.twowaysql.nls.Messages.JDBC_STATEMENT_PREPARE;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +27,14 @@ public class JdbcFunctors {
 			ConnectionHandler<RESULT> handle) throws SQLRuntimeException {
 		Connection con = null;
 		try {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(DETAIL, JDBC_CONNECTION_GET);
+			}
 			con = handle.getConnection();
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(DETAIL, JDBC_CONNECTION_HANDLE);
+			}
 			return handle.handle(con);
 		} catch (SQLRuntimeException e) {
 			throw e;
@@ -25,6 +43,9 @@ public class JdbcFunctors {
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		} finally {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(DETAIL, JDBC_CONNECTION_CLOSE);
+			}
 			close(con);
 		}
 	}
@@ -35,7 +56,7 @@ public class JdbcFunctors {
 				c.close();
 			}
 		} catch (SQLException e) {
-			LOG.error(e.getMessage(), e);
+			LOG.error(DETAIL, e.getMessage(), e);
 		}
 	}
 
@@ -44,11 +65,21 @@ public class JdbcFunctors {
 			throws SQLRuntimeException {
 		STATEMENT statement = null;
 		try {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(DETAIL, JDBC_STATEMENT_PREPARE);
+			}
 			statement = handler.prepare();
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(DETAIL, JDBC_STATEMENT_HANDLE);
+			}
 			return handler.handle(statement);
 		} catch (SQLException e) {
 			throw new SQLRuntimeException(e);
 		} finally {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(DETAIL, JDBC_STATEMENT_CLOSE);
+			}
 			close(statement);
 		}
 	}
@@ -59,7 +90,7 @@ public class JdbcFunctors {
 				s.close();
 			}
 		} catch (SQLException e) {
-			LOG.error(e.getMessage(), e);
+			LOG.error(DETAIL, e.getMessage(), e);
 		}
 	}
 
@@ -67,11 +98,21 @@ public class JdbcFunctors {
 			ResultSetHandler<RESULT> handler) throws SQLRuntimeException {
 		ResultSet rs = null;
 		try {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(DETAIL, JDBC_RESULTSET_EXECUTE);
+			}
 			rs = handler.executeQuery();
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(DETAIL, JDBC_RESULTSET_HANDLE);
+			}
 			return handler.handle(rs);
 		} catch (SQLException e) {
 			throw new SQLRuntimeException(e);
 		} finally {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(DETAIL, JDBC_RESULTSET_CLOSE);
+			}
 			close(rs);
 		}
 	}
@@ -82,7 +123,7 @@ public class JdbcFunctors {
 				rs.close();
 			}
 		} catch (SQLException e) {
-			LOG.error(e.getMessage(), e);
+			LOG.error(DETAIL, e.getMessage(), e);
 		}
 	}
 }

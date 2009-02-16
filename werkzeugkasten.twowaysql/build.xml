@@ -22,8 +22,8 @@
       	<path path="${dest-root}/mvel" />
       	<path path="${dest-root}/test" />
         <path refid="JUnit 4.libraryclasspath"/>
-        <pathelement location="lib/logback-classic-0.9.13.jar"/>
-        <pathelement location="lib/logback-core-0.9.13.jar"/>
+        <pathelement location="lib/logback-classic-0.9.15.jar"/>
+        <pathelement location="lib/logback-core-0.9.15.jar"/>
         <pathelement location="lib/antlr-3.1.1-runtime.jar"/>
         <pathelement location="lib/mvel2-2.0.5.jar"/>
         <pathelement location="lib/nlsgen-runtime.jar"/>

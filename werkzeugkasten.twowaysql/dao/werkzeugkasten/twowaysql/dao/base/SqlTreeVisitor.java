@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import werkzeugkasten.common.util.CollectionUtil;
 import werkzeugkasten.common.util.ConverterUtil;
+import werkzeugkasten.twowaysql.Markers;
 import werkzeugkasten.twowaysql.dao.BinderProducer;
 import werkzeugkasten.twowaysql.dao.SqlContext;
 import werkzeugkasten.twowaysql.dao.el.Expression;
@@ -31,10 +32,7 @@ import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
 public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 
-	static final Logger LOG_RESULT = LoggerFactory
-			.getLogger(SqlTreeVisitor.class + ".result");
-	static final Logger LOG_SKIPPED = LoggerFactory
-			.getLogger(SqlTreeVisitor.class + ".skipped");
+	static final Logger LOG = LoggerFactory.getLogger(SqlTreeVisitor.class);
 
 	protected static final String SPC = " ";
 	protected ExpressionParser parser;
@@ -70,10 +68,9 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 	@Override
 	public boolean visit(ExpressionNode node, SqlContext<EC> context) {
 		Object bool = eval(node, context);
-		if (LOG_RESULT.isDebugEnabled()) {
+		if (LOG.isDebugEnabled()) {
 			String s = getString(context, node);
-			LOG_RESULT
-					.debug(String.format(Messages.EXPRESSION_RESULT, s, bool));
+			LOG.debug(Markers.DETAIL, Messages.EXPRESSION_RESULT, s, bool);
 		}
 		Boolean is = ConverterUtil.convert(bool, Boolean.class);
 		return is != null ? is : false;
@@ -137,7 +134,7 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 
 	protected void skipped(Iterable<? extends Locatable> list,
 			SqlContext<EC> context) {
-		if (LOG_SKIPPED.isDebugEnabled()) {
+		if (LOG.isDebugEnabled()) {
 			for (Locatable node : list) {
 				skipped(node, context);
 			}
@@ -145,9 +142,9 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 	}
 
 	protected void skipped(Locatable node, SqlContext<EC> context) {
-		if (LOG_SKIPPED.isDebugEnabled() && node != null) {
+		if (LOG.isDebugEnabled() && node != null) {
 			String s = getString(context, node);
-			LOG_SKIPPED.debug(String.format(Messages.SKIPPED_TEXT, s));
+			LOG.debug(Markers.DETAIL, Messages.SKIPPED_TEXT, s);
 		}
 	}
 
@@ -196,9 +193,9 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 				}
 			}
 		} else {
-			if (LOG_RESULT.isDebugEnabled()) {
-				LOG_RESULT.debug(String.format(Messages.EXPRESSION_RESULT,
-						getString(context, node), Messages.NULL_OR_EMPTY));
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(Markers.DETAIL, Messages.EXPRESSION_RESULT,
+						getString(context, node), Messages.NULL_OR_EMPTY);
 			}
 			context.append("null");
 		}

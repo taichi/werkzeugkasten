@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import werkzeugkasten.twowaysql.Markers;
 import werkzeugkasten.twowaysql.dao.Binder;
 import werkzeugkasten.twowaysql.dao.BinderFactory;
 import werkzeugkasten.twowaysql.dao.BinderProducer;
@@ -52,6 +53,11 @@ public class DefaultBinderProducer implements BinderProducer {
 	protected Map<String, BinderFactory> nameRegistory = new HashMap<String, BinderFactory>();
 
 	public void initialize() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.LIFECYCLE, Messages.LIFECYCLE_INITIALIZE,
+					DefaultBinderProducer.class.getSimpleName());
+		}
+
 		registerAll(new ArrayBinderFactory());
 		registerAll(new BigDecimalBinderFactory());
 		registerAll(new BinaryStreamBinderFactory());
@@ -148,15 +154,15 @@ public class DefaultBinderProducer implements BinderProducer {
 			return factory.create(object);
 		} catch (RuntimeException e) {
 			if (LOG.isDebugEnabled()) {
-				String template = Messages.BINDERFACTORY_FAILED;
+				String msg = Messages.BINDERFACTORY_FAILED;
 				if (factory == null) {
-					template = Messages.MISSING_BINDERFACTORY;
+					msg = Messages.MISSING_BINDERFACTORY;
 				}
 				ExpressionNode en = node.getExpression();
 				String exp = TextLocationUtil.substring(context
 						.getTwoWayQuery().getSource(), en);
-				String msg = String.format(template, binderName, exp, object);
-				LOG.debug(msg);
+				LOG.debug(Markers.DESIGN, msg, new Object[] { binderName, exp,
+						object });
 			}
 			throw e;
 		}

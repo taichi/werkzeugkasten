@@ -1,6 +1,3 @@
-/**
- * 
- */
 package werkzeugkasten.twowaysql.jdbc;
 
 import java.sql.SQLException;

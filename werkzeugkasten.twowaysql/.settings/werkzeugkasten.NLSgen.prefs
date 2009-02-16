@@ -1,4 +1,6 @@
-#Mon Dec 15 21:31:31 JST 2008
+#Mon Feb 16 15:13:46 JST 2009
 ///werkzeugkasten.twowaysql/core/werkzeugkasten/twowaysql/nls/Messages.properties\#generationDest=/werkzeugkasten.twowaysql/core/werkzeugkasten/twowaysql/nls/Messages.java
 ///werkzeugkasten.twowaysql/core/werkzeugkasten/twowaysql/nls/Messages.properties\#generatorType=werkzeugkasten.nlsgen.gen.SingleLocaleStringsGenerator
+///werkzeugkasten.twowaysql/mvel/werkzeugkasten/twowaysql/dao/el/mvel/nls/Messages.properties\#generationDest=/werkzeugkasten.twowaysql/mvel/werkzeugkasten/twowaysql/dao/el/mvel/nls/Messages.java
+///werkzeugkasten.twowaysql/mvel/werkzeugkasten/twowaysql/dao/el/mvel/nls/Messages.properties\#generatorType=werkzeugkasten.nlsgen.gen.SingleLocaleStringsGenerator
 eclipse.preferences.version=1

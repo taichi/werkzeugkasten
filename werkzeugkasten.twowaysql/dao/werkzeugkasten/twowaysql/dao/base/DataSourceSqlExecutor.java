@@ -1,5 +1,8 @@
 package werkzeugkasten.twowaysql.dao.base;
 
+import static werkzeugkasten.twowaysql.Markers.DETAIL;
+import static werkzeugkasten.twowaysql.Markers.INTERFACE;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +22,7 @@ import werkzeugkasten.twowaysql.jdbc.JdbcFunctors;
 import werkzeugkasten.twowaysql.jdbc.ResultSetHandler;
 import werkzeugkasten.twowaysql.jdbc.SQLRuntimeException;
 import werkzeugkasten.twowaysql.jdbc.StatementHandler;
+import werkzeugkasten.twowaysql.nls.Messages;
 
 public class DataSourceSqlExecutor implements SqlExecutor {
 
@@ -28,6 +32,10 @@ public class DataSourceSqlExecutor implements SqlExecutor {
 	protected DataSource dataSource;
 
 	public void setDataSource(DataSource ds) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(DETAIL, Messages.SET_DEPENDENCY, new Object[] {
+					"dataSource", DataSourceSqlExecutor.class.getName(), ds });
+		}
 		this.dataSource = ds;
 	}
 
@@ -56,8 +64,8 @@ public class DataSourceSqlExecutor implements SqlExecutor {
 		@Override
 		public PreparedStatement prepare() throws SQLException {
 			String sql = this.context.getSql();
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(sql);
+			if (LOG.isInfoEnabled()) {
+				LOG.info(INTERFACE, sql);
 			}
 			return this.c.prepareStatement(sql);
 		}

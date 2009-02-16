@@ -51,6 +51,20 @@ public class Messages {
 	public static String LABEL_IDENT;
 	public static String BINDERFACTORY_FAILED;
 	public static String MISSING_BINDERFACTORY;
+	public static String SET_DEPENDENCY;
+	public static String JDBC_STATEMENT_HANDLE;
+	public static String JDBC_STATEMENT_PREPARE;
+	public static String JDBC_RESULTSET_EXECUTE;
+	public static String JDBC_RESULTSET_HANDLE;
+	public static String JDBC_CONNECTION_HANDLE;
+	public static String JDBC_CONNECTION_GET;
+	public static String JDBC_CONNECTION_CLOSE;
+	public static String JDBC_RESULTSET_CLOSE;
+	public static String JDBC_STATEMENT_CLOSE;
+	public static String LIFECYCLE_INITIALIZE;
+	public static String LOAD_RESOURCE;
+	public static String PARSE_TWOWAYSQL;
+	public static String VISIT_TWOWAYSQL_TREE;
 	static {
 		Class<?> clazz = Messages.class;
 		SingleLocaleStrings.load(clazz);
