@@ -54,8 +54,7 @@ public class DefaultBinderProducer implements BinderProducer {
 
 	public void initialize() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(Markers.LIFECYCLE, Messages.LIFECYCLE_INITIALIZE,
-					DefaultBinderProducer.class.getSimpleName());
+			LOG.debug(Markers.LIFECYCLE, Messages.LIFECYCLE_INITIALIZE);
 		}
 
 		registerAll(new ArrayBinderFactory());
@@ -103,6 +102,10 @@ public class DefaultBinderProducer implements BinderProducer {
 	}
 
 	protected BinderFactory findByType(Class<?> clazz) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.DETAIL, "findByType class:{}", clazz);
+		}
+
 		BinderFactory factory = null;
 		loop: while (factory == null) {
 			factory = this.typeRegistory.get(clazz);
@@ -127,6 +130,9 @@ public class DefaultBinderProducer implements BinderProducer {
 	}
 
 	protected BinderFactory findByName(String name) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.DETAIL, "findByName name:{}", name);
+		}
 		return this.nameRegistory.get(name.toLowerCase());
 	}
 

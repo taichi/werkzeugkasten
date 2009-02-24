@@ -1,7 +1,7 @@
 package werkzeugkasten.twowaysql.dao.base;
 
-import static werkzeugkasten.twowaysql.Markers.DETAIL;
 import static werkzeugkasten.twowaysql.Markers.BOUNDARY;
+import static werkzeugkasten.twowaysql.Markers.DETAIL;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -74,6 +74,10 @@ public class DataSourceSqlExecutor implements SqlExecutor {
 		public R handle(PreparedStatement statement) throws SQLException {
 			int index = 1;
 			for (Binder b : context.getBinders()) {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug(DETAIL, Messages.BIND, b.getClass().getName(),
+							index);
+				}
 				b.bind(statement, index++);
 			}
 			return execute(statement);

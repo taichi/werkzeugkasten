@@ -1,5 +1,9 @@
 package werkzeugkasten.twowaysql.dao.base;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import werkzeugkasten.twowaysql.Markers;
 import werkzeugkasten.twowaysql.dao.QueryLoader;
 import werkzeugkasten.twowaysql.dao.QueryWrapper;
 import werkzeugkasten.twowaysql.dao.ResultSetMapper;
@@ -9,13 +13,21 @@ import werkzeugkasten.twowaysql.dao.SqlExecutor;
 import werkzeugkasten.twowaysql.dao.SqlProcessor;
 import werkzeugkasten.twowaysql.error.QueryProblemException;
 import werkzeugkasten.twowaysql.jdbc.SQLRuntimeException;
+import werkzeugkasten.twowaysql.nls.Messages;
 import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
 public class DefaultSqlProcessor implements SqlProcessor {
 
+	static final Logger LOG = LoggerFactory
+			.getLogger(DefaultSqlProcessor.class);
+
 	protected SqlEnviroment enviroment;
 
 	public void setEnviroment(SqlEnviroment env) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, new Object[] {
+					"enviroment", SqlEnviroment.class.getName(), env });
+		}
 		this.enviroment = env;
 	}
 

@@ -14,7 +14,7 @@
 	</turboFilter>
 	<turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
 		<Marker>werkzeugkasten.twowaysql.lifecycle</Marker>
-		<OnMatch>ACCEPT</OnMatch>
+		<OnMatch>DENY</OnMatch>
 	</turboFilter>
 	<turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
 		<Marker>werkzeugkasten.twowaysql.detail</Marker>

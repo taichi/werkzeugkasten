@@ -3,11 +3,18 @@ package werkzeugkasten.twowaysql.dao.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import werkzeugkasten.twowaysql.Markers;
 import werkzeugkasten.twowaysql.dao.Binder;
 import werkzeugkasten.twowaysql.dao.QueryWrapper;
 import werkzeugkasten.twowaysql.dao.SqlContext;
+import werkzeugkasten.twowaysql.nls.Messages;
 
 public class DefaultSqlContext<EC> implements SqlContext<EC> {
+
+	static final Logger LOG = LoggerFactory.getLogger(DefaultSqlContext.class);
 
 	protected EC expressionContext;
 	protected QueryWrapper twoWayQuery;
@@ -20,6 +27,9 @@ public class DefaultSqlContext<EC> implements SqlContext<EC> {
 	}
 
 	protected DefaultSqlContext(EC context, QueryWrapper twoWayQuery) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.LIFECYCLE, Messages.LIFECYCLE_INITIALIZE);
+		}
 		this.expressionContext = context;
 		this.twoWayQuery = twoWayQuery;
 		QueryStackElement e = new QueryStackElement();

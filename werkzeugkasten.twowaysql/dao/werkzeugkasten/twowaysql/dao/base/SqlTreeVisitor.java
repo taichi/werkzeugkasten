@@ -39,6 +39,9 @@ public class SqlTreeVisitor<EC> implements QueryTreeVisitor<SqlContext<EC>> {
 	protected BinderProducer producer;
 
 	public SqlTreeVisitor(ExpressionParser parser, BinderProducer producer) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.LIFECYCLE, Messages.LIFECYCLE_INITIALIZE);
+		}
 		this.parser = parser;
 		this.producer = producer;
 	}

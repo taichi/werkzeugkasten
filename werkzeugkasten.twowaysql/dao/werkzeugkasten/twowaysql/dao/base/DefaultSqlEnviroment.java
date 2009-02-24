@@ -1,5 +1,9 @@
 package werkzeugkasten.twowaysql.dao.base;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import werkzeugkasten.twowaysql.Markers;
 import werkzeugkasten.twowaysql.dao.BinderProducer;
 import werkzeugkasten.twowaysql.dao.QueryLoader;
 import werkzeugkasten.twowaysql.dao.QueryWrapper;
@@ -7,9 +11,13 @@ import werkzeugkasten.twowaysql.dao.SqlContext;
 import werkzeugkasten.twowaysql.dao.SqlEnviroment;
 import werkzeugkasten.twowaysql.dao.SqlExecutor;
 import werkzeugkasten.twowaysql.dao.el.ExpressionParser;
+import werkzeugkasten.twowaysql.nls.Messages;
 import werkzeugkasten.twowaysql.tree.visitor.QueryTreeVisitor;
 
 public class DefaultSqlEnviroment implements SqlEnviroment {
+
+	static final Logger LOG = LoggerFactory
+			.getLogger(DefaultSqlEnviroment.class);
 
 	protected QueryLoader<?> queryLoader;
 	protected ExpressionParser elparser;
@@ -23,6 +31,10 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 	}
 
 	public void setLoader(QueryLoader<?> loader) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, new Object[] {
+					"loader", QueryLoader.class.getName(), loader });
+		}
 		this.queryLoader = loader;
 	}
 
@@ -37,6 +49,10 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 	}
 
 	public void setELParser(ExpressionParser elparser) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, new Object[] {
+					"elparser", ExpressionParser.class.getName(), elparser });
+		}
 		this.elparser = elparser;
 	}
 
@@ -46,6 +62,11 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 	}
 
 	public void setBinderProducer(BinderProducer producer) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY,
+					new Object[] { "binderProducer",
+							BinderProducer.class.getName(), producer });
+		}
 		this.binderProducer = producer;
 	}
 
@@ -60,6 +81,10 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 	}
 
 	public void setExecutor(SqlExecutor executor) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, new Object[] {
+					"executor", SqlExecutor.class.getName(), executor });
+		}
 		this.executor = executor;
 	}
 }

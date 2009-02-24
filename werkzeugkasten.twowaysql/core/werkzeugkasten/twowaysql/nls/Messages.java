@@ -65,6 +65,7 @@ public class Messages {
 	public static String LOAD_RESOURCE;
 	public static String PARSE_TWOWAYSQL;
 	public static String VISIT_TWOWAYSQL_TREE;
+	public static String BIND;
 	static {
 		Class<?> clazz = Messages.class;
 		SingleLocaleStrings.load(clazz);
