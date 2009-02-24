@@ -9,7 +9,7 @@
 		<OnMatch>ACCEPT</OnMatch>
 	</turboFilter>
 	<turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
-		<Marker>werkzeugkasten.twowaysql.interface</Marker>
+		<Marker>werkzeugkasten.twowaysql.boundary</Marker>
 		<OnMatch>ACCEPT</OnMatch>
 	</turboFilter>
 	<turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">

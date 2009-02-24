@@ -4,6 +4,26 @@
 			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
 		</layout>
 	</appender>
+	<turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+		<Marker>werkzeugkasten.twowaysql</Marker>
+		<OnMatch>ACCEPT</OnMatch>
+	</turboFilter>
+	<turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+		<Marker>werkzeugkasten.twowaysql.design</Marker>
+		<OnMatch>ACCEPT</OnMatch>
+	</turboFilter>
+	<turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+		<Marker>werkzeugkasten.twowaysql.boundary</Marker>
+		<OnMatch>ACCEPT</OnMatch>
+	</turboFilter>
+	<turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+		<Marker>werkzeugkasten.twowaysql.lifecycle</Marker>
+		<OnMatch>DENY</OnMatch>
+	</turboFilter>
+	<turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+		<Marker>werkzeugkasten.twowaysql.detail</Marker>
+		<OnMatch>DENY</OnMatch>
+	</turboFilter>
 	<logger name="werkzeugkasten.twowaysql" level="info" />
 	<logger name="werkzeugkasten.twowaysql.jdbc" level="info" />
 	<root level="info">
