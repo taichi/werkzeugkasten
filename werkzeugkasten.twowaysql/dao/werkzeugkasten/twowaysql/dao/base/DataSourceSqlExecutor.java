@@ -1,7 +1,7 @@
 package werkzeugkasten.twowaysql.dao.base;
 
 import static werkzeugkasten.twowaysql.Markers.DETAIL;
-import static werkzeugkasten.twowaysql.Markers.INTERFACE;
+import static werkzeugkasten.twowaysql.Markers.BOUNDARY;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -65,7 +65,7 @@ public class DataSourceSqlExecutor implements SqlExecutor {
 		public PreparedStatement prepare() throws SQLException {
 			String sql = this.context.getSql();
 			if (LOG.isInfoEnabled()) {
-				LOG.info(INTERFACE, sql);
+				LOG.info(BOUNDARY, sql);
 			}
 			return this.c.prepareStatement(sql);
 		}

@@ -15,8 +15,8 @@ public class Markers {
 			+ ".design");
 
 	// interface of any other systems or library
-	public static final Marker INTERFACE = MarkerFactory.getMarker(PREFIX_PKG
-			+ ".interface");
+	public static final Marker BOUNDARY = MarkerFactory.getMarker(PREFIX_PKG
+			+ ".boundary");
 
 	// lifeCycle of objects
 	public static final Marker LIFECYCLE = MarkerFactory.getMarker(PREFIX_PKG
@@ -28,7 +28,7 @@ public class Markers {
 			+ ".detail");
 
 	static {
-		Marker[] markers = { DESIGN, INTERFACE, LIFECYCLE, DETAIL };
+		Marker[] markers = { DESIGN, BOUNDARY, LIFECYCLE, DETAIL };
 		for (Marker m : markers) {
 			MARKER_ROOT.add(m);
 		}

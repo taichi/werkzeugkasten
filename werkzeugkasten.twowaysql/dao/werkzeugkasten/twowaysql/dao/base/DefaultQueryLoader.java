@@ -42,7 +42,7 @@ public class DefaultQueryLoader implements QueryLoader<String> {
 				parser.setProblemCoordinator(pc);
 				try {
 					if (LOG.isDebugEnabled()) {
-						LOG.debug(Markers.INTERFACE, Messages.PARSE_TWOWAYSQL);
+						LOG.debug(Markers.BOUNDARY, Messages.PARSE_TWOWAYSQL);
 					}
 					TwoWaySqlParser.twowaySQL_return ret = parser.twowaySQL();
 					if (LOG.isDebugEnabled()) {
@@ -60,7 +60,7 @@ public class DefaultQueryLoader implements QueryLoader<String> {
 
 	protected String loadSource(final String context) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(Markers.INTERFACE, Messages.LOAD_RESOURCE, context);
+			LOG.debug(Markers.BOUNDARY, Messages.LOAD_RESOURCE, context);
 		}
 		final String[] result = new String[1];
 		new Streams.using<InputStream, Exception>(Exception.class) {

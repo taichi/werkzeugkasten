@@ -20,7 +20,7 @@ public class MVELExpression<C> implements Expression<C> {
 	public MVELExpression(String source) {
 		this.source = source;
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(Markers.INTERFACE, Messages.PARSE, source);
+			LOG.debug(Markers.BOUNDARY, Messages.PARSE, source);
 		}
 		this.compiled = MVEL.compileExpression(source);
 	}
@@ -34,7 +34,7 @@ public class MVELExpression<C> implements Expression<C> {
 	@SuppressWarnings("unchecked")
 	public <R> R eval(C context) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(Markers.INTERFACE, Messages.EVAL, this.source, context);
+			LOG.debug(Markers.BOUNDARY, Messages.EVAL, this.source, context);
 		}
 		return (R) MVEL.executeExpression(this.compiled, context);
 	}
