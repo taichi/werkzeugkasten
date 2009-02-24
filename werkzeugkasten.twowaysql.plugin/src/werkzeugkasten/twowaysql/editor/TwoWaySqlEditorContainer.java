@@ -39,7 +39,7 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 
 	protected void setUpEditorPage() {
 		try {
-			this.delegate = new TwoWaySqlEditor(this.store);
+			this.delegate = new TwoWaySqlEditor(this.store, this.settings);
 			int index = addPage(this.delegate, getEditorInput());
 			setPageText(index, this.delegate.getTitle());
 		} catch (PartInitException e) {

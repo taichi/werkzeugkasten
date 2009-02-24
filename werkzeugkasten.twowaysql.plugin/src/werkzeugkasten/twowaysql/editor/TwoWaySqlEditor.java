@@ -7,6 +7,7 @@ import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
 import werkzeugkasten.twowaysql.Activator;
+import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
 import werkzeugkasten.twowaysql.nls.Strings;
 
 public class TwoWaySqlEditor extends TextEditor {
@@ -15,9 +16,9 @@ public class TwoWaySqlEditor extends TextEditor {
 
 	protected TwoWaySqlConfiguration configuration;
 
-	public TwoWaySqlEditor(IPreferenceStore pref) {
-		configuration = new TwoWaySqlConfiguration(pref);
-		configuration.initialize();
+	public TwoWaySqlEditor(IPreferenceStore pref, ContextSettings settings) {
+		this.configuration = new TwoWaySqlConfiguration(pref, settings);
+		this.configuration.initialize();
 		setSourceViewerConfiguration(configuration);
 		setDocumentProvider(Activator.getDocumentProvider());
 	}

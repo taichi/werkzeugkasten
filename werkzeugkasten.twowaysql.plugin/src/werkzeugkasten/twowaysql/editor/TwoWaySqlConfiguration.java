@@ -18,6 +18,7 @@ import werkzeugkasten.twowaysql.Activator;
 import werkzeugkasten.twowaysql.Constants;
 import werkzeugkasten.twowaysql.Constants.COLORING;
 import werkzeugkasten.twowaysql.editor.conf.ColorDefineFactory;
+import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
 import werkzeugkasten.twowaysql.editor.contentassist.CommentContentAssistProcessor;
 import werkzeugkasten.twowaysql.editor.contentassist.TextContentAssistProcessor;
 import werkzeugkasten.twowaysql.editor.scanner.LexerBasedColoringScanner;
@@ -27,13 +28,16 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 		implements Initializable, Disposable {
 
 	protected IPreferenceStore preferenceStore;
+	protected ContextSettings settings;
 	protected ColorDefineFactory colorFactory;
 	protected TextScanner textScanner;
 	protected LexerBasedColoringScanner lineCommentScanner;
 	protected LexerBasedColoringScanner blockCommentScanner;
 
-	public TwoWaySqlConfiguration(IPreferenceStore pref) {
+	public TwoWaySqlConfiguration(IPreferenceStore pref,
+			ContextSettings settings) {
 		this.preferenceStore = pref;
+		this.settings = settings;
 		this.colorFactory = new ColorDefineFactory();
 		this.colorFactory.initialize();
 	}
