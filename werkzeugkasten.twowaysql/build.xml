@@ -6,6 +6,7 @@
               as the first entry and export the buildfile again. -->
 <project basedir="." default="jar" name="werkzeugkasten.twowaysql">
     <property environment="env"/>
+	<property name="javac.encoding" value="UTF-8" />
     <property name="H2" value="lib-test/h2-2008-10-04.jar"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
@@ -56,19 +57,19 @@
     <target name="build-subprojects"/>
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="${dest-root}/core" source="${source}" target="${target}">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${dest-root}/core" source="${source}" target="${target}" encoding="${javac.encoding}">
             <src path="core"/>
             <classpath refid="werkzeugkasten.twowaysql.classpath"/>
         </javac>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="${dest-root}/dao" source="${source}" target="${target}">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${dest-root}/dao" source="${source}" target="${target}" encoding="${javac.encoding}">
             <src path="dao"/>
             <classpath refid="werkzeugkasten.twowaysql.classpath"/>
         </javac>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="${dest-root}/mvel" source="${source}" target="${target}">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${dest-root}/mvel" source="${source}" target="${target}" encoding="${javac.encoding}">
             <src path="mvel"/>
             <classpath refid="werkzeugkasten.twowaysql.classpath"/>
         </javac>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="${dest-root}/test" source="${source}" target="${target}">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${dest-root}/test" source="${source}" target="${target}" encoding="${javac.encoding}">
             <src path="test"/>
             <classpath refid="werkzeugkasten.twowaysql.classpath"/>
         </javac>
