@@ -11,6 +11,7 @@
   <!-- JMX Support for the Tomcat server. Documentation at /docs/non-existent.html -->
   <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="werkzeugkasten.weblauncher.tomcat.startup.PortOverrideLifecycleListener" />
 
   <!-- Global JNDI resources
        Documentation at /docs/jndi-resources-howto.html
@@ -108,9 +109,8 @@
        -->
       <Host name="localhost"  appBase="webapps"
             unpackWARs="true" autoDeploy="true"
-            xmlValidation="false" xmlNamespaceAware="false"
-            hostConfigClass="werkzeugkasten.weblauncher.tomcat.startup.WebLauncherHostConfig"
-            >
+            xmlValidation="false" xmlNamespaceAware="false">
+		<Listener className="werkzeugkasten.weblauncher.tomcat.startup.WebLauncherHostConfig" />
 
         <!-- SingleSignOn valve, share authentication between web applications
              Documentation at: /docs/config/valve.html -->
