@@ -35,6 +35,7 @@
   <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
   <Listener className="org.apache.catalina.storeconfig.StoreConfigLifecycleListener"/>
+  <Listener className="werkzeugkasten.weblauncher.tomcat.startup.PortOverrideLifecycleListener" />
 
   <!-- Global JNDI resources -->
   <GlobalNamingResources>

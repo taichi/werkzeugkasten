@@ -29,6 +29,7 @@ import werkzeugkasten.common.debug.LaunchConfigurationFactory;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.util.Streams;
+import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.Constants;
@@ -97,6 +98,12 @@ public class TomcatLaunchConfigurationBuilder implements
 				CONTEXT_XML).toOSString()));
 		stb.append(" -Dweblauncher.ctx.name=");
 		stb.append(preferences.getContextName());
+
+		String port = preferences.getWebPortNo();
+		if (StringUtil.isEmpty(port) == false && port.matches("\\d*")) {
+			stb.append(" -Dweblauncher.port=");
+			stb.append(port);
+		}
 		return stb.toString();
 	}
 
@@ -148,7 +155,8 @@ public class TomcatLaunchConfigurationBuilder implements
 
 					public boolean equals(ILaunchConfiguration config)
 							throws CoreException {
-						return Activator.isSameVersion(config);
+						return Activator.isSameVersion(config)
+								&& isSameArgs(config);
 					}
 				});
 	}
@@ -170,6 +178,17 @@ public class TomcatLaunchConfigurationBuilder implements
 		} finally {
 			Streams.close(in);
 		}
+	}
+
+	protected boolean isSameArgs(ILaunchConfiguration config)
+			throws CoreException {
+		return this
+				.getArgs()
+				.equals(
+						config
+								.getAttribute(
+										IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
+										""));
 	}
 
 	protected void setUp(ILaunchConfigurationWorkingCopy copy)
