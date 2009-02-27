@@ -16,11 +16,12 @@ public class PortOverrideLifecycleListener implements LifecycleListener {
 				Lifecycle l = event.getLifecycle();
 				if (l instanceof Server) {
 					Server server = (Server) l;
-					for (Service service : server.findServices()) {
-						Connector[] connectors = service.findConnectors();
-						if (connectors != null && connectors.length == 1) {
-							connectors[0].setPort(Integer.parseInt(port));
-							break;
+					loop: for (Service service : server.findServices()) {
+						for (Connector c : service.findConnectors()) {
+							if ("HTTP/1.1".equals(c.getProtocol())) {
+								c.setPort(Integer.parseInt(port));
+								break loop;
+							}
 						}
 					}
 				}
