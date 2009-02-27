@@ -50,7 +50,7 @@ import werkzeugkasten.weblauncher.preferences.impl.WebPreferencesImpl;
  */
 public class WebPreferencesPage extends PropertyPage {
 
-	private Pattern numeric = Pattern.compile("\\d*");
+	private static final Pattern numeric = Pattern.compile("\\d*");
 
 	private Button useWebLauncher;
 
