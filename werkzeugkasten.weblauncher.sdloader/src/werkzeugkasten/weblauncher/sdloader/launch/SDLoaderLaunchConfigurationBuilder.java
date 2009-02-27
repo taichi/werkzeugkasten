@@ -119,7 +119,8 @@ public class SDLoaderLaunchConfigurationBuilder implements
 
 					public boolean equals(ILaunchConfiguration config)
 							throws CoreException {
-						return Activator.isSameVersion(config);
+						return Activator.isSameVersion(config)
+								&& isSameArgs(config);
 					}
 				});
 	}
@@ -144,6 +145,17 @@ public class SDLoaderLaunchConfigurationBuilder implements
 		} finally {
 			Streams.close(in);
 		}
+	}
+
+	protected boolean isSameArgs(ILaunchConfiguration config)
+			throws CoreException {
+		return this
+				.getArgs()
+				.equals(
+						config
+								.getAttribute(
+										IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
+										""));
 	}
 
 	protected void setUp(ILaunchConfigurationWorkingCopy copy)
