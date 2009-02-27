@@ -28,6 +28,7 @@ import werkzeugkasten.common.debug.LaunchConfigurationFactory;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.resource.ResourceUtil;
 import werkzeugkasten.common.util.Streams;
+import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.launcher.LaunchConfigurationBuilder;
 import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.Constants;
@@ -81,6 +82,11 @@ public class Jetty6LaunchConfigurationBuilder implements
 		stb.append(" -Dweblauncher.ctx.loc=");
 		stb.append(ResourceUtil.quote(getProject().getLocation().append(
 				CONTEXT_XML).toString()));
+		String port = preferences.getWebPortNo();
+		if (StringUtil.isEmpty(port) == false && port.matches("\\d*")) {
+			stb.append(" -Djetty.port=");
+			stb.append(port);
+		}
 		return stb.toString();
 	}
 
