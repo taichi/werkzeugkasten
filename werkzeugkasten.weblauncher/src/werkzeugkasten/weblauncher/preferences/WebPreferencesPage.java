@@ -37,7 +37,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.ui.WorkbenchUtil;
-import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
+import werkzeugkasten.common.widget.ResourceTreeSelectionDialog;
 import werkzeugkasten.launcher.ConfigurationFacet;
 import werkzeugkasten.launcher.ConfigurationFacetRegistry;
 import werkzeugkasten.launcher.LibraryConfigurator;
