@@ -565,7 +565,14 @@ public class ConverterUtil {
 			}
 			java.util.Date date = DATE_CONVERTER.convert(o, pattern);
 			if (date != null) {
-				return new java.sql.Date(date.getTime());
+				Calendar c = Calendar.getInstance();
+				c.setTime(date);
+				c.set(Calendar.HOUR_OF_DAY, 0);
+				c.set(Calendar.HOUR, 0);
+				c.set(Calendar.MINUTE, 0);
+				c.set(Calendar.SECOND, 0);
+				c.set(Calendar.MILLISECOND, 0);
+				return new java.sql.Date(c.getTimeInMillis());
 			}
 			return null;
 		}
