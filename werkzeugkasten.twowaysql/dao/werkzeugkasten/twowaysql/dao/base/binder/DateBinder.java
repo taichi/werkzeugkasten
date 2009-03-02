@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import werkzeugkasten.common.util.ConverterUtil;
 import werkzeugkasten.twowaysql.dao.Binder;
 
 public class DateBinder implements Binder {
@@ -15,7 +16,7 @@ public class DateBinder implements Binder {
 	}
 
 	public DateBinder(java.util.Date value) {
-		this(new Date(value.getTime()));
+		this(ConverterUtil.SQLDATE_CONVERTER.convert(value));
 	}
 
 	@Override
