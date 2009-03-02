@@ -40,7 +40,7 @@ import werkzeugkasten.common.resource.ProjectUtil;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.ui.WorkbenchUtil;
 import werkzeugkasten.common.util.StringUtil;
-import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
+import werkzeugkasten.common.widget.ResourceTreeSelectionDialog;
 import werkzeugkasten.dblauncher.Activator;
 import werkzeugkasten.dblauncher.nls.Strings;
 import werkzeugkasten.dblauncher.preferences.impl.DbPreferencesImpl;
@@ -88,7 +88,9 @@ public class DbPreferencesPage extends PropertyPage implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+	 * @see
+	 * org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
+	 * .swt.widgets.Composite)
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
