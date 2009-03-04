@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.twowaysql.dao.ResultSetMapper;
+import werkzeugkasten.twowaysql.dao._;
 import werkzeugkasten.twowaysql.dao.el.mvel.MVELExpressionParser;
 import werkzeugkasten.twowaysql.jdbc.ConnectionHandler;
 import werkzeugkasten.twowaysql.jdbc.JdbcFunctors;
@@ -144,6 +145,24 @@ public class DefaultSqlProcessorTest {
 			}
 		});
 		assertEquals("World", s);
+	}
+
+	@Test
+	public void testProcessMappingWithVoidReturn() {
+		String path = "werkzeugkasten/twowaysql/dao/base/testSelectQuery.sql";
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("aaa", 2);
+		final String[] ary = new String[1];
+		target.process(path, map, new ResultSetMapper<_>() {
+			@Override
+			public _ map(ResultSet rs) throws SQLException {
+				if (rs.next()) {
+					ary[0] = rs.getString(2);
+				}
+				return _._;
+			}
+		});
+		assertEquals("World", ary[0]);
 	}
 
 	@Test
