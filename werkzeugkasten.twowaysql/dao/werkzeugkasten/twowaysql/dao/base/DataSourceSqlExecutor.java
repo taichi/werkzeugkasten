@@ -33,8 +33,7 @@ public class DataSourceSqlExecutor implements SqlExecutor {
 
 	public void setDataSource(DataSource ds) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(DETAIL, Messages.SET_DEPENDENCY, new Object[] {
-					"dataSource", DataSourceSqlExecutor.class.getName(), ds });
+			LOG.debug(DETAIL, Messages.SET_DEPENDENCY, ds, "dataSource");
 		}
 		this.dataSource = ds;
 	}

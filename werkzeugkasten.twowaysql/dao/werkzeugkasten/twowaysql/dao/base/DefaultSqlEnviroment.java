@@ -32,8 +32,9 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 
 	public void setLoader(QueryLoader<?> loader) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, new Object[] {
-					"loader", QueryLoader.class.getName(), loader });
+			LOG
+					.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, loader,
+							"loader");
 		}
 		this.queryLoader = loader;
 	}
@@ -50,8 +51,8 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 
 	public void setELParser(ExpressionParser elparser) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, new Object[] {
-					"elparser", ExpressionParser.class.getName(), elparser });
+			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, elparser,
+					"elparser");
 		}
 		this.elparser = elparser;
 	}
@@ -63,9 +64,8 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 
 	public void setBinderProducer(BinderProducer producer) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY,
-					new Object[] { "binderProducer",
-							BinderProducer.class.getName(), producer });
+			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, producer,
+					"binderProducer");
 		}
 		this.binderProducer = producer;
 	}
@@ -82,8 +82,8 @@ public class DefaultSqlEnviroment implements SqlEnviroment {
 
 	public void setExecutor(SqlExecutor executor) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, new Object[] {
-					"executor", SqlExecutor.class.getName(), executor });
+			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, executor,
+					"executor");
 		}
 		this.executor = executor;
 	}

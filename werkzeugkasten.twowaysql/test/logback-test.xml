@@ -14,11 +14,11 @@
 	</turboFilter>
 	<turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
 		<Marker>werkzeugkasten.twowaysql.lifecycle</Marker>
-		<OnMatch>DENY</OnMatch>
+		<OnMatch>ACCEPT</OnMatch>
 	</turboFilter>
 	<turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
 		<Marker>werkzeugkasten.twowaysql.detail</Marker>
-		<OnMatch>DENY</OnMatch>
+		<OnMatch>ACCEPT</OnMatch>
 	</turboFilter>
 	<logger name="werkzeugkasten.twowaysql" level="debug" />
 	<logger name="werkzeugkasten.twowaysql.jdbc" level="debug" />

@@ -25,8 +25,8 @@ public class DefaultSqlProcessor implements SqlProcessor {
 
 	public void setEnviroment(SqlEnviroment env) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, new Object[] {
-					"enviroment", SqlEnviroment.class.getName(), env });
+			LOG.debug(Markers.DETAIL, Messages.SET_DEPENDENCY, env,
+					"enviroment");
 		}
 		this.enviroment = env;
 	}
