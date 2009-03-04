@@ -93,17 +93,25 @@ public class DefaultBinderProducer implements BinderProducer {
 	}
 
 	public void registerByType(BinderFactory factory) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.DETAIL, Messages.BINDERPRODUCER_REGISTER_TYPE,
+					factory.targetType());
+		}
 		this.typeRegistory.put(factory.targetType(), factory);
 	}
 
 	public void registerByName(BinderFactory factory) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.DETAIL, Messages.BINDERPRODUCER_REGISTER_NAME,
+					factory.bindingTypeName());
+		}
 		this.nameRegistory
 				.put(factory.bindingTypeName().toLowerCase(), factory);
 	}
 
 	protected BinderFactory findByType(Class<?> clazz) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(Markers.DETAIL, "findByType class:{}", clazz);
+			LOG.debug(Markers.DETAIL, Messages.BINDERPRODUCER_FIND_TYPE, clazz);
 		}
 
 		BinderFactory factory = null;
@@ -131,7 +139,7 @@ public class DefaultBinderProducer implements BinderProducer {
 
 	protected BinderFactory findByName(String name) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(Markers.DETAIL, "findByName name:{}", name);
+			LOG.debug(Markers.DETAIL, Messages.BINDERPRODUCER_FIND_NAME, name);
 		}
 		return this.nameRegistory.get(name.toLowerCase());
 	}
