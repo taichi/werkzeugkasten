@@ -4,13 +4,13 @@
    <description url="http://code.google.com/p/werkzeugkasten/">
       Quickly and minimum java toolset by anytime code writing.
    </description>
-   <feature url="features/werkzeugkasten.resource.synchronizer.feature_0.0.5.jar" id="werkzeugkasten.resource.synchronizer.feature" version="0.0.5">
+   <feature url="features/werkzeugkasten.resource.synchronizer.feature_0.0.6.jar" id="werkzeugkasten.resource.synchronizer.feature" version="0.0.6">
       <category name="ResourceSynchronizer"/>
    </feature>
    <feature url="features/werkzeugkasten.dblauncher.feature_0.0.12.jar" id="werkzeugkasten.dblauncher.feature" version="0.0.12">
       <category name="DbLauncher"/>
    </feature>
-   <feature url="features/werkzeugkasten.weblauncher.feature_0.0.20.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.20">
+   <feature url="features/werkzeugkasten.weblauncher.feature_0.0.21.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.21">
       <category name="WebLauncher"/>
    </feature>
    <feature url="features/werkzeugkasten.dirbuildpathupdater.feature_0.0.5.jar" id="werkzeugkasten.dirbuildpathupdater.feature" version="0.0.5">

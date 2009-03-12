@@ -2,7 +2,7 @@
 <feature
       id="werkzeugkasten.weblauncher.feature"
       label="WebLauncher"
-      version="0.0.20"
+      version="0.0.21"
       provider-name="ryushi">
 
    <description url="http://code.google.com/p/werkzeugkasten/">
@@ -428,7 +428,7 @@
          id="werkzeugkasten.weblauncher.tomcat"
          download-size="0"
          install-size="0"
-         version="0.0.9"/>
+         version="0.1.0"/>
 
    <plugin
          id="werkzeugkasten.docs"
@@ -452,6 +452,6 @@
          id="werkzeugkasten.weblauncher.tomcat55"
          download-size="0"
          install-size="0"
-         version="0.0.7"/>
+         version="0.1.0"/>
 
 </feature>
