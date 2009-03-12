@@ -37,9 +37,10 @@ public class DustCart {
 	public void pickUp(ClassLoader classLoader) {
 		Introspector.flushCaches();
 		deregisterDrivers();
-
-		for (DustBox db : dustBoxes) {
-			db.cleanUp(classLoader);
+		if (classLoader != null) {
+			for (DustBox db : dustBoxes) {
+				db.cleanUp(classLoader);
+			}
 		}
 	}
 
