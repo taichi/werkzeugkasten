@@ -2,7 +2,7 @@
 <feature
       id="werkzeugkasten.resource.synchronizer.feature"
       label="%plugin.name"
-      version="0.0.5"
+      version="0.0.6"
       provider-name="%plugin.author"
       plugin="werkzeugkasten.resource.synchronizer">
 
@@ -431,7 +431,7 @@
          id="werkzeugkasten.resource.synchronizer"
          download-size="0"
          install-size="0"
-         version="0.0.5"
+         version="0.0.6"
          unpack="false"/>
 
 </feature>
