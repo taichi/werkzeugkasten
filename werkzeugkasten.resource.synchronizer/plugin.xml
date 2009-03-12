@@ -69,6 +69,10 @@
             class="werkzeugkasten.resource.synchronizer.servlet.SelectionServlet"
             url-pattern="/select">
       </servlet>
+      <servlet
+            class="werkzeugkasten.resource.synchronizer.servlet.ResourceSelectionServlet"
+            url-pattern="/resource">
+      </servlet>
    </extension>
 
 </plugin>

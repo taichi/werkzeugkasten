@@ -164,11 +164,11 @@ public class SelectionServlet extends HttpServlet {
 
 	private static final Pattern isNumeric = Pattern.compile("\\d*");
 
-	private static int toLine(String line) {
+	static int toLine(String line) {
 		return toLine(line, 0);
 	}
 
-	private static int toLine(String line, int dv) {
+	static int toLine(String line, int dv) {
 		if (line != null && isNumeric.matcher(line).matches()) {
 			return Integer.parseInt(line);
 		}
