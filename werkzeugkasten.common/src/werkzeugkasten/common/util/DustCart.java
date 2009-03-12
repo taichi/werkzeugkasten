@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import werkzeugkasten.common.runtime.LogUtil;
-
 /**
  * @author taichi
  */
@@ -53,7 +51,7 @@ public class DustCart {
 				DriverManager.deregisterDriver(d);
 			}
 		} catch (SQLException e) {
-			LogUtil.log(null, e);
+			LOG.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 
