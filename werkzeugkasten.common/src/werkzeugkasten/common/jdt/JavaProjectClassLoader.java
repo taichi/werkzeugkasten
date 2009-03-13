@@ -12,12 +12,10 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 
-import werkzeugkasten.common.runtime.LogUtil;
-
 /**
  * @author taichi
  */
-public class JavaProjectClassLoader extends URLClassLoader {
+public abstract class JavaProjectClassLoader extends URLClassLoader {
 
 	public JavaProjectClassLoader(IJavaProject project) {
 		super(new URL[0]);
@@ -73,7 +71,7 @@ public class JavaProjectClassLoader extends URLClassLoader {
 				}
 			}
 		} catch (JavaModelException e) {
-			LogUtil.log(null, e);
+			log(e);
 		}
 	}
 
@@ -81,7 +79,9 @@ public class JavaProjectClassLoader extends URLClassLoader {
 		try {
 			addURL(path.toFile().getAbsoluteFile().toURI().toURL());
 		} catch (MalformedURLException e) {
-			LogUtil.log(null, e);
+			log(e);
 		}
 	}
+
+	public abstract void log(Throwable t);
 }
