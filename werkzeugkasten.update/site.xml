@@ -22,6 +22,9 @@
    <feature url="features/werkzeugkasten.NLSgen.feature_0.0.6.jar" id="werkzeugkasten.NLSgen.feature" version="0.0.6">
       <category name="Misc"/>
    </feature>
+   <feature url="features/werkzeugkasten.weblauncher.feature_0.0.22.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.22">
+      <category name="WebLauncher"/>
+   </feature>
    <category-def name="DbLauncher" label="DbLauncher">
       <description>
          Launching Plugin for H2.
