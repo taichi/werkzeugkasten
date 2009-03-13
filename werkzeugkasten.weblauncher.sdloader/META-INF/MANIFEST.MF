@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
 Bundle-SymbolicName: werkzeugkasten.weblauncher.sdloader;singleton:=true
-Bundle-Version: 0.0.11
+Bundle-Version: 0.0.20
 Bundle-Localization: plugin
 Bundle-Activator: werkzeugkasten.weblauncher.sdloader.Activator
 Require-Bundle: org.eclipse.ui,
@@ -13,6 +13,6 @@ Require-Bundle: org.eclipse.ui,
  werkzeugkasten.weblauncher
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
- sdloader/lib/sdloader-jsp20.jar,
+ sdloader/lib/sdloader-jsp21.jar,
  sdloader/lib/weblauncher.enhance.sdloader.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
