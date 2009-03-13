@@ -33,9 +33,11 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 	protected TextScanner textScanner;
 	protected LexerBasedColoringScanner lineCommentScanner;
 	protected LexerBasedColoringScanner blockCommentScanner;
+	protected TwoWaySqlEditor sqlEditor;
 
-	public TwoWaySqlConfiguration(IPreferenceStore pref,
-			ContextSettings settings) {
+	public TwoWaySqlConfiguration(TwoWaySqlEditor editor,
+			IPreferenceStore pref, ContextSettings settings) {
+		this.sqlEditor = editor;
 		this.preferenceStore = pref;
 		this.settings = settings;
 		this.colorFactory = new ColorDefineFactory();
@@ -115,7 +117,8 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 		assistant.setContentAssistProcessor(processor,
 				Constants.CONTENT_TYPE_TEXT);
 
-		processor = new CommentContentAssistProcessor();
+		processor = new CommentContentAssistProcessor(this.sqlEditor,
+				this.settings);
 		assistant.setContentAssistProcessor(processor,
 				Constants.CONTENT_TYPE_LINECOMMENT);
 		assistant.setContentAssistProcessor(processor,

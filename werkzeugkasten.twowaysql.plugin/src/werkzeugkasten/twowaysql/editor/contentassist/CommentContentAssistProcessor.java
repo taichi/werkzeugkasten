@@ -14,6 +14,7 @@ import java.util.List;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.BitSet;
 import org.antlr.runtime.CommonToken;
+import org.antlr.runtime.Token;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPartitioningException;
@@ -30,6 +31,8 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 
 import werkzeugkasten.twowaysql.Activator;
 import werkzeugkasten.twowaysql.Constants;
+import werkzeugkasten.twowaysql.editor.TwoWaySqlEditor;
+import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
 import werkzeugkasten.twowaysql.grammar.NoChannelLexer;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer;
 import werkzeugkasten.twowaysql.util.DocumentUtil;
@@ -46,11 +49,17 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 	protected static final BitSet WILLBE_EXPRESSION_bits = BitSet.of(IF,
 			ELSEIF, SYM_BIND);
 	protected static final BitSet KEYWORDPART_bits = BitSet.of(IDENT, ELSE);
+	protected static final BitSet EXPRESSION_PART_bits = BitSet.of(LT,
+			WHITE_SPACES, IDENT);
 
-	public CommentContentAssistProcessor() {
+	protected MVELCompletionProposer mvelCollector;
+
+	public CommentContentAssistProcessor(TwoWaySqlEditor editor,
+			ContextSettings settings) {
 		IPreferenceStore store = Activator.getGlobalPreference();
 		store.addPropertyChangeListener(this);
 		// TODO read from preference
+		this.mvelCollector = new MVELCompletionProposer(editor, store, settings);
 	}
 
 	@Override
@@ -65,7 +74,9 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 			IDocument doc = viewer.getDocument();
 			ITypedRegion partition = DocumentUtil.getPartition(doc,
 					Constants.PARTITION_TYPE_TWOWAYSQL, offset);
-			List<CommonToken> before = getBeforeTokens(offset, doc, partition);
+			List<CommonToken> tokens = parsePartition(doc, partition);
+			List<CommonToken> before = getBeforeTokens(offset, partition,
+					tokens);
 			if (before.size() < 2) {
 				// キーワード全部(コメント開始位置もしくは、その内側にカーソルがある)
 				CommonToken first = before.get(0);
@@ -91,9 +102,25 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 						}
 					}
 				}
+
 				// キーワードが既に完成している。(式言語の入力補完)
-				if (WILLBE_EXPRESSION_bits.member(last.getType())) {
-					// TODO 式言語の入力補完
+				int index = conditionalTokenIndex(tokens);
+				if (-1 < index) {
+					String maybeExp = "";
+					if ((index + 1) < tokens.size()) {
+						CommonToken expStart = tokens.get(index + 1);
+						CommonToken expEnd = findExpressionEndToken(tokens,
+								index + 1);
+						if (expEnd != null) {
+							maybeExp = doc.get(partition.getOffset()
+									+ expStart.getStartIndex(), expEnd
+									.getStopIndex()
+									- expStart.getStartIndex() + 1);
+						}
+					}
+					// 式言語の入力補完
+					proposals.addAll(this.mvelCollector.collect(viewer,
+							maybeExp.trim(), offset));
 				}
 			}
 			return proposals.toArray(new ICompletionProposal[proposals.size()]);
@@ -106,24 +133,62 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 		}
 	}
 
-	protected List<CommonToken> getBeforeTokens(int offset, IDocument doc,
+	private List<CommonToken> parsePartition(IDocument doc,
 			ITypedRegion partition) throws BadLocationException {
-		int cursor = offset - partition.getOffset() - 1;
+		List<CommonToken> result = new ArrayList<CommonToken>();
 		String string = doc.get(partition.getOffset(), partition.getLength());
+
+		// System.out.printf("parsePartition %s %n", string);
+
 		TwoWaySqlLexer lex = new NoChannelLexer(new ANTLRStringStream(string));
-		List<CommonToken> before = new ArrayList<CommonToken>();
 		CommonToken ct = (CommonToken) lex.nextToken();
-		while (true) {
+		while (ct.getType() != Token.EOF) {
 			if (WHITESPACE_bits.member(ct.getType()) == false) {
-				before.add(ct);
+				result.add(ct);
 			}
+			ct = (CommonToken) lex.nextToken();
+		}
+		return result;
+	}
+
+	protected List<CommonToken> getBeforeTokens(int offset,
+			ITypedRegion partition, List<CommonToken> tokens)
+			throws BadLocationException {
+		int cursor = offset - partition.getOffset();
+		List<CommonToken> before = new ArrayList<CommonToken>();
+		for (CommonToken ct : tokens) {
 			if (ct.getStopIndex() < cursor) {
-				ct = (CommonToken) lex.nextToken();
-			} else {
-				break;
+				before.add(ct);
 			}
 		}
 		return before;
+	}
+
+	protected int conditionalTokenIndex(List<CommonToken> tokens) {
+		int result = 0;
+		for (CommonToken ct : tokens) {
+			if (WILLBE_EXPRESSION_bits.member(ct.getType())) {
+				break;
+			}
+			result++;
+		}
+		return result;
+	}
+
+	protected CommonToken findExpressionEndToken(List<CommonToken> tokens,
+			int beginIndex) {
+		CommonToken result = null;
+		int index = beginIndex;
+		int size = tokens.size();
+		while (index < size) {
+			CommonToken ct = tokens.get(index++);
+			if (EXPRESSION_PART_bits.member(ct.getType()) == false) {
+				break;
+			}
+			result = ct;
+		}
+
+		return result;
 	}
 
 	@Override

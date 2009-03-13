@@ -17,7 +17,7 @@ public class TwoWaySqlEditor extends TextEditor {
 	protected TwoWaySqlConfiguration configuration;
 
 	public TwoWaySqlEditor(IPreferenceStore pref, ContextSettings settings) {
-		this.configuration = new TwoWaySqlConfiguration(pref, settings);
+		this.configuration = new TwoWaySqlConfiguration(this, pref, settings);
 		this.configuration.initialize();
 		setSourceViewerConfiguration(configuration);
 		setDocumentProvider(Activator.getDocumentProvider());

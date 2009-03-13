@@ -1,5 +1,7 @@
 package werkzeugkasten.twowaysql;
 
+import org.eclipse.jface.text.IDocument;
+
 import werkzeugkasten.common.util.StringUtil;
 
 public class Constants {
@@ -27,7 +29,8 @@ public class Constants {
 	public static final String CONTENT_TYPE_BLOCKCOMMENT = PARTITION_TYPE_TWOWAYSQL
 			+ "blockcomment_";
 
-	public static final String[] LEGAL_CONTENT_TYPES = { CONTENT_TYPE_TEXT,
+	public static final String[] LEGAL_CONTENT_TYPES = {
+			IDocument.DEFAULT_CONTENT_TYPE, CONTENT_TYPE_TEXT,
 			CONTENT_TYPE_LINECOMMENT, CONTENT_TYPE_BLOCKCOMMENT };
 
 	public enum COLORING {
