@@ -19,8 +19,8 @@ public class Main {
 				protected void initWebApp() {
 					try {
 						log.info("WebApplication initialize start.");
-						webAppManager = new EnhancedWebAppManager(this);
-						webAppManager.init();
+						webAppManager = new EnhancedWebAppManager();
+						webAppManager.init(config);
 						log.info("WebApplication initialize success.");
 					} catch (RuntimeException e) {
 						log.error("WebApplication initialize fail.", e);
@@ -35,9 +35,6 @@ public class Main {
 	}
 
 	public static class EnhancedWebAppManager extends WebAppManager {
-		public EnhancedWebAppManager(SDLoader server) {
-			super(server);
-		}
 		protected void detectWebApps() throws Exception {
 			String contextfile = System.getProperty("weblauncher.ctx.loc");
 			if (contextfile == null || contextfile.length() < 1) {
