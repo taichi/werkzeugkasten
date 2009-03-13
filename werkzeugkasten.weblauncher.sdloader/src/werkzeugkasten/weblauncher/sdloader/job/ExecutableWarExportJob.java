@@ -31,13 +31,13 @@ public class ExecutableWarExportJob extends WarExportJob {
 				attrs.put(Attributes.Name.MAIN_CLASS,
 						"werkzeugkasten.weblauncher.sdloader.exec.Main");
 				attrs.putValue("Server-Main", "sdloader.BrowserOpen");
-				attrs.putValue("Server-lib", "sdloader-jsp20.jar");
+				attrs.putValue("Server-lib", "sdloader-jsp21.jar");
 			}
 		});
 		super.addEntries(monitor, pref, assembler);
 		Bundle bundle = Activator.getDefault().getBundle();
-		URL url = bundle.getEntry("sdloader/lib/sdloader-jsp20.jar");
-		assembler.entry(new URLOpener(url), "sdloader-jsp20.jar");
+		URL url = bundle.getEntry("sdloader/lib/sdloader-jsp21.jar");
+		assembler.entry(new URLOpener(url), "sdloader-jsp21.jar");
 
 		String main = "werkzeugkasten/weblauncher/sdloader/exec/Main.class";
 		assembler.entry(new URLOpener(bundle.getResource(main)), main);
