@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="lib/h2-2008-10-24.jar" sourcepath="lib/h2-2008-10-24.src.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/h2-2009-03-14.jar" rootpath="." sourcepath="lib/h2-2009-03-14.src.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
