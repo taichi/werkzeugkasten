@@ -16,8 +16,13 @@ public class Streams {
 	static final Logger LOG = Logger.getLogger(Streams.class.getName());
 
 	public static abstract class using<STREAM extends Closeable, T extends Exception> {
-		public using(Class<T> clazz) {
-			$(this, clazz);
+		/**
+		 * @param t
+		 *            is trick parameter. needless to assign.
+		 */
+		@SuppressWarnings("unchecked")
+		public using(T... t) {
+			$(this, (Class<T>) t.getClass().getComponentType());
 		}
 
 		public abstract STREAM open() throws T;

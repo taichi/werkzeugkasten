@@ -20,7 +20,7 @@ public class FileUtil {
 	}
 
 	public static void copy(final InputStream in, final File dest) {
-		new Streams.using<FileOutputStream, IOException>(IOException.class) {
+		new Streams.using<FileOutputStream, IOException>() {
 			@Override
 			public FileOutputStream open() throws IOException {
 				return new FileOutputStream(dest);
