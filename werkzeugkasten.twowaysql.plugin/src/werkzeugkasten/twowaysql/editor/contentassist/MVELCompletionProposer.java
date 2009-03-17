@@ -4,6 +4,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.CompletionContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.eval.IEvaluationContext;
 import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
@@ -109,65 +111,103 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		} else {
 			// その他。主に、不完全な変数名が入力状態である時。
 			// hog
+			// collectAccessibleVariables(rounded[0], offset, result);
 		}
 		return result;
 	}
 
 	private void collectAccessibleVariables(String string, int offset,
 			List<ICompletionProposal> result) {
-		// TODO Auto-generated method stub
+		String prev = getPreviusExpression(string);
+		CompiledExpression ce = parseEL(prev, true);
+		StringBuilder stb = new StringBuilder();
+		Formatter fmt = new Formatter(stb);
+		contextToDummyText(ce, fmt);
+		requestCodeCompletion(offset, result, stb.toString());
+	}
 
+	private void contextToDummyText(CompiledExpression ce, Formatter fmt) {
+		ParserContext pc = ce.getParserContext();
+		contextToDummyText(fmt, pc.getVariables());
+		contextToDummyText(fmt, pc.getInputs());
+	}
+
+	@SuppressWarnings("unchecked")
+	private void contextToDummyText(Formatter fmt, Map<String, Class> vars) {
+		for (String s : vars.keySet()) {
+			fmt.format("%s %s;", vars.get(s).getName(), s);
+		}
+	}
+
+	private String getPreviusExpression(String string) {
+		int index = string.lastIndexOf(';');
+		if (-1 < index) {
+			return string.substring(0, index);
+		}
+		return string;
 	}
 
 	private void collectMemberAccess(String string, int offset,
 			List<ICompletionProposal> result) {
+		CompiledExpression ce = parseEL(string, true);
+		Class<?> lastType = ce.getKnownEgressType(); // return type
+		if (lastType == null) {
+			return;
+		}
+		String dummyText = buildJavaText(ce, lastType);
+		requestCodeCompletion(offset, result, dummyText);
+	}
+
+	private void requestCodeCompletion(int offset,
+			List<ICompletionProposal> result, String dummyText) {
 		try {
-			CompiledExpression ce = parseEL(string, true);
-			Class<?> lastType = ce.getKnownEgressType(); // return type
-			if (lastType == null) {
-				return;
-			}
-
-			String varname = findVarName(ce, lastType);
-
 			IJavaProject project = getJavaProject();
 			CompletionProposalCollector collector = new ELCompletionProposalCollector(
-					project, offset);
+					project, offset - dummyText.length());
 			collector.acceptContext(new CompletionContext());
 			IEvaluationContext evalContext = project.newEvaluationContext();
 			// evalContext.setImports(null); // need imports really
 
-			StringBuilder stb = new StringBuilder();
-			stb.append(lastType.getName());
-			stb.append(" ");
-			stb.append(varname);
-			stb.append(';');
-			stb.append(varname);
-			stb.append('.');
-
-			evalContext.codeComplete(stb.toString(), stb.length(), collector);
+			evalContext.codeComplete(dummyText, dummyText.length(), collector);
 
 			for (IJavaCompletionProposal jcp : collector
 					.getJavaCompletionProposals()) {
 				result.add(jcp);
 			}
-		} catch (Exception e) {
+		} catch (JavaModelException e) {
 			Activator.log(e);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private String findVarName(CompiledExpression ce, Class<?> lastType) {
-		String result = "";
-		Map<String, Class> vars = ce.getParserContext().getVariables();
+	protected String buildJavaText(CompiledExpression expression,
+			Class<?> lastType) {
+		StringBuilder stb = new StringBuilder();
+		Formatter fmt = new Formatter(stb);
+		String lastName = buildJavaText(expression, lastType, fmt);
+		fmt.format("%s %s;", lastType.getName(), lastName);
+		fmt.format("%s.", lastName);
+		return stb.toString();
+	}
+
+	private String buildJavaText(CompiledExpression expression,
+			Class<?> lastType, Formatter fmt) {
+		String lastName = "";
+		ParserContext pc = expression.getParserContext();
+		@SuppressWarnings("unchecked")
+		Map<String, Class> vars = pc.getVariables();
 		for (String v : vars.keySet()) {
 			Class<?> clazz = vars.get(v);
 			if (lastType.equals(clazz)) {
-				result = v;
-				break;
+				lastName = v;
+			} else {
+				fmt.format("%s %s;", clazz.getName(), v);
 			}
 		}
-		return result;
+		contextToDummyText(fmt, pc.getInputs());
+		if (StringUtil.isEmpty(lastName)) {
+			lastName = lastType.getSimpleName().toLowerCase();
+		}
+		return lastName;
 	}
 
 	private boolean endsWith(String string, String exp, String[] rounded) {

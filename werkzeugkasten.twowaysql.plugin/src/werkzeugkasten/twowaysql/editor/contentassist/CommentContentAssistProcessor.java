@@ -42,6 +42,8 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 
 	protected String errorMessage;
 
+	protected static final char[] activator = { '.' };
+
 	protected static final String[] KEYWORDS = { "?", "BEGIN", "IF", "ELSEIF",
 			"ELSE" };
 
@@ -193,7 +195,7 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 
 	@Override
 	public char[] getCompletionProposalAutoActivationCharacters() {
-		return null;
+		return activator;
 	}
 
 	@Override
@@ -204,7 +206,7 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 
 	@Override
 	public char[] getContextInformationAutoActivationCharacters() {
-		return null;
+		return activator;
 	}
 
 	@Override

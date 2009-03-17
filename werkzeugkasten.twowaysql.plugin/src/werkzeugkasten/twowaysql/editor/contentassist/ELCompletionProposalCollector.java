@@ -39,7 +39,8 @@ public class ELCompletionProposalCollector extends CompletionProposalCollector {
 	protected IJavaCompletionProposal createJavaCompletionProposal(
 			CompletionProposal proposal) {
 		int startIndex = proposal.getReplaceStart() + baseOffset;
-		proposal.setReplaceRange(startIndex, proposal.getReplaceEnd());
+		int endIndex = proposal.getReplaceEnd() + baseOffset;
+		proposal.setReplaceRange(startIndex, endIndex);
 		return super.createJavaCompletionProposal(proposal);
 	}
 
