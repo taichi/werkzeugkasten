@@ -16,12 +16,13 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: lib/antlr-3.1.1-runtime.jar,
+Bundle-ClassPath: .,
+ lib/antlr-3.1.1-runtime.jar,
  lib/nlsgen-runtime.jar,
+ lib/mvel2-2.0.7.jar,
  lib/werkzeugkasten.twowaysql.core-0.0.1.jar,
  lib/werkzeugkasten.twowaysql.dao-0.0.1.jar,
- lib/werkzeugkasten.twowaysql.mvel-0.0.1.jar,
- .
+ lib/werkzeugkasten.twowaysql.mvel-0.0.1.jar
 Export-Package: org.antlr.runtime,
  org.antlr.runtime.debug,
  org.antlr.runtime.misc,

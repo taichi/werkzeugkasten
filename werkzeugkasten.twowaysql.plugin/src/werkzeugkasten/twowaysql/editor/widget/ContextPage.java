@@ -43,7 +43,7 @@ import werkzeugkasten.common.viewers.TableViewerCoordinator;
 import werkzeugkasten.twowaysql.Activator;
 import werkzeugkasten.twowaysql.editor.TwoWaySqlEditorContainer;
 import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
-import werkzeugkasten.twowaysql.editor.conf.ContextSettings.Var;
+import werkzeugkasten.twowaysql.editor.conf.Variable;
 import werkzeugkasten.twowaysql.nls.Strings;
 
 public class ContextPage implements IStructuredContentProvider {
@@ -152,7 +152,7 @@ public class ContextPage implements IStructuredContentProvider {
 													.toString(types[i])
 													.replace('/', '.'));
 											if (t != null && t.exists()) {
-												ContextSettings.Var v = new ContextSettings.Var();
+												Variable v = new Variable();
 												v
 														.type(t
 																.getFullyQualifiedName());
@@ -240,13 +240,13 @@ public class ContextPage implements IStructuredContentProvider {
 		data.verticalSpan = 5;
 		t.setLayoutData(data);
 		this.variables.setContentProvider(this);
-		List<ColumnDescriptor<ContextSettings.Var>> list = buildColumns(t);
-		new TableViewerCoordinator<Var>(this.variables,
-				ContextSettings.Var.class, list);
+		List<ColumnDescriptor<Variable>> list = buildColumns(t);
+		new TableViewerCoordinator<Variable>(this.variables,
+				Variable.class, list);
 	}
 
-	private List<ColumnDescriptor<ContextSettings.Var>> buildColumns(Table table) {
-		List<ColumnDescriptor<ContextSettings.Var>> result = new ArrayList<ColumnDescriptor<Var>>();
+	private List<ColumnDescriptor<Variable>> buildColumns(Table table) {
+		List<ColumnDescriptor<Variable>> result = new ArrayList<ColumnDescriptor<Variable>>();
 		result.add(new TypeColumn(table));
 		result.add(new VariableColumn(table));
 		result.add(new ExampleColumn(table));
@@ -269,7 +269,7 @@ public class ContextPage implements IStructuredContentProvider {
 			public void widgetSelected(SelectionEvent e) {
 				IType type = selectType();
 				if (type != null) {
-					ContextSettings.Var var = new Var();
+					Variable var = new Variable();
 					var.type(type.getFullyQualifiedName());
 					String name = type.getElementName();
 					StringBuilder stb = new StringBuilder(name);
@@ -300,8 +300,8 @@ public class ContextPage implements IStructuredContentProvider {
 							Item em = (Item) o;
 							o = em.getData();
 						}
-						if (o instanceof ContextSettings.Var) {
-							ContextSettings.Var var = (ContextSettings.Var) o;
+						if (o instanceof Variable) {
+							Variable var = (Variable) o;
 							settings.variables().remove(var);
 							variables.remove(var);
 						}

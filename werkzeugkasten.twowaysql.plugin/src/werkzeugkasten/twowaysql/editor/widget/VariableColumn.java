@@ -11,11 +11,10 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.viewers.ColumnDescriptor;
-import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
-import werkzeugkasten.twowaysql.editor.conf.ContextSettings.Var;
+import werkzeugkasten.twowaysql.editor.conf.Variable;
 import werkzeugkasten.twowaysql.nls.Strings;
 
-public class VariableColumn implements ColumnDescriptor<ContextSettings.Var> {
+public class VariableColumn implements ColumnDescriptor<Variable> {
 
 	CellEditor editor;
 
@@ -37,13 +36,13 @@ public class VariableColumn implements ColumnDescriptor<ContextSettings.Var> {
 	}
 
 	@Override
-	public Image getImage(Var element) {
+	public Image getImage(Variable element) {
 		return JavaUI.getSharedImages().getImage(
 				ISharedImages.IMG_OBJS_LOCAL_VARIABLE);
 	}
 
 	@Override
-	public String getText(Var element) {
+	public String getText(Variable element) {
 		return element.name();
 	}
 
@@ -53,12 +52,12 @@ public class VariableColumn implements ColumnDescriptor<ContextSettings.Var> {
 	}
 
 	@Override
-	public Object getValue(Var element) {
+	public Object getValue(Variable element) {
 		return element.name();
 	}
 
 	@Override
-	public void setValue(Var element, Object value) {
+	public void setValue(Variable element, Object value) {
 		String s = AdaptableUtil.to(value, String.class);
 		element.name(s);
 	}

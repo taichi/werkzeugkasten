@@ -5,10 +5,15 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jdt.core.CompletionContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.eval.IEvaluationContext;
+import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
+import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -28,7 +33,7 @@ import werkzeugkasten.common.util.DustCart;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.twowaysql.Activator;
 import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
-import werkzeugkasten.twowaysql.editor.conf.ContextSettings.Var;
+import werkzeugkasten.twowaysql.editor.conf.Variable;
 
 public class MVELCompletionProposer implements IPropertyChangeListener {
 
@@ -86,7 +91,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		} else if (endsWith(".", partOfExpression, rounded)) {
 			// .で終わっている場合
 			// hoge.
-			collectMemberAccess(rounded[0], result);
+			collectMemberAccess(rounded[0], offset, result);
 		} else if (StringUtil.isEmpty(partOfExpression)
 				|| endsWith(",", partOfExpression, rounded)
 				|| endsWithOperator(partOfExpression, rounded)) {
@@ -96,7 +101,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 			// {aaa,
 			// hoge['fuga':
 			// hoge <
-			collectAccessibleVariables(rounded[0], result);
+			collectAccessibleVariables(rounded[0], offset, result);
 		} else if (maybeCollectionLiteralPart(partOfExpression, rounded)) {
 			// mapリテラル、listリテラル、配列リテラルっぽい場合
 			// hoge[
@@ -108,16 +113,61 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		return result;
 	}
 
-	private void collectAccessibleVariables(String string,
+	private void collectAccessibleVariables(String string, int offset,
 			List<ICompletionProposal> result) {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void collectMemberAccess(String string,
+	private void collectMemberAccess(String string, int offset,
 			List<ICompletionProposal> result) {
-		// TODO Auto-generated method stub
+		try {
+			CompiledExpression ce = parseEL(string, true);
+			Class<?> lastType = ce.getKnownEgressType(); // return type
+			if (lastType == null) {
+				return;
+			}
 
+			String varname = findVarName(ce, lastType);
+
+			IJavaProject project = getJavaProject();
+			CompletionProposalCollector collector = new ELCompletionProposalCollector(
+					project, offset);
+			collector.acceptContext(new CompletionContext());
+			IEvaluationContext evalContext = project.newEvaluationContext();
+			// evalContext.setImports(null); // need imports really
+
+			StringBuilder stb = new StringBuilder();
+			stb.append(lastType.getName());
+			stb.append(" ");
+			stb.append(varname);
+			stb.append(';');
+			stb.append(varname);
+			stb.append('.');
+
+			evalContext.codeComplete(stb.toString(), stb.length(), collector);
+
+			for (IJavaCompletionProposal jcp : collector
+					.getJavaCompletionProposals()) {
+				result.add(jcp);
+			}
+		} catch (Exception e) {
+			Activator.log(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private String findVarName(CompiledExpression ce, Class<?> lastType) {
+		String result = "";
+		Map<String, Class> vars = ce.getParserContext().getVariables();
+		for (String v : vars.keySet()) {
+			Class<?> clazz = vars.get(v);
+			if (lastType.equals(clazz)) {
+				result = v;
+				break;
+			}
+		}
+		return result;
 	}
 
 	private boolean endsWith(String string, String exp, String[] rounded) {
@@ -151,7 +201,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 			ctx.setStrictTypeEnforcement(strictTyping);
 			ctx.setCompiled(true);
 
-			for (Var v : this.settings.variables()) {
+			for (Variable v : this.settings.variables()) {
 				try {
 					Class<?> clazz = classLoader.loadClass(v.type());
 					ctx.addInput(v.name(), clazz);
@@ -168,12 +218,9 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 
 	protected ClassLoader createClassLoader() {
 		ClassLoader result = null;
-		IEditorInput input = this.editor.getEditorInput();
-		if (input instanceof IFileEditorInput) {
-			IFileEditorInput fei = (IFileEditorInput) input;
-			IFile file = fei.getFile();
-			IJavaProject project = JavaCore.create(file.getProject());
-			result = new JavaProjectClassLoader(project) {
+		IJavaProject jp = getJavaProject();
+		if (jp != null) {
+			result = new JavaProjectClassLoader(jp) {
 				@Override
 				public void log(Throwable t) {
 					Activator.log(t);
@@ -182,7 +229,16 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		} else {
 			result = new URLClassLoader(new URL[0]);
 		}
-
 		return result;
+	}
+
+	protected IJavaProject getJavaProject() {
+		IEditorInput input = this.editor.getEditorInput();
+		if (input instanceof IFileEditorInput) {
+			IFileEditorInput fei = (IFileEditorInput) input;
+			IFile file = fei.getFile();
+			return JavaCore.create(file.getProject());
+		}
+		return null;
 	}
 }

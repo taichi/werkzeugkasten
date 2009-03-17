@@ -28,45 +28,9 @@ public class ContextSettings {
 	static final String ATR_SEQ = "seq";
 
 	protected XMLMemento memento;
-	protected List<Var> vars;
+	protected List<Variable> vars;
 
 	protected ContextSettings() {
-	}
-
-	public static class Var {
-		String name = "";
-		String type = "";
-		String example = "";
-
-		public String name() {
-			return name;
-		}
-
-		public void name(String name) {
-			this.name = StringUtil.toString(name);
-		}
-
-		public String type() {
-			return type;
-		}
-
-		public void type(String type) {
-			this.type = StringUtil.toString(type);
-		}
-
-		public String example() {
-			return this.example;
-		}
-
-		public void example(String example) {
-			this.example = StringUtil.toString(example);
-		}
-
-		@Override
-		public String toString() {
-			return String.format("{name=[%s] type=[%s] example=[%s]}", name,
-					type, example);
-		}
 	}
 
 	public static ContextSettings read(IPreferenceStore store, IFile readTarget) {
@@ -84,9 +48,9 @@ public class ContextSettings {
 				result.memento.putString(ATR_METHOD, old.getString(ATR_METHOD));
 				IMemento[] kids = old.getChildren(TAG_VAR);
 				if (kids != null) {
-					List<Var> vs = new ArrayList<Var>(kids.length);
+					List<Variable> vs = new ArrayList<Variable>(kids.length);
 					for (IMemento m : kids) {
-						Var v = new Var();
+						Variable v = new Variable();
 						v.type = m.getString(ATR_TYPE);
 						v.name = m.getString(ATR_NAME);
 						vs.add(v);
@@ -94,7 +58,7 @@ public class ContextSettings {
 					result.variables(vs);
 				}
 			} else {
-				result.variables(new ArrayList<Var>());
+				result.variables(new ArrayList<Variable>());
 			}
 		} catch (WorkbenchException e) {
 			Activator.log(e);
@@ -107,7 +71,7 @@ public class ContextSettings {
 		try {
 			StringWriter writer = new StringWriter();
 			for (int i = 0, length = settings.vars.size(); i < length; i++) {
-				Var v = settings.vars.get(i);
+				Variable v = settings.vars.get(i);
 				IMemento mnmt = settings.memento.createChild(TAG_VAR);
 				mnmt.putString(ATR_NAME, v.name());
 				mnmt.putString(ATR_TYPE, v.type());
@@ -138,11 +102,11 @@ public class ContextSettings {
 		return this.memento.getString(ATR_METHOD);
 	}
 
-	public void variables(List<Var> vars) {
+	public void variables(List<Variable> vars) {
 		this.vars = vars;
 	}
 
-	public List<Var> variables() {
+	public List<Variable> variables() {
 		return this.vars;
 	}
 }
