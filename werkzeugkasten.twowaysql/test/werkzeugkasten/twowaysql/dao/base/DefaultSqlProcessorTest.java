@@ -51,7 +51,7 @@ public class DefaultSqlProcessorTest {
 
 			@Override
 			public Void handle(final Connection c) throws SQLException {
-				new Streams.using<InputStream, Exception>(Exception.class) {
+				new Streams.using<InputStream, Exception>() {
 
 					@Override
 					public InputStream open() throws Exception {

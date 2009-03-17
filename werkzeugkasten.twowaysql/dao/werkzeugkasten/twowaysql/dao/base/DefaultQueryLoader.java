@@ -63,7 +63,7 @@ public class DefaultQueryLoader implements QueryLoader<String> {
 			LOG.debug(Markers.BOUNDARY, Messages.LOAD_RESOURCE, context);
 		}
 		final String[] result = new String[1];
-		new Streams.using<InputStream, Exception>(Exception.class) {
+		new Streams.using<InputStream, Exception>() {
 			@Override
 			public InputStream open() throws Exception {
 				ClassLoader cl = Thread.currentThread().getContextClassLoader();
