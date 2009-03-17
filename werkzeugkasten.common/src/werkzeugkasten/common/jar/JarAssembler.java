@@ -63,7 +63,7 @@ public class JarAssembler {
 	}
 
 	protected void entry(final Opener opener, final $entry func) {
-		new using<InputStream, Exception>(Exception.class) {
+		new using<InputStream, Exception>() {
 			@Override
 			public InputStream open() throws Exception {
 				return opener.open();
