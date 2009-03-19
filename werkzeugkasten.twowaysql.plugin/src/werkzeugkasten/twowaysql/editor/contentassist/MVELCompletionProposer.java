@@ -78,6 +78,9 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		System.out.printf("EXP !! <<%s>>%n", partOfExpression);
 		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 		String[] rounded = { "" };
+
+		// TODO パーティションの途中で、入力補完を起動した時の考慮が必要。
+
 		if (endsWith("'", partOfExpression, rounded)
 				|| endsWith("\"", partOfExpression, rounded)) {
 			// 文字リテラルを記述しようとしている為、補完候補が存在しない
