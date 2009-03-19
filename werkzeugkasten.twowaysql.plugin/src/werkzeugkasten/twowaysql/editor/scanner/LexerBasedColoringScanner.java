@@ -7,6 +7,7 @@ import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.END;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.IDENT;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.IF;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.LT;
+import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.MAYBE_SKIP;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.QUOTED;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.SYMBOLS;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.SYM_BIND;
@@ -87,9 +88,10 @@ public class LexerBasedColoringScanner implements ITokenScanner {
 		}
 	}
 
-	protected static final BitSet EXPRESSION_bits = new BitSet();
+	public static final BitSet EXPRESSION_bits = new BitSet();
 	static {
 		EXPRESSION_bits.add(IDENT);
+		EXPRESSION_bits.add(MAYBE_SKIP);
 		EXPRESSION_bits.add(QUOTED);
 		EXPRESSION_bits.add(SYMBOLS);
 		EXPRESSION_bits.add(SYM_BIND);

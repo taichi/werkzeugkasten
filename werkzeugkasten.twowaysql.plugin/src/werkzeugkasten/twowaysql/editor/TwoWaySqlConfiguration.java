@@ -110,6 +110,7 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 				.getSettings("completion_proposal_size"));
 		assistant
 				.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
+		assistant.enableAutoActivation(true);
 		assistant.setDocumentPartitioning(Constants.PARTITION_TYPE_TWOWAYSQL);
 		IContentAssistProcessor processor = new TextContentAssistProcessor();
 		assistant.setContentAssistProcessor(processor,

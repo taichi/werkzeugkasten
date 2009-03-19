@@ -3,10 +3,12 @@ package werkzeugkasten.twowaysql.editor.contentassist;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Formatter;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.CompletionContext;
@@ -18,15 +20,16 @@ import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.mvel2.CompileException;
 import org.mvel2.ParserConfiguration;
 import org.mvel2.ParserContext;
-import org.mvel2.compiler.AbstractParser;
 import org.mvel2.compiler.CompiledExpression;
 import org.mvel2.compiler.ExpressionCompiler;
 
@@ -39,25 +42,16 @@ import werkzeugkasten.twowaysql.editor.conf.Variable;
 
 public class MVELCompletionProposer implements IPropertyChangeListener {
 
-	protected static final List<String> LITERALS = new ArrayList<String>();
-	protected static final List<String> OPERATORS = new ArrayList<String>();
+	protected static final String[] KEYWORDS = { "true", "false", "null",
+			"nil", "new", /* "and", "or", */"instanceof", "is", "contains",
+			"soundslike", "strsim", "convertable_to", "in", "==", "!=", "<",
+			"<=", ">", ">=" };
 
-	static {
-		for (String s : AbstractParser.LITERALS.keySet()) {
-			LITERALS.add(s);
-		}
-		Collections.sort(LITERALS);
-		try {
-			AbstractParser.setLanguageLevel(AbstractParser.LEVEL_1_BASIC_LANG);
-			for (String s : AbstractParser.OPERATORS.keySet()) {
-				OPERATORS.add(s);
-			}
-			Collections.sort(OPERATORS);
-		} finally {
-			AbstractParser
-					.setLanguageLevel(AbstractParser.LEVEL_5_CONTROL_FLOW);
-		}
-	}
+	protected static final Pattern OPERATORS = Pattern
+			.compile(
+					"((<<|<<<|>>|>>>|\\+{1,2}|-{1,2}|\\*{1,2}|/|%|!|={1,2}|!=|>|>=|<|<=|&&|~=|#|&|\\|{1,2}|^|:)|"
+							+ "(\\s(instanceof|is|contains|soundslike|strsim|convertable_to|in)\\s*))$",
+					Pattern.CASE_INSENSITIVE);
 
 	protected ITextEditor editor;
 	protected ContextSettings settings;
@@ -78,8 +72,6 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 	// 考慮事項メモ
 	// (や{が開きっぱなしで閉じてない場合
 	// with構文
-	// キーワード対応的なアレ
-	// true/false null nil new with assert isdef !
 
 	public List<ICompletionProposal> collect(ITextViewer viewer,
 			String partOfExpression, int offset) {
@@ -111,29 +103,87 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		} else {
 			// その他。主に、不完全な変数名が入力状態である時。
 			// hog
-			// collectAccessibleVariables(rounded[0], offset, result);
+			collectIncompleteVariables(partOfExpression, offset, result);
+		}
+
+		if (result.size() < 1) {
+			collectKeywordCompletion(partOfExpression, offset, result);
 		}
 		return result;
+	}
+
+	private void collectKeywordCompletion(String partOfExpression, int offset,
+			List<ICompletionProposal> result) {
+		String[] ary = partOfExpression.split("\\s");
+		if (0 < ary.length) {
+			String part = ary[ary.length - 1];
+			for (String s : KEYWORDS) {
+				if (s.startsWith(part)) {
+					CompletionProposal cp = new CompletionProposal(s, offset
+							- part.length(), part.length(), s.length());
+					result.add(cp);
+				}
+			}
+		}
+	}
+
+	private void collectIncompleteVariables(String string, int offset,
+			List<ICompletionProposal> result) {
+		String prev = getPreviusExpression(string);
+		CompiledExpression ce = parseEL(prev, false);
+
+		if (ce != null) {
+			ParserContext pc = ce.getParserContext();
+			filterIncompleteVariables(string, pc.getVariables());
+			filterIncompleteVariables(string, pc.getInputs());
+		}
+
+		StringBuilder stb = new StringBuilder();
+		Formatter fmt = new Formatter(stb);
+		contextToDummyText(ce, fmt);
+		stb.append(string);
+		requestCodeCompletion(offset, result, stb.toString());
+	}
+
+	private void filterIncompleteVariables(String string,
+			@SuppressWarnings("unchecked") Map<String, Class> map) {
+		for (Iterator<String> i = map.keySet().iterator(); i.hasNext();) {
+			String s = i.next();
+			if (string.endsWith(s) && Object.class.equals(map.get(s))) {
+				i.remove();
+			}
+		}
 	}
 
 	private void collectAccessibleVariables(String string, int offset,
 			List<ICompletionProposal> result) {
 		String prev = getPreviusExpression(string);
-		CompiledExpression ce = parseEL(prev, true);
 		StringBuilder stb = new StringBuilder();
 		Formatter fmt = new Formatter(stb);
+
+		CompiledExpression ce = parseEL(prev, true);
 		contextToDummyText(ce, fmt);
 		requestCodeCompletion(offset, result, stb.toString());
 	}
 
 	private void contextToDummyText(CompiledExpression ce, Formatter fmt) {
-		ParserContext pc = ce.getParserContext();
-		contextToDummyText(fmt, pc.getVariables());
-		contextToDummyText(fmt, pc.getInputs());
+		if (ce == null) {
+			createDefaultDummyText(fmt);
+		} else {
+			ParserContext pc = ce.getParserContext();
+			contextToDummyText(fmt, pc.getVariables());
+			contextToDummyText(fmt, pc.getInputs());
+		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void contextToDummyText(Formatter fmt, Map<String, Class> vars) {
+	private void createDefaultDummyText(Formatter fmt) {
+		for (Variable v : this.settings.variables()) {
+			fmt.format("%s %s;", v.type(), v.name());
+		}
+	}
+
+	private void contextToDummyText(Formatter fmt,
+			@SuppressWarnings("unchecked") Map<String, Class> vars) {
 		for (String s : vars.keySet()) {
 			fmt.format("%s %s;", vars.get(s).getName(), s);
 		}
@@ -150,12 +200,22 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 	private void collectMemberAccess(String string, int offset,
 			List<ICompletionProposal> result) {
 		CompiledExpression ce = parseEL(string, true);
-		Class<?> lastType = ce.getKnownEgressType(); // return type
-		if (lastType == null) {
-			return;
+		String dummyText = "";
+		if (ce != null) {
+			Class<?> lastType = ce.getKnownEgressType(); // return type
+			if (lastType == null || Object.class.equals(lastType)) {
+				return;
+			}
+			dummyText = buildJavaText(ce, lastType);
+		} else {
+			StringBuilder stb = new StringBuilder();
+			Formatter fmt = new Formatter(stb);
+			createDefaultDummyText(fmt);
+			dummyText = stb.toString();
 		}
-		String dummyText = buildJavaText(ce, lastType);
 		requestCodeCompletion(offset, result, dummyText);
+
+		// mvlify
 	}
 
 	private void requestCodeCompletion(int offset,
@@ -166,7 +226,8 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 					project, offset - dummyText.length());
 			collector.acceptContext(new CompletionContext());
 			IEvaluationContext evalContext = project.newEvaluationContext();
-			// evalContext.setImports(null); // need imports really
+			// TODO import from context settings.
+			// evalContext.setImports(null);
 
 			evalContext.codeComplete(dummyText, dummyText.length(), collector);
 
@@ -219,10 +280,10 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 	}
 
 	private boolean endsWithOperator(String exp, String[] rounded) {
-		for (String s : OPERATORS) {
-			if (endsWith(s, exp, rounded)) {
-				return true;
-			}
+		Matcher m = OPERATORS.matcher(exp);
+		if (m.find()) {
+			rounded[0] = m.replaceAll("");
+			return true;
 		}
 		return false;
 	}
@@ -235,6 +296,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 	protected CompiledExpression parseEL(String el, boolean strictTyping) {
 		ClassLoader classLoader = createClassLoader();
 		try {
+			System.out.printf("parseEL %s%n", el);
 			ParserConfiguration config = new ParserConfiguration();
 			config.setClassLoader(createClassLoader());
 			ParserContext ctx = new ParserContext();
@@ -251,6 +313,10 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 			}
 			ExpressionCompiler compiler = new ExpressionCompiler(el);
 			return compiler.compile(ctx);
+		} catch (CompileException e) {
+			// 式言語の処理に失敗した場合には、出せるものを出す
+			Activator.log(e);
+			return null;
 		} finally {
 			this.dustCart.pickUp(classLoader);
 		}

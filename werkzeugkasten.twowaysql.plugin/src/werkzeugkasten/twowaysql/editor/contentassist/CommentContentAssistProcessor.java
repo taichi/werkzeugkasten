@@ -33,6 +33,7 @@ import werkzeugkasten.twowaysql.Activator;
 import werkzeugkasten.twowaysql.Constants;
 import werkzeugkasten.twowaysql.editor.TwoWaySqlEditor;
 import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
+import werkzeugkasten.twowaysql.editor.scanner.LexerBasedColoringScanner;
 import werkzeugkasten.twowaysql.grammar.NoChannelLexer;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer;
 import werkzeugkasten.twowaysql.util.DocumentUtil;
@@ -51,8 +52,7 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 	protected static final BitSet WILLBE_EXPRESSION_bits = BitSet.of(IF,
 			ELSEIF, SYM_BIND);
 	protected static final BitSet KEYWORDPART_bits = BitSet.of(IDENT, ELSE);
-	protected static final BitSet EXPRESSION_PART_bits = BitSet.of(LT,
-			WHITE_SPACES, IDENT);
+	protected static final BitSet EXPRESSION_PART_bits = LexerBasedColoringScanner.EXPRESSION_bits;
 
 	protected MVELCompletionProposer mvelCollector;
 
@@ -60,8 +60,9 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 			ContextSettings settings) {
 		IPreferenceStore store = Activator.getGlobalPreference();
 		store.addPropertyChangeListener(this);
-		// TODO read from preference
 		this.mvelCollector = new MVELCompletionProposer(editor, store, settings);
+
+		// TODO read from preference
 	}
 
 	@Override
@@ -122,7 +123,7 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 					}
 					// 式言語の入力補完
 					proposals.addAll(this.mvelCollector.collect(viewer,
-							maybeExp.trim(), offset));
+							maybeExp, offset));
 				}
 			}
 			return proposals.toArray(new ICompletionProposal[proposals.size()]);
@@ -199,14 +200,14 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 	}
 
 	@Override
-	public IContextInformation[] computeContextInformation(ITextViewer viewer,
-			int offset) {
+	public char[] getContextInformationAutoActivationCharacters() {
 		return null;
 	}
 
 	@Override
-	public char[] getContextInformationAutoActivationCharacters() {
-		return activator;
+	public IContextInformation[] computeContextInformation(ITextViewer viewer,
+			int offset) {
+		return null;
 	}
 
 	@Override
