@@ -49,8 +49,8 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 
 	protected static final Pattern OPERATORS = Pattern
 			.compile(
-					"((<<|<<<|>>|>>>|\\+{1,2}|-{1,2}|\\*{1,2}|/|%|!|={1,2}|!=|>|>=|<|<=|&&|~=|#|&|\\|{1,2}|^|:)|"
-							+ "(\\s(instanceof|is|contains|soundslike|strsim|convertable_to|in)\\s*))$",
+					"(\\s*(\\+{1,2}|-{1,2}|\\*{1,2}|/|%|==|!=|>=|<=|<{1,3}|>{1,3}|&&|~=|#|&|\\|{1,2}|\\^|:)\\s*|"
+							+ "(\\s(and|or|instanceof|is|contains|soundslike|strsim|convertable_to|in)\\s))",
 					Pattern.CASE_INSENSITIVE);
 
 	protected ITextEditor editor;
@@ -109,6 +109,12 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		if (result.size() < 1) {
 			collectKeywordCompletion(partOfExpression, offset, result);
 		}
+
+		// 様々な理由により候補が全くないので、アクセス可能な変数をとりあえず並べる。
+		if (result.size() < 1) {
+			collectAccessibleVariables("", offset, result);
+		}
+
 		return result;
 	}
 
@@ -190,11 +196,22 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 	}
 
 	private String getPreviusExpression(String string) {
+		return splitExpression(string)[0];
+	}
+
+	private String[] splitExpression(String string) {
+		// これじゃ、ダメじゃね？
+		String[] result = new String[2];
 		int index = string.lastIndexOf(';');
 		if (-1 < index) {
-			return string.substring(0, index);
+			index += 1;
+			result[0] = string.substring(0, index);
+			result[1] = string.substring(index);
+		} else {
+			result[0] = "";
+			result[1] = string;
 		}
-		return string;
+		return result;
 	}
 
 	private void collectMemberAccess(String string, int offset,
@@ -214,8 +231,6 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 			dummyText = stb.toString();
 		}
 		requestCodeCompletion(offset, result, dummyText);
-
-		// mvlify
 	}
 
 	private void requestCodeCompletion(int offset,
@@ -281,7 +296,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 
 	private boolean endsWithOperator(String exp, String[] rounded) {
 		Matcher m = OPERATORS.matcher(exp);
-		if (m.find()) {
+		if (m.find() && exp.length() == m.end()) {
 			rounded[0] = m.replaceAll("");
 			return true;
 		}
@@ -294,8 +309,10 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 	}
 
 	protected CompiledExpression parseEL(String el, boolean strictTyping) {
-		ClassLoader classLoader = createClassLoader();
+		CompiledExpression result = null;
+		ClassLoader classLoader = null;
 		try {
+			classLoader = createClassLoader();
 			System.out.printf("parseEL %s%n", el);
 			ParserConfiguration config = new ParserConfiguration();
 			config.setClassLoader(createClassLoader());
@@ -311,15 +328,44 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 					Activator.log(e);
 				}
 			}
-			ExpressionCompiler compiler = new ExpressionCompiler(el);
-			return compiler.compile(ctx);
-		} catch (CompileException e) {
-			// 式言語の処理に失敗した場合には、出せるものを出す
-			Activator.log(e);
-			return null;
+			try {
+				ExpressionCompiler compiler = new ExpressionCompiler(el);
+				result = compiler.compile(ctx);
+			} catch (CompileException e) {
+				result = retryELcompile(el, ctx);
+			}
+			return result;
 		} finally {
 			this.dustCart.pickUp(classLoader);
 		}
+	}
+
+	private CompiledExpression retryELcompile(String hasError, ParserContext ctx) {
+		CompiledExpression result = null;
+		// 最小限の変数アクセスする為にコンパイルを再実行する。
+		// 式言語のコンパイルが通らない時に、もっと細かくエラーリカバリするかは、考えた方がよいかも。
+		Matcher m = OPERATORS.matcher(hasError);
+		String retry = "";
+		// 面倒なので、最後のオペレータより後ろだけ取る。
+		while (m.find()) {
+			retry = hasError.substring(m.end());
+		}
+
+		if (StringUtil.isEmpty(retry)) {
+			// オペレータが無いので、ステートメントを分割しようとしてみる。
+			int index = hasError.lastIndexOf(';');
+			if (-1 < index) {
+				retry = hasError.substring(index);
+			}
+		}
+		if (StringUtil.isEmpty(retry) == false) {
+			ExpressionCompiler compiler = new ExpressionCompiler(retry);
+			try {
+				result = compiler.compile(ctx);
+			} catch (CompileException e2) {
+			}
+		}
+		return result;
 	}
 
 	protected ClassLoader createClassLoader() {
