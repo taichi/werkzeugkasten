@@ -69,6 +69,7 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 	public void propertyChange(PropertyChangeEvent event) {
 	}
 
+	// TODO パーティションが*/で終わって無い時の対応。
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
@@ -107,19 +108,26 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 				}
 
 				// キーワードが既に完成している。(式言語の入力補完)
-				int index = conditionalTokenIndex(tokens);
+				int index = conditionalTokenIndex(before);
 				if (-1 < index) {
 					String maybeExp = "";
-					if ((index + 1) < tokens.size()) {
-						CommonToken expStart = tokens.get(index + 1);
-						CommonToken expEnd = findExpressionEndToken(tokens,
+					if ((index + 1) < before.size()) {
+						CommonToken expStart = before.get(index + 1);
+						CommonToken expEnd = findExpressionEndToken(before,
 								index + 1);
-						if (expEnd != null) {
-							maybeExp = doc.get(partition.getOffset()
-									+ expStart.getStartIndex(), expEnd
-									.getStopIndex()
-									- expStart.getStartIndex() + 1);
-						}
+						int start = partition.getOffset()
+								+ expStart.getStartIndex();
+						int end = offset - partition.getOffset();
+						maybeExp = doc.get(start, end);
+						System.out.printf("%s %s %n", start, end);
+
+						// if (expEnd != null) {
+						// 
+						// maybeExp = doc.get(partition.getOffset()
+						// + expStart.getStartIndex(), expEnd
+						// .getStopIndex()
+						// - expStart.getStartIndex() + 1);
+						// }
 					}
 					// 式言語の入力補完
 					proposals.addAll(this.mvelCollector.collect(viewer,

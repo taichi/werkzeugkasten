@@ -79,8 +79,6 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 		String[] rounded = { "" };
 
-		// TODO パーティションの途中で、入力補完を起動した時の考慮が必要。
-
 		if (endsWith("'", partOfExpression, rounded)
 				|| endsWith("\"", partOfExpression, rounded)) {
 			// 文字リテラルを記述しようとしている為、補完候補が存在しない
@@ -113,10 +111,10 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 			collectKeywordCompletion(partOfExpression, offset, result);
 		}
 
-		// 様々な理由により候補が全くないので、アクセス可能な変数をとりあえず並べる。
-		if (result.size() < 1) {
-			collectAccessibleVariables("", offset, result);
-		}
+		// // 様々な理由により候補が全くないので、アクセス可能な変数をとりあえず並べる。
+		// if (result.size() < 1) {
+		// collectAccessibleVariables("", offset, result);
+		// }
 
 		return result;
 	}
