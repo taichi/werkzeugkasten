@@ -64,6 +64,20 @@ public class TwoWaySqlParserTest {
 	}
 
 	@Test
+	public void runTokenStream() throws Exception {
+		String string = "/*IF true || false /*ELSEIF true*/";
+		CommonTokenStream tokens = new CommonTokenStream(new NoChannelLexer(
+				new ANTLRStringStream(string)));
+		CommonToken token = (CommonToken) tokens.LT(1);
+		while (token.getType() != org.antlr.runtime.Token.EOF) {
+			System.out.printf("%s %s %n", TwoWaySqlParser.tokenNames[token
+					.getType()], token);
+			tokens.consume();
+			token = (CommonToken) tokens.LT(1);
+		}
+	}
+
+	@Test
 	public void testLex() throws Exception {
 		String aaa = "/*IF hoge != null */";
 		TwoWaySqlLexer lex = new TwoWaySqlLexer(new ANTLRStringStream(aaa));
