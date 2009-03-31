@@ -138,7 +138,7 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 		List<CommonToken> result = new ArrayList<CommonToken>();
 		String string = doc.get(partition.getOffset(), partition.getLength());
 
-		System.out.printf("parsePartition %s %n", string);
+		// System.out.printf("parsePartition %s %n", string);
 
 		TwoWaySqlLexer lex = new NoChannelLexer(new ANTLRStringStream(string));
 		CommonToken ct = (CommonToken) lex.nextToken();

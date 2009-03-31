@@ -77,7 +77,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 
 	public List<ICompletionProposal> collect(ITextViewer viewer,
 			String partOfExpression, int offset) {
-		System.out.printf("EXP !! <<%s>>%n", partOfExpression);
+		// System.out.printf("EXP !! <<%s>>%n", partOfExpression);
 		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 		String[] rounded = { "" };
 
@@ -197,6 +197,8 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 
 	private void collectMemberAccess(String string, int offset,
 			List<ICompletionProposal> result) {
+		// .アクセスなので、直前の変数だけを考慮対象にすれば、大体良い筈。
+		// (hoge && fuga). みたいなのを今のところ考慮しない。
 		CompiledExpression ce = parseEL(concatLastStatement(string), true);
 		String dummyText = "";
 		if (ce != null) {
@@ -231,7 +233,8 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 					.getJavaCompletionProposals()) {
 				result.add(jcp);
 			}
-			// Comparator使う為には、internal APIに触らないといけなくて、それはイマイチ筋が悪いので、とりあえず反転しる。
+			// Comparator使う為には、internal APIに触らないといけなくて、
+			// それはイマイチ筋が悪いので、とりあえず反転しる。
 			Collections.reverse(result);
 		} catch (JavaModelException e) {
 			Activator.log(e);
@@ -292,7 +295,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		ClassLoader classLoader = null;
 		try {
 			classLoader = createClassLoader();
-			System.out.printf("parseEL %s%n", el);
+			// System.out.printf("parseEL %s%n", el);
 			ParserConfiguration config = new ParserConfiguration();
 			config.setClassLoader(createClassLoader());
 			ParserContext ctx = new ParserContext();
