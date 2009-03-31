@@ -3,6 +3,7 @@ package werkzeugkasten.twowaysql.editor.contentassist;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
@@ -230,6 +231,8 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 					.getJavaCompletionProposals()) {
 				result.add(jcp);
 			}
+			// Comparator使う為には、internal APIに触らないといけなくて、それはイマイチ筋が悪いので、とりあえず反転しる。
+			Collections.reverse(result);
 		} catch (JavaModelException e) {
 			Activator.log(e);
 		}
@@ -263,6 +266,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		if (StringUtil.isEmpty(lastName)) {
 			lastName = lastType.getSimpleName().toLowerCase();
 		}
+		// BooleanやLong等、単にLowerしただけでは、妥当な型名になってしまうケースに対する対応。
 		return "_" + lastName;
 	}
 
@@ -307,7 +311,6 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 				ExpressionCompiler compiler = new ExpressionCompiler(el);
 				result = compiler.compile(ctx);
 			} catch (CompileException e) {
-				System.out.println("retry..");
 				result = retryELcompile(el, ctx);
 			}
 			return result;
@@ -346,7 +349,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 				result = el.substring(index);
 			}
 		}
-		System.out.printf("concatLast %n%s%n%s%n", el, result);
+		// System.out.printf("concatLast %n%s%n%s%n", el, result);
 		return result;
 	}
 
