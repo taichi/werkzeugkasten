@@ -7,6 +7,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -76,6 +77,16 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 				Constants.CONTENT_TYPE_TEXT,
 				Constants.CONTENT_TYPE_BLOCKCOMMENT,
 				Constants.CONTENT_TYPE_LINECOMMENT };
+	}
+
+	/**
+	 * @see org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration#getReconciler
+	 * @see org.eclipse.jface.text.reconciler.IReconcilingStrategy
+	 */
+	@Override
+	public IReconciler getReconciler(ISourceViewer sourceViewer) {
+		// TODO ファイルのベリファイアを実装しる。
+		return super.getReconciler(sourceViewer);
 	}
 
 	@Override

@@ -88,6 +88,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		} else if (endsWith(".", partOfExpression, rounded)) {
 			// .で終わっている場合
 			// hoge.
+			// TODO hoge.fu > hoge.fuga等、プロパティアクセスが不完全な時に足りない部分を補完しる。
 			collectMemberAccess(rounded[0], offset, result);
 		} else if (StringUtil.isEmpty(partOfExpression)
 				|| endsWith(",", partOfExpression, rounded)
