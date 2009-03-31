@@ -1,6 +1,7 @@
 package werkzeugkasten.twowaysql.grammar;
 
 import org.antlr.runtime.CharStream;
+import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 
@@ -22,5 +23,11 @@ public class NoChannelLexer extends TwoWaySqlLexer {
 	public Token emit() {
 		state.channel = org.antlr.runtime.Token.DEFAULT_CHANNEL;
 		return super.emit();
+	}
+
+	@Override
+	public void displayRecognitionError(String[] tokenNames,
+			RecognitionException e) {
+		// Suppress error messages
 	}
 }
