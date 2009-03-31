@@ -4,6 +4,7 @@ import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.C_ED;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.C_LN_ED;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.C_LN_ST;
 import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.C_ST;
+import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.SYMBOLS;
 
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.BitSet;
@@ -61,9 +62,17 @@ public class PartitionScanner implements IPartitionTokenScanner {
 		CommonToken stop = null;
 		// TODO 式を含むコメントとそうでないコメントを分ける事に意味があるか、考慮する。
 		switch (type) {
+		case SYMBOLS: {
+			if (lookLikeC_ST()) {
+				stop = consumeComment();
+				result = PT_BLOCKCOMMENT;
+				break;
+			}
+			// break; /で始まっていても、単にテキストとして扱っても良いケース
+		}
 		case C_ST: {
-			stop = consume(C_ED_bits, 1);
-			tokens.consume();
+			// stop = consume(C_ED_bits, 1);
+			stop = consumeComment();
 			result = PT_BLOCKCOMMENT;
 			break;
 		}
@@ -78,11 +87,39 @@ public class PartitionScanner implements IPartitionTokenScanner {
 		}
 		}
 		emit(start, stop);
-		// System.out.printf("$PT$ start[%s %s] stop[%s %s] [%d:%d]%n", start,
-		// TwoWaySqlParser.tokenNames[start.getType()], stop,
-		// TwoWaySqlParser.tokenNames[stop.getType()], this.tokenOffset,
-		// this.tokenLength);
+		// System.out.printf("$PT$ %s start[%s %s] stop[%s %s] [%d:%d]%n",
+		// result
+		// .getData(), start, TwoWaySqlParser.tokenNames[start.getType()],
+		// stop, TwoWaySqlParser.tokenNames[stop.getType()],
+		// this.tokenOffset, this.tokenLength);
 		return result;
+	}
+
+	protected CommonToken consumeComment() {
+		tokens.consume();
+		CommonToken ct = (CommonToken) tokens.LT(1);
+		int type = ct.getType();
+		while (C_ED_bits.member(type) == false) {
+			tokens.consume();
+			ct = (CommonToken) tokens.LT(1);
+			type = ct.getType();
+			if (lookLikeC_ST() || type == org.antlr.runtime.Token.EOF) {
+				return (CommonToken) tokens.LT(-1);
+			}
+		}
+		tokens.consume();
+		return ct;
+	}
+
+	protected boolean lookLikeC_ST() {
+		CommonToken ct = (CommonToken) tokens.LT(1);
+		if (ct.getType() == SYMBOLS && "/".equals(ct.getText())) {
+			ct = (CommonToken) tokens.LT(2);
+			if (ct.getType() == SYMBOLS && "*".equals(ct.getText())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	protected CommonToken consume(BitSet stopBit, int index) {

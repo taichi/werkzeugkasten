@@ -113,21 +113,10 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 					String maybeExp = "";
 					if ((index + 1) < before.size()) {
 						CommonToken expStart = before.get(index + 1);
-						CommonToken expEnd = findExpressionEndToken(before,
-								index + 1);
 						int start = partition.getOffset()
 								+ expStart.getStartIndex();
-						int end = offset - partition.getOffset();
+						int end = offset - start;
 						maybeExp = doc.get(start, end);
-						System.out.printf("%s %s %n", start, end);
-
-						// if (expEnd != null) {
-						// 
-						// maybeExp = doc.get(partition.getOffset()
-						// + expStart.getStartIndex(), expEnd
-						// .getStopIndex()
-						// - expStart.getStartIndex() + 1);
-						// }
 					}
 					// 式言語の入力補完
 					proposals.addAll(this.mvelCollector.collect(viewer,
@@ -149,7 +138,7 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 		List<CommonToken> result = new ArrayList<CommonToken>();
 		String string = doc.get(partition.getOffset(), partition.getLength());
 
-		// System.out.printf("parsePartition %s %n", string);
+		System.out.printf("parsePartition %s %n", string);
 
 		TwoWaySqlLexer lex = new NoChannelLexer(new ANTLRStringStream(string));
 		CommonToken ct = (CommonToken) lex.nextToken();

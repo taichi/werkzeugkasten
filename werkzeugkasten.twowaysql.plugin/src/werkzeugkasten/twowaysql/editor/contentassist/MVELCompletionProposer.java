@@ -69,9 +69,10 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		// TODO read from configuration...
 	}
 
-	// 考慮事項メモ
+	// 考慮事項メモ。以下の項目については、とりあえずサポートしない。
 	// (や{が開きっぱなしで閉じてない場合
 	// with構文
+	// List,配列,Mapリテラルに対するアクセス
 
 	public List<ICompletionProposal> collect(ITextViewer viewer,
 			String partOfExpression, int offset) {
@@ -97,25 +98,14 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 			// hoge['fuga':
 			// hoge <
 			collectAccessibleVariables(rounded[0], offset, result);
-		} else if (maybeCollectionLiteralPart(partOfExpression, rounded)) {
-			// mapリテラル、listリテラル、配列リテラルっぽい場合
-			// hoge[
-			// TODO not implemented. what needly ?
 		} else {
 			// その他。主に、不完全な変数名が入力状態である時。
 			// hog
 			collectIncompleteVariables(partOfExpression, offset, result);
 		}
-
 		if (result.size() < 1) {
 			collectKeywordCompletion(partOfExpression, offset, result);
 		}
-
-		// // 様々な理由により候補が全くないので、アクセス可能な変数をとりあえず並べる。
-		// if (result.size() < 1) {
-		// collectAccessibleVariables("", offset, result);
-		// }
-
 		return result;
 	}
 
@@ -197,27 +187,16 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 	}
 
 	private String getPreviusExpression(String string) {
-		return splitExpression(string)[0];
-	}
-
-	private String[] splitExpression(String string) {
-		// これじゃ、ダメじゃね？
-		String[] result = new String[2];
 		int index = string.lastIndexOf(';');
 		if (-1 < index) {
-			index += 1;
-			result[0] = string.substring(0, index);
-			result[1] = string.substring(index);
-		} else {
-			result[0] = "";
-			result[1] = string;
+			return string.substring(0, index);
 		}
-		return result;
+		return string;
 	}
 
 	private void collectMemberAccess(String string, int offset,
 			List<ICompletionProposal> result) {
-		CompiledExpression ce = parseEL(string, true);
+		CompiledExpression ce = parseEL(concatLastStatement(string), true);
 		String dummyText = "";
 		if (ce != null) {
 			Class<?> lastType = ce.getKnownEgressType(); // return type
@@ -284,7 +263,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		if (StringUtil.isEmpty(lastName)) {
 			lastName = lastType.getSimpleName().toLowerCase();
 		}
-		return lastName;
+		return "_" + lastName;
 	}
 
 	private boolean endsWith(String string, String exp, String[] rounded) {
@@ -301,11 +280,6 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 			rounded[0] = m.replaceAll("");
 			return true;
 		}
-		return false;
-	}
-
-	private boolean maybeCollectionLiteralPart(String exp, String[] rounded) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -333,6 +307,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 				ExpressionCompiler compiler = new ExpressionCompiler(el);
 				result = compiler.compile(ctx);
 			} catch (CompileException e) {
+				System.out.println("retry..");
 				result = retryELcompile(el, ctx);
 			}
 			return result;
@@ -343,22 +318,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 
 	private CompiledExpression retryELcompile(String hasError, ParserContext ctx) {
 		CompiledExpression result = null;
-		// 最小限の変数アクセスする為にコンパイルを再実行する。
-		// 式言語のコンパイルが通らない時に、もっと細かくエラーリカバリするかは、考えた方がよいかも。
-		Matcher m = OPERATORS.matcher(hasError);
-		String retry = "";
-		// 面倒なので、最後のオペレータより後ろだけ取る。
-		while (m.find()) {
-			retry = hasError.substring(m.end());
-		}
-
-		if (StringUtil.isEmpty(retry)) {
-			// オペレータが無いので、ステートメントを分割しようとしてみる。
-			int index = hasError.lastIndexOf(';');
-			if (-1 < index) {
-				retry = hasError.substring(index);
-			}
-		}
+		String retry = concatLastStatement(hasError);
 		if (StringUtil.isEmpty(retry) == false) {
 			ExpressionCompiler compiler = new ExpressionCompiler(retry);
 			try {
@@ -366,6 +326,27 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 			} catch (CompileException e2) {
 			}
 		}
+		return result;
+	}
+
+	private String concatLastStatement(String el) {
+		String result = "";
+		// 最小限の変数アクセスする為にコンパイルを再実行する。
+		// 式言語のコンパイルが通らない時に、もっと細かくエラーリカバリするかは、考えた方がよいかも。
+		Matcher m = OPERATORS.matcher(el);
+		// 面倒なので、最後のオペレータより後ろだけ取る。
+		while (m.find()) {
+			result = el.substring(m.end());
+		}
+
+		if (StringUtil.isEmpty(result)) {
+			// オペレータが無いので、ステートメントを分割しようとしてみる。
+			int index = el.lastIndexOf(';');
+			if (-1 < index) {
+				result = el.substring(index);
+			}
+		}
+		System.out.printf("concatLast %n%s%n%s%n", el, result);
 		return result;
 	}
 
