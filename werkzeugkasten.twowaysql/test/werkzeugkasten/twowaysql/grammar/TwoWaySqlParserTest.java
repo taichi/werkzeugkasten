@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import werkzeugkasten.twowaysql.error.ProblemCoordinator;
 import werkzeugkasten.twowaysql.error.QueryProblem;
+import werkzeugkasten.twowaysql.error.QueryProblemException;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser.twowaySQL_return;
 import werkzeugkasten.twowaysql.tree.visitor.QueryTreeAcceptor;
 import werkzeugkasten.twowaysql.tree.visitor.ToStringVisitor;
@@ -105,9 +106,19 @@ public class TwoWaySqlParserTest {
 
 	@Test
 	public void testTwowaySQL() throws Exception {
-		String sql = "select * from dual;/*";
+		assertTwowaySQL(UnwantedTokenException.class, "select * from dual;/*");
+		assertTwowaySQL(MissingTokenException.class,
+				"select * from dual;/*END*/");
+	}
+
+	protected void assertTwowaySQL(Class<?> expected, String sql)
+			throws Exception {
 		TwoWaySqlParser parser = createParser(sql);
-		parser.twowaySQL();
+		try {
+			parser.twowaySQL();
+		} catch (QueryProblemException e) {
+		}
+		assertParser(expected, parser);
 	}
 
 	@Test

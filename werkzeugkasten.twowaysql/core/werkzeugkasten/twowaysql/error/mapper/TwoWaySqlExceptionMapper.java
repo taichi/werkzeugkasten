@@ -1,7 +1,7 @@
 package werkzeugkasten.twowaysql.error.mapper;
 
-import werkzeugkasten.twowaysql.error.handler.EarlyExitHandler;
 import werkzeugkasten.twowaysql.error.handler.MismatchedTokenHandler;
+import werkzeugkasten.twowaysql.error.handler.MissingTokenHandler;
 import werkzeugkasten.twowaysql.error.handler.UnwantedTokenHandler;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser;
 import werkzeugkasten.twowaysql.nls.Messages;
@@ -23,16 +23,12 @@ public class TwoWaySqlExceptionMapper extends AbstractExceptionMapper {
 			}
 		});
 
-		// TODO .....
-		add(new MismatchedTokenHandler(Messages.LABEL_BINDCOMMENT) {
+		add(new MissingTokenHandler(Messages.LABEL_TWOWAYSQL) {
 			@Override
 			protected String selectExpected(int expecting) {
 				switch (expecting) {
-				case TwoWaySqlParser.SYM_BIND: {
-					return "?";
-				}
-				case TwoWaySqlParser.C_ED: {
-					return "*/";
+				case TwoWaySqlParser.EOF: {
+					return "EOF";
 				}
 				default: {
 					throw new IllegalStateException();
@@ -40,7 +36,18 @@ public class TwoWaySqlExceptionMapper extends AbstractExceptionMapper {
 				}
 			}
 		});
-		add(new EarlyExitHandler(Messages.LABEL_BINDCOMMENT,
-				Messages.REQUIRED_TXT));
+		add(new MismatchedTokenHandler(Messages.LABEL_TWOWAYSQL) {
+			@Override
+			protected String selectExpected(int expecting) {
+				switch (expecting) {
+				case TwoWaySqlParser.EOF: {
+					return "EOF";
+				}
+				default: {
+					throw new IllegalStateException();
+				}
+				}
+			}
+		});
 	}
 }
