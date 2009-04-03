@@ -45,6 +45,7 @@ public void reportError(RecognitionException ex) {
 	this.coordinator.report(ex);
 }
 
+protected static final ExceptionMapper EM_TOWWAYSQL = new TwoWaySqlExceptionMapper();
 protected static final ExceptionMapper EM_TXT = new TxtExceptionMapper();
 protected static final ExceptionMapper EM_EXPRESSION = new ExpressionExceptionMapper();
 protected static final ExceptionMapper EM_BLOCKCOMMENT = new BlockCommentExceptionMapper();
@@ -72,6 +73,7 @@ package werkzeugkasten.twowaysql.grammar;
 boolean inComment = false;
 boolean inLineComment = false;
 
+@Override
 public Token nextToken() {
 	while (true) {
 		state.token = null;
@@ -107,10 +109,17 @@ public Token nextToken() {
 		}
 	}
 }
+
+@Override
+public void displayRecognitionError(String[] tokenNames,
+		RecognitionException e) {
+	// Suppress error messages
+}
 }
 
 twowaySQL returns[TwoWayQuery query]
 	@init {
+		push(EM_TOWWAYSQL);
 		$query = new TwoWayQuery();
 	}
 	@after {
@@ -122,6 +131,7 @@ twowaySQL returns[TwoWayQuery query]
 	}
 	;
 	finally {
+		pop();
 		coordinator.raise();
 	}
 

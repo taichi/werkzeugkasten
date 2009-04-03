@@ -70,6 +70,7 @@ public class Messages {
 	public static String BINDERPRODUCER_REGISTER_NAME;
 	public static String BINDERPRODUCER_FIND_TYPE;
 	public static String BINDERPRODUCER_FIND_NAME;
+	public static String LABEL_TWOWAYSQL;
 	static {
 		Class<?> clazz = Messages.class;
 		SingleLocaleStrings.load(clazz);

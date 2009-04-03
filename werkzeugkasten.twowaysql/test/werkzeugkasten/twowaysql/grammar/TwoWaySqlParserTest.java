@@ -104,6 +104,13 @@ public class TwoWaySqlParserTest {
 	}
 
 	@Test
+	public void testTwowaySQL() throws Exception {
+		String sql = "select * from dual;/*";
+		TwoWaySqlParser parser = createParser(sql);
+		parser.twowaySQL();
+	}
+
+	@Test
 	public void testTxt() throws Exception {
 		TwoWaySqlParser parser = createParser("");
 		parser.txt();
