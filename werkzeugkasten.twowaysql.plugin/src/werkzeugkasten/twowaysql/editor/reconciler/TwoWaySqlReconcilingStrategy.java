@@ -19,6 +19,7 @@ import werkzeugkasten.twowaysql.error.QueryProblem;
 import werkzeugkasten.twowaysql.error.QueryProblemException;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser;
+import werkzeugkasten.twowaysql.util.AnnotationUtil;
 
 /**
  * 
@@ -63,6 +64,7 @@ public class TwoWaySqlReconcilingStrategy implements IReconcilingStrategy,
 
 	protected void reconcile() {
 		IAnnotationModel model = this.sourceViewer.getAnnotationModel();
+		AnnotationUtil.removeAllAnnotations(model);
 
 		String string = this.document.get();
 		TwoWaySqlParser parser = createParser(string);
