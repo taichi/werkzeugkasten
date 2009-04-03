@@ -6,10 +6,10 @@ import org.antlr.runtime.UnwantedTokenException;
 import werkzeugkasten.twowaysql.error.DefaultQueryProblem;
 import werkzeugkasten.twowaysql.error.QueryProblem;
 import werkzeugkasten.twowaysql.error.RecognitionExceptionHandler;
+import werkzeugkasten.twowaysql.grammar.GrammarUtil;
 import werkzeugkasten.twowaysql.nls.Messages;
 
-public abstract class UnwantedTokenHandler implements
-		RecognitionExceptionHandler {
+public class UnwantedTokenHandler implements RecognitionExceptionHandler {
 
 	protected String ruleName;
 
@@ -25,12 +25,10 @@ public abstract class UnwantedTokenHandler implements
 		UnwantedTokenException ex = (UnwantedTokenException) cause;
 		DefaultQueryProblem qp = new DefaultQueryProblem(ex);
 		String msg = String.format(Messages.UNWANTED_TOKEN, ruleName,
-				selectExpected(ex.expecting), Messages
+				GrammarUtil.to(ex.expecting), Messages
 						.getTokenErrorDisplay(ex.token));
 		qp.setMessage(msg);
 		return qp;
 	}
-
-	protected abstract String selectExpected(int expecting);
 
 }

@@ -3,7 +3,7 @@ package werkzeugkasten.twowaysql.error.handler;
 import org.antlr.runtime.MissingTokenException;
 import org.antlr.runtime.RecognitionException;
 
-public abstract class MissingTokenHandler extends MismatchedTokenHandler {
+public class MissingTokenHandler extends MismatchedTokenHandler {
 
 	public MissingTokenHandler(String ruleName) {
 		super(ruleName);
