@@ -3,7 +3,6 @@ package werkzeugkasten.twowaysql.grammar;
 import java.util.HashMap;
 import java.util.Map;
 
-import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.twowaysql.error.UnExpectedTokenTypeException;
 import werkzeugkasten.twowaysql.nls.Messages;
 
@@ -47,7 +46,7 @@ public class GrammarUtil {
 	public static String to(int type) {
 		Integer i = type;
 		String view = typeToView.get(i);
-		if (StringUtil.isEmpty(view)) {
+		if (view == null || view.isEmpty()) {
 			throw new UnExpectedTokenTypeException(type);
 		}
 		return view;
