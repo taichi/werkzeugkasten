@@ -44,4 +44,16 @@ public class Constants {
 			return "PREF_STYLE_" + name();
 		}
 	}
+
+	/**
+	 * annotation types.
+	 */
+	public static final String ANNOTATION_TYPE = Constants.ID_PLUGIN
+			+ ".annotation";
+
+	public static final String ANNOTATION_TYPE_ERROR = ANNOTATION_TYPE
+			+ ".error";
+	public static final String ANNOTATION_TYPE_WARN = ANNOTATION_TYPE + ".warn";
+	public static final String ANNOTATION_TYPE_INFO = ANNOTATION_TYPE + ".info";
+
 }

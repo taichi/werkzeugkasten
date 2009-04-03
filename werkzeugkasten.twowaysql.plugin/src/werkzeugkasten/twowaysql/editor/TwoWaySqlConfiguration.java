@@ -8,6 +8,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -22,6 +23,7 @@ import werkzeugkasten.twowaysql.editor.conf.ColorDefineFactory;
 import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
 import werkzeugkasten.twowaysql.editor.contentassist.CommentContentAssistProcessor;
 import werkzeugkasten.twowaysql.editor.contentassist.TextContentAssistProcessor;
+import werkzeugkasten.twowaysql.editor.reconciler.TwoWaySqlReconcilingStrategy;
 import werkzeugkasten.twowaysql.editor.scanner.LexerBasedColoringScanner;
 import werkzeugkasten.twowaysql.editor.scanner.TextScanner;
 
@@ -79,16 +81,6 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 				Constants.CONTENT_TYPE_LINECOMMENT };
 	}
 
-	/**
-	 * @see org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration#getReconciler
-	 * @see org.eclipse.jface.text.reconciler.IReconcilingStrategy
-	 */
-	@Override
-	public IReconciler getReconciler(ISourceViewer sourceViewer) {
-		// TODO ファイルのベリファイアを実装しる。
-		return super.getReconciler(sourceViewer);
-	}
-
 	@Override
 	public IPresentationReconciler getPresentationReconciler(
 			ISourceViewer sourceViewer) {
@@ -137,6 +129,19 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 				Constants.CONTENT_TYPE_BLOCKCOMMENT);
 
 		return assistant;
+	}
+
+	/**
+	 * @see org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration#getReconciler
+	 * @see org.eclipse.jface.text.reconciler.IReconcilingStrategy
+	 */
+	@Override
+	public IReconciler getReconciler(ISourceViewer sourceViewer) {
+		MonoReconciler reconciler = new MonoReconciler(
+				new TwoWaySqlReconcilingStrategy(sourceViewer), false);
+		reconciler.setIsAllowedToModifyDocument(false);
+		reconciler.setDelay(500);
+		return reconciler;
 	}
 
 	public void dispose() {

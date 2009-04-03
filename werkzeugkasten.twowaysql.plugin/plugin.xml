@@ -24,5 +24,14 @@
             extensions="sql">
       </participant>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            markerSeverity="2"
+            markerType="org.eclipse.core.resources.problemmarker"
+            name="werkzeugkasten.twowaysql.plugin.annotation.error"
+            super="org.eclipse.ui.workbench.texteditor.error">
+      </type>
+   </extension>
 
 </plugin>

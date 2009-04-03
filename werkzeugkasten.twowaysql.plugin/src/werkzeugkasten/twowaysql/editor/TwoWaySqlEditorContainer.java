@@ -41,7 +41,8 @@ public class TwoWaySqlEditorContainer extends MultiPageEditorPart {
 		try {
 			this.delegate = new TwoWaySqlEditor(this.store, this.settings);
 			int index = addPage(this.delegate, getEditorInput());
-			setPageText(index, this.delegate.getTitle());
+			setPageText(index, Strings.SQLPage_label);
+			setPartName(this.delegate.getTitle());
 		} catch (PartInitException e) {
 			ErrorDialog.openError(getSite().getShell(), e.getMessage(), e
 					.getMessage(), e.getStatus());
