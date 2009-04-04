@@ -22,7 +22,10 @@ Bundle-ClassPath: .,
  lib/mvel2-2.0.7.jar,
  lib/werkzeugkasten.twowaysql.core-0.0.1.jar,
  lib/werkzeugkasten.twowaysql.dao-0.0.1.jar,
- lib/werkzeugkasten.twowaysql.mvel-0.0.1.jar
+ lib/werkzeugkasten.twowaysql.mvel-0.0.1.jar,
+ lib/logback-classic-0.9.15.jar,
+ lib/logback-core-0.9.15.jar,
+ lib/slf4j-api-1.5.6.jar
 Export-Package: org.antlr.runtime,
  org.antlr.runtime.debug,
  org.antlr.runtime.misc,
