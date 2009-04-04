@@ -10,6 +10,7 @@ public class RecognitionExceptionAdapter implements QueryProblem {
 
 	public RecognitionExceptionAdapter(RecognitionException cause) {
 		this.cause = cause;
+		// エラーが発生した場所が、分らないとエラー表示しようが無いので、一つ前のを指す。
 		if (cause.token != null
 				&& (cause.token.getCharPositionInLine() < 0 || cause.token
 						.getLine() < 1) && (cause.input instanceof TokenStream)) {
