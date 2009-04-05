@@ -104,13 +104,6 @@ public class TwoWaySqlParserTest {
 		System.out.println(stb.toString());
 	}
 
-	@Test
-	public void testTwowaySQL() throws Exception {
-		assertTwowaySQL(UnwantedTokenException.class, "select * from dual;/*");
-		assertTwowaySQL(MissingTokenException.class,
-				"select * from dual;/*END*/");
-	}
-
 	protected void assertTwowaySQL(Class<?> expected, String sql)
 			throws Exception {
 		TwoWaySqlParser parser = createParser(sql);

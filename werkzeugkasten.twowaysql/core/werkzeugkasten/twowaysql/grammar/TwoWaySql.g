@@ -126,7 +126,7 @@ twowaySQL returns[TwoWayQuery query]
 		$query.update(retval);
 		$query.freeze();
 	}
-	: nodelist EOF {
+	: nodelist {
 		$query.setChildren($nodelist.list);
 	}
 	;
