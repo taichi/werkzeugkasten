@@ -121,12 +121,7 @@ public class TwoWaySqlReconcilingStrategy implements IReconcilingStrategy,
 	protected TwoWaySqlParser createParser(String sql) {
 		ProblemCoordinator pc = new ProblemCoordinator();
 		ANTLRStringStream in = new ANTLRStringStream(sql);
-		TwoWaySqlLexer lex = new TwoWaySqlLexer(in) {
-			@Override
-			public void displayRecognitionError(String[] tokenNames,
-					RecognitionException e) {
-			}
-		};
+		TwoWaySqlLexer lex = new TwoWaySqlLexer(in);
 		CommonTokenStream tokens = new CommonTokenStream(lex);
 		TwoWaySqlParser parser = new TwoWaySqlParser(tokens);
 		parser.setProblemCoordinator(pc);
