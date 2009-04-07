@@ -109,10 +109,10 @@ public class TwoWaySqlReconcilingStrategy implements IReconcilingStrategy,
 						qp.getCause().printStackTrace();
 						System.err.println("#######################");
 					}
-				} catch (BadLocationException e1) {
-					e1.printStackTrace();
-				} catch (BadPartitioningException e1) {
-					e1.printStackTrace();
+				} catch (BadLocationException ex) {
+					ex.printStackTrace();
+				} catch (BadPartitioningException ex) {
+					ex.printStackTrace();
 				}
 			}
 		}

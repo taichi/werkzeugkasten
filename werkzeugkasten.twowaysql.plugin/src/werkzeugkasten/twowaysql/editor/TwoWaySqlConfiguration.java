@@ -2,16 +2,24 @@ package werkzeugkasten.twowaysql.editor;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IUndoManager;
+import org.eclipse.jface.text.TextViewerUndoManager;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
+import org.eclipse.jface.text.hyperlink.URLHyperlinkDetector;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.ITokenScanner;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 import werkzeugkasten.common.util.Disposable;
@@ -30,7 +38,6 @@ import werkzeugkasten.twowaysql.editor.scanner.TextScanner;
 public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 		implements Initializable, Disposable {
 
-	protected IPreferenceStore preferenceStore;
 	protected ContextSettings settings;
 	protected ColorDefineFactory colorFactory;
 	protected TextScanner textScanner;
@@ -40,8 +47,8 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 
 	public TwoWaySqlConfiguration(TwoWaySqlEditor editor,
 			IPreferenceStore pref, ContextSettings settings) {
+		super(pref);
 		this.sqlEditor = editor;
-		this.preferenceStore = pref;
 		this.settings = settings;
 		this.colorFactory = new ColorDefineFactory();
 		this.colorFactory.initialize();
@@ -55,6 +62,9 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 				COLORING.COMMENT, getColorFactory());
 		this.blockCommentScanner = new LexerBasedColoringScanner(
 				COLORING.COMMENT, getColorFactory());
+
+		// ProblemAnnotationにTextHoverを表示するスイッチ
+		this.fPreferenceStore.setDefault("errorIndication", true);
 	}
 
 	protected ColorDefineFactory getColorFactory() {
@@ -142,6 +152,45 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 		reconciler.setIsAllowedToModifyDocument(false);
 		reconciler.setDelay(500);
 		return reconciler;
+	}
+
+	/*
+	 * default editor configurations.
+	 * IPreferenceStoreをTextSourceViewerConfigurationに食わせる事で、
+	 * 設定を抜こうと頑張るが上手く取れないケースに対応しちる。
+	 */
+
+	@Override
+	protected boolean isShowInVerticalRuler(Annotation annotation) {
+		return true;
+	}
+
+	@Override
+	protected boolean isShowInOverviewRuler(Annotation annotation) {
+		return true;
+	}
+
+	@Override
+	public int getTabWidth(ISourceViewer sourceViewer) {
+		return 4;
+	}
+
+	@Override
+	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+		if (sourceViewer == null) {
+			return null;
+		}
+		return new IHyperlinkDetector[] { new URLHyperlinkDetector() };
+	}
+
+	@Override
+	public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
+		return new DefaultHyperlinkPresenter(new RGB(0, 0, 255));
+	}
+
+	@Override
+	public IUndoManager getUndoManager(ISourceViewer sourceViewer) {
+		return new TextViewerUndoManager(25);
 	}
 
 	public void dispose() {
