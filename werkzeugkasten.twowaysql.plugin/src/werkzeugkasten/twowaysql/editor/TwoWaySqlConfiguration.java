@@ -7,9 +7,7 @@ import org.eclipse.jface.text.TextViewerUndoManager;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
-import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.URLHyperlinkDetector;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
@@ -19,7 +17,6 @@ import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 import werkzeugkasten.common.util.Disposable;
@@ -31,6 +28,7 @@ import werkzeugkasten.twowaysql.editor.conf.ColorDefineFactory;
 import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
 import werkzeugkasten.twowaysql.editor.contentassist.CommentContentAssistProcessor;
 import werkzeugkasten.twowaysql.editor.contentassist.TextContentAssistProcessor;
+import werkzeugkasten.twowaysql.editor.hyperlink.ELHyperlinkDetector;
 import werkzeugkasten.twowaysql.editor.reconciler.TwoWaySqlReconcilingStrategy;
 import werkzeugkasten.twowaysql.editor.scanner.LexerBasedColoringScanner;
 import werkzeugkasten.twowaysql.editor.scanner.TextScanner;
@@ -65,6 +63,9 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 
 		// ProblemAnnotationにTextHoverを表示するスイッチ
 		this.fPreferenceStore.setDefault("errorIndication", true);
+
+		// 文字列が、HyperLink化した時の色
+		this.fPreferenceStore.setDefault("hyperlinkColor", "0,0,255");
 	}
 
 	protected ColorDefineFactory getColorFactory() {
@@ -154,6 +155,15 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 		return reconciler;
 	}
 
+	@Override
+	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+		if (sourceViewer == null) {
+			return null;
+		}
+		return new IHyperlinkDetector[] { new URLHyperlinkDetector(),
+				new ELHyperlinkDetector(this.sqlEditor, this.settings) };
+	}
+
 	/*
 	 * default editor configurations.
 	 * IPreferenceStoreをTextSourceViewerConfigurationに食わせる事で、
@@ -173,19 +183,6 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 	@Override
 	public int getTabWidth(ISourceViewer sourceViewer) {
 		return 4;
-	}
-
-	@Override
-	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		if (sourceViewer == null) {
-			return null;
-		}
-		return new IHyperlinkDetector[] { new URLHyperlinkDetector() };
-	}
-
-	@Override
-	public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
-		return new DefaultHyperlinkPresenter(new RGB(0, 0, 255));
 	}
 
 	@Override

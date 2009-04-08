@@ -16,6 +16,7 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 
+import werkzeugkasten.twowaysql.Activator;
 import werkzeugkasten.twowaysql.Constants;
 import werkzeugkasten.twowaysql.editor.QueryProblemAnnotation;
 import werkzeugkasten.twowaysql.error.ProblemCoordinator;
@@ -76,44 +77,48 @@ public class TwoWaySqlReconcilingStrategy implements IReconcilingStrategy,
 		try {
 			parser.twowaySQL();
 		} catch (RecognitionException e) {
-			e.printStackTrace();
+			Activator.log(e);
 		} catch (QueryProblemException e) {
-			ProblemCoordinator coordinator = parser.getProblemCoordinator();
-			for (QueryProblem qp : coordinator.getAll()) {
-				System.out.printf(
-						"line:[%s] charPosInline:[%s] token:%s node:%s%n", qp
-								.getLine(), qp.getCharPositionInLine(), qp
-								.getCause().token, qp.getCause().node);
-				try {
-					if (0 < qp.getLine()) {
-						// IDocumentの行番号は、0オーダだが、
-						// ANTLRの行番号は1オーダの為調節が必要。
-						int offset = this.document
-								.getLineOffset(qp.getLine() - 1)
-								+ qp.getCharPositionInLine();
-						if (-1 < offset) {
-							ITypedRegion tr = DocumentUtil.getPartition(
-									this.document,
-									Constants.PARTITION_TYPE_TWOWAYSQL, offset);
-							System.out.printf("%s %s %s [%s]%n",
-									tr.getOffset(), tr.getLength(), tr
-											.getType(), qp.getMessage());
-							QueryProblemAnnotation a = new QueryProblemAnnotation(
-									qp);
-							model.addAnnotation(a, new Position(tr.getOffset(),
-									tr.getLength()));
-						}
-					} else {
-						System.err.println("#######################");
-						System.err.println(qp.getMessage());
-						qp.getCause().printStackTrace();
-						System.err.println("#######################");
+			processErrorAnnotate(model, parser);
+		}
+	}
+
+	protected void processErrorAnnotate(IAnnotationModel model,
+			TwoWaySqlParser parser) {
+		ProblemCoordinator coordinator = parser.getProblemCoordinator();
+		for (QueryProblem qp : coordinator.getAll()) {
+			// System.out.printf(
+			// "line:[%s] charPosInline:[%s] token:%s node:%s%n", qp
+			// .getLine(), qp.getCharPositionInLine(), qp
+			// .getCause().token, qp.getCause().node);
+			try {
+				if (0 < qp.getLine()) {
+					// IDocumentの行番号は、0オーダだが、
+					// ANTLRの行番号は1オーダの為調節が必要。
+					int offset = this.document.getLineOffset(qp.getLine() - 1)
+							+ qp.getCharPositionInLine();
+					if (-1 < offset) {
+						ITypedRegion tr = DocumentUtil.getPartition(
+								this.document,
+								Constants.PARTITION_TYPE_TWOWAYSQL, offset);
+						// System.out.printf("%s %s %s [%s]%n", tr.getOffset(),
+						// tr
+						// .getLength(), tr.getType(), qp.getMessage());
+						QueryProblemAnnotation a = new QueryProblemAnnotation(
+								qp);
+						model.addAnnotation(a, new Position(tr.getOffset(), tr
+								.getLength()));
 					}
-				} catch (BadLocationException ex) {
-					ex.printStackTrace();
-				} catch (BadPartitioningException ex) {
-					ex.printStackTrace();
+					// } else {
+					// System.err.println("#######################");
+					// System.err.println(qp.getMessage());
+					// qp.getCause().printStackTrace();
+					// System.err.println("#######################");
 				}
+			} catch (BadLocationException e) {
+				Activator.log(e);
+			} catch (BadPartitioningException e) {
+				Activator.log(e);
 			}
 		}
 	}

@@ -11,10 +11,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.CompletionContext;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.eval.IEvaluationContext;
 import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
@@ -25,8 +23,6 @@ import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.mvel2.CompileException;
 import org.mvel2.ParserConfiguration;
@@ -35,6 +31,7 @@ import org.mvel2.compiler.CompiledExpression;
 import org.mvel2.compiler.ExpressionCompiler;
 
 import werkzeugkasten.common.jdt.JavaProjectClassLoader;
+import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.util.DustCart;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.twowaysql.Activator;
@@ -220,23 +217,27 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 	private void requestCodeCompletion(int offset,
 			List<ICompletionProposal> result, String dummyText) {
 		try {
-			IJavaProject project = getJavaProject();
-			CompletionProposalCollector collector = new ELCompletionProposalCollector(
-					project, offset - dummyText.length());
-			collector.acceptContext(new CompletionContext());
-			IEvaluationContext evalContext = project.newEvaluationContext();
-			// TODO import from context settings.
-			// evalContext.setImports(null);
+			IJavaProject project = AdaptableUtil.to(this.editor,
+					IJavaProject.class);
+			if (project != null) {
+				CompletionProposalCollector collector = new ELCompletionProposalCollector(
+						project, offset - dummyText.length());
+				collector.acceptContext(new CompletionContext());
+				IEvaluationContext evalContext = project.newEvaluationContext();
+				// TODO import from context settings.
+				// evalContext.setImports(null);
 
-			evalContext.codeComplete(dummyText, dummyText.length(), collector);
+				evalContext.codeComplete(dummyText, dummyText.length(),
+						collector);
 
-			for (IJavaCompletionProposal jcp : collector
-					.getJavaCompletionProposals()) {
-				result.add(jcp);
+				for (IJavaCompletionProposal jcp : collector
+						.getJavaCompletionProposals()) {
+					result.add(jcp);
+				}
+				// Comparator使う為には、internal APIに触らないといけなくて、
+				// それはイマイチ筋が悪いので、とりあえず反転しる。
+				Collections.reverse(result);
 			}
-			// Comparator使う為には、internal APIに触らないといけなくて、
-			// それはイマイチ筋が悪いので、とりあえず反転しる。
-			Collections.reverse(result);
 		} catch (JavaModelException e) {
 			Activator.log(e);
 		}
@@ -359,7 +360,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 
 	protected ClassLoader createClassLoader() {
 		ClassLoader result = null;
-		IJavaProject jp = getJavaProject();
+		IJavaProject jp = AdaptableUtil.to(this.editor, IJavaProject.class);
 		if (jp != null) {
 			result = new JavaProjectClassLoader(jp) {
 				@Override
@@ -373,13 +374,4 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 		return result;
 	}
 
-	protected IJavaProject getJavaProject() {
-		IEditorInput input = this.editor.getEditorInput();
-		if (input instanceof IFileEditorInput) {
-			IFileEditorInput fei = (IFileEditorInput) input;
-			IFile file = fei.getFile();
-			return JavaCore.create(file.getProject());
-		}
-		return null;
-	}
 }

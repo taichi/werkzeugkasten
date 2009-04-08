@@ -1,7 +1,13 @@
 package werkzeugkasten.twowaysql.editor;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
@@ -34,9 +40,28 @@ public class TwoWaySqlEditor extends TextEditor {
 		markAsStateDependentAction("ContentAssistProposal", true);
 	}
 
+	protected IJavaProject getJavaProject() {
+		IEditorInput input = this.getEditorInput();
+		if (input instanceof IFileEditorInput) {
+			IFileEditorInput fei = (IFileEditorInput) input;
+			IFile file = fei.getFile();
+			return JavaCore.create(file.getProject());
+		}
+		return null;
+	}
+
 	@Override
 	public void dispose() {
 		this.configuration.dispose();
 		super.dispose();
+	}
+
+	@Override
+	public Object getAdapter(@SuppressWarnings("unchecked") Class adapter) {
+		if (IJavaElement.class.isAssignableFrom(adapter)) {
+			return getJavaProject();
+		}
+
+		return super.getAdapter(adapter);
 	}
 }

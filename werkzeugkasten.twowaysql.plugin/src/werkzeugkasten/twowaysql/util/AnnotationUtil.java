@@ -9,6 +9,7 @@ import org.eclipse.jface.text.source.IAnnotationModelExtension;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 
 public class AnnotationUtil {
+
 	public static void removeAllAnnotations(IAnnotationModel model) {
 		if (model instanceof IAnnotationModelExtension) {
 			IAnnotationModelExtension ame = (IAnnotationModelExtension) model;
@@ -20,5 +21,4 @@ public class AnnotationUtil {
 			}
 		}
 	}
-
 }

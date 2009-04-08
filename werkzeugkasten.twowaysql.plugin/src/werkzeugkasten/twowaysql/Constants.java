@@ -45,7 +45,7 @@ public class Constants {
 		}
 	}
 
-	/**
+	/*
 	 * annotation types.
 	 */
 	public static final String ANNOTATION_TYPE = Constants.ID_PLUGIN
