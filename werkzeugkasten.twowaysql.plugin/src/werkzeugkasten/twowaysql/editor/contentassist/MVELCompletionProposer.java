@@ -299,7 +299,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 			classLoader = createClassLoader();
 			// System.out.printf("parseEL %s%n", el);
 			ParserConfiguration config = new ParserConfiguration();
-			config.setClassLoader(createClassLoader());
+			config.setClassLoader(classLoader);
 			ParserContext ctx = new ParserContext();
 			ctx.setStrictTypeEnforcement(strictTyping);
 			ctx.setCompiled(true);
@@ -352,6 +352,8 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 			int index = el.lastIndexOf(';');
 			if (-1 < index) {
 				result = el.substring(index);
+			} else {
+				result = el;
 			}
 		}
 		// System.out.printf("concatLast %n%s%n%s%n", el, result);

@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.antlr.runtime.BitSet;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -55,25 +55,15 @@ public class ELHyperlinkDetector extends AbstractHyperlinkDetector implements
 		List<IHyperlink> result = new ArrayList<IHyperlink>();
 		try {
 			IDocument doc = textViewer.getDocument();
+			int offset = region.getOffset();
 			ITypedRegion partition = DocumentUtil.getPartition(doc,
-					Constants.PARTITION_TYPE_TWOWAYSQL, region.getOffset());
+					Constants.PARTITION_TYPE_TWOWAYSQL, offset);
 			if (CONTENT_TYPE_COMMENTS.contains(partition.getType())) {
-				int offset = region.getOffset();
-				int end = DocumentUtil.skip(doc, offset, skipToLinkEnd);
-
-				// back　to index が必要。
-
-				String string = doc.get(partition.getOffset(), end
-						- partition.getOffset());
+				int begin = DocumentUtil.backto(doc, offset, linkBegin);
+				int end = DocumentUtil.skip(doc, offset, linkEnd);
+				String string = doc.get(begin, end - begin);
 				System.out.println(string);
-				Matcher bm = ELBeforeSpliter.matcher(string);
-				if (bm.find()) {
-					int before = bm.end();
-					if (0 < before) {
-						string = string.substring(before);
-						System.out.println(string);
-					}
-				}
+
 			}
 		} catch (Exception e) {
 			Activator.log(e);
@@ -90,27 +80,39 @@ public class ELHyperlinkDetector extends AbstractHyperlinkDetector implements
 		return SWT.CTRL;
 	}
 
-	public static final DocumentUtil.Detector skipToLinkEnd = new DocumentUtil.Detector() {
+	protected static final BitSet separators = new BitSet();
+	static {
+		separators.add('+');
+		separators.add('-');
+		separators.add('/');
+		separators.add('*');
+		separators.add('=');
+		separators.add('>');
+		separators.add('<');
+		separators.add('\'');
+		separators.add('\"');
+		separators.add('^');
+		separators.add('%');
+		separators.add(':');
+		separators.add('&');
+		separators.add('|');
+	}
+
+	public static final DocumentUtil.Detector linkBegin = new DocumentUtil.Detector() {
+		public boolean detect(IDocument d, int index)
+				throws BadLocationException {
+			char ch = d.getChar(index);
+			return Character.isWhitespace(ch) == false
+					&& separators.member(ch) == false;
+		}
+	};
+	public static final DocumentUtil.Detector linkEnd = new DocumentUtil.Detector() {
 		@Override
 		public boolean detect(IDocument d, int index)
 				throws BadLocationException {
-			int ch = d.getChar(index);
-			if (Character.isWhitespace(ch) || ch == '.') {
-				return false;
-			}
-			if (1 < index) {
-				char prev = d.getChar(index - 1);
-				if (ch == '/' && prev == '*') {
-					return false;
-				}
-			}
-			if (index + 1 < d.getLength()) {
-				char next = d.getChar(index + 1);
-				if (ch == '*' && next == '/') {
-					return false;
-				}
-			}
-			return true;
+			char ch = d.getChar(index);
+			return Character.isWhitespace(ch) == false
+					&& separators.member(ch) == false && ch != '.';
 		}
 	};
 

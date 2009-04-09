@@ -53,26 +53,22 @@ public class DocumentUtil {
 	public static int skip(IDocument doc, int offset, Detector d) {
 		try {
 			int index = offset;
-			while (index < doc.getLength() && d.detect(doc, index)) {
-				index++;
-			}
+			while (index < doc.getLength() && d.detect(doc, ++index))
+				;
 			return index;
 		} catch (BadLocationException e) {
 			return offset;
 		}
 	}
 
-	public static String backto(IDocument doc, int offset, Detector d) {
+	public static int backto(IDocument doc, int offset, Detector d) {
 		try {
 			int index = offset;
-			for (; -1 < index; index--) {
-				if (d.detect(doc, index) == false) {
-					break;
-				}
-			}
-			return doc.get(index + 1, offset - index);
+			while (-1 < index && d.detect(doc, --index))
+				;
+			return index + 1;
 		} catch (BadLocationException e) {
-			return "";
+			return offset;
 		}
 	}
 

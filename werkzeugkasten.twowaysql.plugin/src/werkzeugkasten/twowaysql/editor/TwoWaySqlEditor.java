@@ -1,7 +1,6 @@
 package werkzeugkasten.twowaysql.editor;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
@@ -58,7 +57,7 @@ public class TwoWaySqlEditor extends TextEditor {
 
 	@Override
 	public Object getAdapter(@SuppressWarnings("unchecked") Class adapter) {
-		if (IJavaElement.class.isAssignableFrom(adapter)) {
+		if (IJavaProject.class.isAssignableFrom(adapter)) {
 			return getJavaProject();
 		}
 
