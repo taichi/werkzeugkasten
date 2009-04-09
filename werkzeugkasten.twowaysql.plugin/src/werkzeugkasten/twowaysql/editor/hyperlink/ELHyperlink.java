@@ -5,6 +5,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.ui.PartInitException;
 
@@ -22,6 +23,10 @@ public class ELHyperlink implements IHyperlink {
 		this.target = element;
 	}
 
+	public ELHyperlink(int offset, int length, IJavaElement element) {
+		this(new Region(offset, length), element);
+	}
+
 	@Override
 	public IRegion getHyperlinkRegion() {
 		return this.region;
@@ -29,11 +34,6 @@ public class ELHyperlink implements IHyperlink {
 
 	@Override
 	public String getHyperlinkText() {
-		try {
-			return this.target.getAttachedJavadoc(null);
-		} catch (JavaModelException e) {
-			Activator.log(e);
-		}
 		return null;
 	}
 

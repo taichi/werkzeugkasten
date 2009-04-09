@@ -5,6 +5,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
@@ -12,12 +14,23 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.XMLMemento;
+import org.mvel2.CompileException;
+import org.mvel2.ParserConfiguration;
+import org.mvel2.ParserContext;
+import org.mvel2.compiler.CompiledExpression;
+import org.mvel2.compiler.ExpressionCompiler;
 
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.twowaysql.Activator;
 import werkzeugkasten.twowaysql.Constants;
 
 public class ContextSettings {
+
+	public static final Pattern OPERATORS = Pattern
+			.compile(
+					"(\\s*(\\+{1,2}|-{1,2}|\\*{1,2}|/|%|==|!=|>=|<=|<{1,3}|>{1,3}|&&|~=|#|&|\\|{1,2}|\\^|:)\\s*|"
+							+ "(\\s(and|or|instanceof|is|contains|soundslike|strsim|convertable_to|in)\\s))",
+					Pattern.CASE_INSENSITIVE);
 
 	static final String TAG_ROOT = "context";
 	static final String TAG_VAR = "var";
@@ -108,5 +121,68 @@ public class ContextSettings {
 
 	public List<Variable> variables() {
 		return this.vars;
+	}
+
+	public CompiledExpression parseEL(ClassLoader classLoader, String el,
+			boolean strictTyping) {
+		CompiledExpression result = null;
+		// System.out.printf("parseEL %s%n", el);
+		ParserConfiguration config = new ParserConfiguration();
+		config.setClassLoader(classLoader);
+		ParserContext ctx = new ParserContext();
+		ctx.setStrictTypeEnforcement(strictTyping);
+		ctx.setCompiled(true);
+
+		for (Variable v : variables()) {
+			try {
+				Class<?> clazz = classLoader.loadClass(v.type());
+				ctx.addInput(v.name(), clazz);
+			} catch (ClassNotFoundException e) {
+				Activator.log(e);
+			}
+		}
+		try {
+			ExpressionCompiler compiler = new ExpressionCompiler(el);
+			result = compiler.compile(ctx);
+		} catch (CompileException e) {
+			result = retryELcompile(el, ctx);
+		}
+		return result;
+	}
+
+	private CompiledExpression retryELcompile(String hasError, ParserContext ctx) {
+		CompiledExpression result = null;
+		String retry = concatLastStatement(hasError);
+		if (StringUtil.isEmpty(retry) == false) {
+			ExpressionCompiler compiler = new ExpressionCompiler(retry);
+			try {
+				result = compiler.compile(ctx);
+			} catch (CompileException e2) {
+			}
+		}
+		return result;
+	}
+
+	public String concatLastStatement(String el) {
+		String result = "";
+		// 最小限の変数アクセスする為にコンパイルを再実行する。
+		// 式言語のコンパイルが通らない時に、もっと細かくエラーリカバリするかは、考えた方がよいかも。
+		Matcher m = OPERATORS.matcher(el);
+		// 面倒なので、最後のオペレータより後ろだけ取る。
+		while (m.find()) {
+			result = el.substring(m.end());
+		}
+
+		if (StringUtil.isEmpty(result)) {
+			// オペレータが無いので、ステートメントを分割しようとしてみる。
+			int index = el.lastIndexOf(';');
+			if (-1 < index) {
+				result = el.substring(index);
+			} else {
+				result = el;
+			}
+		}
+		// System.out.printf("concatLast %n%s%n%s%n", el, result);
+		return result;
 	}
 }

@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.jdt.core.CompletionContext;
 import org.eclipse.jdt.core.IJavaProject;
@@ -24,11 +23,8 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.mvel2.CompileException;
-import org.mvel2.ParserConfiguration;
 import org.mvel2.ParserContext;
 import org.mvel2.compiler.CompiledExpression;
-import org.mvel2.compiler.ExpressionCompiler;
 
 import werkzeugkasten.common.jdt.JavaProjectClassLoader;
 import werkzeugkasten.common.runtime.AdaptableUtil;
@@ -45,15 +41,10 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 			"soundslike", "strsim", "convertable_to", "in", "==", "!=", "<",
 			"<=", ">", ">=" };
 
-	protected static final Pattern OPERATORS = Pattern
-			.compile(
-					"(\\s*(\\+{1,2}|-{1,2}|\\*{1,2}|/|%|==|!=|>=|<=|<{1,3}|>{1,3}|&&|~=|#|&|\\|{1,2}|\\^|:)\\s*|"
-							+ "(\\s(and|or|instanceof|is|contains|soundslike|strsim|convertable_to|in)\\s))",
-					Pattern.CASE_INSENSITIVE);
+	protected DustCart dustCart = new DustCart();
 
 	protected ITextEditor editor;
 	protected ContextSettings settings;
-	protected DustCart dustCart = new DustCart();
 
 	public MVELCompletionProposer(ITextEditor editor, IPreferenceStore store,
 			ContextSettings settings) {
@@ -197,7 +188,8 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 			List<ICompletionProposal> result) {
 		// .アクセスなので、直前の変数だけを考慮対象にすれば、大体良い筈。
 		// (hoge && fuga). みたいなのを今のところ考慮しない。
-		CompiledExpression ce = parseEL(concatLastStatement(string), true);
+		CompiledExpression ce = parseEL(this.settings
+				.concatLastStatement(string), true);
 		String dummyText = "";
 		if (ce != null) {
 			Class<?> lastType = ce.getKnownEgressType(); // return type
@@ -284,7 +276,7 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 	}
 
 	private boolean endsWithOperator(String exp, String[] rounded) {
-		Matcher m = OPERATORS.matcher(exp);
+		Matcher m = ContextSettings.OPERATORS.matcher(exp);
 		if (m.find() && exp.length() == m.end()) {
 			rounded[0] = m.replaceAll("");
 			return true;
@@ -293,71 +285,12 @@ public class MVELCompletionProposer implements IPropertyChangeListener {
 	}
 
 	protected CompiledExpression parseEL(String el, boolean strictTyping) {
-		CompiledExpression result = null;
-		ClassLoader classLoader = null;
+		ClassLoader classLoader = createClassLoader();
 		try {
-			classLoader = createClassLoader();
-			// System.out.printf("parseEL %s%n", el);
-			ParserConfiguration config = new ParserConfiguration();
-			config.setClassLoader(classLoader);
-			ParserContext ctx = new ParserContext();
-			ctx.setStrictTypeEnforcement(strictTyping);
-			ctx.setCompiled(true);
-
-			for (Variable v : this.settings.variables()) {
-				try {
-					Class<?> clazz = classLoader.loadClass(v.type());
-					ctx.addInput(v.name(), clazz);
-				} catch (ClassNotFoundException e) {
-					Activator.log(e);
-				}
-			}
-			try {
-				ExpressionCompiler compiler = new ExpressionCompiler(el);
-				result = compiler.compile(ctx);
-			} catch (CompileException e) {
-				result = retryELcompile(el, ctx);
-			}
-			return result;
+			return this.settings.parseEL(classLoader, el, strictTyping);
 		} finally {
 			this.dustCart.pickUp(classLoader);
 		}
-	}
-
-	private CompiledExpression retryELcompile(String hasError, ParserContext ctx) {
-		CompiledExpression result = null;
-		String retry = concatLastStatement(hasError);
-		if (StringUtil.isEmpty(retry) == false) {
-			ExpressionCompiler compiler = new ExpressionCompiler(retry);
-			try {
-				result = compiler.compile(ctx);
-			} catch (CompileException e2) {
-			}
-		}
-		return result;
-	}
-
-	private String concatLastStatement(String el) {
-		String result = "";
-		// 最小限の変数アクセスする為にコンパイルを再実行する。
-		// 式言語のコンパイルが通らない時に、もっと細かくエラーリカバリするかは、考えた方がよいかも。
-		Matcher m = OPERATORS.matcher(el);
-		// 面倒なので、最後のオペレータより後ろだけ取る。
-		while (m.find()) {
-			result = el.substring(m.end());
-		}
-
-		if (StringUtil.isEmpty(result)) {
-			// オペレータが無いので、ステートメントを分割しようとしてみる。
-			int index = el.lastIndexOf(';');
-			if (-1 < index) {
-				result = el.substring(index);
-			} else {
-				result = el;
-			}
-		}
-		// System.out.printf("concatLast %n%s%n%s%n", el, result);
-		return result;
 	}
 
 	protected ClassLoader createClassLoader() {
