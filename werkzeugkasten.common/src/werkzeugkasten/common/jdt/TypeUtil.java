@@ -188,6 +188,10 @@ public class TypeUtil {
 		return null;
 	}
 
+	/**
+	 * @see TypeHierarchyWalker#TypeHierarchyMethodHandler
+	 */
+	@Deprecated
 	public static void walkSupertypeHierarchy(IType type,
 			IProgressMonitor monitor, TypeHierarchyWalker walker)
 			throws JavaModelException {
