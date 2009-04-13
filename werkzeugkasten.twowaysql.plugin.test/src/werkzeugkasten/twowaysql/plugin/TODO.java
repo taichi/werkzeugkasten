@@ -24,4 +24,5 @@ public interface TODO {
 	// - .sqlファイルのデバッグ実行。引数にテキトウな値を設定して、最終的に動作するSQLをステップ実行しながら確認出来る。
 	// - IFコメント入力時に、TABキーで、カーソル位置をジャンプする。JDTの Java -> Editor -> Templates 相当の機能
 	// - .sqlファイルのフォーマッタ機能
+	// - 式言語部分にマウスカーソルが当たっている時に、当該JavaElementのjavadoc等を表示する。
 }
