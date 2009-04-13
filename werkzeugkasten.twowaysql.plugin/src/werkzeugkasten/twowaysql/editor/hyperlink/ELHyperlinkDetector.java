@@ -116,14 +116,6 @@ public class ELHyperlinkDetector extends AbstractHyperlinkDetector implements
 						new TypeHierarchyWalker(type,
 								new TypeHierarchyWalker.TypeHierarchyHandler() {
 									@Override
-									public void begin() {
-									}
-
-									@Override
-									public void done() {
-									}
-
-									@Override
 									public boolean handle(IType type)
 											throws JavaModelException {
 										result[0] = searchMember(type, cond);

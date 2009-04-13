@@ -7,6 +7,7 @@ import org.eclipse.jface.text.TextViewerUndoManager;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.URLHyperlinkDetector;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
@@ -28,6 +29,7 @@ import werkzeugkasten.twowaysql.editor.conf.ColorDefineFactory;
 import werkzeugkasten.twowaysql.editor.conf.ContextSettings;
 import werkzeugkasten.twowaysql.editor.contentassist.CommentContentAssistProcessor;
 import werkzeugkasten.twowaysql.editor.contentassist.TextContentAssistProcessor;
+import werkzeugkasten.twowaysql.editor.formatter.StateBasedSelectableContentFormatter;
 import werkzeugkasten.twowaysql.editor.hyperlink.ELHyperlinkDetector;
 import werkzeugkasten.twowaysql.editor.reconciler.TwoWaySqlReconcilingStrategy;
 import werkzeugkasten.twowaysql.editor.scanner.LexerBasedColoringScanner;
@@ -162,6 +164,14 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 		}
 		return new IHyperlinkDetector[] { new URLHyperlinkDetector(),
 				new ELHyperlinkDetector(this.sqlEditor, this.settings) };
+	}
+
+	@Override
+	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
+		if (sourceViewer == null) {
+			return null;
+		}
+		return new StateBasedSelectableContentFormatter(sourceViewer);
 	}
 
 	/*

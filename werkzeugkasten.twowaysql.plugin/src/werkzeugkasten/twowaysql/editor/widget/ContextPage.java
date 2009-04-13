@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
-import werkzeugkasten.common.jdt.TypeUtil;
+import werkzeugkasten.common.jdt.TypeHierarchyWalker;
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.util.StringUtil;
 import werkzeugkasten.common.viewers.ColumnDescriptor;
@@ -93,10 +93,10 @@ public class ContextPage implements IStructuredContentProvider {
 			this.methodSignatures = new ArrayList<String>();
 			IProgressMonitor monitor = this.site.getActionBars()
 					.getStatusLineManager().getProgressMonitor();
-			TypeUtil.walkSupertypeHierarchy(selected, monitor,
-					new TypeUtil.TypeHierarchyWalker() {
+			TypeHierarchyWalker walker = new TypeHierarchyWalker(selected,
+					new TypeHierarchyWalker.TypeHierarchyMethodHandler() {
 						@Override
-						public boolean apply(IType type, IMethod method)
+						public boolean handle(IMethod method)
 								throws JavaModelException {
 							String[] names = method.getParameterNames();
 							String sig = Signature
@@ -111,10 +111,11 @@ public class ContextPage implements IStructuredContentProvider {
 							return true;
 						}
 					});
+			walker.run(monitor);
 			this.methods.setItems(methodSignatures
 					.toArray(new String[methodSignatures.size()]));
 			modified(modified);
-		} catch (CoreException ex) {
+		} catch (Exception ex) {
 			Activator.log(ex);
 		}
 	}
@@ -128,10 +129,12 @@ public class ContextPage implements IStructuredContentProvider {
 						.getSelectionIndex());
 				IProgressMonitor monitor = this.site.getActionBars()
 						.getStatusLineManager().getProgressMonitor();
-				TypeUtil.walkSupertypeHierarchy(type, monitor,
-						new TypeUtil.TypeHierarchyWalker() {
+
+				TypeHierarchyWalker walker = new TypeHierarchyWalker(type,
+						new TypeHierarchyWalker.TypeHierarchyMethodHandler() {
+
 							@Override
-							public boolean apply(IType type, IMethod method)
+							public boolean handle(IMethod method)
 									throws JavaModelException {
 								String[] names = method.getParameterNames();
 								String s = Signature.toString(
@@ -167,10 +170,12 @@ public class ContextPage implements IStructuredContentProvider {
 								return true;
 							}
 						});
+				walker.run(monitor);
+
 				this.modified(true);
 				variables.setInput(settings.variables());
 			}
-		} catch (CoreException ex) {
+		} catch (Exception ex) {
 			Activator.log(ex);
 		}
 	}
@@ -241,8 +246,8 @@ public class ContextPage implements IStructuredContentProvider {
 		t.setLayoutData(data);
 		this.variables.setContentProvider(this);
 		List<ColumnDescriptor<Variable>> list = buildColumns(t);
-		new TableViewerCoordinator<Variable>(this.variables,
-				Variable.class, list);
+		new TableViewerCoordinator<Variable>(this.variables, Variable.class,
+				list);
 	}
 
 	private List<ColumnDescriptor<Variable>> buildColumns(Table table) {

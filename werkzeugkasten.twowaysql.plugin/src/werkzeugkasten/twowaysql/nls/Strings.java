@@ -31,6 +31,8 @@ public class Strings {
 	public static String label_Method;
 	public static String label_Class;
 	public static String SQLPage_label;
+	public static String Format_label;
+
 	static {
 		Dictionary<?, ?> dic = Activator.getDefault().getBundle().getHeaders();
 		Object o = dic.get("Bundle-Localization");
