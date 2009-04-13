@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
@@ -186,35 +183,5 @@ public class TypeUtil {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * @see TypeHierarchyWalker#TypeHierarchyMethodHandler
-	 */
-	@Deprecated
-	public static void walkSupertypeHierarchy(IType type,
-			IProgressMonitor monitor, TypeHierarchyWalker walker)
-			throws JavaModelException {
-		List<IType> classes = new ArrayList<IType>();
-		classes.add(type);
-		ITypeHierarchy hierarchy = type.newSupertypeHierarchy(monitor);
-		IType[] supers = hierarchy.getAllSuperclasses(type);
-		if (supers != null) {
-			for (IType t : supers) {
-				classes.add(t);
-			}
-		}
-		for (IType t : classes) {
-			for (IMethod m : t.getMethods()) {
-				if (walker.apply(t, m) == false) {
-					break;
-				}
-			}
-		}
-
-	}
-
-	public interface TypeHierarchyWalker {
-		boolean apply(IType type, IMethod method) throws JavaModelException;
 	}
 }

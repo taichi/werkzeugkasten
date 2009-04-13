@@ -10,6 +10,12 @@ import org.eclipse.core.runtime.OperationCanceledException;
  */
 public class ProgressMonitorUtil {
 
+	public static void isCanceled(IProgressMonitor monitor) {
+		if (monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+	}
+
 	public static void isCanceled(IProgressMonitor monitor, int work) {
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();

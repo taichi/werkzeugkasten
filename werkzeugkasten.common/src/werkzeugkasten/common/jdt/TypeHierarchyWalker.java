@@ -25,33 +25,27 @@ public class TypeHierarchyWalker implements IRunnableWithProgress {
 	public void run(IProgressMonitor monitor) throws InvocationTargetException,
 			InterruptedException {
 		monitor = ProgressMonitorUtil.care(monitor);
-		this.handler.begin();
 		try {
 			ITypeHierarchy hierarchy = type.newSupertypeHierarchy(monitor);
+			ProgressMonitorUtil.isCanceled(monitor);
 			IType[] superTypes = hierarchy.getAllSuperclasses(type);
 			for (IType t : superTypes) {
+				ProgressMonitorUtil.isCanceled(monitor);
 				if (this.handler.handle(t) == false) {
 					break;
 				}
 			}
 		} catch (JavaModelException e) {
 			throw new InvocationTargetException(e);
-		} finally {
-			this.handler.done();
 		}
 	}
 
 	public interface TypeHierarchyHandler {
-		void begin();
-
 		boolean handle(IType type) throws JavaModelException;
-
-		void done();
 	}
 
-	public abstract class TypeHierarchyMethodHandler implements
+	public static abstract class TypeHierarchyMethodHandler implements
 			TypeHierarchyHandler {
-
 		@Override
 		public boolean handle(IType type) throws JavaModelException {
 			for (IMethod m : type.getMethods()) {
