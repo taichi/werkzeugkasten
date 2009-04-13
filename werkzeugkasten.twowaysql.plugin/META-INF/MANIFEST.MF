@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: TwoWaySql Support Plug-in
-Bundle-SymbolicName: werkzeugkasten.twowaysql.plugin;singleton:=true
+Bundle-Name: TwoWaySql Support
+Bundle-SymbolicName: werkzeugkasten.twowaysql;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: werkzeugkasten.twowaysql.Activator
 Require-Bundle: org.eclipse.ui,

@@ -10,7 +10,7 @@ public class Constants {
 			.getBundleHeaders().get("Bundle-Version"), "0.0.0");
 
 	// The plug-in ID
-	public static final String ID_PLUGIN = "werkzeugkasten.twowaysql.plugin";
+	public static final String ID_PLUGIN = "werkzeugkasten.twowaysql";
 
 	public static final String PARTITION_TYPE_TWOWAYSQL = "__twowaysql_";
 

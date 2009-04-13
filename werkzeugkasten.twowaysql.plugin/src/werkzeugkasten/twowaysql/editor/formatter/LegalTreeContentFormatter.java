@@ -9,12 +9,10 @@ public class LegalTreeContentFormatter implements IContentFormatter {
 
 	@Override
 	public void format(IDocument document, IRegion region) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public IFormattingStrategy getFormattingStrategy(String contentType) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

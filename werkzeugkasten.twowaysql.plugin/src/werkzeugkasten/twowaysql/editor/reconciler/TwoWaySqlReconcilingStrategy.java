@@ -24,6 +24,7 @@ import werkzeugkasten.twowaysql.error.QueryProblem;
 import werkzeugkasten.twowaysql.error.QueryProblemException;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer;
 import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser;
+import werkzeugkasten.twowaysql.grammar.TwoWaySqlParser.twowaySQL_return;
 import werkzeugkasten.twowaysql.util.AnnotationUtil;
 import werkzeugkasten.twowaysql.util.DocumentUtil;
 
@@ -75,7 +76,8 @@ public class TwoWaySqlReconcilingStrategy implements IReconcilingStrategy,
 		String string = this.document.get();
 		TwoWaySqlParser parser = createParser(string);
 		try {
-			parser.twowaySQL();
+			twowaySQL_return result = parser.twowaySQL();
+			processInformationAnnotate(model, result);
 		} catch (RecognitionException e) {
 			Activator.log(e);
 		} catch (QueryProblemException e) {
@@ -121,6 +123,11 @@ public class TwoWaySqlReconcilingStrategy implements IReconcilingStrategy,
 				Activator.log(e);
 			}
 		}
+	}
+
+	protected void processInformationAnnotate(IAnnotationModel model,
+			twowaySQL_return result) {
+
 	}
 
 	protected TwoWaySqlParser createParser(String sql) {

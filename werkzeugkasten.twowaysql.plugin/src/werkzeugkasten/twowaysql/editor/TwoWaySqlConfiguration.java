@@ -64,7 +64,9 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 				COLORING.COMMENT, getColorFactory());
 
 		// ProblemAnnotationにTextHoverを表示するスイッチ
+		// see. org.eclipse.ui.editors/plugin.xml
 		this.fPreferenceStore.setDefault("errorIndication", true);
+		this.fPreferenceStore.setDefault("infoIndication", true);
 
 		// 文字列が、HyperLink化した時の色
 		this.fPreferenceStore.setDefault("hyperlinkColor", "0,0,255");
