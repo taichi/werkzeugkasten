@@ -31,7 +31,7 @@ import werkzeugkasten.twowaysql.editor.contentassist.CommentContentAssistProcess
 import werkzeugkasten.twowaysql.editor.contentassist.TextContentAssistProcessor;
 import werkzeugkasten.twowaysql.editor.formatter.StateBasedSelectableContentFormatter;
 import werkzeugkasten.twowaysql.editor.hyperlink.ELHyperlinkDetector;
-import werkzeugkasten.twowaysql.editor.reconciler.TwoWaySqlReconcilingStrategy;
+import werkzeugkasten.twowaysql.editor.reconciler.TwoWaySqlErrorReconciler;
 import werkzeugkasten.twowaysql.editor.scanner.LexerBasedColoringScanner;
 import werkzeugkasten.twowaysql.editor.scanner.TextScanner;
 
@@ -153,7 +153,7 @@ public class TwoWaySqlConfiguration extends TextSourceViewerConfiguration
 	@Override
 	public IReconciler getReconciler(ISourceViewer sourceViewer) {
 		MonoReconciler reconciler = new MonoReconciler(
-				new TwoWaySqlReconcilingStrategy(sourceViewer), false);
+				new TwoWaySqlErrorReconciler(sourceViewer), false);
 		reconciler.setIsAllowedToModifyDocument(false);
 		reconciler.setDelay(500);
 		return reconciler;

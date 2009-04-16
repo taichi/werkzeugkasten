@@ -32,14 +32,14 @@ import werkzeugkasten.twowaysql.util.DocumentUtil;
  * @author taichi
  * @see org.eclipse.ui.texteditor.MarkerUtilities
  */
-public class TwoWaySqlReconcilingStrategy implements IReconcilingStrategy,
+public class TwoWaySqlErrorReconciler implements IReconcilingStrategy,
 		IReconcilingStrategyExtension {
 
 	protected IDocument document;
 	protected IProgressMonitor monitor;
 	protected ISourceViewer sourceViewer;
 
-	public TwoWaySqlReconcilingStrategy(ISourceViewer sourceViewer) {
+	public TwoWaySqlErrorReconciler(ISourceViewer sourceViewer) {
 		this.sourceViewer = sourceViewer;
 	}
 
