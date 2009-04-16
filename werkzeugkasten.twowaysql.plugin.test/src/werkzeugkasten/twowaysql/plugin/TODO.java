@@ -13,9 +13,9 @@ public interface TODO {
 	// -- EL式内で、最終結果の型がメソッドの時には、呼び忘れなので、エラーを出力する。
 	// - エラーメッセージに対する変更候補表示+自動変更
 	// fixed コメント部分の入力補完
-	// working マルチページエディタ化(入力候補の登録)
 	// working 式言語部分の入力補完
-	// - 引数名からエディタの入力補完候補の自動登録
+	// working マルチページエディタ化(入力候補の登録)
+	// working 引数名からエディタの入力補完候補の自動登録
 	// - interfaceからSQLプロセッサの自動生成
 	// - interfaceに定義されたSQLファイルが存在しない場合にエラー表示
 	// - リファクタリング追従
@@ -25,4 +25,12 @@ public interface TODO {
 	// - IFコメント入力時に、TABキーで、カーソル位置をジャンプする。JDTの Java -> Editor -> Templates 相当の機能
 	// - .sqlファイルのフォーマッタ機能
 	// - 式言語部分にマウスカーソルが当たっている時に、当該JavaElementのjavadoc等を表示する。
+	// - ProjectionViewer を使って、対応する括弧ごと開いたり閉じたりする。
+	// -- ProjectionAnnotationModel,ProjectionAnnotation
+	// - ITextHoverで、カーソルが当たっている式言語内の型に関するjavadocをホバーする。
+	// -- org.eclipse.jface.text.TextViewerHoverManager
+	// -- org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover
+	// - ソースコードフォーマット
+	// -- org.eclipse.jface.text.formatter.IContentFormatter
+	// -- パーザベースでやるなら、パーザ自体を作りなおさないとダメかも。
 }
