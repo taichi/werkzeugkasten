@@ -17,7 +17,6 @@ import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.Token;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.BadPartitioningException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
@@ -124,9 +123,6 @@ public class CommentContentAssistProcessor implements IContentAssistProcessor,
 				}
 			}
 			return proposals.toArray(new ICompletionProposal[proposals.size()]);
-		} catch (BadPartitioningException e) {
-			this.errorMessage = e.getMessage();
-			return null;
 		} catch (BadLocationException e) {
 			this.errorMessage = e.getMessage();
 			return null;

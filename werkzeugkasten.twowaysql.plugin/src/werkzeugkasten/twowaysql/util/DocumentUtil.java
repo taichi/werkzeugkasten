@@ -1,11 +1,11 @@
 package werkzeugkasten.twowaysql.util;
 
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.BadPartitioningException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.TextUtilities;
 
 public class DocumentUtil {
 
@@ -20,16 +20,15 @@ public class DocumentUtil {
 	}
 
 	public static ITypedRegion getPartition(IDocument document,
-			String partitionType, int offset) throws BadLocationException,
-			BadPartitioningException {
-		ITypedRegion partition = null;
-		if (document instanceof IDocumentExtension3) {
-			IDocumentExtension3 de3 = (IDocumentExtension3) document;
-			partition = de3.getPartition(partitionType, offset, true);
-		} else {
-			partition = document.getPartition(offset);
-		}
-		return partition;
+			String partitionType, int offset) throws BadLocationException {
+		return TextUtilities
+				.getPartition(document, partitionType, offset, true);
+	}
+
+	public static ITypedRegion[] computePartitioning(IDocument document,
+			String partitionType) throws BadLocationException {
+		return TextUtilities.computePartitioning(document, partitionType, 0,
+				document.getLength(), false);
 	}
 
 	public interface Detector {

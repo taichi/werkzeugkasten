@@ -5,7 +5,6 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.BadPartitioningException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
@@ -116,8 +115,6 @@ public class TwoWaySqlErrorReconciler implements IReconcilingStrategy,
 					// System.err.println("#######################");
 				}
 			} catch (BadLocationException e) {
-				Activator.log(e);
-			} catch (BadPartitioningException e) {
 				Activator.log(e);
 			}
 		}
