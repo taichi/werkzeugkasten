@@ -1,161 +1,144 @@
 package werkzeugkasten.twowaysql.editor.scanner;
 
-import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.C_ED;
-import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.C_LN_ED;
-import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.C_LN_ST;
-import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.C_ST;
-import static werkzeugkasten.twowaysql.grammar.TwoWaySqlLexer.SYMBOLS;
-
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.BitSet;
-import org.antlr.runtime.CommonToken;
-import org.antlr.runtime.CommonTokenStream;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.rules.ICharacterScanner;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
+import werkzeugkasten.twowaysql.Activator;
 import werkzeugkasten.twowaysql.Constants;
-import werkzeugkasten.twowaysql.grammar.NoChannelLexer;
 
 public class PartitionScanner implements IPartitionTokenScanner {
-	// TODO will be tune. cf. FastJavaPartitionScanner
 
+	protected IDocument document;
+
+	// temporary values.
+	protected int tokenOffset;
+	protected int tokenLength;
+
+	protected static final int EOF = ICharacterScanner.EOF;
 	protected static final IToken PT_TXT = new Token(
 			Constants.CONTENT_TYPE_TEXT);
 	protected static final IToken PT_BLOCKCOMMENT = new Token(
 			Constants.CONTENT_TYPE_BLOCKCOMMENT);
 	protected static final IToken PT_LINECOMMENT = new Token(
 			Constants.CONTENT_TYPE_LINECOMMENT);
-	protected static final BitSet C_ED_bits = BitSet.of(C_ED);
-	protected static final BitSet C_LN_ED_bits = BitSet.of(C_LN_ED);
-	protected static final BitSet TXT_bits = BitSet.of(C_ST, C_LN_ST);
-
-	protected CommonTokenStream tokens = null;
-	protected int rangeOffset = 0;
-	protected int tokenLength = 0;
-	protected int tokenOffset = 0;
-
-	public PartitionScanner() {
-	}
-
-	@Override
-	public int getTokenLength() {
-		return this.tokenLength;
-	}
-
-	@Override
-	public int getTokenOffset() {
-		return this.rangeOffset + this.tokenOffset;
-	}
 
 	@Override
 	public IToken nextToken() {
-		CommonToken start = (CommonToken) tokens.LT(1);
-		int type = start.getType();
-		if (type == org.antlr.runtime.Token.EOF) {
+		int offset = this.tokenOffset + this.tokenLength;
+		int prefix = offset;
+		int end = 0;
+		IToken result = Token.EOF;
+		switch (read(offset)) {
+		case EOF: {
 			return Token.EOF;
 		}
-
-		IToken result = PT_TXT;
-		CommonToken stop = null;
-		// TODO 式を含むコメントとそうでないコメントを分ける事に意味があるか、考慮する。
-		switch (type) {
-		case SYMBOLS: {
-			if (lookLikeC_ST()) {
-				stop = consumeComment();
+		case '/': {
+			if (read(offset + 1) == '*') {
+				prefix = offset + 2;
 				result = PT_BLOCKCOMMENT;
 				break;
 			}
-			// break; /で始まっていても、単にテキストとして扱っても良いケース
 		}
-		case C_ST: {
-			// stop = consume(C_ED_bits, 1);
-			stop = consumeComment();
-			result = PT_BLOCKCOMMENT;
-			break;
+		case '-': {
+			if (read(offset + 1) == '-') {
+				prefix = offset + 2;
+				result = PT_LINECOMMENT;
+				break;
+			}
 		}
-		case C_LN_ST: {
-			stop = consume(C_LN_ED_bits, 1);
-			tokens.consume();
+		case '#': {
+			prefix = offset + 1;
 			result = PT_LINECOMMENT;
 			break;
 		}
 		default: {
-			stop = consume(TXT_bits, -1);
+			prefix = offset + 1;
+			result = PT_TXT;
+			break;
 		}
 		}
-		emit(start, stop);
-		// System.out.printf("$PT$ %s start[%s %s] stop[%s %s] [%d:%d]%n",
-		// result
-		// .getData(), start, TwoWaySqlParser.tokenNames[start.getType()],
-		// stop, TwoWaySqlParser.tokenNames[stop.getType()],
-		// this.tokenOffset, this.tokenLength);
+
+		loop: while (true) {
+			switch (read(prefix++)) {
+			case EOF: {
+				end = prefix - 1;
+				break loop;
+			}
+			case '*': {
+				if (result == PT_BLOCKCOMMENT) {
+					if (read(prefix) == '/') {
+						end = prefix + 1;
+						break loop;
+					}
+				}
+				break;
+			}
+			case '\n': {
+				if (result == PT_LINECOMMENT) {
+					end = prefix;
+					break loop;
+				}
+				break;
+			}
+			case '/': {
+				if (read(prefix) == '*') {
+					end = prefix - 1;
+					break loop;
+				}
+				break;
+			}
+			case '-': {
+				if (read(prefix) == '-') {
+					end = prefix - 1;
+					break loop;
+				}
+				break;
+			}
+			case '#': {
+				end = prefix - 1;
+				break loop;
+			}
+			case '\"': {
+				prefix = skipToNextQuote(prefix + 1, '\"');
+				break;
+			}
+			case '\'': {
+				prefix = skipToNextQuote(prefix + 1, '\'');
+				break;
+			}
+			}
+		}
+		emit(offset, end);
 		return result;
 	}
 
-	protected CommonToken consumeComment() {
-		tokens.consume();
-		CommonToken ct = (CommonToken) tokens.LT(1);
-		int type = ct.getType();
-		while (C_ED_bits.member(type) == false) {
-			tokens.consume();
-			ct = (CommonToken) tokens.LT(1);
-			type = ct.getType();
-			if (lookLikeC_ST() || type == org.antlr.runtime.Token.EOF) {
-				return (CommonToken) tokens.LT(-1);
-			}
-		}
-		tokens.consume();
-		return ct;
-	}
-
-	protected boolean lookLikeC_ST() {
-		CommonToken ct = (CommonToken) tokens.LT(1);
-		if (ct.getType() == SYMBOLS && "/".equals(ct.getText())) {
-			ct = (CommonToken) tokens.LT(2);
-			if (ct.getType() == SYMBOLS && "*".equals(ct.getText())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	protected CommonToken consume(BitSet stopBit, int index) {
-		tokens.consume();
-		CommonToken ct = (CommonToken) tokens.LT(1);
-		int type = ct.getType();
-		while (stopBit.member(type) == false) {
-			tokens.consume();
-			ct = (CommonToken) tokens.LT(1);
-			type = ct.getType();
-			if (type == org.antlr.runtime.Token.EOF) {
-				return (CommonToken) tokens.LT(-1);
-			}
-		}
-		return (CommonToken) tokens.LT(index);
-	}
-
-	protected void emit(CommonToken start, CommonToken stop) {
-		this.tokenOffset = start.getStartIndex();
-		this.tokenLength = stop.getStopIndex() - start.getStartIndex() + 1;
-	}
-
-	@Override
-	public void setPartialRange(IDocument document, int offset, int length,
-			String contentType, int partitionOffset) {
+	protected int read(int offset) {
 		try {
-			String string = document.get(offset, length);
-			// System.out.printf("$PT$[%d:%d:%s:%d] [%s] %n", offset, length,
-			// contentType, partitionOffset, string);
-			rangeOffset = offset;
-			tokenLength = 0;
-			tokenOffset = 0;
-			tokens = new CommonTokenStream(new NoChannelLexer(
-					new ANTLRStringStream(string)));
+			if (offset < this.document.getLength()) {
+				return this.document.getChar(offset);
+			}
 		} catch (BadLocationException e) {
+			Activator.log(e);
 		}
+		return EOF;
+	}
+
+	protected void emit(int begin, int end) {
+		this.tokenOffset = begin;
+		this.tokenLength = end - begin;
+	}
+
+	protected int skipToNextQuote(int offset, int quote) {
+		for (int i = read(offset); i != quote; i = read(++offset)) {
+			if (i == EOF) {
+				return offset;
+			}
+		}
+		return offset + 1;
 	}
 
 	@Override
@@ -163,4 +146,29 @@ public class PartitionScanner implements IPartitionTokenScanner {
 		setPartialRange(document, offset, length, Constants.CONTENT_TYPE_TEXT,
 				0);
 	}
+
+	@Override
+	public void setPartialRange(IDocument document, int offset, int length,
+			String contentType, int partitionOffset) {
+		try {
+			String string = document.get(offset, length);
+			System.out.printf("$PT$[%d:%d:%s:%d] [%s] %n", offset, length,
+					contentType, partitionOffset, string);
+		} catch (BadLocationException e) {
+		}
+		this.document = document;
+		this.tokenOffset = offset;
+		this.tokenLength = 0;
+	}
+
+	@Override
+	public int getTokenOffset() {
+		return this.tokenOffset;
+	}
+
+	@Override
+	public int getTokenLength() {
+		return this.tokenLength;
+	}
+
 }
