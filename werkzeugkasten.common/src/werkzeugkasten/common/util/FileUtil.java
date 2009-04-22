@@ -122,18 +122,18 @@ public class FileUtil {
 		});
 	}
 
-	public static void delete(File file) {
-		delete(file.getPath(), NULL_FILTER);
+	public static void delete(String file) {
+		delete(file, NULL_FILTER);
 	}
 
 	public static void copy(String from, final String to, PathFilter filter) {
 		File fromFile = new File(from);
 		if (fromFile.exists()) {
+			File t = new File(to);
+			if (t.exists()) {
+				delete(to);
+			}
 			if (fromFile.isFile()) {
-				File t = new File(to);
-				if (t.exists()) {
-					delete(t);
-				}
 				copy(open(fromFile), t);
 			}
 			if (fromFile.isDirectory()) {
