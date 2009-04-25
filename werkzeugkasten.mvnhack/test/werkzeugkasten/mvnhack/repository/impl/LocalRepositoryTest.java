@@ -47,7 +47,7 @@ public class LocalRepositoryTest {
 	@After
 	public void tearDown() throws Exception {
 		if (another.exists()) {
-			FileUtil.delete(another);
+			FileUtil.delete(another.getPath());
 		}
 	}
 
@@ -61,7 +61,7 @@ public class LocalRepositoryTest {
 		assertEquals(3, set.size());
 
 		if (another.exists()) {
-			FileUtil.delete(another);
+			FileUtil.delete(another.getPath());
 		}
 		LocalRepository lr = new LocalRepository(another, builder);
 		lr.copyFrom(new DefaultContext(new DefaultConfiguration()), target, a);

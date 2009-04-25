@@ -41,14 +41,14 @@ public class DefaultContextTest {
 		url = cl.getResource(".");
 		destDir = new File(url.getPath(), "dest");
 		if (destDir.exists()) {
-			FileUtil.delete(destDir);
+			FileUtil.delete(destDir.getPath());
 		}
 		FlatDestination flat = new FlatDestination(destDir);
 		config.addDestination(flat);
 
 		destRepo = new File(url.getPath(), "destrepo");
 		if (destRepo.exists()) {
-			FileUtil.delete(destRepo);
+			FileUtil.delete(destRepo.getPath());
 		}
 		LocalRepository lrdest = new LocalRepository(destRepo, builder);
 		config.addDestination(lrdest);
@@ -59,10 +59,10 @@ public class DefaultContextTest {
 	@After
 	public void tearDown() throws Exception {
 		if (destDir.exists()) {
-			FileUtil.delete(destDir);
+			FileUtil.delete(destDir.getPath());
 		}
 		if (destRepo.exists()) {
-			FileUtil.delete(destRepo);
+			FileUtil.delete(destRepo.getPath());
 		}
 	}
 

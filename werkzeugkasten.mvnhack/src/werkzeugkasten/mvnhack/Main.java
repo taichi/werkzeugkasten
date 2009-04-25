@@ -104,7 +104,7 @@ public class Main {
 		}
 		final URL url = u;
 		if (url != null) {
-			new Streams.using<InputStream, Exception>(Exception.class) {
+			new Streams.using<InputStream, Exception>() {
 				@Override
 				public InputStream open() throws Exception {
 					return UrlUtil.open(url);

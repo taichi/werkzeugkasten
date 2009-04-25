@@ -39,7 +39,7 @@ public class RemoteRepositoryTest {
 		URL url = cl.getResource(".");
 		localRoot = new File(url.getPath(), "local");
 		if (localRoot.exists()) {
-			FileUtil.delete(localRoot);
+			FileUtil.delete(localRoot.getPath());
 		}
 		flat = new FlatDestination(localRoot);
 		target = new RemoteRepository(Constants.CENTRAL_REPOSITORY, builder);
@@ -51,7 +51,7 @@ public class RemoteRepositoryTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FileUtil.delete(localRoot);
+		FileUtil.delete(localRoot.getPath());
 	}
 
 	@Test
