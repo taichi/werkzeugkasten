@@ -2,6 +2,7 @@ package werkzeugkasten.dirbuildpath.job;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,40 +45,46 @@ public class RemoveDirBuildpathJob extends WorkspaceJob {
 		monitor.beginTask(Strings.UPDATE_BUILDPATH_CONTAINER,
 				IProgressMonitor.UNKNOWN);
 		try {
-			for (IProject project : this.map.keySet()) {
+			for (Iterator<IProject> i = this.map.keySet().iterator(); i
+					.hasNext();) {
+				IProject project = i.next();
 				ProgressMonitorUtil.isCanceled(monitor, 1);
 				try {
-					IJavaProject javap = JavaCore.create(project);
-					final Map<IPath, IClasspathEntry> ents = ClasspathEntryUtil
-							.toClasspathMap(javap);
-					ScopedPreferenceStore store = new ScopedPreferenceStore(
-							new ProjectScope(project), Constants.ID_PLUGIN);
-					IWorkspaceRoot root = ResourcesPlugin.getWorkspace()
-							.getRoot();
-					for (IPath p : this.map.get(project)) {
-						ProgressMonitorUtil.isCanceled(monitor, 1);
-						store.setValue(p.toString(), "");
-						IResource r = root.findMember(p);
-						if (r != null && r.exists()) {
-							r.accept(new IResourceVisitor() {
-								public boolean visit(IResource resource)
-										throws CoreException {
-									if (AddDirBuildpathJob.isLib.matcher(
-											resource.getName()).matches()) {
-										IPath path = resource.getFullPath();
-										ents.remove(path);
+					if (project.exists()) {
+						IJavaProject javap = JavaCore.create(project);
+						final Map<IPath, IClasspathEntry> ents = ClasspathEntryUtil
+								.toClasspathMap(javap);
+						ScopedPreferenceStore store = new ScopedPreferenceStore(
+								new ProjectScope(project), Constants.ID_PLUGIN);
+						IWorkspaceRoot root = ResourcesPlugin.getWorkspace()
+								.getRoot();
+						for (IPath p : this.map.get(project)) {
+							ProgressMonitorUtil.isCanceled(monitor, 1);
+							store.setValue(p.toString(), "");
+							IResource r = root.findMember(p);
+							if (r != null && r.exists()) {
+								r.accept(new IResourceVisitor() {
+									public boolean visit(IResource resource)
+											throws CoreException {
+										if (AddDirBuildpathJob.isLib.matcher(
+												resource.getName()).matches()) {
+											IPath path = resource.getFullPath();
+											ents.remove(path);
+										}
+										return true;
 									}
-									return true;
-								}
-							});
+								});
+							}
+							AbstractLightweightLabelDecorator.updateDecorators(
+									Constants.ID_DECORATOR, r);
 						}
-						AbstractLightweightLabelDecorator.updateDecorators(
-								Constants.ID_DECORATOR, r);
+						Collection<IClasspathEntry> c = ents.values();
+						javap.setRawClasspath(c.toArray(new IClasspathEntry[c
+								.size()]), monitor);
+						store.save();
+					} else {
+						i.remove();
 					}
-					Collection<IClasspathEntry> c = ents.values();
-					javap.setRawClasspath(c.toArray(new IClasspathEntry[c
-							.size()]), monitor);
-					store.save();
 				} catch (IOException e) {
 					Activator.log(e);
 				}
