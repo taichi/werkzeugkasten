@@ -15,7 +15,7 @@ import werkzeugkasten.common.util.FileUtil;
 
 public abstract class BuildSupport {
 
-	protected static FileUtil.PathFilter FILTER_DEFAULT_IGNORED = new FileUtil.ReverseFilter(
+	protected static FileUtil.NameFilter FILTER_DEFAULT_IGNORED = new FileUtil.ReverseFilter(
 			new FileUtil.PatternFilter(
 					"^(\\..*|CVS|SCCS|[Vv][Ss][Ss][Vv][Ee][Rr]\\.[Ss][Cc][Cc]|.*(\\.([Bb][Aa]?[Kk]|[Tt][Mm][Pp]|[Oo][Rr][Ii]?[Gg])|~))$"));
 
@@ -71,7 +71,7 @@ public abstract class BuildSupport {
 	 * @param filter
 	 * @return files
 	 */
-	protected List<File> list(String path, FileUtil.PathFilter filter) {
+	protected List<File> list(String path, FileUtil.NameFilter filter) {
 		return FileUtil.list(path, filter);
 	}
 
@@ -87,24 +87,24 @@ public abstract class BuildSupport {
 		copy(from, to, FILTER_DEFAULT_IGNORED);
 	}
 
-	protected void copy(String from, String to, FileUtil.PathFilter filter) {
+	protected void copy(String from, String to, FileUtil.NameFilter filter) {
 		File f = new File(from);
 		File t = new File(to);
 		if (f.exists()) {
 			if (f.isFile()) {
 				if (t.exists()) {
-					delete(t);
+					delete(to);
 				}
 				FileUtil.copy(FileUtil.open(f), t);
 			}
 		}
 	}
 
-	protected void delete(File file) {
+	protected void delete(String file) {
 		FileUtil.delete(file);
 	}
 
-	protected void delete(String root, FileUtil.PathFilter filter) {
+	protected void delete(String root, FileUtil.NameFilter filter) {
 		FileUtil.delete(root, filter);
 	}
 
