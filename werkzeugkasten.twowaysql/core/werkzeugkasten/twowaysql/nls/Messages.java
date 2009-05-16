@@ -71,6 +71,7 @@ public class Messages {
 	public static String BINDERPRODUCER_FIND_TYPE;
 	public static String BINDERPRODUCER_FIND_NAME;
 	public static String LABEL_TWOWAYSQL;
+	public static String UNEXPECTED_TOKEN_TYPE;
 	static {
 		Class<?> clazz = Messages.class;
 		SingleLocaleStrings.load(clazz);

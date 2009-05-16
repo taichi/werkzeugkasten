@@ -3,7 +3,7 @@ package werkzeugkasten.twowaysql.plugin;
 public interface TODO {
 
 	// fixed パーティショナの実装
-	// - Lexerを使わないパーティショナの実装
+	// fixed Lexerを使わないパーティショナの実装
 	// fixed 色分け
 	// - 色分け定義の変更、表示フォントの変更
 	// working パーザエラーメッセージの表示
@@ -24,14 +24,13 @@ public interface TODO {
 	// - 対応関係のないSQLファイルの検索ツール
 	// - .sqlファイルのデバッグ実行。引数にテキトウな値を設定して、最終的に動作するSQLをステップ実行しながら確認出来る。
 	// - IFコメント入力時に、TABキーで、カーソル位置をジャンプする。JDTの Java -> Editor -> Templates 相当の機能
-	// - .sqlファイルのフォーマッタ機能
 	// - 式言語部分にマウスカーソルが当たっている時に、当該JavaElementのjavadoc等を表示する。
 	// - ProjectionViewer を使って、対応する括弧ごと開いたり閉じたりする。
 	// -- ProjectionAnnotationModel,ProjectionAnnotation
 	// - ITextHoverで、カーソルが当たっている式言語内の型に関するjavadocをホバーする。
 	// -- org.eclipse.jface.text.TextViewerHoverManager
 	// -- org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover
-	// - ソースコードフォーマット
+	// - .sqlファイルのフォーマッタ機能
 	// -- org.eclipse.jface.text.formatter.IContentFormatter
 	// -- パーザベースでやるなら、パーザ自体を作りなおさないとダメかも。
 }
