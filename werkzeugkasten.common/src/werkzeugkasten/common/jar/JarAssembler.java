@@ -44,8 +44,7 @@ public class JarAssembler {
 			Attributes main = manifest.getMainAttributes();
 			String version = main.getValue(Attributes.Name.MANIFEST_VERSION);
 			if (StringUtil.isEmpty(version)) {
-				main.putValue(Attributes.Name.MANIFEST_VERSION.toString(),
-						"1.0");
+				main.put(Attributes.Name.MANIFEST_VERSION, "1.0");
 			}
 			this.stream = new JarOutputStream(new BufferedOutputStream(
 					new FileOutputStream(dest)));

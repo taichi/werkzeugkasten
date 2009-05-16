@@ -1,6 +1,3 @@
-/**
- * 
- */
 package werkzeugkasten.common.jar;
 
 import java.io.InputStream;

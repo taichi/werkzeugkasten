@@ -1,6 +1,3 @@
-/**
- * 
- */
 package werkzeugkasten.common.jar;
 
 import java.util.HashMap;
@@ -16,7 +13,7 @@ public abstract class JarConfig {
 	protected Map<Class<?>, ExceptionHandler> excetionHandlers = new HashMap<Class<?>, ExceptionHandler>();
 
 	public JarConfig() {
-		excetionHandlers.put(Object.class, DEFAULT_HANDLER);
+		this.excetionHandlers.put(Object.class, DEFAULT_HANDLER);
 	}
 
 	public ExceptionHandler find(Class<?> key) {
