@@ -50,7 +50,7 @@ public class RemoveDirBuildpathJob extends WorkspaceJob {
 				IProject project = i.next();
 				ProgressMonitorUtil.isCanceled(monitor, 1);
 				try {
-					if (project.exists()) {
+					if (project.exists() && project.isOpen()) {
 						IJavaProject javap = JavaCore.create(project);
 						final Map<IPath, IClasspathEntry> ents = ClasspathEntryUtil
 								.toClasspathMap(javap);

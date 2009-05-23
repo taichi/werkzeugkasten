@@ -32,7 +32,7 @@ public class DirBuildpathResourceChangeListener implements
 						switch (r.getType()) {
 						case IResource.PROJECT: {
 							IProject p = r.getProject();
-							if (p.exists()) {
+							if (p.exists() && p.isOpen()) {
 								this.current = p;
 								this.currentPref = new ScopedPreferenceStore(
 										new ProjectScope(p),
