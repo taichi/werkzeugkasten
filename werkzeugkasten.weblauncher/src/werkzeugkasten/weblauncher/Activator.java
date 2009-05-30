@@ -224,7 +224,7 @@ public class Activator extends AbstractUIPlugin {
 				if (ID_LAUNCH_CONFIG.equals(id)) {
 					IProject p = LaunchUtil.getProject(l);
 					if (project.equals(p)) {
-						FileUtil.delete(work);
+						FileUtil.delete(work.getAbsolutePath());
 						DebugPlugin.getDefault().removeDebugEventListener(this);
 					}
 				}
