@@ -12,6 +12,7 @@ import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.EarlyExitException;
+import org.antlr.runtime.MismatchedSetException;
 import org.antlr.runtime.MismatchedTokenException;
 import org.antlr.runtime.MissingTokenException;
 import org.antlr.runtime.NoViableAltException;
@@ -284,8 +285,7 @@ public class TwoWaySqlParserTest {
 		assertBindComment(EarlyExitException.class, "/*?");
 		assertBindComment(MismatchedTokenException.class, "/*? hoge");
 		assertBindComment(MismatchedTokenException.class, "/*?hoge*");
-		assertBindComment(EarlyExitException.class, "/*?hoge*/");
-		assertBindComment(EarlyExitException.class, "/*?aa*?hoge*/");
+		assertBindComment(MismatchedSetException.class, "/*?hoge*/");
 	}
 
 	protected void assertBindComment(Class<?> expected, String sql)
@@ -331,9 +331,10 @@ public class TwoWaySqlParserTest {
 	public void testInBindSkipped() throws Exception {
 		assertInBindSkipped(MissingTokenException.class, "?");
 		assertInBindSkipped(MissingTokenException.class, "? aaa)");
-		assertInBindSkipped(EarlyExitException.class, "(");
-		assertInBindSkipped(EarlyExitException.class, "(aaa,");
-		assertInBindSkipped(EarlyExitException.class, "('aaa',,");
+		System.err.println("=====================");
+		assertInBindSkipped(MismatchedSetException.class, "(");
+		assertInBindSkipped(MismatchedSetException.class, "(aaa,");
+		assertInBindSkipped(MismatchedSetException.class, "('aaa',,");
 		assertInBindSkipped(MissingTokenException.class, "(aaa,bbb");
 		assertInBindSkipped(MissingTokenException.class, "(aaa(");
 	}

@@ -1,20 +1,53 @@
-// $ANTLR 3.1.1 C:\\development\\java\\workspace_3.4.1\\werkzeugkasten.twowaysql\\core\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g 2009-04-05 03:16:20
+// $ANTLR 3.1.1 C:\\development\\java\\workspace_3.4.1\\werkzeugkasten.twowaysql\\core\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g 2009-06-05 04:14:13
 
 package werkzeugkasten.twowaysql.grammar;
 
-import werkzeugkasten.twowaysql.error.*;
-import werkzeugkasten.twowaysql.error.mapper.*;
-import werkzeugkasten.twowaysql.tree.*;
-
-
-
-import org.antlr.runtime.*;
-import java.util.Stack;
-import java.util.List;
 import java.util.ArrayList;
 
+import org.antlr.runtime.BaseRecognizer;
+import org.antlr.runtime.BitSet;
+import org.antlr.runtime.DFA;
+import org.antlr.runtime.EarlyExitException;
+import org.antlr.runtime.MismatchedSetException;
+import org.antlr.runtime.NoViableAltException;
+import org.antlr.runtime.Parser;
+import org.antlr.runtime.ParserRuleReturnScope;
+import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.RecognizerSharedState;
+import org.antlr.runtime.Token;
+import org.antlr.runtime.TokenStream;
+import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.CommonTreeAdaptor;
+import org.antlr.runtime.tree.TreeAdaptor;
 
-import org.antlr.runtime.tree.*;
+import werkzeugkasten.twowaysql.error.ExceptionMapper;
+import werkzeugkasten.twowaysql.error.ProblemCoordinator;
+import werkzeugkasten.twowaysql.error.mapper.BeginCommentExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.BindCommentExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.BindingNameExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.BlockCommentExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.ElseCommentExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.ElseIfBlockCommentExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.ElseIfLineCommentExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.ElseIfNodeExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.ElseNodeExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.EndCommentExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.ExpressionExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.IfCommentExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.InBindExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.InBindSkippedExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.LineCommentExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.TwoWaySqlExceptionMapper;
+import werkzeugkasten.twowaysql.error.mapper.TxtExceptionMapper;
+import werkzeugkasten.twowaysql.tree.BeginNode;
+import werkzeugkasten.twowaysql.tree.BindNode;
+import werkzeugkasten.twowaysql.tree.ElseNode;
+import werkzeugkasten.twowaysql.tree.ExpressionNode;
+import werkzeugkasten.twowaysql.tree.IfNode;
+import werkzeugkasten.twowaysql.tree.InBindNode;
+import werkzeugkasten.twowaysql.tree.QueryNode;
+import werkzeugkasten.twowaysql.tree.TwoWayQuery;
+import werkzeugkasten.twowaysql.tree.TxtNode;
 
 public class TwoWaySqlParser extends Parser {
     public static final String[] tokenNames = new String[] {
@@ -2477,7 +2510,7 @@ public class TwoWaySqlParser extends Parser {
     };
 
     // $ANTLR start "bindchars"
-    // C:\\development\\java\\workspace_3.4.1\\werkzeugkasten.twowaysql\\core\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:434:1: bindchars returns [TxtNode node] : ( IDENT | QUOTED | SYMBOLS | SYM_BIND )+ ;
+    // C:\\development\\java\\workspace_3.4.1\\werkzeugkasten.twowaysql\\core\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:434:1: bindchars returns [TxtNode node] : ( IDENT | QUOTED | SYMBOLS | SYM_BIND ) ;
     public final TwoWaySqlParser.bindchars_return bindchars() throws RecognitionException {
         TwoWaySqlParser.bindchars_return retval = new TwoWaySqlParser.bindchars_return();
         retval.start = input.LT(1);
@@ -2492,50 +2525,21 @@ public class TwoWaySqlParser extends Parser {
         		retval.node = new TxtNode();
         	
         try {
-            // C:\\development\\java\\workspace_3.4.1\\werkzeugkasten.twowaysql\\core\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:443:2: ( ( IDENT | QUOTED | SYMBOLS | SYM_BIND )+ )
-            // C:\\development\\java\\workspace_3.4.1\\werkzeugkasten.twowaysql\\core\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:444:2: ( IDENT | QUOTED | SYMBOLS | SYM_BIND )+
+            // C:\\development\\java\\workspace_3.4.1\\werkzeugkasten.twowaysql\\core\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:443:2: ( ( IDENT | QUOTED | SYMBOLS | SYM_BIND ) )
+            // C:\\development\\java\\workspace_3.4.1\\werkzeugkasten.twowaysql\\core\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:444:2: ( IDENT | QUOTED | SYMBOLS | SYM_BIND )
             {
             root_0 = (CommonTree)adaptor.nil();
 
-            // C:\\development\\java\\workspace_3.4.1\\werkzeugkasten.twowaysql\\core\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:444:2: ( IDENT | QUOTED | SYMBOLS | SYM_BIND )+
-            int cnt21=0;
-            loop21:
-            do {
-                int alt21=2;
-                int LA21_0 = input.LA(1);
-
-                if ( ((LA21_0>=IDENT && LA21_0<=QUOTED)||(LA21_0>=SYMBOLS && LA21_0<=SYM_BIND)) ) {
-                    alt21=1;
-                }
-
-
-                switch (alt21) {
-            	case 1 :
-            	    // C:\\development\\java\\workspace_3.4.1\\werkzeugkasten.twowaysql\\core\\werkzeugkasten\\twowaysql\\grammar\\TwoWaySql.g:
-            	    {
-            	    set89=(Token)input.LT(1);
-            	    if ( (input.LA(1)>=IDENT && input.LA(1)<=QUOTED)||(input.LA(1)>=SYMBOLS && input.LA(1)<=SYM_BIND) ) {
-            	        input.consume();
-            	        adaptor.addChild(root_0, (CommonTree)adaptor.create(set89));
-            	        state.errorRecovery=false;
-            	    }
-            	    else {
-            	        MismatchedSetException mse = new MismatchedSetException(null,input);
-            	        throw mse;
-            	    }
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    if ( cnt21 >= 1 ) break loop21;
-                        EarlyExitException eee =
-                            new EarlyExitException(21, input);
-                        throw eee;
-                }
-                cnt21++;
-            } while (true);
+            set89=(Token)input.LT(1);
+            if ( (input.LA(1)>=IDENT && input.LA(1)<=QUOTED)||(input.LA(1)>=SYMBOLS && input.LA(1)<=SYM_BIND) ) {
+                input.consume();
+                adaptor.addChild(root_0, (CommonTree)adaptor.create(set89));
+                state.errorRecovery=false;
+            }
+            else {
+                MismatchedSetException mse = new MismatchedSetException(null,input);
+                throw mse;
+            }
 
 
             }
@@ -2550,10 +2554,11 @@ public class TwoWaySqlParser extends Parser {
             		retval.node.freeze();
             	
         }
-        catch (EarlyExitException ex) {
 
-            		throw ex;
-            	
+        catch (RecognitionException ex) {
+        	reportError(ex);
+        	recover(input,ex);
+        	retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), ex);
         }
         finally {
         }
@@ -2715,6 +2720,6 @@ public class TwoWaySqlParser extends Parser {
     public static final BitSet FOLLOW_bindchars_in_inbindskipped1010 = new BitSet(new long[]{0x0000000000005A00L});
     public static final BitSet FOLLOW_txtcomment_in_inbindskipped1012 = new BitSet(new long[]{0x0000000000005A00L});
     public static final BitSet FOLLOW_SYM_RP_in_inbindskipped1021 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_set_in_bindchars1056 = new BitSet(new long[]{0x00000000000001B2L});
+    public static final BitSet FOLLOW_set_in_bindchars1056 = new BitSet(new long[]{0x0000000000000002L});
 
 }

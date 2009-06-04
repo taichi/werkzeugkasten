@@ -441,12 +441,8 @@ bindchars  returns[TxtNode node]
 		$node.freeze();
 	}
 	:
-	(IDENT | QUOTED | SYMBOLS | SYM_BIND)+
+	(IDENT | QUOTED | SYMBOLS | SYM_BIND)
 	;
-	catch [EarlyExitException ex] {
-		throw ex;
-	}
-
 // $>
 
 // $<Symbols
