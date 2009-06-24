@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 
 import werkzeugkasten.common.resource.ProjectUtil;
-import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
+import werkzeugkasten.common.widget.ResourceTreeSelectionDialog;
 import werkzeugkasten.resource.synchronizer.Activator;
 import werkzeugkasten.resource.synchronizer.nls.Strings;
 
