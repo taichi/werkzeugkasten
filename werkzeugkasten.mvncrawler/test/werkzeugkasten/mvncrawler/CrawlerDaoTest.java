@@ -75,7 +75,7 @@ public class CrawlerDaoTest {
 	@AfterClass
 	public static void stopDb() throws Exception {
 		server.shutdown();
-		FileUtil.delete(data);
+		FileUtil.delete(data.getPath());
 	}
 
 	@Before
