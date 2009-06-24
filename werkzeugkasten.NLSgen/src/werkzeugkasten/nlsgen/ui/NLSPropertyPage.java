@@ -43,7 +43,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import werkzeugkasten.common.runtime.AdaptableUtil;
 import werkzeugkasten.common.util.StringUtil;
-import werkzeugkasten.common.wiget.ResourceTreeSelectionDialog;
+import werkzeugkasten.common.widget.ResourceTreeSelectionDialog;
 import werkzeugkasten.nlsgen.Activator;
 import werkzeugkasten.nlsgen.Constants;
 import werkzeugkasten.nlsgen.ResourceGenerator;

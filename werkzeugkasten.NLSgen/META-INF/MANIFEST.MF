@@ -23,7 +23,7 @@ Export-Package: werkzeugkasten.common.exception,
  werkzeugkasten.common.runtime,
  werkzeugkasten.common.ui,
  werkzeugkasten.common.util,
- werkzeugkasten.common.wiget,
+ werkzeugkasten.common.widget,
  werkzeugkasten.nlsgen,
  werkzeugkasten.nlsgen.gen
 Bundle-ActivationPolicy: lazy
