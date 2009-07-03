@@ -1,16 +1,12 @@
 package werkzeugkasten.factory.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import werkzeugkasten.factory.AdapterFactory;
 import werkzeugkasten.factory.AdapterManager;
 
 public class DefaultAdapterManager implements AdapterManager {
 
-	protected Map<Class<?>, AdapterFactory<?>> factories = new HashMap<Class<?>, AdapterFactory<?>>();
-
 	public <T> T getAdapter(Object adaptable, Class<T> adapterType) {
+
 		return null;
 	}
 
