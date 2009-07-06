@@ -19,7 +19,7 @@
    <feature url="features/werkzeugkasten.NLSgen.feature_0.0.7.jar" id="werkzeugkasten.NLSgen.feature" version="0.0.7">
       <category name="Misc"/>
    </feature>
-   <feature url="features/werkzeugkasten.weblauncher.feature_0.0.23.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.23">
+   <feature url="features/werkzeugkasten.weblauncher.feature_0.0.24.jar" id="werkzeugkasten.weblauncher.feature" version="0.0.24">
       <category name="WebLauncher"/>
    </feature>
    <category-def name="DbLauncher" label="DbLauncher">
