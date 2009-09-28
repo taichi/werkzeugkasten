@@ -1,6 +1,6 @@
 package org.handwerkszeug.container;
 
-public interface ContainerFactory<CTX, N extends Nameable, K> {
+public interface ContainerFactory<CTX, N extends Nameable, K> extends
+		Factory<Container<N, K>, CTX> {
 
-	Container<N, K> create(CTX context);
 }
