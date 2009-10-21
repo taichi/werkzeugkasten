@@ -2,7 +2,7 @@
 <feature
       id="werkzeugkasten.weblauncher.feature"
       label="WebLauncher"
-      version="0.0.25"
+      version="0.0.26"
       provider-name="ryushi">
 
    <description url="http://code.google.com/p/werkzeugkasten/">
@@ -446,7 +446,7 @@
          id="werkzeugkasten.weblauncher.sdloader"
          download-size="0"
          install-size="0"
-         version="0.3.2"/>
+         version="0.3.3"/>
 
    <plugin
          id="werkzeugkasten.weblauncher.tomcat55"
