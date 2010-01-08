@@ -1,0 +1,28 @@
+package kvsview.test;
+
+option java_package = "org.handwerkszeug.kvsview.model.pb";
+option java_outer_classname = "ModelPB";
+option optimize_for = SPEED;
+
+message Entity {
+	repeated string className = 1;
+}
+
+message Leaf {
+	required int64 id = 1;
+	required string valueKey = 2;
+}
+
+message Node {
+	required string id = 1;
+	required Node parent = 2;
+	required bool hasLeaf = 3; 
+	repeated Leaf leaves = 4;
+	optional Node firstChild = 5;
+	optional Node next = 6;
+	optional Node prev = 7;
+}
+
+message EntityRoot {
+	repeated string nodeId = 1;
+}
