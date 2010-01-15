@@ -9,20 +9,15 @@ message Entity {
 }
 
 message Leaf {
-	required int64 id = 1;
-	required string valueKey = 2;
+	required string valueKey = 1;
 }
 
 message Node {
-	required string id = 1;
-	required Node parent = 2;
-	required bool hasLeaf = 3; 
-	repeated Leaf leaves = 4;
-	optional Node firstChild = 5;
-	optional Node next = 6;
-	optional Node prev = 7;
+	required bool hasLeaf = 1;
+	repeated Leaf leaves = 2;
+	optional string parentKey = 3;
+	optional string firstChild = 4;
+	optional string next = 5;
+	optional string prev = 6;
 }
 
-message EntityRoot {
-	repeated string nodeId = 1;
-}
