@@ -1,3 +1,4 @@
+package org.handwerkszeug;
 import java.util.Properties;
 
 import voldemort.server.VoldemortConfig;
