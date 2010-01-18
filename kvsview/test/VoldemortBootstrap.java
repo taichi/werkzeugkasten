@@ -10,6 +10,17 @@ import voldemort.store.readonly.ReadOnlyStorageConfiguration;
 public class VoldemortBootstrap {
 
 	public static void main(String[] args) {
+		final VoldemortServer server = start();
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				VoldemortBootstrap.stop(server);
+			}
+		});
+	}
+
+	public static VoldemortServer start() {
 		Properties prop = new Properties();
 		prop.setProperty("node.id", "0");
 		prop.setProperty("voldemort.home", "./");
@@ -20,16 +31,14 @@ public class VoldemortBootstrap {
 				+ CacheStorageConfiguration.class.getName() + ", "
 				+ ReadOnlyStorageConfiguration.class.getName());
 		VoldemortConfig config = new VoldemortConfig(prop);
-		final VoldemortServer server = new VoldemortServer(config);
+		VoldemortServer server = new VoldemortServer(config);
 		server.start();
+		return server;
+	}
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				if (server != null && server.isStarted()) {
-					server.stop();
-				}
-			}
-		});
+	public static void stop(VoldemortServer server) {
+		if (server != null && server.isStarted()) {
+			server.stop();
+		}
 	}
 }

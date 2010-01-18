@@ -2,16 +2,16 @@ package org.handwerkszeug.kvsview;
 
 import voldemort.versioning.Versioned;
 
-public interface EntityView<V> {
+public interface EntityView {
 
 	@NotNull
 	Iterable<Class<?>> getAccessibleEntities();
 
 	@NotNull
-	Iterable<Versioned<V>> getAllEntities(@NotNull Class<V> entity,
+	<V> Iterable<Versioned<V>> getAllEntities(@NotNull Class<V> entity,
 			@NotNull Filter<V> filter);
 
 	@NotNull
-	Iterable<V> getAllEntityValues(@NotNull Class<V> entity,
+	<V> Iterable<V> getAllEntityValues(@NotNull Class<V> entity,
 			@NotNull Filter<V> filter);
 }

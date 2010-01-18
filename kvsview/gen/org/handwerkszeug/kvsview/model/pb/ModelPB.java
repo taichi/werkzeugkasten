@@ -1069,6 +1069,312 @@ public final class ModelPB {
     }
   }
   
+  public static final class EntityRoot extends
+      com.google.protobuf.GeneratedMessage {
+    // Use EntityRoot.newBuilder() to construct.
+    private EntityRoot() {}
+    
+    private static final EntityRoot defaultInstance = new EntityRoot();
+    public static EntityRoot getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public EntityRoot getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.handwerkszeug.kvsview.model.pb.ModelPB.internal_static_kvsview_test_EntityRoot_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.handwerkszeug.kvsview.model.pb.ModelPB.internal_static_kvsview_test_EntityRoot_fieldAccessorTable;
+    }
+    
+    // repeated string rootNode = 1;
+    public static final int ROOTNODE_FIELD_NUMBER = 1;
+    private java.util.List<java.lang.String> rootNode_ =
+      java.util.Collections.emptyList();
+    public java.util.List<java.lang.String> getRootNodeList() {
+      return rootNode_;
+    }
+    public int getRootNodeCount() { return rootNode_.size(); }
+    public java.lang.String getRootNode(int index) {
+      return rootNode_.get(index);
+    }
+    
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (java.lang.String element : getRootNodeList()) {
+        output.writeString(1, element);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      {
+        int dataSize = 0;
+        for (java.lang.String element : getRootNodeList()) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeStringSizeNoTag(element);
+        }
+        size += dataSize;
+        size += 1 * getRootNodeList().size();
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeDelimitedFrom(input).buildParsed();
+    }
+    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeDelimitedFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot result;
+      
+      // Construct using org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot();
+        return builder;
+      }
+      
+      protected org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot.getDescriptor();
+      }
+      
+      public org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot getDefaultInstanceForType() {
+        return org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        if (result.rootNode_ != java.util.Collections.EMPTY_LIST) {
+          result.rootNode_ =
+            java.util.Collections.unmodifiableList(result.rootNode_);
+        }
+        org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot) {
+          return mergeFrom((org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot other) {
+        if (other == org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot.getDefaultInstance()) return this;
+        if (!other.rootNode_.isEmpty()) {
+          if (result.rootNode_.isEmpty()) {
+            result.rootNode_ = new java.util.ArrayList<java.lang.String>();
+          }
+          result.rootNode_.addAll(other.rootNode_);
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              addRootNode(input.readString());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // repeated string rootNode = 1;
+      public java.util.List<java.lang.String> getRootNodeList() {
+        return java.util.Collections.unmodifiableList(result.rootNode_);
+      }
+      public int getRootNodeCount() {
+        return result.getRootNodeCount();
+      }
+      public java.lang.String getRootNode(int index) {
+        return result.getRootNode(index);
+      }
+      public Builder setRootNode(int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.rootNode_.set(index, value);
+        return this;
+      }
+      public Builder addRootNode(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  if (result.rootNode_.isEmpty()) {
+          result.rootNode_ = new java.util.ArrayList<java.lang.String>();
+        }
+        result.rootNode_.add(value);
+        return this;
+      }
+      public Builder addAllRootNode(
+          java.lang.Iterable<? extends java.lang.String> values) {
+        if (result.rootNode_.isEmpty()) {
+          result.rootNode_ = new java.util.ArrayList<java.lang.String>();
+        }
+        super.addAll(values, result.rootNode_);
+        return this;
+      }
+      public Builder clearRootNode() {
+        result.rootNode_ = java.util.Collections.emptyList();
+        return this;
+      }
+    }
+    
+    static {
+      org.handwerkszeug.kvsview.model.pb.ModelPB.getDescriptor();
+    }
+    
+    static {
+      org.handwerkszeug.kvsview.model.pb.ModelPB.internalForceInit();
+    }
+  }
+  
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_kvsview_test_Entity_descriptor;
   private static
@@ -1084,6 +1390,11 @@ public final class ModelPB {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_kvsview_test_Node_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_kvsview_test_EntityRoot_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_kvsview_test_EntityRoot_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1097,9 +1408,9 @@ public final class ModelPB {
       "ntity\022\021\n\tclassName\030\001 \003(\t\"\030\n\004Leaf\022\020\n\010valu" +
       "eKey\030\002 \002(\t\"j\n\004Node\022\"\n\006leaves\030\001 \003(\0132\022.kvs" +
       "view.test.Leaf\022\016\n\006parent\030\002 \001(\t\022\022\n\nfirstC" +
-      "hild\030\003 \001(\t\022\014\n\004next\030\004 \001(\t\022\014\n\004prev\030\005 \001(\tB/" +
-      "\n\"org.handwerkszeug.kvsview.model.pbB\007Mo" +
-      "delPBH\001"
+      "hild\030\003 \001(\t\022\014\n\004next\030\004 \001(\t\022\014\n\004prev\030\005 \001(\t\"\036" +
+      "\n\nEntityRoot\022\020\n\010rootNode\030\001 \003(\tB/\n\"org.ha" +
+      "ndwerkszeug.kvsview.model.pbB\007ModelPBH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1130,6 +1441,14 @@ public final class ModelPB {
               new java.lang.String[] { "Leaves", "Parent", "FirstChild", "Next", "Prev", },
               org.handwerkszeug.kvsview.model.pb.ModelPB.Node.class,
               org.handwerkszeug.kvsview.model.pb.ModelPB.Node.Builder.class);
+          internal_static_kvsview_test_EntityRoot_descriptor =
+            getDescriptor().getMessageTypes().get(3);
+          internal_static_kvsview_test_EntityRoot_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_kvsview_test_EntityRoot_descriptor,
+              new java.lang.String[] { "RootNode", },
+              org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot.class,
+              org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot.Builder.class);
           return null;
         }
       };

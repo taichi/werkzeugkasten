@@ -20,3 +20,6 @@ message Node {
 	optional string prev = 5;
 }
 
+message EntityRoot {
+	repeated string rootNode = 1;
+}

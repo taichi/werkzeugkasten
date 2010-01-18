@@ -10,7 +10,6 @@ import org.handwerkszeug.kvsview.model.pb.ModelPB;
 import voldemort.client.StoreClient;
 
 public class PBNode<V> implements Node<V> {
-
 	protected ModelPB.Node delegate;
 
 	protected StoreClient<String, ModelPB.Node> nodeClient;
@@ -65,6 +64,7 @@ public class PBNode<V> implements Node<V> {
 	}
 
 	protected Node<V> node(String key) {
+		// TODO 先読み、キャッシュ、遅延読み。
 		ModelPB.Node d = this.nodeClient.getValue(key);
 		return new PBNode<V>(d, this.nodeClient, this.leafClient, this.client);
 	}
