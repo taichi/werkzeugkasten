@@ -2,7 +2,7 @@ package org.handwerkszeug.kvsview.model.pb;
 
 import java.util.UUID;
 
-public class UUIDKeyGenerator {
+public class UUIDKeyGenerator implements KeyGenerator {
 
 	public String nextKey(ModelPB.Node node) {
 		// TODO より低コストかつ、ノードの状態を考慮したID生成処理を実装しる。

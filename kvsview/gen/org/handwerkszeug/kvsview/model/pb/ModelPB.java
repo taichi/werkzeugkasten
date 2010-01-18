@@ -337,13 +337,6 @@ public final class ModelPB {
       return org.handwerkszeug.kvsview.model.pb.ModelPB.internal_static_kvsview_test_Leaf_fieldAccessorTable;
     }
     
-    // required int64 id = 1;
-    public static final int ID_FIELD_NUMBER = 1;
-    private boolean hasId;
-    private long id_ = 0L;
-    public boolean hasId() { return hasId; }
-    public long getId() { return id_; }
-    
     // required string valueKey = 2;
     public static final int VALUEKEY_FIELD_NUMBER = 2;
     private boolean hasValueKey;
@@ -352,16 +345,12 @@ public final class ModelPB {
     public java.lang.String getValueKey() { return valueKey_; }
     
     public final boolean isInitialized() {
-      if (!hasId) return false;
       if (!hasValueKey) return false;
       return true;
     }
     
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (hasId()) {
-        output.writeInt64(1, getId());
-      }
       if (hasValueKey()) {
         output.writeString(2, getValueKey());
       }
@@ -374,10 +363,6 @@ public final class ModelPB {
       if (size != -1) return size;
     
       size = 0;
-      if (hasId()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, getId());
-      }
       if (hasValueKey()) {
         size += com.google.protobuf.CodedOutputStream
           .computeStringSize(2, getValueKey());
@@ -531,9 +516,6 @@ public final class ModelPB {
       
       public Builder mergeFrom(org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf other) {
         if (other == org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf.getDefaultInstance()) return this;
-        if (other.hasId()) {
-          setId(other.getId());
-        }
         if (other.hasValueKey()) {
           setValueKey(other.getValueKey());
         }
@@ -562,10 +544,6 @@ public final class ModelPB {
               }
               break;
             }
-            case 8: {
-              setId(input.readInt64());
-              break;
-            }
             case 18: {
               setValueKey(input.readString());
               break;
@@ -574,24 +552,6 @@ public final class ModelPB {
         }
       }
       
-      
-      // required int64 id = 1;
-      public boolean hasId() {
-        return result.hasId();
-      }
-      public long getId() {
-        return result.getId();
-      }
-      public Builder setId(long value) {
-        result.hasId = true;
-        result.id_ = value;
-        return this;
-      }
-      public Builder clearId() {
-        result.hasId = false;
-        result.id_ = 0L;
-        return this;
-      }
       
       // required string valueKey = 2;
       public boolean hasValueKey() {
@@ -648,29 +608,8 @@ public final class ModelPB {
       return org.handwerkszeug.kvsview.model.pb.ModelPB.internal_static_kvsview_test_Node_fieldAccessorTable;
     }
     
-    // required string id = 1;
-    public static final int ID_FIELD_NUMBER = 1;
-    private boolean hasId;
-    private java.lang.String id_ = "";
-    public boolean hasId() { return hasId; }
-    public java.lang.String getId() { return id_; }
-    
-    // required .kvsview.test.Node parent = 2;
-    public static final int PARENT_FIELD_NUMBER = 2;
-    private boolean hasParent;
-    private org.handwerkszeug.kvsview.model.pb.ModelPB.Node parent_ = org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance();
-    public boolean hasParent() { return hasParent; }
-    public org.handwerkszeug.kvsview.model.pb.ModelPB.Node getParent() { return parent_; }
-    
-    // required bool hasLeaf = 3;
-    public static final int HASLEAF_FIELD_NUMBER = 3;
-    private boolean hasHasLeaf;
-    private boolean hasLeaf_ = false;
-    public boolean hasHasLeaf() { return hasHasLeaf; }
-    public boolean getHasLeaf() { return hasLeaf_; }
-    
-    // repeated .kvsview.test.Leaf leaves = 4;
-    public static final int LEAVES_FIELD_NUMBER = 4;
+    // repeated .kvsview.test.Leaf leaves = 1;
+    public static final int LEAVES_FIELD_NUMBER = 1;
     private java.util.List<org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf> leaves_ =
       java.util.Collections.emptyList();
     public java.util.List<org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf> getLeavesList() {
@@ -681,69 +620,57 @@ public final class ModelPB {
       return leaves_.get(index);
     }
     
-    // optional .kvsview.test.Node firstChild = 5;
-    public static final int FIRSTCHILD_FIELD_NUMBER = 5;
+    // optional string parent = 2;
+    public static final int PARENT_FIELD_NUMBER = 2;
+    private boolean hasParent;
+    private java.lang.String parent_ = "";
+    public boolean hasParent() { return hasParent; }
+    public java.lang.String getParent() { return parent_; }
+    
+    // optional string firstChild = 3;
+    public static final int FIRSTCHILD_FIELD_NUMBER = 3;
     private boolean hasFirstChild;
-    private org.handwerkszeug.kvsview.model.pb.ModelPB.Node firstChild_ = org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance();
+    private java.lang.String firstChild_ = "";
     public boolean hasFirstChild() { return hasFirstChild; }
-    public org.handwerkszeug.kvsview.model.pb.ModelPB.Node getFirstChild() { return firstChild_; }
+    public java.lang.String getFirstChild() { return firstChild_; }
     
-    // optional .kvsview.test.Node next = 6;
-    public static final int NEXT_FIELD_NUMBER = 6;
+    // optional string next = 4;
+    public static final int NEXT_FIELD_NUMBER = 4;
     private boolean hasNext;
-    private org.handwerkszeug.kvsview.model.pb.ModelPB.Node next_ = org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance();
+    private java.lang.String next_ = "";
     public boolean hasNext() { return hasNext; }
-    public org.handwerkszeug.kvsview.model.pb.ModelPB.Node getNext() { return next_; }
+    public java.lang.String getNext() { return next_; }
     
-    // optional .kvsview.test.Node prev = 7;
-    public static final int PREV_FIELD_NUMBER = 7;
+    // optional string prev = 5;
+    public static final int PREV_FIELD_NUMBER = 5;
     private boolean hasPrev;
-    private org.handwerkszeug.kvsview.model.pb.ModelPB.Node prev_ = org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance();
+    private java.lang.String prev_ = "";
     public boolean hasPrev() { return hasPrev; }
-    public org.handwerkszeug.kvsview.model.pb.ModelPB.Node getPrev() { return prev_; }
+    public java.lang.String getPrev() { return prev_; }
     
     public final boolean isInitialized() {
-      if (!hasId) return false;
-      if (!hasParent) return false;
-      if (!hasHasLeaf) return false;
-      if (!getParent().isInitialized()) return false;
       for (org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf element : getLeavesList()) {
         if (!element.isInitialized()) return false;
-      }
-      if (hasFirstChild()) {
-        if (!getFirstChild().isInitialized()) return false;
-      }
-      if (hasNext()) {
-        if (!getNext().isInitialized()) return false;
-      }
-      if (hasPrev()) {
-        if (!getPrev().isInitialized()) return false;
       }
       return true;
     }
     
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (hasId()) {
-        output.writeString(1, getId());
+      for (org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf element : getLeavesList()) {
+        output.writeMessage(1, element);
       }
       if (hasParent()) {
-        output.writeMessage(2, getParent());
-      }
-      if (hasHasLeaf()) {
-        output.writeBool(3, getHasLeaf());
-      }
-      for (org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf element : getLeavesList()) {
-        output.writeMessage(4, element);
+        output.writeString(2, getParent());
       }
       if (hasFirstChild()) {
-        output.writeMessage(5, getFirstChild());
+        output.writeString(3, getFirstChild());
       }
       if (hasNext()) {
-        output.writeMessage(6, getNext());
+        output.writeString(4, getNext());
       }
       if (hasPrev()) {
-        output.writeMessage(7, getPrev());
+        output.writeString(5, getPrev());
       }
       getUnknownFields().writeTo(output);
     }
@@ -754,33 +681,25 @@ public final class ModelPB {
       if (size != -1) return size;
     
       size = 0;
-      if (hasId()) {
+      for (org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf element : getLeavesList()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(1, getId());
+          .computeMessageSize(1, element);
       }
       if (hasParent()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getParent());
-      }
-      if (hasHasLeaf()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(3, getHasLeaf());
-      }
-      for (org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf element : getLeavesList()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, element);
+          .computeStringSize(2, getParent());
       }
       if (hasFirstChild()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getFirstChild());
+          .computeStringSize(3, getFirstChild());
       }
       if (hasNext()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(6, getNext());
+          .computeStringSize(4, getNext());
       }
       if (hasPrev()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, getPrev());
+          .computeStringSize(5, getPrev());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -935,29 +854,23 @@ public final class ModelPB {
       
       public Builder mergeFrom(org.handwerkszeug.kvsview.model.pb.ModelPB.Node other) {
         if (other == org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance()) return this;
-        if (other.hasId()) {
-          setId(other.getId());
-        }
-        if (other.hasParent()) {
-          mergeParent(other.getParent());
-        }
-        if (other.hasHasLeaf()) {
-          setHasLeaf(other.getHasLeaf());
-        }
         if (!other.leaves_.isEmpty()) {
           if (result.leaves_.isEmpty()) {
             result.leaves_ = new java.util.ArrayList<org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf>();
           }
           result.leaves_.addAll(other.leaves_);
         }
+        if (other.hasParent()) {
+          setParent(other.getParent());
+        }
         if (other.hasFirstChild()) {
-          mergeFirstChild(other.getFirstChild());
+          setFirstChild(other.getFirstChild());
         }
         if (other.hasNext()) {
-          mergeNext(other.getNext());
+          setNext(other.getNext());
         }
         if (other.hasPrev()) {
-          mergePrev(other.getPrev());
+          setPrev(other.getPrev());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -985,53 +898,25 @@ public final class ModelPB {
               break;
             }
             case 10: {
-              setId(input.readString());
-              break;
-            }
-            case 18: {
-              org.handwerkszeug.kvsview.model.pb.ModelPB.Node.Builder subBuilder = org.handwerkszeug.kvsview.model.pb.ModelPB.Node.newBuilder();
-              if (hasParent()) {
-                subBuilder.mergeFrom(getParent());
-              }
-              input.readMessage(subBuilder, extensionRegistry);
-              setParent(subBuilder.buildPartial());
-              break;
-            }
-            case 24: {
-              setHasLeaf(input.readBool());
-              break;
-            }
-            case 34: {
               org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf.Builder subBuilder = org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf.newBuilder();
               input.readMessage(subBuilder, extensionRegistry);
               addLeaves(subBuilder.buildPartial());
               break;
             }
+            case 18: {
+              setParent(input.readString());
+              break;
+            }
+            case 26: {
+              setFirstChild(input.readString());
+              break;
+            }
+            case 34: {
+              setNext(input.readString());
+              break;
+            }
             case 42: {
-              org.handwerkszeug.kvsview.model.pb.ModelPB.Node.Builder subBuilder = org.handwerkszeug.kvsview.model.pb.ModelPB.Node.newBuilder();
-              if (hasFirstChild()) {
-                subBuilder.mergeFrom(getFirstChild());
-              }
-              input.readMessage(subBuilder, extensionRegistry);
-              setFirstChild(subBuilder.buildPartial());
-              break;
-            }
-            case 50: {
-              org.handwerkszeug.kvsview.model.pb.ModelPB.Node.Builder subBuilder = org.handwerkszeug.kvsview.model.pb.ModelPB.Node.newBuilder();
-              if (hasNext()) {
-                subBuilder.mergeFrom(getNext());
-              }
-              input.readMessage(subBuilder, extensionRegistry);
-              setNext(subBuilder.buildPartial());
-              break;
-            }
-            case 58: {
-              org.handwerkszeug.kvsview.model.pb.ModelPB.Node.Builder subBuilder = org.handwerkszeug.kvsview.model.pb.ModelPB.Node.newBuilder();
-              if (hasPrev()) {
-                subBuilder.mergeFrom(getPrev());
-              }
-              input.readMessage(subBuilder, extensionRegistry);
-              setPrev(subBuilder.buildPartial());
+              setPrev(input.readString());
               break;
             }
           }
@@ -1039,83 +924,7 @@ public final class ModelPB {
       }
       
       
-      // required string id = 1;
-      public boolean hasId() {
-        return result.hasId();
-      }
-      public java.lang.String getId() {
-        return result.getId();
-      }
-      public Builder setId(java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  result.hasId = true;
-        result.id_ = value;
-        return this;
-      }
-      public Builder clearId() {
-        result.hasId = false;
-        result.id_ = getDefaultInstance().getId();
-        return this;
-      }
-      
-      // required .kvsview.test.Node parent = 2;
-      public boolean hasParent() {
-        return result.hasParent();
-      }
-      public org.handwerkszeug.kvsview.model.pb.ModelPB.Node getParent() {
-        return result.getParent();
-      }
-      public Builder setParent(org.handwerkszeug.kvsview.model.pb.ModelPB.Node value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        result.hasParent = true;
-        result.parent_ = value;
-        return this;
-      }
-      public Builder setParent(org.handwerkszeug.kvsview.model.pb.ModelPB.Node.Builder builderForValue) {
-        result.hasParent = true;
-        result.parent_ = builderForValue.build();
-        return this;
-      }
-      public Builder mergeParent(org.handwerkszeug.kvsview.model.pb.ModelPB.Node value) {
-        if (result.hasParent() &&
-            result.parent_ != org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance()) {
-          result.parent_ =
-            org.handwerkszeug.kvsview.model.pb.ModelPB.Node.newBuilder(result.parent_).mergeFrom(value).buildPartial();
-        } else {
-          result.parent_ = value;
-        }
-        result.hasParent = true;
-        return this;
-      }
-      public Builder clearParent() {
-        result.hasParent = false;
-        result.parent_ = org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance();
-        return this;
-      }
-      
-      // required bool hasLeaf = 3;
-      public boolean hasHasLeaf() {
-        return result.hasHasLeaf();
-      }
-      public boolean getHasLeaf() {
-        return result.getHasLeaf();
-      }
-      public Builder setHasLeaf(boolean value) {
-        result.hasHasLeaf = true;
-        result.hasLeaf_ = value;
-        return this;
-      }
-      public Builder clearHasLeaf() {
-        result.hasHasLeaf = false;
-        result.hasLeaf_ = false;
-        return this;
-      }
-      
-      // repeated .kvsview.test.Leaf leaves = 4;
+      // repeated .kvsview.test.Leaf leaves = 1;
       public java.util.List<org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf> getLeavesList() {
         return java.util.Collections.unmodifiableList(result.leaves_);
       }
@@ -1166,420 +975,87 @@ public final class ModelPB {
         return this;
       }
       
-      // optional .kvsview.test.Node firstChild = 5;
+      // optional string parent = 2;
+      public boolean hasParent() {
+        return result.hasParent();
+      }
+      public java.lang.String getParent() {
+        return result.getParent();
+      }
+      public Builder setParent(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasParent = true;
+        result.parent_ = value;
+        return this;
+      }
+      public Builder clearParent() {
+        result.hasParent = false;
+        result.parent_ = getDefaultInstance().getParent();
+        return this;
+      }
+      
+      // optional string firstChild = 3;
       public boolean hasFirstChild() {
         return result.hasFirstChild();
       }
-      public org.handwerkszeug.kvsview.model.pb.ModelPB.Node getFirstChild() {
+      public java.lang.String getFirstChild() {
         return result.getFirstChild();
       }
-      public Builder setFirstChild(org.handwerkszeug.kvsview.model.pb.ModelPB.Node value) {
+      public Builder setFirstChild(java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        result.hasFirstChild = true;
+    throw new NullPointerException();
+  }
+  result.hasFirstChild = true;
         result.firstChild_ = value;
-        return this;
-      }
-      public Builder setFirstChild(org.handwerkszeug.kvsview.model.pb.ModelPB.Node.Builder builderForValue) {
-        result.hasFirstChild = true;
-        result.firstChild_ = builderForValue.build();
-        return this;
-      }
-      public Builder mergeFirstChild(org.handwerkszeug.kvsview.model.pb.ModelPB.Node value) {
-        if (result.hasFirstChild() &&
-            result.firstChild_ != org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance()) {
-          result.firstChild_ =
-            org.handwerkszeug.kvsview.model.pb.ModelPB.Node.newBuilder(result.firstChild_).mergeFrom(value).buildPartial();
-        } else {
-          result.firstChild_ = value;
-        }
-        result.hasFirstChild = true;
         return this;
       }
       public Builder clearFirstChild() {
         result.hasFirstChild = false;
-        result.firstChild_ = org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance();
+        result.firstChild_ = getDefaultInstance().getFirstChild();
         return this;
       }
       
-      // optional .kvsview.test.Node next = 6;
+      // optional string next = 4;
       public boolean hasNext() {
         return result.hasNext();
       }
-      public org.handwerkszeug.kvsview.model.pb.ModelPB.Node getNext() {
+      public java.lang.String getNext() {
         return result.getNext();
       }
-      public Builder setNext(org.handwerkszeug.kvsview.model.pb.ModelPB.Node value) {
+      public Builder setNext(java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        result.hasNext = true;
+    throw new NullPointerException();
+  }
+  result.hasNext = true;
         result.next_ = value;
-        return this;
-      }
-      public Builder setNext(org.handwerkszeug.kvsview.model.pb.ModelPB.Node.Builder builderForValue) {
-        result.hasNext = true;
-        result.next_ = builderForValue.build();
-        return this;
-      }
-      public Builder mergeNext(org.handwerkszeug.kvsview.model.pb.ModelPB.Node value) {
-        if (result.hasNext() &&
-            result.next_ != org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance()) {
-          result.next_ =
-            org.handwerkszeug.kvsview.model.pb.ModelPB.Node.newBuilder(result.next_).mergeFrom(value).buildPartial();
-        } else {
-          result.next_ = value;
-        }
-        result.hasNext = true;
         return this;
       }
       public Builder clearNext() {
         result.hasNext = false;
-        result.next_ = org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance();
+        result.next_ = getDefaultInstance().getNext();
         return this;
       }
       
-      // optional .kvsview.test.Node prev = 7;
+      // optional string prev = 5;
       public boolean hasPrev() {
         return result.hasPrev();
       }
-      public org.handwerkszeug.kvsview.model.pb.ModelPB.Node getPrev() {
+      public java.lang.String getPrev() {
         return result.getPrev();
       }
-      public Builder setPrev(org.handwerkszeug.kvsview.model.pb.ModelPB.Node value) {
+      public Builder setPrev(java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        result.hasPrev = true;
+    throw new NullPointerException();
+  }
+  result.hasPrev = true;
         result.prev_ = value;
-        return this;
-      }
-      public Builder setPrev(org.handwerkszeug.kvsview.model.pb.ModelPB.Node.Builder builderForValue) {
-        result.hasPrev = true;
-        result.prev_ = builderForValue.build();
-        return this;
-      }
-      public Builder mergePrev(org.handwerkszeug.kvsview.model.pb.ModelPB.Node value) {
-        if (result.hasPrev() &&
-            result.prev_ != org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance()) {
-          result.prev_ =
-            org.handwerkszeug.kvsview.model.pb.ModelPB.Node.newBuilder(result.prev_).mergeFrom(value).buildPartial();
-        } else {
-          result.prev_ = value;
-        }
-        result.hasPrev = true;
         return this;
       }
       public Builder clearPrev() {
         result.hasPrev = false;
-        result.prev_ = org.handwerkszeug.kvsview.model.pb.ModelPB.Node.getDefaultInstance();
-        return this;
-      }
-    }
-    
-    static {
-      org.handwerkszeug.kvsview.model.pb.ModelPB.getDescriptor();
-    }
-    
-    static {
-      org.handwerkszeug.kvsview.model.pb.ModelPB.internalForceInit();
-    }
-  }
-  
-  public static final class EntityRoot extends
-      com.google.protobuf.GeneratedMessage {
-    // Use EntityRoot.newBuilder() to construct.
-    private EntityRoot() {}
-    
-    private static final EntityRoot defaultInstance = new EntityRoot();
-    public static EntityRoot getDefaultInstance() {
-      return defaultInstance;
-    }
-    
-    public EntityRoot getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return org.handwerkszeug.kvsview.model.pb.ModelPB.internal_static_kvsview_test_EntityRoot_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return org.handwerkszeug.kvsview.model.pb.ModelPB.internal_static_kvsview_test_EntityRoot_fieldAccessorTable;
-    }
-    
-    // repeated string nodeId = 1;
-    public static final int NODEID_FIELD_NUMBER = 1;
-    private java.util.List<java.lang.String> nodeId_ =
-      java.util.Collections.emptyList();
-    public java.util.List<java.lang.String> getNodeIdList() {
-      return nodeId_;
-    }
-    public int getNodeIdCount() { return nodeId_.size(); }
-    public java.lang.String getNodeId(int index) {
-      return nodeId_.get(index);
-    }
-    
-    public final boolean isInitialized() {
-      return true;
-    }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      for (java.lang.String element : getNodeIdList()) {
-        output.writeString(1, element);
-      }
-      getUnknownFields().writeTo(output);
-    }
-    
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-    
-      size = 0;
-      {
-        int dataSize = 0;
-        for (java.lang.String element : getNodeIdList()) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeStringSizeNoTag(element);
-        }
-        size += dataSize;
-        size += 1 * getNodeIdList().size();
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-    
-    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeDelimitedFrom(input).buildParsed();
-    }
-    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeDelimitedFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-    
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> {
-      private org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot result;
-      
-      // Construct using org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot.newBuilder()
-      private Builder() {}
-      
-      private static Builder create() {
-        Builder builder = new Builder();
-        builder.result = new org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot();
-        return builder;
-      }
-      
-      protected org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot internalGetResult() {
-        return result;
-      }
-      
-      public Builder clear() {
-        if (result == null) {
-          throw new IllegalStateException(
-            "Cannot call clear() after build().");
-        }
-        result = new org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot();
-        return this;
-      }
-      
-      public Builder clone() {
-        return create().mergeFrom(result);
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot.getDescriptor();
-      }
-      
-      public org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot getDefaultInstanceForType() {
-        return org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot.getDefaultInstance();
-      }
-      
-      public boolean isInitialized() {
-        return result.isInitialized();
-      }
-      public org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot build() {
-        if (result != null && !isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return buildPartial();
-      }
-      
-      private org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        if (!isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return buildPartial();
-      }
-      
-      public org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot buildPartial() {
-        if (result == null) {
-          throw new IllegalStateException(
-            "build() has already been called on this Builder.");
-        }
-        if (result.nodeId_ != java.util.Collections.EMPTY_LIST) {
-          result.nodeId_ =
-            java.util.Collections.unmodifiableList(result.nodeId_);
-        }
-        org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot returnMe = result;
-        result = null;
-        return returnMe;
-      }
-      
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot) {
-          return mergeFrom((org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
-      public Builder mergeFrom(org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot other) {
-        if (other == org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot.getDefaultInstance()) return this;
-        if (!other.nodeId_.isEmpty()) {
-          if (result.nodeId_.isEmpty()) {
-            result.nodeId_ = new java.util.ArrayList<java.lang.String>();
-          }
-          result.nodeId_.addAll(other.nodeId_);
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-      
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              addNodeId(input.readString());
-              break;
-            }
-          }
-        }
-      }
-      
-      
-      // repeated string nodeId = 1;
-      public java.util.List<java.lang.String> getNodeIdList() {
-        return java.util.Collections.unmodifiableList(result.nodeId_);
-      }
-      public int getNodeIdCount() {
-        return result.getNodeIdCount();
-      }
-      public java.lang.String getNodeId(int index) {
-        return result.getNodeId(index);
-      }
-      public Builder setNodeId(int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  result.nodeId_.set(index, value);
-        return this;
-      }
-      public Builder addNodeId(java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  if (result.nodeId_.isEmpty()) {
-          result.nodeId_ = new java.util.ArrayList<java.lang.String>();
-        }
-        result.nodeId_.add(value);
-        return this;
-      }
-      public Builder addAllNodeId(
-          java.lang.Iterable<? extends java.lang.String> values) {
-        if (result.nodeId_.isEmpty()) {
-          result.nodeId_ = new java.util.ArrayList<java.lang.String>();
-        }
-        super.addAll(values, result.nodeId_);
-        return this;
-      }
-      public Builder clearNodeId() {
-        result.nodeId_ = java.util.Collections.emptyList();
+        result.prev_ = getDefaultInstance().getPrev();
         return this;
       }
     }
@@ -1608,11 +1084,6 @@ public final class ModelPB {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_kvsview_test_Node_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_kvsview_test_EntityRoot_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_kvsview_test_EntityRoot_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1623,15 +1094,12 @@ public final class ModelPB {
   static {
     java.lang.String[] descriptorData = {
       "\n\023kvsview-admin.proto\022\014kvsview.test\"\033\n\006E" +
-      "ntity\022\021\n\tclassName\030\001 \003(\t\"$\n\004Leaf\022\n\n\002id\030\001" +
-      " \002(\003\022\020\n\010valueKey\030\002 \002(\t\"\327\001\n\004Node\022\n\n\002id\030\001 " +
-      "\002(\t\022\"\n\006parent\030\002 \002(\0132\022.kvsview.test.Node\022" +
-      "\017\n\007hasLeaf\030\003 \002(\010\022\"\n\006leaves\030\004 \003(\0132\022.kvsvi" +
-      "ew.test.Leaf\022&\n\nfirstChild\030\005 \001(\0132\022.kvsvi" +
-      "ew.test.Node\022 \n\004next\030\006 \001(\0132\022.kvsview.tes" +
-      "t.Node\022 \n\004prev\030\007 \001(\0132\022.kvsview.test.Node" +
-      "\"\034\n\nEntityRoot\022\016\n\006nodeId\030\001 \003(\tB/\n\"org.ha" +
-      "ndwerkszeug.kvsview.model.pbB\007ModelPBH\001"
+      "ntity\022\021\n\tclassName\030\001 \003(\t\"\030\n\004Leaf\022\020\n\010valu" +
+      "eKey\030\002 \002(\t\"j\n\004Node\022\"\n\006leaves\030\001 \003(\0132\022.kvs" +
+      "view.test.Leaf\022\016\n\006parent\030\002 \001(\t\022\022\n\nfirstC" +
+      "hild\030\003 \001(\t\022\014\n\004next\030\004 \001(\t\022\014\n\004prev\030\005 \001(\tB/" +
+      "\n\"org.handwerkszeug.kvsview.model.pbB\007Mo" +
+      "delPBH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1651,7 +1119,7 @@ public final class ModelPB {
           internal_static_kvsview_test_Leaf_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_kvsview_test_Leaf_descriptor,
-              new java.lang.String[] { "Id", "ValueKey", },
+              new java.lang.String[] { "ValueKey", },
               org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf.class,
               org.handwerkszeug.kvsview.model.pb.ModelPB.Leaf.Builder.class);
           internal_static_kvsview_test_Node_descriptor =
@@ -1659,17 +1127,9 @@ public final class ModelPB {
           internal_static_kvsview_test_Node_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_kvsview_test_Node_descriptor,
-              new java.lang.String[] { "Id", "Parent", "HasLeaf", "Leaves", "FirstChild", "Next", "Prev", },
+              new java.lang.String[] { "Leaves", "Parent", "FirstChild", "Next", "Prev", },
               org.handwerkszeug.kvsview.model.pb.ModelPB.Node.class,
               org.handwerkszeug.kvsview.model.pb.ModelPB.Node.Builder.class);
-          internal_static_kvsview_test_EntityRoot_descriptor =
-            getDescriptor().getMessageTypes().get(3);
-          internal_static_kvsview_test_EntityRoot_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_kvsview_test_EntityRoot_descriptor,
-              new java.lang.String[] { "NodeId", },
-              org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot.class,
-              org.handwerkszeug.kvsview.model.pb.ModelPB.EntityRoot.Builder.class);
           return null;
         }
       };
