@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.jdt.ui.foldingStructureProviders">
       <provider
-            class="moeclipse.JavaBackgroudModifier"
+            class="moeclipse.JavaBackgroundModifier"
             id="moeclipse.provider"
             preferencesClass="moeclipse.JavaFoldingPreferenceBlock">
       </provider>

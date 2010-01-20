@@ -48,7 +48,11 @@ public class JavaFoldingPreferenceBlock implements IJavaFoldingPreferenceBlock {
 			preferenceStore
 					.setToDefault(PreferenceConstants.EDITOR_FOLDING_PROVIDER);
 		}
-		// TODO save to strage.
+
+		IPreferenceStore myStore = Activator.getDefault().getPreferenceStore();
+		myStore.setValue(Constants.PREF_MOEMODE, this.moeMode.getSelection());
+		myStore.setValue(Constants.PREF_PICTURE_PATH, this.picturePath
+				.getText());
 	}
 
 }
