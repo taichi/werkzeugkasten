@@ -22,13 +22,11 @@ public class JavaBackgroundModifier extends DefaultJavaFoldingStructureProvider
 	public void install(ITextEditor editor, ProjectionViewer viewer) {
 		super.install(editor, viewer);
 		this.text = viewer.getTextWidget();
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		if (store.getBoolean(Constants.PREF_MOEMODE)) {
-			text.setBackgroundImage(loadImage(store));
-		}
+		text.setBackgroundImage(loadImage());
 	}
 
-	protected Image loadImage(IPreferenceStore store) {
+	protected Image loadImage() {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		String path = store.getString(Constants.PREF_PICTURE_PATH);
 		ImageRegistry ir = Activator.getDefault().getImageRegistry();
 		ImageDescriptor id = ir.getDescriptor(path);

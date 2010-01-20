@@ -6,6 +6,7 @@
       <provider
             class="moeclipse.JavaBackgroundModifier"
             id="moeclipse.provider"
+            name="%MODENAME"
             preferencesClass="moeclipse.JavaFoldingPreferenceBlock">
       </provider>
    </extension>
