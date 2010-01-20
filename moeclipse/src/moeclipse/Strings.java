@@ -11,9 +11,9 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Strings {
 
-	public static String MOEMODE;
-	public static String PICTUREPATH;
 	public static String MODENAME;
+	public static String LABEL_BROWSE;
+	public static String LABEL_PICTUREPATH;
 
 	static {
 		Object o = Activator.getDefault().getBundle().getHeaders().get(

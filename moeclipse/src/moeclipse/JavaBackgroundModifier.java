@@ -45,6 +45,10 @@ public class JavaBackgroundModifier extends DefaultJavaFoldingStructureProvider
 	@Override
 	public void uninstall() {
 		this.text.setBackgroundImage(null);
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		String path = store.getString(Constants.PREF_PICTURE_PATH);
+		ImageRegistry ir = Activator.getDefault().getImageRegistry();
+		ir.remove(path);
 		super.uninstall();
 	}
 
