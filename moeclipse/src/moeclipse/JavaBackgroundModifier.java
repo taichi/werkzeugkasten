@@ -1,27 +1,27 @@
 package moeclipse;
 
+import org.eclipse.jdt.ui.text.folding.DefaultJavaFoldingStructureProvider;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class JavaBackgroundModifier implements IJavaFoldingStructureProvider {
+public class JavaBackgroundModifier extends DefaultJavaFoldingStructureProvider
+		implements IJavaFoldingStructureProvider {
 
-	@Override
-	public void initialize() {
-		// TODO Auto-generated method stub
-
-	}
+	protected StyledText text;
 
 	@Override
 	public void install(ITextEditor editor, ProjectionViewer viewer) {
-		// TODO Auto-generated method stub
-
+		super.install(editor, viewer);
+		this.text = viewer.getTextWidget();
+		text.setBackgroundImage(null);
 	}
 
 	@Override
 	public void uninstall() {
-		// TODO Auto-generated method stub
-
+		this.text.setBackgroundImage(null);
+		super.uninstall();
 	}
 
 }
