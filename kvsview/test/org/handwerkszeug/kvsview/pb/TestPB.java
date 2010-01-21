@@ -31,33 +31,22 @@ public final class TestPB {
       return org.handwerkszeug.kvsview.pb.TestPB.internal_static_kvsview_test_Dept_fieldAccessorTable;
     }
     
-    // required int64 id = 1;
-    public static final int ID_FIELD_NUMBER = 1;
-    private boolean hasId;
-    private long id_ = 0L;
-    public boolean hasId() { return hasId; }
-    public long getId() { return id_; }
-    
-    // required string deptName = 2;
-    public static final int DEPTNAME_FIELD_NUMBER = 2;
-    private boolean hasDeptName;
-    private java.lang.String deptName_ = "";
-    public boolean hasDeptName() { return hasDeptName; }
-    public java.lang.String getDeptName() { return deptName_; }
+    // required string name = 1;
+    public static final int NAME_FIELD_NUMBER = 1;
+    private boolean hasName;
+    private java.lang.String name_ = "";
+    public boolean hasName() { return hasName; }
+    public java.lang.String getName() { return name_; }
     
     public final boolean isInitialized() {
-      if (!hasId) return false;
-      if (!hasDeptName) return false;
+      if (!hasName) return false;
       return true;
     }
     
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (hasId()) {
-        output.writeInt64(1, getId());
-      }
-      if (hasDeptName()) {
-        output.writeString(2, getDeptName());
+      if (hasName()) {
+        output.writeString(1, getName());
       }
       getUnknownFields().writeTo(output);
     }
@@ -68,13 +57,9 @@ public final class TestPB {
       if (size != -1) return size;
     
       size = 0;
-      if (hasId()) {
+      if (hasName()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, getId());
-      }
-      if (hasDeptName()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(2, getDeptName());
+          .computeStringSize(1, getName());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -225,11 +210,8 @@ public final class TestPB {
       
       public Builder mergeFrom(org.handwerkszeug.kvsview.pb.TestPB.Dept other) {
         if (other == org.handwerkszeug.kvsview.pb.TestPB.Dept.getDefaultInstance()) return this;
-        if (other.hasId()) {
-          setId(other.getId());
-        }
-        if (other.hasDeptName()) {
-          setDeptName(other.getDeptName());
+        if (other.hasName()) {
+          setName(other.getName());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -256,12 +238,8 @@ public final class TestPB {
               }
               break;
             }
-            case 8: {
-              setId(input.readInt64());
-              break;
-            }
-            case 18: {
-              setDeptName(input.readString());
+            case 10: {
+              setName(input.readString());
               break;
             }
           }
@@ -269,42 +247,24 @@ public final class TestPB {
       }
       
       
-      // required int64 id = 1;
-      public boolean hasId() {
-        return result.hasId();
+      // required string name = 1;
+      public boolean hasName() {
+        return result.hasName();
       }
-      public long getId() {
-        return result.getId();
+      public java.lang.String getName() {
+        return result.getName();
       }
-      public Builder setId(long value) {
-        result.hasId = true;
-        result.id_ = value;
-        return this;
-      }
-      public Builder clearId() {
-        result.hasId = false;
-        result.id_ = 0L;
-        return this;
-      }
-      
-      // required string deptName = 2;
-      public boolean hasDeptName() {
-        return result.hasDeptName();
-      }
-      public java.lang.String getDeptName() {
-        return result.getDeptName();
-      }
-      public Builder setDeptName(java.lang.String value) {
+      public Builder setName(java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  result.hasDeptName = true;
-        result.deptName_ = value;
+  result.hasName = true;
+        result.name_ = value;
         return this;
       }
-      public Builder clearDeptName() {
-        result.hasDeptName = false;
-        result.deptName_ = getDefaultInstance().getDeptName();
+      public Builder clearName() {
+        result.hasName = false;
+        result.name_ = getDefaultInstance().getName();
         return this;
       }
     }
@@ -342,30 +302,22 @@ public final class TestPB {
       return org.handwerkszeug.kvsview.pb.TestPB.internal_static_kvsview_test_Emp_fieldAccessorTable;
     }
     
-    // required int64 id = 1;
-    public static final int ID_FIELD_NUMBER = 1;
-    private boolean hasId;
-    private long id_ = 0L;
-    public boolean hasId() { return hasId; }
-    public long getId() { return id_; }
+    // required string name = 1;
+    public static final int NAME_FIELD_NUMBER = 1;
+    private boolean hasName;
+    private java.lang.String name_ = "";
+    public boolean hasName() { return hasName; }
+    public java.lang.String getName() { return name_; }
     
-    // required string empName = 2;
-    public static final int EMPNAME_FIELD_NUMBER = 2;
-    private boolean hasEmpName;
-    private java.lang.String empName_ = "";
-    public boolean hasEmpName() { return hasEmpName; }
-    public java.lang.String getEmpName() { return empName_; }
-    
-    // required .kvsview.test.Dept dept = 3;
-    public static final int DEPT_FIELD_NUMBER = 3;
+    // required .kvsview.test.Dept dept = 2;
+    public static final int DEPT_FIELD_NUMBER = 2;
     private boolean hasDept;
     private org.handwerkszeug.kvsview.pb.TestPB.Dept dept_ = org.handwerkszeug.kvsview.pb.TestPB.Dept.getDefaultInstance();
     public boolean hasDept() { return hasDept; }
     public org.handwerkszeug.kvsview.pb.TestPB.Dept getDept() { return dept_; }
     
     public final boolean isInitialized() {
-      if (!hasId) return false;
-      if (!hasEmpName) return false;
+      if (!hasName) return false;
       if (!hasDept) return false;
       if (!getDept().isInitialized()) return false;
       return true;
@@ -373,14 +325,11 @@ public final class TestPB {
     
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (hasId()) {
-        output.writeInt64(1, getId());
-      }
-      if (hasEmpName()) {
-        output.writeString(2, getEmpName());
+      if (hasName()) {
+        output.writeString(1, getName());
       }
       if (hasDept()) {
-        output.writeMessage(3, getDept());
+        output.writeMessage(2, getDept());
       }
       getUnknownFields().writeTo(output);
     }
@@ -391,17 +340,13 @@ public final class TestPB {
       if (size != -1) return size;
     
       size = 0;
-      if (hasId()) {
+      if (hasName()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, getId());
-      }
-      if (hasEmpName()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(2, getEmpName());
+          .computeStringSize(1, getName());
       }
       if (hasDept()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getDept());
+          .computeMessageSize(2, getDept());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -552,11 +497,8 @@ public final class TestPB {
       
       public Builder mergeFrom(org.handwerkszeug.kvsview.pb.TestPB.Emp other) {
         if (other == org.handwerkszeug.kvsview.pb.TestPB.Emp.getDefaultInstance()) return this;
-        if (other.hasId()) {
-          setId(other.getId());
-        }
-        if (other.hasEmpName()) {
-          setEmpName(other.getEmpName());
+        if (other.hasName()) {
+          setName(other.getName());
         }
         if (other.hasDept()) {
           mergeDept(other.getDept());
@@ -586,15 +528,11 @@ public final class TestPB {
               }
               break;
             }
-            case 8: {
-              setId(input.readInt64());
+            case 10: {
+              setName(input.readString());
               break;
             }
             case 18: {
-              setEmpName(input.readString());
-              break;
-            }
-            case 26: {
               org.handwerkszeug.kvsview.pb.TestPB.Dept.Builder subBuilder = org.handwerkszeug.kvsview.pb.TestPB.Dept.newBuilder();
               if (hasDept()) {
                 subBuilder.mergeFrom(getDept());
@@ -608,46 +546,28 @@ public final class TestPB {
       }
       
       
-      // required int64 id = 1;
-      public boolean hasId() {
-        return result.hasId();
+      // required string name = 1;
+      public boolean hasName() {
+        return result.hasName();
       }
-      public long getId() {
-        return result.getId();
+      public java.lang.String getName() {
+        return result.getName();
       }
-      public Builder setId(long value) {
-        result.hasId = true;
-        result.id_ = value;
-        return this;
-      }
-      public Builder clearId() {
-        result.hasId = false;
-        result.id_ = 0L;
-        return this;
-      }
-      
-      // required string empName = 2;
-      public boolean hasEmpName() {
-        return result.hasEmpName();
-      }
-      public java.lang.String getEmpName() {
-        return result.getEmpName();
-      }
-      public Builder setEmpName(java.lang.String value) {
+      public Builder setName(java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  result.hasEmpName = true;
-        result.empName_ = value;
+  result.hasName = true;
+        result.name_ = value;
         return this;
       }
-      public Builder clearEmpName() {
-        result.hasEmpName = false;
-        result.empName_ = getDefaultInstance().getEmpName();
+      public Builder clearName() {
+        result.hasName = false;
+        result.name_ = getDefaultInstance().getName();
         return this;
       }
       
-      // required .kvsview.test.Dept dept = 3;
+      // required .kvsview.test.Dept dept = 2;
       public boolean hasDept() {
         return result.hasDept();
       }
@@ -713,11 +633,10 @@ public final class TestPB {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\021test_entity.proto\022\014kvsview.test\"$\n\004Dep" +
-      "t\022\n\n\002id\030\001 \002(\003\022\020\n\010deptName\030\002 \002(\t\"D\n\003Emp\022\n" +
-      "\n\002id\030\001 \002(\003\022\017\n\007empName\030\002 \002(\t\022 \n\004dept\030\003 \002(" +
-      "\0132\022.kvsview.test.DeptB(\n\034org.handwerksze" +
-      "ug.kvsview.pbB\006TestPBH\001"
+      "\n\021test_entity.proto\022\014kvsview.test\"\024\n\004Dep" +
+      "t\022\014\n\004name\030\001 \002(\t\"5\n\003Emp\022\014\n\004name\030\001 \002(\t\022 \n\004" +
+      "dept\030\002 \002(\0132\022.kvsview.test.DeptB(\n\034org.ha" +
+      "ndwerkszeug.kvsview.pbB\006TestPBH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -729,7 +648,7 @@ public final class TestPB {
           internal_static_kvsview_test_Dept_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_kvsview_test_Dept_descriptor,
-              new java.lang.String[] { "Id", "DeptName", },
+              new java.lang.String[] { "Name", },
               org.handwerkszeug.kvsview.pb.TestPB.Dept.class,
               org.handwerkszeug.kvsview.pb.TestPB.Dept.Builder.class);
           internal_static_kvsview_test_Emp_descriptor =
@@ -737,7 +656,7 @@ public final class TestPB {
           internal_static_kvsview_test_Emp_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_kvsview_test_Emp_descriptor,
-              new java.lang.String[] { "Id", "EmpName", "Dept", },
+              new java.lang.String[] { "Name", "Dept", },
               org.handwerkszeug.kvsview.pb.TestPB.Emp.class,
               org.handwerkszeug.kvsview.pb.TestPB.Emp.Builder.class);
           return null;

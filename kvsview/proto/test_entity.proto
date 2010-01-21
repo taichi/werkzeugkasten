@@ -5,13 +5,11 @@ option java_outer_classname = "TestPB";
 option optimize_for = SPEED;
 
 message Dept {
-  required int64 id = 1;
-  required string deptName = 2;
+  required string name = 1;
 }
 
 message Emp {
-  required int64 id = 1;
-  required string empName = 2;
-  required Dept dept = 3;
+  required string name = 1;
+  required Dept dept = 2;
 }
 

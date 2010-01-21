@@ -337,8 +337,8 @@ public final class ModelPB {
       return org.handwerkszeug.kvsview.model.pb.ModelPB.internal_static_kvsview_test_Leaf_fieldAccessorTable;
     }
     
-    // required string valueKey = 2;
-    public static final int VALUEKEY_FIELD_NUMBER = 2;
+    // required string valueKey = 1;
+    public static final int VALUEKEY_FIELD_NUMBER = 1;
     private boolean hasValueKey;
     private java.lang.String valueKey_ = "";
     public boolean hasValueKey() { return hasValueKey; }
@@ -352,7 +352,7 @@ public final class ModelPB {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (hasValueKey()) {
-        output.writeString(2, getValueKey());
+        output.writeString(1, getValueKey());
       }
       getUnknownFields().writeTo(output);
     }
@@ -365,7 +365,7 @@ public final class ModelPB {
       size = 0;
       if (hasValueKey()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(2, getValueKey());
+          .computeStringSize(1, getValueKey());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -544,7 +544,7 @@ public final class ModelPB {
               }
               break;
             }
-            case 18: {
+            case 10: {
               setValueKey(input.readString());
               break;
             }
@@ -553,7 +553,7 @@ public final class ModelPB {
       }
       
       
-      // required string valueKey = 2;
+      // required string valueKey = 1;
       public boolean hasValueKey() {
         return result.hasValueKey();
       }
@@ -1406,7 +1406,7 @@ public final class ModelPB {
     java.lang.String[] descriptorData = {
       "\n\023kvsview-admin.proto\022\014kvsview.test\"\033\n\006E" +
       "ntity\022\021\n\tclassName\030\001 \003(\t\"\030\n\004Leaf\022\020\n\010valu" +
-      "eKey\030\002 \002(\t\"j\n\004Node\022\"\n\006leaves\030\001 \003(\0132\022.kvs" +
+      "eKey\030\001 \002(\t\"j\n\004Node\022\"\n\006leaves\030\001 \003(\0132\022.kvs" +
       "view.test.Leaf\022\016\n\006parent\030\002 \001(\t\022\022\n\nfirstC" +
       "hild\030\003 \001(\t\022\014\n\004next\030\004 \001(\t\022\014\n\004prev\030\005 \001(\t\"\036" +
       "\n\nEntityRoot\022\020\n\010rootNode\030\001 \003(\tB/\n\"org.ha" +

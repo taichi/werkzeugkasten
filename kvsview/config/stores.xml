@@ -63,4 +63,39 @@
       <schema-info>java=org.handwerkszeug.kvsview.model.pb.ModelPB$Leaf</schema-info>
     </value-serializer>
   </store>
+  <!-- test datas -->
+  <store>
+    <name>org.handwerkszeug.kvsview.pb.TestPB$Dept</name>
+    <persistence>memory</persistence>
+    <routing>client</routing>
+    <replication-factor>1</replication-factor>
+    <required-reads>1</required-reads>
+    <required-writes>1</required-writes>
+    <key-serializer>
+      <type>string</type>
+      <schema-info>utf8</schema-info>
+    </key-serializer>
+    <value-serializer>
+      <type>protobuf</type>
+      <schema-info>java=org.handwerkszeug.kvsview.pb.TestPB$Dept</schema-info>
+    </value-serializer>
+  </store>
+  <store>
+    <name>org.handwerkszeug.kvsview.pb.TestPB$Emp</name>
+    <persistence>memory</persistence>
+    <routing>client</routing>
+    <replication-factor>1</replication-factor>
+    <required-reads>1</required-reads>
+    <required-writes>1</required-writes>
+    <key-serializer>
+      <type>string</type>
+      <schema-info>utf8</schema-info>
+    </key-serializer>
+    <value-serializer>
+      <type>protobuf</type>
+      <schema-info>java=org.handwerkszeug.kvsview.pb.TestPB$Emp</schema-info>
+    </value-serializer>
+  </store>
+
+
 </stores>

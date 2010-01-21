@@ -43,9 +43,13 @@ public class NodeIterator<V> implements Iterator<V> {
 		if (dig(next)) {
 			return true;
 		}
-		Node<V> uncle = this.currentNode.parent().next();
-		if (dig(uncle)) {
-			return true;
+
+		Node<V> parent = this.currentNode.parent();
+		if (parent != null) {
+			Node<V> uncle = parent.next();
+			if (dig(uncle)) {
+				return true;
+			}
 		}
 		return false;
 	}

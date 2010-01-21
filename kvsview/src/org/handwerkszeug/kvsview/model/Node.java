@@ -20,7 +20,7 @@ public interface Node<V> {
 	@Nullable
 	Node<V> prev();
 
-	@NotNull
+	@Nullable
 	Node<V> parent();
 
 	boolean hasLeaf();

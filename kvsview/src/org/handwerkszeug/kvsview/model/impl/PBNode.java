@@ -64,6 +64,9 @@ public class PBNode<V> implements Node<V> {
 	}
 
 	protected Node<V> node(String key) {
+		if (key == null) {
+			return null;
+		}
 		// TODO 先読み、キャッシュ、遅延読み。
 		ModelPB.Node d = this.nodeClient.getValue(key);
 		return new PBNode<V>(d, this.nodeClient, this.leafClient, this.client);

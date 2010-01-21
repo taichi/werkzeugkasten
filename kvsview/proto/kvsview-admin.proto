@@ -9,7 +9,7 @@ message Entity {
 }
 
 message Leaf {
-	required string valueKey = 2;
+	required string valueKey = 1;
 }
 
 message Node {
