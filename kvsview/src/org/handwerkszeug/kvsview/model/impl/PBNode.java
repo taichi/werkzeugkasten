@@ -28,7 +28,11 @@ public class PBNode<V> implements Node<V> {
 
 	@Override
 	public boolean hasLeaf() {
-		return 0 < this.delegate.getLeavesCount();
+		try {
+			return 0 < this.delegate.getLeavesCount();
+		} catch (NullPointerException e) {
+			throw e;
+		}
 	}
 
 	@Override
@@ -69,6 +73,9 @@ public class PBNode<V> implements Node<V> {
 		}
 		// TODO 先読み、キャッシュ、遅延読み。
 		ModelPB.Node d = this.nodeClient.getValue(key);
+		if (d == null) {
+			return null;
+		}
 		return new PBNode<V>(d, this.nodeClient, this.leafClient, this.client);
 	}
 }
