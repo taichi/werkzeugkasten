@@ -26,6 +26,9 @@ public class EntityViewImplTest extends TestCase {
 	protected VoldemortServer server;
 	protected EntityViewImpl target;
 
+	protected List<TestPB.Dept> expectedDept;
+	protected List<TestPB.Emp> expectedEmp;
+
 	@Override
 	protected void setUp() throws Exception {
 		this.server = VoldemortBootstrap.start();
@@ -34,21 +37,22 @@ public class EntityViewImplTest extends TestCase {
 		SocketStoreClientFactory factory = new SocketStoreClientFactory(config);
 		this.target = new EntityViewImpl(factory);
 
-		List<TestPB.Dept> deps = new ArrayList<TestPB.Dept>();
-		List<TestPB.Emp> emps = new ArrayList<TestPB.Emp>();
+		this.expectedDept = new ArrayList<TestPB.Dept>();
+		this.expectedEmp = new ArrayList<TestPB.Emp>();
 		for (int i = 0; i < 10; i++) {
 			TestPB.Dept d = TestPB.Dept.newBuilder().setName(
 					String.valueOf(i) + "Dept").build();
-			deps.add(d);
+			this.expectedDept.add(d);
 			for (int j = 0; j < 10; j++) {
 				TestPB.Emp e = TestPB.Emp.newBuilder().setName(
 						String.valueOf(i) + String.valueOf(j) + "Emp").setDept(
 						d).build();
-				emps.add(e);
+				this.expectedEmp.add(e);
 			}
 		}
 
-		List<String> deptKeys = puts(TestPB.Dept.class, deps, factory);
+		List<String> deptKeys = puts(TestPB.Dept.class, this.expectedDept,
+				factory);
 		List<ModelPB.Leaf> deptLeaves = leaves(deptKeys);
 
 		KeyGenerator kg = new UUIDKeyGenerator();
@@ -73,39 +77,44 @@ public class EntityViewImplTest extends TestCase {
 			String rootKey = TestPB.Emp.class.getName();
 			String leftKey = kg.nextKey();
 			String rightKey = kg.nextKey();
-			ModelPB.Node left = ModelPB.Node.newBuilder().setParent(rootKey)
-					.setNext(rightKey).build();
-			ModelPB.Node right = ModelPB.Node.newBuilder().setParent(rootKey)
-					.setPrev(leftKey).build();
-			nodeStore.put(leftKey, left);
-			nodeStore.put(rightKey, right);
 
 			ModelPB.EntityRoot root = ModelPB.EntityRoot.newBuilder()
 					.addRootNode(leftKey).addRootNode(rightKey).build();
 			rootStore.put(rootKey, root);
 
-			List<String> empKeys = puts(TestPB.Emp.class, emps, factory);
+			List<String> empKeys = puts(TestPB.Emp.class, this.expectedEmp,
+					factory);
 			Deque<ModelPB.Leaf> empLeaves = leaves(empKeys);
-			int size = empLeaves.size();
 
+			int size = empLeaves.size();
 			int secondryNodeSize = size / 2 / 10;
 
-			List<String> secondryNodes = new ArrayList<String>(secondryNodeSize);
-			for (int i = 0; i < secondryNodeSize; i++) {
-				secondryNodes.add(kg.nextKey());
-			}
-			List<String> leftKids = secondryNodes.subList(0,
-					secondryNodeSize / 2);
-			putSecondryKids(nodeStore, leftKey, empLeaves, leftKids);
-			List<String> rightKids = secondryNodes.subList(
-					secondryNodeSize / 2, secondryNodes.size());
-			putSecondryKids(nodeStore, rightKey, empLeaves, rightKids);
+			String primaryLeftChild = putSecondryKids(nodeStore, leftKey,
+					empLeaves, kg, secondryNodeSize);
+
+			String primaryRightChild = putSecondryKids(nodeStore, rightKey,
+					empLeaves, kg, secondryNodeSize);
+
+			ModelPB.Node left = ModelPB.Node.newBuilder().setParent(rootKey)
+					.setNext(rightKey).setFirstChild(primaryLeftChild).build();
+
+			ModelPB.Node right = ModelPB.Node.newBuilder().setParent(rootKey)
+					.setPrev(leftKey).setFirstChild(primaryRightChild).build();
+
+			nodeStore.put(leftKey, left);
+			nodeStore.put(rightKey, right);
 		}
 	}
 
-	private void putSecondryKids(StoreClient<String, ModelPB.Node> nodeStore,
-			String leftKey, Deque<ModelPB.Leaf> empLeaves,
-			List<String> childNodeKey) {
+	private String putSecondryKids(StoreClient<String, ModelPB.Node> nodeStore,
+			String leftKey, Deque<ModelPB.Leaf> empLeaves, KeyGenerator kg,
+			int secondryNodeSize) {
+
+		List<String> childNodeKey = new ArrayList<String>(secondryNodeSize);
+		for (int i = 0; i < secondryNodeSize; i++) {
+			childNodeKey.add(kg.nextKey());
+		}
+
 		for (ListIterator<String> i = childNodeKey.listIterator(); i.hasNext();) {
 			String current = i.next();
 			ModelPB.Node.Builder builder = ModelPB.Node.newBuilder();
@@ -123,6 +132,7 @@ public class EntityViewImplTest extends TestCase {
 			}
 			nodeStore.put(current, builder.build());
 		}
+		return childNodeKey.get(0);
 	}
 
 	protected LinkedList<ModelPB.Leaf> leaves(List<String> keys) {
@@ -153,14 +163,23 @@ public class EntityViewImplTest extends TestCase {
 	}
 
 	public void testGetAllEntityValues() {
-		Iterable<TestPB.Dept> i = target.getAllEntityValues(TestPB.Dept.class,
-				new Filter<TestPB.Dept>() {
-					public boolean filter(TestPB.Dept v) {
-						return true;
-					};
-				});
-		for (TestPB.Dept d : i) {
-			System.out.println(d);
+		List<TestPB.Dept> deps = getAllvalues(TestPB.Dept.class);
+		assertEquals(expectedDept, deps);
+
+		List<TestPB.Emp> emps = getAllvalues(TestPB.Emp.class);
+		assertEquals(expectedEmp, emps);
+	}
+
+	private <V> List<V> getAllvalues(Class<V> clazz) {
+		Iterable<V> i = target.getAllEntityValues(clazz, new Filter<V>() {
+			public boolean filter(V v) {
+				return true;
+			};
+		});
+		List<V> list = new ArrayList<V>();
+		for (V v : i) {
+			list.add(v);
 		}
+		return list;
 	}
 }
