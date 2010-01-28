@@ -8,8 +8,9 @@ import org.handwerkszeug.kvsview.model.Node;
 import org.handwerkszeug.kvsview.model.pb.ModelPB;
 
 import voldemort.client.StoreClient;
+import voldemort.versioning.Versioned;
 
-public class PBNode<V> implements Node<V> {
+public class PBNode<V> implements Node<Versioned<V>> {
 	protected ModelPB.Node delegate;
 
 	protected StoreClient<String, ModelPB.Node> nodeClient;
@@ -28,19 +29,16 @@ public class PBNode<V> implements Node<V> {
 
 	@Override
 	public boolean hasLeaf() {
-		try {
-			return 0 < this.delegate.getLeavesCount();
-		} catch (NullPointerException e) {
-			throw e;
-		}
+		return 0 < this.delegate.getLeavesCount();
 	}
 
 	@Override
-	public List<Leaf<V>> leaves() {
-		List<Leaf<V>> result = new ArrayList<Leaf<V>>();
+	public List<Leaf<Versioned<V>>> leaves() {
+		List<Leaf<Versioned<V>>> result = new ArrayList<Leaf<Versioned<V>>>();
 		if (this.hasLeaf()) {
 			for (ModelPB.Leaf pbl : this.delegate.getLeavesList()) {
-				Leaf<V> l = new PBLeaf<V>(pbl, this.client);
+				// TODO StoreClient#getAll 使えるんじゃないか？
+				Leaf<Versioned<V>> l = new PBLeaf<V>(pbl, this.client);
 				result.add(l);
 			}
 		}
@@ -48,26 +46,26 @@ public class PBNode<V> implements Node<V> {
 	}
 
 	@Override
-	public Node<V> firstChild() {
+	public Node<Versioned<V>> firstChild() {
 		return node(this.delegate.getFirstChild());
 	}
 
 	@Override
-	public Node<V> next() {
+	public Node<Versioned<V>> next() {
 		return node(this.delegate.getNext());
 	}
 
 	@Override
-	public Node<V> parent() {
+	public Node<Versioned<V>> parent() {
 		return node(this.delegate.getParent());
 	}
 
 	@Override
-	public Node<V> prev() {
+	public Node<Versioned<V>> prev() {
 		return node(this.delegate.getPrev());
 	}
 
-	protected Node<V> node(String key) {
+	protected Node<Versioned<V>> node(String key) {
 		if (key == null) {
 			return null;
 		}

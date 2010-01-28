@@ -9,7 +9,7 @@ public interface EntityView {
 
 	@NotNull
 	<V> Iterable<Versioned<V>> getAllEntities(@NotNull Class<V> entity,
-			@NotNull Filter<V> filter);
+			@NotNull Filter<Versioned<V>> filter);
 
 	@NotNull
 	<V> Iterable<V> getAllEntityValues(@NotNull Class<V> entity,

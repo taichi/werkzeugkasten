@@ -3,23 +3,24 @@ package org.handwerkszeug.kvsview.model;
 import java.util.Iterator;
 
 import voldemort.annotations.concurrency.NotThreadsafe;
+import voldemort.versioning.Versioned;
 
 @NotThreadsafe
-public class NodeIterator<V> implements Iterator<V> {
+public class NodeIterator<V> implements Iterator<Versioned<V>> {
 
-	Node<V> currentNode;
-	Iterator<Leaf<V>> leafIterator;
-	Leaf<V> current;
+	protected Node<Versioned<V>> currentNode;
+	protected Iterator<Leaf<Versioned<V>>> leafIterator;
+	protected Leaf<Versioned<V>> current;
 
-	public NodeIterator(EntityRoot<V> initial) {
-		Iterator<Node<V>> i = initial.children().iterator();
+	public NodeIterator(EntityRoot<Versioned<V>> initial) {
+		Iterator<Node<Versioned<V>>> i = initial.children().iterator();
 		if (i.hasNext()) {
 			dig(i.next());
 		}
 	}
 
-	protected boolean dig(final Node<V> node) {
-		Node<V> n = node;
+	protected boolean dig(final Node<Versioned<V>> node) {
+		Node<Versioned<V>> n = node;
 		while (n != null && n.hasLeaf() == false) {
 			n = n.firstChild();
 		}
@@ -39,14 +40,14 @@ public class NodeIterator<V> implements Iterator<V> {
 		if (this.leafIterator.hasNext()) {
 			return true;
 		}
-		Node<V> next = this.currentNode.next();
+		Node<Versioned<V>> next = this.currentNode.next();
 		if (dig(next)) {
 			return true;
 		}
 
-		Node<V> parent = this.currentNode.parent();
+		Node<Versioned<V>> parent = this.currentNode.parent();
 		if (parent != null) {
-			Node<V> uncle = parent.next();
+			Node<Versioned<V>> uncle = parent.next();
 			if (dig(uncle)) {
 				return true;
 			}
@@ -55,7 +56,7 @@ public class NodeIterator<V> implements Iterator<V> {
 	}
 
 	@Override
-	public V next() {
+	public Versioned<V> next() {
 		this.current = this.leafIterator.next();
 		return this.current.value();
 	}

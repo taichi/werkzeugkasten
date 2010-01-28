@@ -63,19 +63,21 @@ public class EntityViewImpl implements EntityView {
 
 	@Override
 	public <V> Iterable<Versioned<V>> getAllEntities(Class<V> entity,
-			Filter<V> filter) {
-		// TODO Auto-generated method stub
-		return null;
+			final Filter<Versioned<V>> filter) {
+		final EntityRoot<Versioned<V>> initial = entityRoot(entity);
+		return new Iterable<Versioned<V>>() {
+			@Override
+			public Iterator<Versioned<V>> iterator() {
+				return new VersionedFilteringIterator<V>(filter,
+						new NodeIterator<V>(initial));
+			}
+		};
 	}
 
 	@Override
 	public <V> Iterable<V> getAllEntityValues(Class<V> entity,
 			final Filter<V> filter) {
-		ModelPB.EntityRoot rootNode = this.rootStore.getValue(entity.getName());
-		StoreClient<String, V> store = this.factory.getStoreClient(entity
-				.getName());
-		final EntityRoot<V> initial = new PBEntityRoot<V>(rootNode,
-				this.nodeClient, this.leafClient, store);
+		final EntityRoot<Versioned<V>> initial = entityRoot(entity);
 		return new Iterable<V>() {
 			@Override
 			public Iterator<V> iterator() {
@@ -83,6 +85,15 @@ public class EntityViewImpl implements EntityView {
 						initial));
 			}
 		};
+	}
+
+	protected <V> EntityRoot<Versioned<V>> entityRoot(Class<V> entity) {
+		ModelPB.EntityRoot rootNode = this.rootStore.getValue(entity.getName());
+		StoreClient<String, V> store = this.factory.getStoreClient(entity
+				.getName());
+		final EntityRoot<Versioned<V>> initial = new PBEntityRoot<V>(rootNode,
+				this.nodeClient, this.leafClient, store);
+		return initial;
 	}
 
 }

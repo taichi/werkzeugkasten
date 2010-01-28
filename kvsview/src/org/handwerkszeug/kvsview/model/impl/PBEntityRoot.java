@@ -8,8 +8,9 @@ import org.handwerkszeug.kvsview.model.Node;
 import org.handwerkszeug.kvsview.model.pb.ModelPB;
 
 import voldemort.client.StoreClient;
+import voldemort.versioning.Versioned;
 
-public class PBEntityRoot<V> implements EntityRoot<V> {
+public class PBEntityRoot<V> implements EntityRoot<Versioned<V>> {
 
 	protected ModelPB.EntityRoot rootNode;
 
@@ -29,8 +30,8 @@ public class PBEntityRoot<V> implements EntityRoot<V> {
 	}
 
 	@Override
-	public List<Node<V>> children() {
-		List<Node<V>> result = new ArrayList<Node<V>>();
+	public List<Node<Versioned<V>>> children() {
+		List<Node<Versioned<V>>> result = new ArrayList<Node<Versioned<V>>>();
 		for (String key : rootNode.getRootNodeList()) {
 			ModelPB.Node n = this.nodeClient.getValue(key);
 			PBNode<V> node = new PBNode<V>(n, nodeClient, leafClient, client);

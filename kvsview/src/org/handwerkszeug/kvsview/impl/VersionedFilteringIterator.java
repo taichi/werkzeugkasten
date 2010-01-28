@@ -9,13 +9,14 @@ import voldemort.annotations.concurrency.NotThreadsafe;
 import voldemort.versioning.Versioned;
 
 @NotThreadsafe
-public class FilteringIterator<V> implements Iterator<V> {
+public class VersionedFilteringIterator<V> implements Iterator<Versioned<V>> {
 
-	Filter<V> filter;
+	Filter<Versioned<V>> filter;
 	Iterator<Versioned<V>> delegate;
-	V nextValue;
+	Versioned<V> nextValue;
 
-	public FilteringIterator(Filter<V> filter, Iterator<Versioned<V>> delegate) {
+	public VersionedFilteringIterator(Filter<Versioned<V>> filter,
+			Iterator<Versioned<V>> delegate) {
 		this.filter = filter;
 		this.delegate = delegate;
 	}
@@ -24,9 +25,8 @@ public class FilteringIterator<V> implements Iterator<V> {
 	public boolean hasNext() {
 		while (this.delegate.hasNext()) {
 			Versioned<V> v = this.delegate.next();
-			V nv = v.getValue();
-			if (this.filter.filter(nv)) {
-				this.nextValue = nv;
+			if (this.filter.filter(v)) {
+				this.nextValue = v;
 				return true;
 			}
 		}
@@ -34,11 +34,11 @@ public class FilteringIterator<V> implements Iterator<V> {
 	}
 
 	@Override
-	public V next() {
+	public Versioned<V> next() {
 		if (this.nextValue == null) {
 			throw new NoSuchElementException();
 		}
-		V returnValue = this.nextValue;
+		Versioned<V> returnValue = this.nextValue;
 		this.nextValue = null;
 		return returnValue;
 	}

@@ -4,8 +4,9 @@ import org.handwerkszeug.kvsview.model.Leaf;
 import org.handwerkszeug.kvsview.model.pb.ModelPB;
 
 import voldemort.client.StoreClient;
+import voldemort.versioning.Versioned;
 
-public class PBLeaf<V> implements Leaf<V> {
+public class PBLeaf<V> implements Leaf<Versioned<V>> {
 
 	protected ModelPB.Leaf delegate;
 
@@ -17,9 +18,12 @@ public class PBLeaf<V> implements Leaf<V> {
 	}
 
 	@Override
-	public V value() {
-		String key = this.delegate.getValueKey();
-		return this.client.getValue(key);
+	public Versioned<V> value() {
+		return this.client.get(valueKey());
+	}
+
+	protected String valueKey() {
+		return this.delegate.getValueKey();
 	}
 
 	@Override
