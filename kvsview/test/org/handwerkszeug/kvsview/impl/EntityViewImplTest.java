@@ -20,6 +20,7 @@ import voldemort.client.SocketStoreClientFactory;
 import voldemort.client.StoreClient;
 import voldemort.client.StoreClientFactory;
 import voldemort.server.VoldemortServer;
+import voldemort.versioning.Versioned;
 
 public class EntityViewImplTest extends TestCase {
 
@@ -162,6 +163,41 @@ public class EntityViewImplTest extends TestCase {
 		VoldemortBootstrap.stop(this.server);
 	}
 
+	public void testGetAllEntities() throws Exception {
+		List<Versioned<TestPB.Dept>> deps = getAllEntities(TestPB.Dept.class);
+		List<TestPB.Dept> dlist = strip(deps);
+		assertEquals(expectedDept, dlist);
+		assertFalse(expectedDept.get(0) == dlist.get(0));
+		List<Versioned<TestPB.Emp>> emps = getAllEntities(TestPB.Emp.class);
+		List<TestPB.Emp> elist = strip(emps);
+		assertEquals(expectedEmp, elist);
+		assertFalse(expectedEmp.get(0) == elist.get(0));
+	}
+
+	private <V> List<V> strip(List<Versioned<V>> list) {
+		List<V> result = new ArrayList<V>();
+		for (Versioned<V> v : list) {
+			result.add(v.getValue());
+		}
+		return result;
+	}
+
+	private <V> List<Versioned<V>> getAllEntities(Class<V> clazz) {
+		Iterable<Versioned<V>> i = target.getAllEntities(clazz,
+				new Filter<Versioned<V>>() {
+					@Override
+					public boolean filter(Versioned<V> v) {
+						return true;
+					}
+				});
+
+		List<Versioned<V>> list = new ArrayList<Versioned<V>>();
+		for (Versioned<V> v : i) {
+			list.add(v);
+		}
+		return list;
+	}
+
 	public void testGetAllEntityValues() {
 		List<TestPB.Dept> deps = getAllvalues(TestPB.Dept.class);
 		assertEquals(expectedDept, deps);
@@ -172,10 +208,12 @@ public class EntityViewImplTest extends TestCase {
 
 	private <V> List<V> getAllvalues(Class<V> clazz) {
 		Iterable<V> i = target.getAllEntityValues(clazz, new Filter<V>() {
+			@Override
 			public boolean filter(V v) {
 				return true;
-			};
+			}
 		});
+
 		List<V> list = new ArrayList<V>();
 		for (V v : i) {
 			list.add(v);
