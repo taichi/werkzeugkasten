@@ -164,25 +164,15 @@ public class EntityViewImplTest extends TestCase {
 	}
 
 	public void testGetAllEntities() throws Exception {
-		List<Versioned<TestPB.Dept>> deps = getAllEntities(TestPB.Dept.class);
-		List<TestPB.Dept> dlist = strip(deps);
-		assertEquals(expectedDept, dlist);
-		assertFalse(expectedDept.get(0) == dlist.get(0));
-		List<Versioned<TestPB.Emp>> emps = getAllEntities(TestPB.Emp.class);
-		List<TestPB.Emp> elist = strip(emps);
-		assertEquals(expectedEmp, elist);
-		assertFalse(expectedEmp.get(0) == elist.get(0));
+		List<TestPB.Dept> deps = getAllEntities(TestPB.Dept.class);
+		assertEquals(expectedDept, deps);
+		assertFalse(expectedDept.get(0) == deps.get(0));
+		List<TestPB.Emp> emps = getAllEntities(TestPB.Emp.class);
+		assertEquals(expectedEmp, emps);
+		assertFalse(expectedEmp.get(0) == emps.get(0));
 	}
 
-	private <V> List<V> strip(List<Versioned<V>> list) {
-		List<V> result = new ArrayList<V>();
-		for (Versioned<V> v : list) {
-			result.add(v.getValue());
-		}
-		return result;
-	}
-
-	private <V> List<Versioned<V>> getAllEntities(Class<V> clazz) {
+	private <V> List<V> getAllEntities(Class<V> clazz) {
 		Iterable<Versioned<V>> i = target.getAllEntities(clazz,
 				new Filter<Versioned<V>>() {
 					@Override
@@ -191,9 +181,9 @@ public class EntityViewImplTest extends TestCase {
 					}
 				});
 
-		List<Versioned<V>> list = new ArrayList<Versioned<V>>();
+		List<V> list = new ArrayList<V>();
 		for (Versioned<V> v : i) {
-			list.add(v);
+			list.add(v.getValue());
 		}
 		return list;
 	}
