@@ -99,7 +99,9 @@ public class AddDirBuildpathJob extends WorkspaceJob {
 
 	public static final Pattern isLib = Pattern.compile(".+\\.(zip|jar)",
 			Pattern.CASE_INSENSITIVE);
-	protected static final Pattern isSrc = Pattern.compile(".*(src|sources).*",
+	protected static final Pattern isSrc = Pattern.compile(".*(\\.src|-sources).*",
+			Pattern.CASE_INSENSITIVE);
+	protected static final Pattern isDoc = Pattern.compile(".*(\\.doc|-javadoc).*",
 			Pattern.CASE_INSENSITIVE);
 
 	protected static Map<String, IClasspathEntry> computeEntries(IPath path)
@@ -113,6 +115,7 @@ public class AddDirBuildpathJob extends WorkspaceJob {
 				public boolean visit(IResource resource) throws CoreException {
 					IPath full = resource.getFullPath();
 					if (isSrc.matcher(full.toString()).matches() == false
+							&& isDoc.matcher(full.toString()).matches() == false
 							&& resource.getType() == IResource.FILE
 							&& isLib.matcher(full.lastSegment()).matches()) {
 						IPath src = findSource(full);
