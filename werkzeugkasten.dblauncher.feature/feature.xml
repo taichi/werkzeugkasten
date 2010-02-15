@@ -438,7 +438,7 @@ limitations under the License.
          id="werkzeugkasten.dblauncher"
          download-size="0"
          install-size="0"
-         version="0.0.14"/>
+         version="0.0.15"/>
 
    <plugin
          id="werkzeugkasten.docs"
