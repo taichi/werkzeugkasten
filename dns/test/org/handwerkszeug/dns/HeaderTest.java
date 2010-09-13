@@ -100,5 +100,24 @@ public class HeaderTest {
 		target.flags(4); // 0000 0000 0000 0100
 		RCode rc = RCode.NOT_IMPLEMENTED;
 		assertEquals(rc, target.rcode());
+
+		rc = RCode.FORMAT_ERROR;
+		target.rcode(rc);
+		assertEquals(rc, target.rcode());
+	}
+
+	@Test
+	public void testToString() {
+		String exp = ";; ->>HEADER<<- opcode: IQUERY, rcode: FORMAT_ERROR, id: 38246\n"
+				+ ";; flags: qr aa tc rd ra ; QUERY: 1000, ANSWER: 2000, AUTHORITY: 3000, ADDITIONAL: 4000";
+		target.id(38246);
+		target.flags(0xFFFF);
+		target.opcode(OpCode.IQUERY);
+		target.rcode(RCode.FORMAT_ERROR);
+		target.qdcount(1000);
+		target.ancount(2000);
+		target.nscount(3000);
+		target.arcount(4000);
+		assertEquals(exp, target.toString());
 	}
 }

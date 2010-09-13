@@ -1,7 +1,10 @@
 package org.handwerkszeug.dns;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
+import java.security.SecureRandom;
+import java.text.MessageFormat;
 
 /**
  * RFC1035 4.1.1. Header section format
@@ -38,6 +41,18 @@ public class Header {
 	static final int FLAGS_Z = 4;
 	static final int FLAGS_RCODE = 0;
 
+	static final int[] FLAGS_ALL = { FLAGS_QR, FLAGS_AA, FLAGS_TC, FLAGS_RD,
+			FLAGS_RA };
+	static final String[] FLAGS_TXT = { "qr", "aa", "tc", "rd", "ra" };
+
+	static final SecureRandom RANDOM;
+
+	static {
+		RANDOM = new SecureRandom();
+		byte[] seed = RANDOM.generateSeed(20); // TODO more ?
+		RANDOM.setSeed(seed);
+	}
+
 	protected int id;
 	// include there flags |QR| Opcode |AA|TC|RD|RA| Z | RCODE|
 	protected int flags;
@@ -48,25 +63,29 @@ public class Header {
 	protected int arcount;
 
 	public Header() {
-		this(MIN_16BitValue);
+		this(RANDOM.nextInt(MAX_16BitValue));
 	}
 
-	public Header(int id) {
+	protected Header(int id) {
 		id(id);
 	}
 
-	public Header(DataInput in) throws IOException {
+	public void parse(DataInput in) throws IOException {
 		id(in.readShort());
+		flags(in.readShort());
+		qdcount(in.readShort());
+		ancount(in.readShort());
+		nscount(in.readShort());
+		arcount(in.readShort());
 	}
 
-	public static Header parse(DataInput di) throws IOException {
-		Header result = new Header(di.readShort());
-		result.flags(di.readShort());
-		result.qdcount(di.readShort());
-		result.ancount(di.readShort());
-		result.nscount(di.readShort());
-		result.arcount(di.readShort());
-		return result;
+	public void emit(DataOutput out) throws IOException {
+		out.writeShort(id());
+		out.writeShort(flags());
+		out.writeShort(qdcount());
+		out.writeShort(ancount());
+		out.writeShort(nscount());
+		out.writeShort(arcount());
 	}
 
 	/**
@@ -79,23 +98,27 @@ public class Header {
 		return this.id;
 	}
 
-	private void id(int i) {
+	protected void id(int i) {
 		this.id = verify16bitValue("ID", i);
 	}
 
-	protected int verify16bitValue(String column, int i) {
+	private int verify16bitValue(String column, int i) {
 		if (i < MIN_16BitValue || MAX_16BitValue < i) {
 			// TODO ERROR Message.
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException(column + ":" + i);
 		}
 		return i;
+	}
+
+	protected int flags() {
+		return this.flags;
 	}
 
 	public void flags(int flags) {
 		this.flags = verify16bitValue("Flags", flags);
 	}
 
-	protected int flags(int shift, int mask) {
+	protected int flag(int shift, int mask) {
 		return (this.flags >> shift) & mask;
 	}
 
@@ -104,7 +127,7 @@ public class Header {
 	 * response (1).
 	 */
 	public boolean qr() {
-		return flags(FLAGS_QR, 0x1) != 0;
+		return flag(FLAGS_QR, 0x1) != 0;
 	}
 
 	public void qr(boolean is) {
@@ -115,7 +138,7 @@ public class Header {
 	 * @see OpCode
 	 */
 	public OpCode opcode() {
-		int code = flags(FLAGS_Opcode, 0xF);
+		int code = flag(FLAGS_Opcode, 0xF);
 		return OpCode.valueOf(code); // TODO cache?
 	}
 
@@ -132,14 +155,14 @@ public class Header {
 	 * question section.
 	 */
 	public boolean aa() {
-		return flags(FLAGS_AA, 0x1) != 0;
+		return flag(FLAGS_AA, 0x1) != 0;
 	}
 
 	public void aa(boolean is) {
 		flip(FLAGS_AA, is);
 	}
 
-	protected void flip(int index, boolean is) {
+	private void flip(int index, boolean is) {
 		int i = 1 << index; // TODO move to caller ?
 		if (is) {
 			this.flags |= i;
@@ -153,7 +176,7 @@ public class Header {
 	 * greater than that permitted on the transmission channel.
 	 */
 	public boolean tc() {
-		return flags(FLAGS_TC, 0x1) != 0;
+		return flag(FLAGS_TC, 0x1) != 0;
 	}
 
 	public void tc(boolean is) {
@@ -166,7 +189,7 @@ public class Header {
 	 * recursively. Recursive query support is optional.
 	 */
 	public boolean rd() {
-		return flags(FLAGS_RD, 0x1) != 0;
+		return flag(FLAGS_RD, 0x1) != 0;
 	}
 
 	public void rd(boolean is) {
@@ -178,7 +201,7 @@ public class Header {
 	 * denotes whether recursive query support is available in the name server.
 	 */
 	public boolean ra() {
-		return flags(FLAGS_RA, 0x1) != 0;
+		return flag(FLAGS_RA, 0x1) != 0;
 	}
 
 	public void ra(boolean is) {
@@ -189,15 +212,22 @@ public class Header {
 	 * Reserved for future use. Must be zero in all queries and responses.
 	 */
 	public int z() {
-		return flags(FLAGS_Z, 0x7);
+		return flag(FLAGS_Z, 0x7);
 	}
 
 	/**
 	 * @see RCode
 	 */
 	public RCode rcode() {
-		int code = flags(FLAGS_RCODE, 0xF);
+		int code = flag(FLAGS_RCODE, 0xF);
 		return RCode.valueOf(code); // TODO cache ?
+	}
+
+	public void rcode(RCode rc) {
+		// clear current response code
+		this.flags &= 0xFFF0; // 1111 1111 1111 0000
+		// set response code
+		this.flags |= rc.value();
 	}
 
 	/**
@@ -209,7 +239,7 @@ public class Header {
 	}
 
 	public void qdcount(int value) {
-		this.qdcount = value;
+		this.qdcount = verify16bitValue("qdcount", value);
 	}
 
 	/**
@@ -221,7 +251,7 @@ public class Header {
 	}
 
 	public void ancount(int value) {
-		this.ancount = value;
+		this.ancount = verify16bitValue("ancount", value);
 	}
 
 	/**
@@ -233,7 +263,8 @@ public class Header {
 	}
 
 	public void nscount(int value) {
-		this.nscount = value;
+		this.nscount = verify16bitValue("nscount", value);
+		;
 	}
 
 	/**
@@ -245,6 +276,29 @@ public class Header {
 	}
 
 	public void arcount(int value) {
-		this.arcount = value;
+		this.arcount = verify16bitValue("arcount", value);
+	}
+
+	@Override
+	public String toString() {
+		MessageFormat form = new MessageFormat(";; ->>HEADER<<- "
+				+ "opcode: {0}, rcode: {1}, id: {2,number,#}\n"
+				+ ";; flags: {3}; QUERY: {4,number,#}, "
+				+ "ANSWER: {5,number,#}, " + "AUTHORITY: {6,number,#}, "
+				+ "ADDITIONAL: {7,number,#}");
+		Object[] args = { opcode().name(), rcode().name(), id(),
+				toFlagsString(), qdcount(), ancount(), nscount(), arcount() };
+		return form.format(args);
+	}
+
+	protected String toFlagsString() {
+		StringBuilder stb = new StringBuilder();
+		for (int i = 0, length = FLAGS_ALL.length; i < length; i++) {
+			if (flag(FLAGS_ALL[i], 0x1) != 0) {
+				stb.append(FLAGS_TXT[i]);
+				stb.append(" ");
+			}
+		}
+		return stb.toString();
 	}
 }
