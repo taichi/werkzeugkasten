@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +16,26 @@ public class HeaderTest {
 
 	@Before
 	public void setUp() {
-		this.target = new Header();
+		target = new Header();
+	}
+
+	@Test
+	public void testEmit() {
+		target.flags(0x20F3);
+		target.opcode(OpCode.IQUERY);
+		target.rcode(RCode.FORMAT_ERROR);
+		target.qdcount(1000);
+		target.ancount(2000);
+		target.nscount(3000);
+		target.arcount(4000);
+
+		ChannelBuffer buf = ChannelBuffers.buffer(100);
+
+		target.write(buf);
+
+		Header newone = new Header(buf);
+
+		assertEquals(target, newone);
 	}
 
 	@Test

@@ -1,10 +1,9 @@
 package org.handwerkszeug.dns;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.security.SecureRandom;
 import java.text.MessageFormat;
+
+import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  * RFC1035 4.1.1. Header section format
@@ -29,8 +28,8 @@ import java.text.MessageFormat;
  */
 public class Header {
 
-	static final int MIN_16BitValue = 0;
-	static final int MAX_16BitValue = 0xFFFF;
+	static final int MIN_USHORT = 0;
+	static final int MAX_USHORT = 0xFFFF;
 
 	static final int FLAGS_QR = 15;
 	static final int FLAGS_Opcode = 11;
@@ -63,23 +62,24 @@ public class Header {
 	protected int arcount;
 
 	public Header() {
-		this(RANDOM.nextInt(MAX_16BitValue));
+		this(RANDOM.nextInt(MAX_USHORT));
 	}
 
 	protected Header(int id) {
 		id(id);
 	}
 
-	public void parse(DataInput in) throws IOException {
-		id(in.readShort());
-		flags(in.readShort());
-		qdcount(in.readShort());
-		ancount(in.readShort());
-		nscount(in.readShort());
-		arcount(in.readShort());
+	public Header(ChannelBuffer in) {
+		this(in.readUnsignedShort());
+		flags(in.readUnsignedShort());
+		qdcount(in.readUnsignedShort());
+		ancount(in.readUnsignedShort());
+		nscount(in.readUnsignedShort());
+		arcount(in.readUnsignedShort());
+
 	}
 
-	public void emit(DataOutput out) throws IOException {
+	public void write(ChannelBuffer out) {
 		out.writeShort(id());
 		out.writeShort(flags());
 		out.writeShort(qdcount());
@@ -95,15 +95,15 @@ public class Header {
 	 * 
 	 */
 	public int id() {
-		return this.id;
+		return id;
 	}
 
 	protected void id(int i) {
-		this.id = verify16bitValue("ID", i);
+		id = verify16bitValue("ID", i);
 	}
 
 	private int verify16bitValue(String column, int i) {
-		if (i < MIN_16BitValue || MAX_16BitValue < i) {
+		if ((i < MIN_USHORT) || (MAX_USHORT < i)) {
 			// TODO ERROR Message.
 			throw new IllegalArgumentException(column + ":" + i);
 		}
@@ -111,7 +111,7 @@ public class Header {
 	}
 
 	protected int flags() {
-		return this.flags;
+		return flags;
 	}
 
 	public void flags(int flags) {
@@ -119,7 +119,7 @@ public class Header {
 	}
 
 	protected int flag(int shift, int mask) {
-		return (this.flags >> shift) & mask;
+		return (flags >> shift) & mask;
 	}
 
 	/**
@@ -144,9 +144,9 @@ public class Header {
 
 	public void opcode(OpCode op) {
 		// clear current opcode
-		this.flags &= 0x87FF; // 1000 0111 1111 1111
+		flags &= 0x87FF; // 1000 0111 1111 1111
 		// set opcode
-		this.flags |= op.value() << FLAGS_Opcode;
+		flags |= op.value() << FLAGS_Opcode;
 	}
 
 	/**
@@ -165,9 +165,9 @@ public class Header {
 	private void flip(int index, boolean is) {
 		int i = 1 << index; // TODO move to caller ?
 		if (is) {
-			this.flags |= i;
+			flags |= i;
 		} else {
-			this.flags &= i ^ 0xFFFF;
+			flags &= i ^ 0xFFFF;
 		}
 	}
 
@@ -225,9 +225,9 @@ public class Header {
 
 	public void rcode(RCode rc) {
 		// clear current response code
-		this.flags &= 0xFFF0; // 1111 1111 1111 0000
+		flags &= 0xFFF0; // 1111 1111 1111 0000
 		// set response code
-		this.flags |= rc.value();
+		flags |= rc.value();
 	}
 
 	/**
@@ -235,11 +235,11 @@ public class Header {
 	 * question section.
 	 */
 	public int qdcount() {
-		return this.qdcount;
+		return qdcount;
 	}
 
 	public void qdcount(int value) {
-		this.qdcount = verify16bitValue("qdcount", value);
+		qdcount = verify16bitValue("qdcount", value);
 	}
 
 	/**
@@ -247,11 +247,11 @@ public class Header {
 	 * the answer section.
 	 */
 	public int ancount() {
-		return this.ancount;
+		return ancount;
 	}
 
 	public void ancount(int value) {
-		this.ancount = verify16bitValue("ancount", value);
+		ancount = verify16bitValue("ancount", value);
 	}
 
 	/**
@@ -259,11 +259,11 @@ public class Header {
 	 * records in the authority records section.
 	 */
 	public int nscount() {
-		return this.nscount;
+		return nscount;
 	}
 
 	public void nscount(int value) {
-		this.nscount = verify16bitValue("nscount", value);
+		nscount = verify16bitValue("nscount", value);
 		;
 	}
 
@@ -272,11 +272,11 @@ public class Header {
 	 * the additional records section.
 	 */
 	public int arcount() {
-		return this.arcount;
+		return arcount;
 	}
 
 	public void arcount(int value) {
-		this.arcount = verify16bitValue("arcount", value);
+		arcount = verify16bitValue("arcount", value);
 	}
 
 	@Override
@@ -300,5 +300,51 @@ public class Header {
 			}
 		}
 		return stb.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		result = prime * result + flags;
+		result = prime * result + qdcount;
+		result = prime * result + ancount;
+		result = prime * result + nscount;
+		result = prime * result + arcount;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof Header) {
+			Header other = (Header) obj;
+			return equals(other);
+		}
+		return false;
+	}
+
+	public boolean equals(Header other) {
+		if (id != other.id) {
+			return false;
+		}
+		if (flags != other.flags) {
+			return false;
+		}
+		if (qdcount != other.qdcount) {
+			return false;
+		}
+		if (ancount != other.ancount) {
+			return false;
+		}
+		if (nscount != other.nscount) {
+			return false;
+		}
+		if (arcount != other.arcount) {
+			return false;
+		}
+		return true;
 	}
 }
