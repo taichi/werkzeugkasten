@@ -30,12 +30,11 @@ public class HeaderTest {
 		target.arcount(4000);
 
 		ChannelBuffer buf = ChannelBuffers.buffer(100);
-
 		target.write(buf);
 
 		Header newone = new Header(buf);
-
 		assertEquals(target, newone);
+
 	}
 
 	@Test
