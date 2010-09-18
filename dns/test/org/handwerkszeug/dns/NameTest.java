@@ -69,6 +69,15 @@ public class NameTest {
 		Name name = new Name(this.buffer);
 
 		assertEquals("google.com.", new String(name.name));
+
+		int mx = this.buffer.readUnsignedShort();
+		assertEquals(15, mx);
+
+		DNSClass IN = DNSClass.valueOf(this.buffer.readUnsignedShort());
+		assertEquals(DNSClass.IN, IN);
+
+		Name n = new Name(this.buffer); // ANSERS SECTION 1st record
+		assertEquals("google.com.", new String(n.name));
 	}
 
 	// @Test
@@ -104,12 +113,9 @@ public class NameTest {
 		this.buffer.readBytes(ary);
 		assertEquals("google", new String(ary));
 
-		byte[] aa = new byte[30];
-		System.arraycopy(ary, 0, aa, 0, ary.length);
-		int pos = ary.length;
+		this.buffer.readerIndex(28);
 
-		System.arraycopy(ary, 0, aa, pos, ary.length);
-
-		System.out.println(aa);
+		Name n = new Name(this.buffer);
+		assertEquals("google.com.", new String(n.name));
 	}
 }

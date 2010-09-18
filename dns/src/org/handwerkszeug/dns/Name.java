@@ -50,7 +50,10 @@ public class Name {
 			}
 		}
 
-		buffer.readerIndex(readPosition);
+		if (jumped) {
+			buffer.readerIndex(readPosition);
+		}
+
 		return freeze(buffer, list);
 	}
 
