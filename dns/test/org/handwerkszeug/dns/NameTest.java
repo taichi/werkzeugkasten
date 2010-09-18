@@ -60,24 +60,33 @@ public class NameTest {
 
 	@Before
 	public void setUp() {
-		this.target = new Name();
 		this.buffer = ChannelBuffers.wrappedBuffer(data);
 		new Header(this.buffer); // skip reading.
 	}
 
 	@Test
+	public void testParse() {
+		Name name = new Name(this.buffer);
+
+		assertEquals("google.com.", new String(name.name));
+	}
+
+	// @Test
 	public void test() {
 		int google = this.buffer.readUnsignedByte();
 		assertEquals(6, google);
+		System.out.println(this.buffer.readerIndex());
 		byte[] ary = new byte[google];
 		this.buffer.readBytes(ary);
 		assertEquals("google", new String(ary));
 
 		int com = this.buffer.readUnsignedByte();
 		assertEquals(3, com);
+		System.out.println(this.buffer.readerIndex());
 		ary = new byte[com];
 		this.buffer.readBytes(ary);
 		assertEquals("com", new String(ary));
+		System.out.println(this.buffer.readerIndex());
 
 		int zero = this.buffer.readUnsignedByte();
 
@@ -88,5 +97,19 @@ public class NameTest {
 
 		DNSClass IN = DNSClass.valueOf(this.buffer.readUnsignedShort());
 		assertEquals(DNSClass.IN, IN);
+
+		System.out.println(this.buffer.readerIndex());
+		this.buffer.readerIndex(13);
+		ary = new byte[google];
+		this.buffer.readBytes(ary);
+		assertEquals("google", new String(ary));
+
+		byte[] aa = new byte[30];
+		System.arraycopy(ary, 0, aa, 0, ary.length);
+		int pos = ary.length;
+
+		System.arraycopy(ary, 0, aa, pos, ary.length);
+
+		System.out.println(aa);
 	}
 }
