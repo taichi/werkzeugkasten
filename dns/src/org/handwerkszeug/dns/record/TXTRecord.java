@@ -1,10 +1,10 @@
 package org.handwerkszeug.dns.record;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.handwerkszeug.dns.NameCompressor;
-import org.handwerkszeug.dns.RecordUtil;
 import org.handwerkszeug.dns.Type;
 import org.jboss.netty.buffer.ChannelBuffer;
 
@@ -27,7 +27,7 @@ public class TXTRecord extends AbstractRecord {
 		this.strings = new ArrayList<byte[]>();
 		ChannelBuffer part = buffer.readSlice(rdlength());
 		while (part.readable()) {
-			this.strings.add(RecordUtil.readString(part));
+			this.strings.add(readString(part));
 		}
 	}
 
@@ -37,4 +37,14 @@ public class TXTRecord extends AbstractRecord {
 
 	}
 
+	public String txt() {
+		StringBuilder stb = new StringBuilder();
+		for (Iterator<byte[]> i = this.strings.iterator(); i.hasNext();) {
+			stb.append(toQuoteString(i.next()));
+			if (i.hasNext()) {
+				stb.append(' ');
+			}
+		}
+		return stb.toString();
+	}
 }

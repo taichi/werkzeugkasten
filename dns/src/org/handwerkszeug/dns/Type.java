@@ -5,6 +5,7 @@ import org.handwerkszeug.VariableEnum;
 import org.handwerkszeug.dns.record.ARecord;
 import org.handwerkszeug.dns.record.MXRecord;
 import org.handwerkszeug.dns.record.SingleNameRecord;
+import org.handwerkszeug.dns.record.TXTRecord;
 
 /**
  * 3.2.2. TYPE values
@@ -64,8 +65,7 @@ public enum Type implements VariableEnum {
 	TXT(16) {
 		@Override
 		public ResourceRecord newRecord() {
-			// TODO Auto-generated method stub
-			return null;
+			return new TXTRecord();
 		}
 	};
 
