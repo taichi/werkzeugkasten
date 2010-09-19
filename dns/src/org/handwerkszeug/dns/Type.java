@@ -32,6 +32,15 @@ public enum Type implements VariableEnum {
 		}
 	},
 	/**
+	 * the canonical name for an alias
+	 */
+	CNAME(5) {
+		@Override
+		public ResourceRecord newRecord() {
+			return new SingleNameRecord(this);
+		}
+	},
+	/**
 	 * a domain name pointer
 	 */
 	PTR(12) {
