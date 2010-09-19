@@ -2,9 +2,9 @@ package org.handwerkszeug.dns.record;
 
 import java.net.InetAddress;
 
-import org.handwerkszeug.NetUtil;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.util.NetUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**

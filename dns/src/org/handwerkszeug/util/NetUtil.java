@@ -1,4 +1,4 @@
-package org.handwerkszeug;
+package org.handwerkszeug.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

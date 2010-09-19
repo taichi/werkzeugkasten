@@ -1,4 +1,4 @@
-package org.handwerkszeug;
+package org.handwerkszeug.util;
 
 public interface VariableEnum {
 

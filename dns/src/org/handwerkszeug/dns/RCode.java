@@ -1,7 +1,7 @@
 package org.handwerkszeug.dns;
 
-import org.handwerkszeug.EnumUtil;
-import org.handwerkszeug.VariableEnum;
+import org.handwerkszeug.util.EnumUtil;
+import org.handwerkszeug.util.VariableEnum;
 
 /**
  * Response code - this 4 bit field is set as part of responses. The values have

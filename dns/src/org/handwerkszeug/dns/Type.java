@@ -1,11 +1,11 @@
 package org.handwerkszeug.dns;
 
-import org.handwerkszeug.EnumUtil;
-import org.handwerkszeug.VariableEnum;
 import org.handwerkszeug.dns.record.ARecord;
 import org.handwerkszeug.dns.record.MXRecord;
 import org.handwerkszeug.dns.record.SingleNameRecord;
 import org.handwerkszeug.dns.record.TXTRecord;
+import org.handwerkszeug.util.EnumUtil;
+import org.handwerkszeug.util.VariableEnum;
 
 /**
  * 3.2.2. TYPE values

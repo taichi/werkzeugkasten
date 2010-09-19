@@ -1,7 +1,7 @@
 package org.handwerkszeug.dns;
 
-import org.handwerkszeug.EnumUtil;
-import org.handwerkszeug.VariableEnum;
+import org.handwerkszeug.util.EnumUtil;
+import org.handwerkszeug.util.VariableEnum;
 
 /**
  * RFC1035 3.2.4. CLASS values

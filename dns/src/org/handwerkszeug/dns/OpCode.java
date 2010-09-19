@@ -1,7 +1,7 @@
 package org.handwerkszeug.dns;
 
-import org.handwerkszeug.EnumUtil;
-import org.handwerkszeug.VariableEnum;
+import org.handwerkszeug.util.EnumUtil;
+import org.handwerkszeug.util.VariableEnum;
 
 /**
  * A four bit field that specifies kind of query in this message. This value is

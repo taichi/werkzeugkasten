@@ -1,10 +1,11 @@
-package org.handwerkszeug;
+package org.handwerkszeug.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.net.InetAddress;
 
+import org.handwerkszeug.util.NetUtil;
 import org.junit.Test;
 
 public class NetUtilTest {
