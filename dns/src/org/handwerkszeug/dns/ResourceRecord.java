@@ -1,5 +1,7 @@
 package org.handwerkszeug.dns;
 
+import org.jboss.netty.buffer.ChannelBuffer;
+
 /**
  * 4.1.3. Resource record format
  * 
@@ -7,13 +9,25 @@ package org.handwerkszeug.dns;
  */
 public interface ResourceRecord {
 
+	Type type();
+
 	Name name();
 
-	int type();
+	void name(Name name);
 
 	DNSClass dnsClass();
 
-	int ttl();
+	void dnsClass(DNSClass dnsClass);
+
+	long ttl();
+
+	void ttl(long ttl);
 
 	int rdlength();
+
+	void rdlength(int rdlength);
+
+	void parse(ChannelBuffer buffer);
+
+	void write(ChannelBuffer buffer, NameCompressor compressor);
 }

@@ -2,6 +2,9 @@ package org.handwerkszeug.dns;
 
 import org.handwerkszeug.EnumUtil;
 import org.handwerkszeug.VariableEnum;
+import org.handwerkszeug.dns.record.ARecord;
+import org.handwerkszeug.dns.record.MXRecord;
+import org.handwerkszeug.dns.record.SingleNameRecord;
 
 /**
  * 3.2.2. TYPE values
@@ -16,8 +19,7 @@ public enum Type implements VariableEnum {
 	A(1) {
 		@Override
 		public ResourceRecord newRecord() {
-			// TODO Auto-generated method stub
-			return null;
+			return new ARecord();
 		}
 	},
 	/**
@@ -26,8 +28,16 @@ public enum Type implements VariableEnum {
 	NS(2) {
 		@Override
 		public ResourceRecord newRecord() {
-			// TODO Auto-generated method stub
-			return null;
+			return new SingleNameRecord(this);
+		}
+	},
+	/**
+	 * a domain name pointer
+	 */
+	PTR(12) {
+		@Override
+		public ResourceRecord newRecord() {
+			return new SingleNameRecord(this);
 		}
 	},
 	/**
@@ -36,8 +46,7 @@ public enum Type implements VariableEnum {
 	MX(15) {
 		@Override
 		public ResourceRecord newRecord() {
-			// TODO Auto-generated method stub
-			return null;
+			return new MXRecord();
 		}
 	},
 	/**
