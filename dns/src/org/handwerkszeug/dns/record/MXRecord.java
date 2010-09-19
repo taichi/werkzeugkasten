@@ -48,7 +48,7 @@ public class MXRecord extends AbstractRecord {
 	@Override
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		buffer.writeShort(this.preference);
-		// TODO Name#write with name compression...
+		this.name.write(buffer, compressor);
 	}
 
 }

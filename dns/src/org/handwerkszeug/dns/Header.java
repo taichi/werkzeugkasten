@@ -327,6 +327,9 @@ public class Header {
 	}
 
 	public boolean equals(Header other) {
+		if (other == null) {
+			return false;
+		}
 		if (id != other.id) {
 			return false;
 		}

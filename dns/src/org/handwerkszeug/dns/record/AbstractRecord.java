@@ -125,8 +125,7 @@ public abstract class AbstractRecord implements ResourceRecord {
 	 * @return
 	 */
 	protected StringBuilder toString(byte[] ary) {
-		DecimalFormat fmt = new DecimalFormat();
-		fmt.setMinimumIntegerDigits(3);
+		DecimalFormat fmt = new DecimalFormat("###");
 		StringBuilder result = new StringBuilder();
 		for (byte b : ary) {
 			int i = b & 0xFF;
@@ -161,7 +160,7 @@ public abstract class AbstractRecord implements ResourceRecord {
 			byte b = bytes[i];
 			if (b == '\\') {
 				byte next = bytes[++i];
-				if ('0' <= next && next <= '9') {
+				if (Character.isDigit(next)) {
 					int value = ((next - '0') * 100)
 							+ ((bytes[++i] - '0') * 10) + bytes[++i] - '0';
 					out.write(value);

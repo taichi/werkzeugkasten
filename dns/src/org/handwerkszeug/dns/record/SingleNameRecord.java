@@ -7,6 +7,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  * <ul>
+ * <li>3.3.1. CNAME RDATA format</li>
  * <li>3.3.11. NS RDATA format</li>
  * <li>3.3.12. PTR RDATA format</li>
  * </ul>
@@ -29,6 +30,6 @@ public class SingleNameRecord extends AbstractRecord {
 
 	@Override
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
-		// TODO
+		this.name.write(buffer, compressor);
 	}
 }
