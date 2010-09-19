@@ -160,12 +160,10 @@ public abstract class AbstractRecord implements ResourceRecord {
 		for (int i = 0, length = bytes.length; i < length; i++) {
 			byte b = bytes[i];
 			if (b == '\\') {
-				byte next = bytes[i++];
-				if ('0' <= next || next >= '9') {
+				byte next = bytes[++i];
+				if ('0' <= next && next <= '9') {
 					int value = ((next - '0') * 100)
-							+ ((bytes[i++] - '0') * 10)
-							//
-							+ bytes[i++] - '0';
+							+ ((bytes[++i] - '0') * 10) + bytes[++i] - '0';
 					out.write(value);
 				} else {
 					out.write(next);
