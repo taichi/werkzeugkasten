@@ -2,6 +2,7 @@ package org.handwerkszeug.dns.record;
 
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
+import org.handwerkszeug.dns.NullNameCompressor;
 import org.handwerkszeug.dns.Type;
 import org.jboss.netty.buffer.ChannelBuffer;
 
@@ -48,7 +49,7 @@ public class MXRecord extends AbstractRecord {
 	@Override
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		buffer.writeShort(this.preference);
-		this.name.write(buffer, compressor);
+		this.name.write(buffer, NullNameCompressor.INSTANCE);
 	}
 
 }

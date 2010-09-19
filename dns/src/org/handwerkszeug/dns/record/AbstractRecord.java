@@ -10,6 +10,7 @@ import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.Type;
 import org.handwerkszeug.util.StringUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 
 public abstract class AbstractRecord implements ResourceRecord {
 
@@ -78,9 +79,9 @@ public abstract class AbstractRecord implements ResourceRecord {
 
 	@Override
 	public void parse(ChannelBuffer buffer) {
-		this.dnsClass = DNSClass.valueOf(buffer.readUnsignedShort());
-		this.ttl = buffer.readUnsignedInt();
-		this.rdlength = buffer.readUnsignedShort();
+		this.dnsClass(DNSClass.valueOf(buffer.readUnsignedShort()));
+		this.ttl(buffer.readUnsignedInt());
+		this.rdlength(buffer.readUnsignedShort());
 
 		parseRDATA(buffer);
 	}
@@ -89,8 +90,13 @@ public abstract class AbstractRecord implements ResourceRecord {
 
 	@Override
 	public void write(ChannelBuffer buffer, NameCompressor compressor) {
-		// TODO not implemented.
-		writeRDATA(buffer, compressor);
+		buffer.writeShort(this.dnsClass().value());
+		buffer.writeInt((int) this.ttl());
+		ChannelBuffer rdata = ChannelBuffers.dynamicBuffer();
+		writeRDATA(rdata, compressor);
+		int rdlength = rdata.writerIndex() & 0xFFFF;
+		buffer.writeShort(rdlength);
+		buffer.writeBytes(rdata, rdlength);
 	}
 
 	protected abstract void writeRDATA(ChannelBuffer buffer,

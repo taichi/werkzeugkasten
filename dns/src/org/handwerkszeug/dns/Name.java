@@ -33,7 +33,6 @@ public class Name {
 
 	protected byte[] parse(ChannelBuffer buffer) {
 		List<byte[]> list = new ArrayList<byte[]>();
-		int readPosition = 0;
 		boolean jumped = false;
 
 		for (int length = buffer.readUnsignedByte(); 0 < length; length = buffer
@@ -42,7 +41,7 @@ public class Name {
 				int p = ((length ^ MASK_POINTER) << 8)
 						+ buffer.readUnsignedByte();
 				if (jumped == false) {
-					readPosition = buffer.readerIndex();
+					buffer.markReaderIndex();
 					jumped = true;
 				}
 				buffer.readerIndex(p);
@@ -57,7 +56,7 @@ public class Name {
 		}
 
 		if (jumped) {
-			buffer.readerIndex(readPosition);
+			buffer.resetReaderIndex();
 		}
 
 		return freeze(buffer, list);
@@ -99,7 +98,7 @@ public class Name {
 				buffer.writeByte(current.length);
 				buffer.writeBytes(current);
 				if (i.hasNext() == false) {
-					buffer.writeBytes(NULL_LABEL);
+					buffer.writeBytes(NULL_LABEL); // use writeZero(1) ?
 				}
 			}
 		}

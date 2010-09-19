@@ -1,7 +1,5 @@
 package org.handwerkszeug.dns;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 3.3. Standard RRs
@@ -18,19 +16,10 @@ import java.util.Map;
  * @author taichi
  * 
  */
-public class NameCompressor {
+public interface NameCompressor {
 
-	protected Map<Name, Integer> map = new HashMap<Name, Integer>();
+	void put(Name name, int offset);
 
-	public void put(Name name, int offset) {
-		this.map.put(name, offset);
-	}
+	int get(Name name);
 
-	public int get(Name name) {
-		Integer i = this.map.get(name);
-		if (i == null) {
-			return -1;
-		}
-		return i.intValue();
-	}
 }
