@@ -2,7 +2,6 @@ package org.handwerkszeug.dns;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -78,13 +77,12 @@ public class Name {
 	}
 
 	public void write(ChannelBuffer buffer, NameCompressor compressor) {
-		if (write(buffer, compressor, this) == false) {
+		if (writePointer(buffer, compressor, this) == false) {
 			compressor.put(this, buffer.writerIndex());
 			List<byte[]> list = split();
 			int namelength = name.length;
 			int consumed = 0;
-			for (Iterator<byte[]> i = list.iterator(); i.hasNext();) {
-				byte[] current = i.next();
+			for (byte[] current : list) {
 				buffer.writeByte(current.length);
 				buffer.writeBytes(current);
 
@@ -94,7 +92,7 @@ public class Name {
 					byte[] newone = new byte[newlength];
 					System.arraycopy(this.name, consumed, newone, 0, newlength);
 					Name n = new Name(newone);
-					if (write(buffer, compressor, n)) {
+					if (writePointer(buffer, compressor, n)) {
 						break;
 					} else {
 						compressor.put(n, buffer.writerIndex());
@@ -106,8 +104,8 @@ public class Name {
 		}
 	}
 
-	protected boolean write(ChannelBuffer buffer, NameCompressor compressor,
-			Name n) {
+	protected boolean writePointer(ChannelBuffer buffer,
+			NameCompressor compressor, Name n) {
 		int position = compressor.get(n);
 		if (-1 < position) {
 			int pointer = (MASK_POINTER << 8) | position;
