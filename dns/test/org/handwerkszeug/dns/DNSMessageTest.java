@@ -1,15 +1,19 @@
 package org.handwerkszeug.dns;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import org.handwerkszeug.dns.record.ARecord;
+import org.handwerkszeug.dns.record.MXRecord;
+import org.handwerkszeug.dns.record.SingleNameRecord;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Before;
 import org.junit.Test;
 
-public class NameTest {
+public class DNSMessageTest {
 
 	// ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 64158
 	// ;; flags: qr rd ra ; qd: 1 an: 4 au: 4 ad: 4
@@ -56,86 +60,57 @@ public class NameTest {
 			-82, 0, 1, 0, 1, 0, 4, -95, 125, 0, 4, -40, -17, 38, 10 };
 
 	ChannelBuffer buffer;
-	Header header;
 
 	@Before
-	public void setUp() {
-		this.buffer = ChannelBuffers.wrappedBuffer(data);
-		this.header = new Header(this.buffer); // skip reading.
+	public void setUp() throws Exception {
+		buffer = ChannelBuffers.wrappedBuffer(data);
 	}
 
 	@Test
-	public void testParse() {
-		Name name = new Name(this.buffer);
+	public void testParseChannelBuffer() {
+		DNSMessage msg = new DNSMessage(buffer);
 
-		assertEquals("google.com.", new String(name.name));
+		assertEquals(298, msg.messageSize());
 
-		int mx = this.buffer.readUnsignedShort();
-		assertEquals(15, mx);
+		List<ResourceRecord> q = msg.question();
+		ResourceRecord google = q.get(0);
+		assertEquals(Type.MX, google.type());
+		assertEquals(DNSClass.IN, google.dnsClass());
+		assertEquals("google.com.", new String(google.name().name));
 
-		DNSClass IN = DNSClass.valueOf(this.buffer.readUnsignedShort());
-		assertEquals(DNSClass.IN, IN);
+		assertEquals(4, msg.answer().size());
 
-		Name n = new Name(this.buffer); // ANSERS SECTION 1st record
-		assertEquals("google.com.", new String(n.name));
+		// google.com. 805 IN MX 200 google.com.s9a2.psmtp.com.
+		ResourceRecord ans3 = msg.answer().get(2);
+		assertEquals(805, ans3.ttl());
+		assertEquals(Type.MX, ans3.type());
+		MXRecord ans3mx = (MXRecord) ans3;
+		assertEquals(200, ans3mx.preference());
+		assertEquals("google.com.s9a2.psmtp.com.", new String(
+				ans3mx.exchange().name));
+
+		// google.com. 336761 IN NS ns3.google.com.
+		ResourceRecord auth = msg.authority().get(1);
+		assertEquals(Type.NS, auth.type());
+		SingleNameRecord ns = (SingleNameRecord) auth;
+		assertEquals("ns3.google.com.", ns.oneName().toString());
+
+		// ns4.google.com. 303485 IN A 216.239.38.10
+		ResourceRecord add = msg.additional().get(3);
+		assertEquals(Type.A, add.type());
+		assertEquals(303485L, add.ttl());
+		ARecord a = (ARecord) add;
+		assertEquals("216.239.38.10", a.address().getHostAddress());
 	}
 
 	@Test
-	public void testSplit() {
-		byte[] ary = "google.com.".getBytes();
-		Name name = new Name(ary);
-		List<byte[]> list = name.split();
-		assertEquals("google", new String(list.get(0)));
-		assertEquals("com", new String(list.get(1)));
+	public void writeTest() {
+		DNSMessage msg = new DNSMessage(buffer);
+		ChannelBuffer newone = ChannelBuffers.dynamicBuffer();
+		msg.write(newone);
+		byte[] actual = new byte[newone.writerIndex()];
+		newone.getBytes(0, actual);
+		assertArrayEquals(data, actual);
 	}
 
-	@Test
-	public void testWrite() {
-		byte[] ary = "google.com.".getBytes();
-		Name name = new Name(ary);
-		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
-		SimpleNameCompressor compressor = new SimpleNameCompressor();
-		name.write(cb, compressor);
-		Name actual = new Name(cb);
-		assertEquals(name, actual);
-	}
-
-	// @Test
-	public void test() {
-		int google = this.buffer.readUnsignedByte();
-		assertEquals(6, google);
-		System.out.println(this.buffer.readerIndex());
-		byte[] ary = new byte[google];
-		this.buffer.readBytes(ary);
-		assertEquals("google", new String(ary));
-
-		int com = this.buffer.readUnsignedByte();
-		assertEquals(3, com);
-		System.out.println(this.buffer.readerIndex());
-		ary = new byte[com];
-		this.buffer.readBytes(ary);
-		assertEquals("com", new String(ary));
-		System.out.println(this.buffer.readerIndex());
-
-		int zero = this.buffer.readUnsignedByte();
-
-		assertEquals(0, zero);
-
-		int mx = this.buffer.readUnsignedShort();
-		assertEquals(15, mx);
-
-		DNSClass IN = DNSClass.valueOf(this.buffer.readUnsignedShort());
-		assertEquals(DNSClass.IN, IN);
-
-		System.out.println(this.buffer.readerIndex());
-		this.buffer.readerIndex(13);
-		ary = new byte[google];
-		this.buffer.readBytes(ary);
-		assertEquals("google", new String(ary));
-
-		this.buffer.readerIndex(28);
-
-		Name n = new Name(this.buffer);
-		assertEquals("google.com.", new String(n.name));
-	}
 }

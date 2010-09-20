@@ -17,7 +17,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  */
 public class SingleNameRecord extends AbstractRecord {
 
-	protected Name name;
+	protected Name oneName;
 
 	public SingleNameRecord(Type type) {
 		super(type);
@@ -25,11 +25,24 @@ public class SingleNameRecord extends AbstractRecord {
 
 	@Override
 	protected void parseRDATA(ChannelBuffer buffer) {
-		this.name = new Name(buffer);
+		this.oneName = new Name(buffer);
 	}
 
 	@Override
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
-		this.name.write(buffer, compressor);
+		this.oneName.write(buffer, compressor);
+	}
+
+	public Name oneName() {
+		return this.oneName;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder stb = new StringBuilder();
+		stb.append(super.toString());
+		stb.append(' ');
+		stb.append(this.oneName().toString());
+		return stb.toString();
 	}
 }

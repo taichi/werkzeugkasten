@@ -19,8 +19,6 @@ public class Name {
 	 */
 	public static final int LABEL_MAX = 63; // 0011 1111
 
-	public static byte[] NULL_LABEL = new byte[] { 0 };
-
 	protected byte[] name;
 
 	public Name(ChannelBuffer buffer) {
@@ -87,18 +85,22 @@ public class Name {
 			int consumed = 0;
 			for (Iterator<byte[]> i = list.iterator(); i.hasNext();) {
 				byte[] current = i.next();
-				consumed += (current.length + 1);
-				byte[] newone = new byte[namelength - consumed];
-				System.arraycopy(this.name, consumed, newone, 0, newone.length);
-				Name n = new Name(newone);
-				if (write(buffer, compressor, n)) {
-					break;
-				}
-				compressor.put(n, buffer.writerIndex());
 				buffer.writeByte(current.length);
 				buffer.writeBytes(current);
-				if (i.hasNext() == false) {
-					buffer.writeBytes(NULL_LABEL); // use writeZero(1) ?
+
+				consumed += (current.length + 1);
+				int newlength = namelength - consumed;
+				if (0 < newlength) {
+					byte[] newone = new byte[newlength];
+					System.arraycopy(this.name, consumed, newone, 0, newlength);
+					Name n = new Name(newone);
+					if (write(buffer, compressor, n)) {
+						break;
+					} else {
+						compressor.put(n, buffer.writerIndex());
+					}
+				} else {
+					buffer.writeZero(1); // Null label
 				}
 			}
 		}
@@ -124,7 +126,7 @@ public class Name {
 				System.arraycopy(this.name, begin, newone, 0, part);
 				result.add(newone);
 				part = 0;
-				begin = ++i;
+				begin = i + 1;
 			} else {
 				part++;
 			}
@@ -153,5 +155,10 @@ public class Name {
 
 	public boolean equals(Name other) {
 		return other != null && Arrays.equals(this.name, other.name);
+	}
+
+	@Override
+	public String toString() {
+		return new String(this.name);
 	}
 }

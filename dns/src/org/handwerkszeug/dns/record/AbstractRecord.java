@@ -10,7 +10,6 @@ import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.Type;
 import org.handwerkszeug.util.StringUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 
 public abstract class AbstractRecord implements ResourceRecord {
 
@@ -107,11 +106,13 @@ public abstract class AbstractRecord implements ResourceRecord {
 	@Override
 	public void write(ChannelBuffer buffer, NameCompressor compressor) {
 		buffer.writeInt((int) this.ttl());
-		ChannelBuffer rdata = ChannelBuffers.dynamicBuffer();
-		writeRDATA(rdata, compressor);
-		int rdlength = rdata.writerIndex() & 0xFFFF;
-		buffer.writeShort(rdlength);
-		buffer.writeBytes(rdata, rdlength);
+		int rdlengthIndex = buffer.writerIndex();
+		buffer.writeShort(0); // at first, write zero.
+
+		writeRDATA(buffer, compressor);
+
+		int rdlength = (buffer.writerIndex() - rdlengthIndex - 2) & 0xFFFF;
+		buffer.setShort(rdlengthIndex, rdlength);
 	}
 
 	protected abstract void writeRDATA(ChannelBuffer buffer,
@@ -212,4 +213,16 @@ public abstract class AbstractRecord implements ResourceRecord {
 		return toArray(string.substring(1, string.length() - 1));
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder stb = new StringBuilder();
+		stb.append(this.name().toString());
+		stb.append(' ');
+		stb.append(this.ttl());
+		stb.append(' ');
+		stb.append(this.dnsClass().name());
+		stb.append(' ');
+		stb.append(this.type().name());
+		return stb.toString();
+	}
 }

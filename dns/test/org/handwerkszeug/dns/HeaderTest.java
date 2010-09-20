@@ -140,4 +140,22 @@ public class HeaderTest {
 		target.arcount(4000);
 		assertEquals(exp, target.toString());
 	}
+
+	@Test
+	public void testWrite() {
+		target.id(38246);
+		target.flags(0xFFFF);
+		target.opcode(OpCode.IQUERY);
+		target.rcode(RCode.FORMAT_ERROR);
+		target.qdcount(1000);
+		target.ancount(2000);
+		target.nscount(3000);
+		target.arcount(4000);
+		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
+		target.write(buffer);
+		ChannelBuffer newone = buffer.slice(0, buffer.writerIndex());
+		Header h = new Header(newone);
+		assertEquals(target, h);
+
+	}
 }
