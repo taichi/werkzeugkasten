@@ -33,8 +33,9 @@ public class TXTRecord extends AbstractRecord {
 
 	@Override
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
-		// TODO Auto-generated method stub
-
+		for (byte[] ary : this.strings) {
+			writeString(buffer, ary);
+		}
 	}
 
 	public String txt() {

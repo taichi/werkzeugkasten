@@ -139,6 +139,12 @@ public abstract class AbstractRecord implements ResourceRecord {
 		return newone;
 	}
 
+	protected void writeString(ChannelBuffer buffer, byte[] ary) {
+		int length = ary.length;
+		buffer.writeByte(length);
+		buffer.writeBytes(ary);
+	}
+
 	/**
 	 * 5.1. Format
 	 * 
