@@ -77,20 +77,35 @@ public abstract class AbstractRecord implements ResourceRecord {
 		this.rdlength = value;
 	}
 
+	public static ResourceRecord parseSection(ChannelBuffer buffer) {
+		Name n = new Name(buffer);
+		Type t = Type.valueOf(buffer.readUnsignedShort());
+		DNSClass dc = DNSClass.valueOf(buffer.readUnsignedShort());
+		ResourceRecord result = t.newRecord();
+		result.name(n);
+		result.dnsClass(dc);
+		return result;
+	}
+
 	@Override
 	public void parse(ChannelBuffer buffer) {
-		this.dnsClass(DNSClass.valueOf(buffer.readUnsignedShort()));
 		this.ttl(buffer.readUnsignedInt());
 		this.rdlength(buffer.readUnsignedShort());
 
 		parseRDATA(buffer);
 	}
 
+	public static void writeSection(ChannelBuffer buffer,
+			NameCompressor compressor, ResourceRecord rr) {
+		rr.name().write(buffer, compressor);
+		buffer.writeShort(rr.type().value());
+		buffer.writeShort(rr.dnsClass().value());
+	}
+
 	protected abstract void parseRDATA(ChannelBuffer buffer);
 
 	@Override
 	public void write(ChannelBuffer buffer, NameCompressor compressor) {
-		buffer.writeShort(this.dnsClass().value());
 		buffer.writeInt((int) this.ttl());
 		ChannelBuffer rdata = ChannelBuffers.dynamicBuffer();
 		writeRDATA(rdata, compressor);

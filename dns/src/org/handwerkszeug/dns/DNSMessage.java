@@ -1,7 +1,10 @@
 package org.handwerkszeug.dns;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.handwerkszeug.dns.record.AbstractRecord;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -31,18 +34,62 @@ public class DNSMessage {
 	protected List<ResourceRecord> authority;
 	protected List<ResourceRecord> additional;
 
+	protected int messageSize;
+
+	public DNSMessage(Header header) {
+		this.header(header);
+	}
+
 	public DNSMessage() {
-		this.header(new Header());
+		this(new Header());
 	}
 
 	public DNSMessage(ChannelBuffer buffer) {
-		this.header(new Header(buffer));
+		this(new Header(buffer));
+		this.parse(buffer);
+	}
+
+	protected void parse(ChannelBuffer buffer) {
+		int q = this.header().qdcount();
+		if (q < 1) {
+			this.question = Collections.emptyList();
+		} else {
+			this.question(new ArrayList<ResourceRecord>(q));
+			for (int i = 0; i < q; i++) {
+				this.question().add(AbstractRecord.parseSection(buffer));
+			}
+		}
+		this.answer(parse(buffer, this.header().ancount()));
+		this.authority(parse(buffer, this.header().nscount()));
+		this.additional(parse(buffer, this.header().arcount()));
+
+		this.messageSize(buffer.readerIndex());
+	}
+
+	protected List<ResourceRecord> parse(ChannelBuffer buffer, int c) {
+		if (c < 1) {
+			return Collections.emptyList();
+		}
+		List<ResourceRecord> result = new ArrayList<ResourceRecord>(c);
+		for (int i = 0; i < c; i++) {
+			ResourceRecord rr = AbstractRecord.parseSection(buffer);
+			rr.parse(buffer);
+			result.add(rr);
+		}
+		return result;
 	}
 
 	public void write(ChannelBuffer buffer) {
+		header().qdcount(this.question().size());
+		header().ancount(this.answer().size());
+		header().nscount(this.authority().size());
+		header().arcount(this.additional().size());
+
 		header().write(buffer);
 		NameCompressor nc = new SimpleNameCompressor();
-		write(buffer, nc, question());
+		for (ResourceRecord rr : this.question()) {
+			AbstractRecord.writeSection(buffer, nc, rr);
+		}
 		write(buffer, nc, answer());
 		write(buffer, nc, authority());
 		write(buffer, nc, additional());
@@ -51,6 +98,7 @@ public class DNSMessage {
 	protected void write(ChannelBuffer buffer, NameCompressor compressor,
 			List<ResourceRecord> list) {
 		for (ResourceRecord rr : list) {
+			AbstractRecord.writeSection(buffer, compressor, rr);
 			rr.write(buffer, compressor);
 		}
 	}
@@ -96,5 +144,13 @@ public class DNSMessage {
 
 	public void additional(List<ResourceRecord> list) {
 		this.additional = list;
+	}
+
+	public int messageSize() {
+		return this.messageSize;
+	}
+
+	public void messageSize(int size) {
+		this.messageSize = size;
 	}
 }
