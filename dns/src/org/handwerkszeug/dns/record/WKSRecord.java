@@ -57,13 +57,10 @@ public class WKSRecord extends AbstractRecord {
 
 	@Override
 	protected void parseRDATA(ChannelBuffer buffer) {
-		int begin = buffer.readerIndex();
 		this.address = buffer.readUnsignedInt();
 		this.protocol = buffer.readUnsignedByte();
-		int length = rdlength() - (buffer.readerIndex() - begin);
-		this.bitmap = new byte[length];
+		this.bitmap = new byte[rdlength() - 5];// (32bit + 8bit) / 8bit
 		buffer.readBytes(this.bitmap);
-
 	}
 
 	@Override
