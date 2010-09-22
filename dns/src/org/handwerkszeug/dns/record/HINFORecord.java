@@ -60,7 +60,12 @@ public class HINFORecord extends AbstractRecord {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
+		StringBuilder stb = new StringBuilder();
+		stb.append(super.toString());
+		stb.append(' ');
+		stb.append(this.cpu());
+		stb.append(' ');
+		stb.append(this.os());
+		return stb.toString();
 	}
 }

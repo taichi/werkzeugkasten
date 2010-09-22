@@ -62,4 +62,15 @@ public class MINFORecord extends AbstractRecord {
 	public void emailbx(Name name) {
 		this.emailbx = name;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder stb = new StringBuilder();
+		stb.append(super.toString());
+		stb.append(' ');
+		stb.append(this.rmailbx());
+		stb.append(' ');
+		stb.append(this.emailbx());
+		return stb.toString();
+	}
 }

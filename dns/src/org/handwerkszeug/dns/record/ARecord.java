@@ -36,4 +36,13 @@ public class ARecord extends AbstractRecord {
 	public InetAddress address() {
 		return NetUtil.getByAddress(this.address);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder stb = new StringBuilder();
+		stb.append(super.toString());
+		stb.append(' ');
+		stb.append(this.address().getHostAddress());
+		return stb.toString();
+	}
 }

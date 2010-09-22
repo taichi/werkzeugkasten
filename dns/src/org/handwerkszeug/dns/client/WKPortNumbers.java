@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.handwerkszeug.dns.record.WKSRecord;
 import org.handwerkszeug.util.ClassUtil;
 
 import werkzeugkasten.common.util.Streams;
@@ -96,5 +98,19 @@ public class WKPortNumbers {
 			return UNKNOWN_PORT;
 		}
 		return keyword;
+	}
+
+	public static void setServices(WKSRecord record, int[] services) {
+		// TODO int array to bitmap
+		Arrays.sort(services);
+	}
+
+	public static int[] getServices(WKSRecord record) {
+		// TODO from bitmap to int array
+		return null;
+	}
+
+	public static void appendServices(WKSRecord record, Appendable appendable) {
+		// TODO from bitmap to String sequences
 	}
 }

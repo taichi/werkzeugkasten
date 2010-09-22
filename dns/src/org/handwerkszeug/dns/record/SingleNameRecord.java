@@ -42,7 +42,7 @@ public class SingleNameRecord extends AbstractRecord {
 		StringBuilder stb = new StringBuilder();
 		stb.append(super.toString());
 		stb.append(' ');
-		stb.append(this.oneName().toString());
+		stb.append(this.oneName());
 		return stb.toString();
 	}
 }

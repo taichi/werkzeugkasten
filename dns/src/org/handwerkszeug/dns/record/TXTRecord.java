@@ -39,6 +39,11 @@ public class TXTRecord extends AbstractRecord {
 	}
 
 	public String txt() {
+		return this.toString();
+	}
+
+	@Override
+	public String toString() {
 		StringBuilder stb = new StringBuilder();
 		for (Iterator<byte[]> i = this.strings.iterator(); i.hasNext();) {
 			stb.append(toQuoteString(i.next()));

@@ -66,7 +66,7 @@ public class MXRecord extends AbstractRecord {
 		stb.append(' ');
 		stb.append(this.preference());
 		stb.append(' ');
-		stb.append(this.exchange().toString());
+		stb.append(this.exchange());
 		return stb.toString();
 	}
 }

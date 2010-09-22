@@ -4,6 +4,8 @@ import java.net.InetAddress;
 
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.dns.client.WKPortNumbers;
+import org.handwerkszeug.dns.client.WKProtocols;
 import org.handwerkszeug.util.NetUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
@@ -49,7 +51,7 @@ public class WKSRecord extends AbstractRecord {
 	/**
 	 * A variable length bit map. The bit map must be a multiple of 8 bits long.
 	 */
-	protected byte[] bitmap; // TODO do more works ?
+	protected byte[] bitmap;
 
 	public WKSRecord() {
 		super(Type.WKS);
@@ -78,7 +80,30 @@ public class WKSRecord extends AbstractRecord {
 		return this.protocol;
 	}
 
+	public void protocol(short no) {
+		this.protocol = no;
+	}
+
 	public byte[] bitmap() {
 		return this.bitmap;
+	}
+
+	public void bitmap(byte[] bytes) {
+		this.bitmap = bytes;
+	}
+
+	/**
+	 * @see WKProtocols
+	 * @see WKPortNumbers
+	 */
+	@Override
+	public String toString() {
+		StringBuilder stb = new StringBuilder();
+		stb.append(super.toString());
+		stb.append(' ');
+		stb.append(this.address().getHostAddress());
+		stb.append(' ');
+		stb.append(this.protocol());
+		return stb.toString();
 	}
 }

@@ -157,4 +157,25 @@ public class SOARecord extends AbstractRecord {
 	public void minimum(long uint) {
 		this.minimum = uint & 0xFFFFFFFFL;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder stb = new StringBuilder();
+		stb.append(super.toString());
+		stb.append(' ');
+		stb.append(this.mname());
+		stb.append(' ');
+		stb.append(this.rname());
+		stb.append(' ');
+		stb.append(this.serial());
+		stb.append(' ');
+		stb.append(this.refresh());
+		stb.append(' ');
+		stb.append(this.retry());
+		stb.append(' ');
+		stb.append(this.expire());
+		stb.append(' ');
+		stb.append(this.minimum());
+		return stb.toString();
+	}
 }
