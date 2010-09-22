@@ -1,9 +1,9 @@
 package org.handwerkszeug.dns.client;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,6 +12,7 @@ import java.util.Set;
 import org.handwerkszeug.util.ClassUtil;
 
 import werkzeugkasten.common.util.Streams;
+import werkzeugkasten.common.util.StringUtil;
 
 /**
  * <a href="http://www.iana.org/assignments/port-numbers">PORT NUMBERS</a>
@@ -46,15 +47,17 @@ public class WKPortNumbers {
 	}
 
 	public void load(final InputStream in) {
-		new Streams.using<BufferedInputStream, Exception>() {
+		new Streams.using<BufferedReader, Exception>() {
 
 			@Override
-			public BufferedInputStream open() throws Exception {
-				return new BufferedInputStream(in);
+			public BufferedReader open() throws Exception {
+				return new BufferedReader(new InputStreamReader(in));
 			}
 
 			@Override
-			public void handle(BufferedInputStream stream) throws Exception {
+			public void handle(BufferedReader stream) throws Exception {
+				WKPortNumbers.this.parse(stream);
+
 			}
 
 			@Override
@@ -71,11 +74,27 @@ public class WKPortNumbers {
 	}
 
 	protected void parse(String line) {
-		String[] ary = line.split("\\p{Space}");
-		if ((ary.length < 3) || "#".equals(ary[0])
-				|| skipWords.contains(ary[2])) {
+		if (line.startsWith("#")) {
 			return;
 		}
+		String[] ary = line.split("\\p{Space}+");
+		if ((ary.length < 3) || skipWords.contains(ary[2])) {
+			return;
+		}
+		int index = ary[1].indexOf('/');
+		String port = ary[1].substring(0, index);
+		add(Integer.valueOf(port), ary[0]);
+	}
 
+	public void add(Integer port, String keyword) {
+		this.ports.put(port, keyword);
+	}
+
+	public String find(Integer port) {
+		String keyword = this.ports.get(port);
+		if (StringUtil.isEmpty(keyword)) {
+			return UNKNOWN_PORT;
+		}
+		return keyword;
 	}
 }
