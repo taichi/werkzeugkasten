@@ -30,7 +30,7 @@ public class WKProtocols {
 	public static final String PATH = ClassUtil
 			.toPackagePath(WKProtocols.class) + "/ProtocolNumbers.xml";
 
-	protected Map<Short, String> ports = new HashMap<Short, String>();
+	protected Map<Short, String> protocols = new HashMap<Short, String>();
 
 	public WKProtocols() {
 	}
@@ -121,11 +121,11 @@ public class WKProtocols {
 	}
 
 	protected void add(Short value, String name) {
-		this.ports.put(value, name);
+		this.protocols.put(value, name);
 	}
 
 	public String find(short ubyte) {
-		String s = this.ports.get(ubyte);
+		String s = this.protocols.get(ubyte);
 		if (StringUtil.isEmpty(s)) {
 			return UNKNOWN_PROTOCOL;
 		}
