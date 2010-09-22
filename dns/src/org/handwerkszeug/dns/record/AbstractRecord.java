@@ -8,8 +8,9 @@ import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.Type;
-import org.handwerkszeug.util.StringUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
+
+import werkzeugkasten.common.util.StringUtil;
 
 public abstract class AbstractRecord implements ResourceRecord {
 
@@ -157,10 +158,10 @@ public abstract class AbstractRecord implements ResourceRecord {
 		StringBuilder result = new StringBuilder();
 		for (byte b : ary) {
 			int i = b & 0xFF;
-			if (i < 0x20 || 0x7E < i) { // control code
+			if ((i < 0x20) || (0x7E < i)) { // control code
 				result.append('\\');
 				result.append(fmt.format(i));
-			} else if (i == '"' || i == '\\') {
+			} else if ((i == '"') || (i == '\\')) {
 				result.append('\\');
 				result.append((char) i);
 			} else {

@@ -4,18 +4,33 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.handwerkszeug.util.ClassUtil;
-import org.handwerkszeug.util.Streams;
-import org.handwerkszeug.util.StringUtil;
 
+import werkzeugkasten.common.util.Streams;
+import werkzeugkasten.common.util.StringUtil;
+import werkzeugkasten.common.util.XMLEventParser;
+import werkzeugkasten.common.util.XMLEventParser.DefaultHandler;
+
+/**
+ * 
+ * <a href="http://www.iana.org/assignments/protocol-numbers/">Protocol
+ * Numbers</a>
+ * 
+ * @author taichi
+ * 
+ */
 public class WKProtocols {
 
 	public static final String UNKNOWN_PROTOCOL = "UNKNOWN";
 	public static final String PATH = ClassUtil
 			.toPackagePath(WKProtocols.class) + "/ProtocolNumbers.xml";
 
-	protected Map<Integer, String> ports = new HashMap<Integer, String>();
+	protected Map<Short, String> ports = new HashMap<Short, String>();
 
 	public WKProtocols() {
 	}
@@ -39,6 +54,10 @@ public class WKProtocols {
 
 			@Override
 			public void handle(BufferedInputStream stream) throws Exception {
+				XMLEventParser parser = new XMLEventParser(stream);
+				parser.add(new DefaultHandler("registry"));
+				parser.add(new RecordHandler());
+				parser.parse();
 			}
 
 			@Override
@@ -48,10 +67,60 @@ public class WKProtocols {
 		};
 	}
 
-	protected void parse(BufferedInputStream stream) throws Exception {
+	class Record {
+		String value;
+		String name;
 	}
 
-	protected void add(int value, String name) {
+	public class RecordHandler extends DefaultHandler {
+		Pattern isDigit = Pattern.compile("\\p{Digit}+");
+
+		public RecordHandler() {
+			super("record");
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			XMLEventParser parser = new XMLEventParser(reader);
+			Record r = new Record();
+			parser.add(new ValueHandler(r));
+			parser.add(new NameHandler(r));
+			parser.parse(getTagName());
+			if (this.isDigit.matcher(r.value).matches()) {
+				WKProtocols.this.add(Short.valueOf(r.value), r.name);
+			}
+		}
+	}
+
+	public class ValueHandler extends DefaultHandler {
+		Record r;
+
+		public ValueHandler(Record r) {
+			super("value");
+			this.r = r;
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			this.r.value = reader.getElementText();
+		}
+	}
+
+	public class NameHandler extends DefaultHandler {
+		Record r;
+
+		public NameHandler(Record r) {
+			super("name");
+			this.r = r;
+		}
+
+		@Override
+		public void handle(XMLStreamReader reader) throws XMLStreamException {
+			this.r.name = reader.getElementText();
+		}
+	}
+
+	protected void add(Short value, String name) {
 		this.ports.put(value, name);
 	}
 
