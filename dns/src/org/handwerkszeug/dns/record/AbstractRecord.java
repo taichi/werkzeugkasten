@@ -22,7 +22,7 @@ public abstract class AbstractRecord implements ResourceRecord {
 
 	protected Name name;
 
-	protected DNSClass dnsClass;
+	protected DNSClass dnsClass = DNSClass.IN;
 
 	protected long ttl;
 

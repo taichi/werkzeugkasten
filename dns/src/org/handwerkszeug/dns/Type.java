@@ -1,5 +1,6 @@
 package org.handwerkszeug.dns;
 
+import org.handwerkszeug.dns.record.AAAARecord;
 import org.handwerkszeug.dns.record.ARecord;
 import org.handwerkszeug.dns.record.HINFORecord;
 import org.handwerkszeug.dns.record.MINFORecord;
@@ -161,6 +162,15 @@ public enum Type implements VariableEnum {
 		@Override
 		public ResourceRecord newRecord() {
 			return new TXTRecord();
+		}
+	},
+	/**
+	 * 
+	 */
+	AAAA(28) {
+		@Override
+		public ResourceRecord newRecord() {
+			return new AAAARecord();
 		}
 	};
 

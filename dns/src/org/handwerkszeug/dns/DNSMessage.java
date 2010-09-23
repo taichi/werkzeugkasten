@@ -38,6 +38,10 @@ public class DNSMessage {
 
 	public DNSMessage(Header header) {
 		this.header(header);
+		this.question = new ArrayList<ResourceRecord>();
+		this.answer = new ArrayList<ResourceRecord>();
+		this.authority = new ArrayList<ResourceRecord>();
+		this.additional = new ArrayList<ResourceRecord>();
 	}
 
 	public DNSMessage() {
@@ -45,7 +49,7 @@ public class DNSMessage {
 	}
 
 	public DNSMessage(ChannelBuffer buffer) {
-		this(new Header(buffer));
+		this.header = new Header(buffer);
 		this.parse(buffer);
 	}
 

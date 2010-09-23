@@ -24,6 +24,10 @@ public class Name {
 		this.name = this.parse(buffer);
 	}
 
+	public Name(String name) {
+		this.name = name.getBytes(); // TODO charset?
+	}
+
 	protected Name(byte[] name) {
 		this.name = name;
 	}
