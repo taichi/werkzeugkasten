@@ -140,8 +140,13 @@ public class DNSClient extends SimpleChannelHandler {
 		this.request.header().opcode(this.opCode);
 		this.request.header().rd(true);
 		for (String s : this.names) {
+			String name = s;
+			if ((OpCode.IQUERY.equals(this.opCode) == false)
+					&& (s.endsWith(".") == false)) {
+				name += ".";
+			}
 			ResourceRecord rr = this.type.newRecord();
-			rr.name(new Name(s));
+			rr.name(new Name(name));
 			this.request.question().add(rr);
 		}
 	}
