@@ -22,6 +22,8 @@ import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
 import org.junit.Before;
 import org.junit.Test;
 
+import sun.net.dns.ResolverConfiguration;
+
 public class ResolverTest {
 
 	@Before
@@ -44,7 +46,7 @@ public class ResolverTest {
 			msg.question().add(rr);
 			ChannelBuffer buffer = ChannelBuffers.buffer(512);
 			msg.write(buffer);
-			time = System.currentTimeMillis();
+			this.time = System.currentTimeMillis();
 			e.getChannel().write(buffer);
 
 		}
@@ -52,7 +54,7 @@ public class ResolverTest {
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
 				throws Exception {
-			time = System.currentTimeMillis() - time;
+			this.time = System.currentTimeMillis() - this.time;
 			ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
 			DNSMessage msg = new DNSMessage(buffer);
 			println(msg);
@@ -84,7 +86,7 @@ public class ResolverTest {
 			stb.append("\n");
 
 			stb.append(";; Query time: ");
-			stb.append(time);
+			stb.append(this.time);
 			stb.append(" msec");
 			stb.append("\n");
 			stb.append(";; WHEN: " + new Date());
@@ -119,6 +121,7 @@ public class ResolverTest {
 		ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
+			@Override
 			public ChannelPipeline getPipeline() {
 				return Channels.pipeline(new DNSClientHandler());
 			}
@@ -127,9 +130,7 @@ public class ResolverTest {
 		bootstrap.setOption("sendBufferSize", 512);
 		bootstrap.setOption("receiveBufferSize", 512);
 
-		String host = "192.168.1.1";
-		int port = 53;
-		InetSocketAddress address = new InetSocketAddress(host, port);
+		InetSocketAddress address = new InetSocketAddress(findDNSServer(), 53);
 
 		ChannelFuture future = bootstrap.connect(address);
 		future.awaitUninterruptibly();
@@ -138,6 +139,16 @@ public class ResolverTest {
 		}
 		future.getChannel().getCloseFuture().awaitUninterruptibly();
 		factory.releaseExternalResources();
+	}
+
+	protected String findDNSServer() throws Exception {
+		// FIXME this code run only sun JRE.
+		ResolverConfiguration conf = ResolverConfiguration.open();
+		List<?> list = conf.nameservers();
+		if (0 < list.size()) {
+			return list.get(0).toString();
+		}
+		return "127.0.0.1";
 	}
 
 }
