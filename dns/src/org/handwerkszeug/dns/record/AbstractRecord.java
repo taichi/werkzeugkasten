@@ -218,12 +218,15 @@ public abstract class AbstractRecord implements ResourceRecord {
 	public String toString() {
 		StringBuilder stb = new StringBuilder();
 		stb.append(this.name().toString());
+		StringUtil.padRight(stb, ' ', 23);
 		stb.append(' ');
 		stb.append(this.ttl());
+		StringUtil.padRight(stb, ' ', 31);
 		stb.append(' ');
 		stb.append(this.dnsClass().name());
 		stb.append(' ');
 		stb.append(this.type().name());
+		StringUtil.padRight(stb, ' ', 39);
 		return stb.toString();
 	}
 }

@@ -2,6 +2,7 @@ package org.handwerkszeug.dns.client;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.jboss.netty.channel.socket.DatagramChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
 
 import sun.net.dns.ResolverConfiguration;
+import werkzeugkasten.common.util.StringUtil;
 
 public class DNSClient extends SimpleChannelHandler {
 
@@ -214,8 +216,10 @@ public class DNSClient extends SimpleChannelHandler {
 		stb.append(";; QUESTION SECTION:");
 		stb.append(LINE_SEP);
 		for (ResourceRecord rr : msg.question()) {
-			stb.append(";");
+			stb.append(';');
+			int i = stb.length();
 			stb.append(rr.name().toString());
+			StringUtil.padRight(stb, ' ', i + 30);
 			stb.append(' ');
 			stb.append(rr.dnsClass().name());
 			stb.append(' ');
@@ -235,10 +239,16 @@ public class DNSClient extends SimpleChannelHandler {
 		stb.append(time);
 		stb.append(" msec");
 		stb.append(LINE_SEP);
-		stb.append(";; WHEN: " + new Date());
+		stb.append(";; Server: ");
+		stb.append(this.serverAddress);
 		stb.append(LINE_SEP);
-		stb.append(";; MSG SIZE rcvd: ");
+		stb.append(";; When: ");
+		stb.append(DateFormat.getDateTimeInstance().format(new Date()));
+		stb.append(LINE_SEP);
+		stb.append(";; Message size: ");
 		stb.append(msg.messageSize());
+		stb.append(" bytes");
+		stb.append(LINE_SEP);
 		return stb.toString();
 	}
 
@@ -247,6 +257,9 @@ public class DNSClient extends SimpleChannelHandler {
 		stb.append(name);
 		stb.append(LINE_SEP);
 		for (ResourceRecord rr : list) {
+			if (rr.type().equals(Type.WKS)) {
+				// TODO handle WKSRecord
+			}
 			stb.append(rr.toString());
 			stb.append(LINE_SEP);
 		}

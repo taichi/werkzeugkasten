@@ -9,7 +9,7 @@ public class StringUtil {
 	public static final String[] EMPTY_ARRAY = {};
 
 	public static boolean isEmpty(Object s) {
-		return s == null || s.toString().length() < 1;
+		return (s == null) || (s.toString().length() < 1);
 	}
 
 	public static String toString(Object s) {
@@ -22,12 +22,12 @@ public class StringUtil {
 
 	public static String replace(String txt, String from, String to) {
 		String result = "";
-		if (isEmpty(txt) == false && isEmpty(from) == false) {
+		if ((isEmpty(txt) == false) && (isEmpty(from) == false)) {
 			Pattern p = Pattern.compile(from);
 			StringBuilder stb = new StringBuilder(txt);
 			Matcher m = p.matcher(stb);
 			int index = 0;
-			while (index < stb.length() && m.find(index)) {
+			while ((index < stb.length()) && m.find(index)) {
 				index = m.start() + to.length();
 				stb.replace(m.start(), m.end(), to);
 				m = p.matcher(stb);
@@ -44,7 +44,7 @@ public class StringUtil {
 			StringBuffer stb = new StringBuffer(template);
 			Matcher m = p.matcher(stb);
 			int index = 0;
-			while (index < stb.length() && m.find(index)) {
+			while ((index < stb.length()) && m.find(index)) {
 				String s = m.group();
 				String v = toString(context.get(s.substring(2, s.length() - 1)));
 				index = m.start() + v.length();
@@ -59,8 +59,8 @@ public class StringUtil {
 	public static String toCamelCase(String s) {
 		if (isEmpty(s) == false) {
 			StringBuilder stb = new StringBuilder(s);
-			stb.replace(0, 1, String
-					.valueOf(Character.toUpperCase(s.charAt(0))));
+			stb.replace(0, 1,
+					String.valueOf(Character.toUpperCase(s.charAt(0))));
 			return stb.toString();
 		}
 		return s;
@@ -80,5 +80,11 @@ public class StringUtil {
 			}
 		}
 		return true;
+	}
+
+	public static void padRight(StringBuilder stb, char c, int upTo) {
+		for (int i = stb.length(); i < upTo; i++) {
+			stb.append(c);
+		}
 	}
 }
