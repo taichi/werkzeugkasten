@@ -15,6 +15,7 @@ import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.OpCode;
 import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.dns.record.WKSRecord;
 import org.handwerkszeug.util.EnumUtil;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -70,9 +71,7 @@ public class DNSClient extends SimpleChannelHandler {
 
 	protected void process(String[] args) throws Exception {
 		parseArgs(args);
-
 		setUpRequest();
-
 		sendRequest();
 	}
 
@@ -258,13 +257,20 @@ public class DNSClient extends SimpleChannelHandler {
 		stb.append(LINE_SEP);
 		if (list != null) {
 			for (ResourceRecord rr : list) {
-				if (rr.type().equals(Type.WKS)) {
-					// TODO handle WKSRecord
-				}
 				stb.append(rr.toString());
+				if (rr.type().equals(Type.WKS)) {
+					append(stb, (WKSRecord) rr);
+				}
 				stb.append(LINE_SEP);
 			}
 		}
+	}
+
+	protected void append(StringBuilder stb, WKSRecord record) {
+		stb.append(' ');
+		stb.append(this.wkProtocols.find(record.protocol()));
+		stb.append(' ');
+		this.wkPortNumbers.appendServices(record, stb);
 	}
 
 	protected void printResult(long time, DNSMessage msg) {

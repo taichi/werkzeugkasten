@@ -4,11 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.handwerkszeug.dns.record.WKSRecord;
 import org.handwerkszeug.util.ClassUtil;
@@ -35,6 +38,7 @@ public class WKPortNumbers {
 	}
 
 	protected Map<Integer, String> ports = new HashMap<Integer, String>();
+	protected Map<String, Integer> keywords = new HashMap<String, Integer>();
 
 	public WKPortNumbers() {
 	}
@@ -90,9 +94,13 @@ public class WKPortNumbers {
 
 	public void add(Integer port, String keyword) {
 		this.ports.put(port, keyword);
+		this.keywords.put(keyword, port);
 	}
 
 	public String find(Integer port) {
+		if (port == null) {
+			return UNKNOWN_PORT;
+		}
 		String keyword = this.ports.get(port);
 		if (StringUtil.isEmpty(keyword)) {
 			return UNKNOWN_PORT;
@@ -100,17 +108,68 @@ public class WKPortNumbers {
 		return keyword;
 	}
 
+	public Integer find(String keyword) {
+		if (StringUtil.isEmpty(keyword)) {
+			return null;
+		}
+		return this.keywords.get(keyword.toLowerCase());
+	}
+
+	static final Pattern isDigit = Pattern.compile("\\d+");
+
+	public void setServices(WKSRecord record, String[] services) {
+		List<Integer> list = new ArrayList<Integer>();
+		for (String s : services) {
+			if (isDigit.matcher(s).matches()) {
+				list.add(Integer.valueOf(s));
+			} else {
+				Integer i = find(s);
+				if (i != null) {
+					list.add(i);
+				}
+			}
+		}
+		int[] ary = new int[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			ary[i] = list.get(i);
+		}
+		WKPortNumbers.setServices(record, ary);
+	}
+
+	/**
+	 * 3.4.2. WKS RDATA format
+	 * 
+	 * @param record
+	 * @param services
+	 */
 	public static void setServices(WKSRecord record, int[] services) {
-		// TODO int array to bitmap
 		Arrays.sort(services);
+		int last = services[services.length - 1];
+		byte[] bitmap = new byte[last / 8 + 1];
+		for (int i : services) {
+			bitmap[i / 8] |= (1 << (7 - i % 8));
+		}
+		record.bitmap(bitmap);
 	}
 
-	public static int[] getServices(WKSRecord record) {
-		// TODO from bitmap to int array
-		return null;
+	protected List<Integer> getServices(WKSRecord record) {
+		byte[] bitmap = record.bitmap();
+		List<Integer> result = new ArrayList<Integer>();
+		for (int i = 0, length = bitmap.length; i < length; i++) {
+			int octets = bitmap[i] & 0xFF;
+			for (int j = 0; j < 8; j++) {
+				if ((octets & (1 << (7 - j))) != 0) {
+					result.add(Integer.valueOf(i * 8 + j));
+				}
+			}
+		}
+		return result;
 	}
 
-	public static void appendServices(WKSRecord record, Appendable appendable) {
-		// TODO from bitmap to String sequences
+	public void appendServices(WKSRecord record, StringBuilder stb) {
+		for (Integer i : getServices(record)) {
+			stb.append(find(i));
+			stb.append(' ');
+		}
 	}
 }
