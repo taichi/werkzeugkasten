@@ -29,7 +29,7 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.channel.socket.DatagramChannelFactory;
-import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
+import org.jboss.netty.channel.socket.oio.OioDatagramChannelFactory;
 
 import sun.net.dns.ResolverConfiguration;
 import werkzeugkasten.common.util.StringUtil;
@@ -155,8 +155,8 @@ public class DNSClient extends SimpleChannelHandler {
 
 	protected void sendRequest() {
 		// use UDP/IP
-		DatagramChannelFactory factory = new NioDatagramChannelFactory(
-				Executors.newCachedThreadPool());
+		DatagramChannelFactory factory = new OioDatagramChannelFactory(
+				Executors.newSingleThreadExecutor());
 
 		try {
 			ClientBootstrap bootstrap = new ClientBootstrap(factory);
@@ -199,13 +199,13 @@ public class DNSClient extends SimpleChannelHandler {
 		DNSMessage msg = new DNSMessage(buffer);
 		printResult(this.time, msg);
 		e.getChannel().close();
-
 	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
 			throws Exception {
 		e.getCause().printStackTrace();
+		e.getChannel().close();
 	}
 
 	protected String formatMessage(long time, DNSMessage msg) {
@@ -256,12 +256,14 @@ public class DNSClient extends SimpleChannelHandler {
 			List<ResourceRecord> list) {
 		stb.append(name);
 		stb.append(LINE_SEP);
-		for (ResourceRecord rr : list) {
-			if (rr.type().equals(Type.WKS)) {
-				// TODO handle WKSRecord
+		if (list != null) {
+			for (ResourceRecord rr : list) {
+				if (rr.type().equals(Type.WKS)) {
+					// TODO handle WKSRecord
+				}
+				stb.append(rr.toString());
+				stb.append(LINE_SEP);
 			}
-			stb.append(rr.toString());
-			stb.append(LINE_SEP);
 		}
 	}
 

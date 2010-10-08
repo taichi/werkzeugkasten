@@ -16,7 +16,7 @@ public class Name {
 	/**
 	 * 2.3.1. Preferred name syntax
 	 */
-	public static final int LABEL_MAX = 63; // 0011 1111
+	public static final int MAX_LABEL_SIZE = 63; // 0011 1111
 
 	protected byte[] name;
 
@@ -25,11 +25,30 @@ public class Name {
 	}
 
 	public Name(String name) {
-		this.name = name.getBytes(); // TODO charset?
+		// TODO charset? double byte string?
+		this(name.getBytes());
 	}
 
 	protected Name(byte[] name) {
+		verify(name);
 		this.name = name;
+	}
+
+	protected void verify(byte[] ary) {
+		int labelsize = 0;
+		for (int i = 0, length = ary.length; i < length; i++) {
+			byte b = ary[i];
+			if ((b == '.') && (++i < length) && (ary[i] == '.')) {
+				// TODO error msg.
+				throw new IllegalArgumentException("null label is not valid");
+			}
+			labelsize++;
+		}
+		if (MAX_LABEL_SIZE < labelsize) {
+			// TODO error msg.
+			throw new IllegalArgumentException(
+					"Labels must be 63 characters or less. size=" + labelsize);
+		}
 	}
 
 	protected byte[] parse(ChannelBuffer buffer) {
@@ -46,7 +65,7 @@ public class Name {
 					jumped = true;
 				}
 				buffer.readerIndex(p);
-			} else if (length <= LABEL_MAX) {
+			} else if (length <= MAX_LABEL_SIZE) {
 				byte[] ary = new byte[length];
 				buffer.readBytes(ary);
 				list.add(ary);
@@ -84,7 +103,7 @@ public class Name {
 		if (writePointer(buffer, compressor, this) == false) {
 			compressor.put(this, buffer.writerIndex());
 			List<byte[]> list = split();
-			int namelength = name.length;
+			int namelength = this.name.length;
 			int consumed = 0;
 			for (byte[] current : list) {
 				buffer.writeByte(current.length);
@@ -140,7 +159,7 @@ public class Name {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(name);
+		result = prime * result + Arrays.hashCode(this.name);
 		return result;
 	}
 
@@ -156,11 +175,12 @@ public class Name {
 	}
 
 	public boolean equals(Name other) {
-		return other != null && Arrays.equals(this.name, other.name);
+		return (other != null) && Arrays.equals(this.name, other.name);
 	}
 
 	@Override
 	public String toString() {
+		// TODO charset ?
 		return new String(this.name);
 	}
 }

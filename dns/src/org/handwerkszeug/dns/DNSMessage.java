@@ -50,7 +50,9 @@ public class DNSMessage {
 
 	public DNSMessage(ChannelBuffer buffer) {
 		this.header = new Header(buffer);
-		this.parse(buffer);
+		if (this.header.rcode().equals(RCode.FORMAT_ERROR) == false) {
+			this.parse(buffer);
+		}
 	}
 
 	protected void parse(ChannelBuffer buffer) {
@@ -70,12 +72,12 @@ public class DNSMessage {
 		this.messageSize(buffer.readerIndex());
 	}
 
-	protected List<ResourceRecord> parse(ChannelBuffer buffer, int c) {
-		if (c < 1) {
+	protected List<ResourceRecord> parse(ChannelBuffer buffer, int size) {
+		if (size < 1) {
 			return Collections.emptyList();
 		}
-		List<ResourceRecord> result = new ArrayList<ResourceRecord>(c);
-		for (int i = 0; i < c; i++) {
+		List<ResourceRecord> result = new ArrayList<ResourceRecord>(size);
+		for (int i = 0; i < size; i++) {
 			ResourceRecord rr = AbstractRecord.parseSection(buffer);
 			rr.parse(buffer);
 			result.add(rr);

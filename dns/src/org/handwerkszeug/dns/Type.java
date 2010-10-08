@@ -165,12 +165,21 @@ public enum Type implements VariableEnum {
 		}
 	},
 	/**
-	 * 
+	 * IP6 Address
 	 */
 	AAAA(28) {
 		@Override
 		public ResourceRecord newRecord() {
 			return new AAAARecord();
+		}
+	},
+	/**
+	 * 
+	 */
+	UNKNOWN(-1) {
+		@Override
+		public ResourceRecord newRecord() {
+			return new NULLRecord();
 		}
 	};
 
@@ -188,6 +197,6 @@ public enum Type implements VariableEnum {
 	}
 
 	public static Type valueOf(int code) {
-		return EnumUtil.find(Type.values(), code);
+		return EnumUtil.find(Type.values(), code, UNKNOWN);
 	}
 }

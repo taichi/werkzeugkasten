@@ -1,6 +1,8 @@
 package org.handwerkszeug.dns;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -137,5 +139,25 @@ public class NameTest {
 
 		Name n = new Name(this.buffer);
 		assertEquals("google.com.", new String(n.name));
+	}
+
+	@Test
+	public void testErrorString() throws Exception {
+		try {
+			new Name("w3c.org..");
+			fail();
+		} catch (IllegalArgumentException e) {
+			assertTrue(true);
+		}
+		try {
+			StringBuilder stb = new StringBuilder();
+			for (int i = 0; i < 64; i++) {
+				stb.append("a.");
+			}
+			new Name(stb.toString());
+			fail();
+		} catch (IllegalArgumentException e) {
+			assertTrue(true);
+		}
 	}
 }
