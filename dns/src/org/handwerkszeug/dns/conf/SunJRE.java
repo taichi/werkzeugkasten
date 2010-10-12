@@ -6,8 +6,12 @@ import java.util.List;
 import org.handwerkszeug.chain.Chain;
 import org.handwerkszeug.chain.ChainResult;
 import org.handwerkszeug.chain.impl.SimpleChainResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SunJRE implements Chain<List<String>, ChainResult> {
+
+	static final Logger LOG = LoggerFactory.getLogger(SunJRE.class);
 
 	@Override
 	public ChainResult execute(List<String> context) {
@@ -21,7 +25,7 @@ public class SunJRE implements Chain<List<String>, ChainResult> {
 				context.add(o.toString());
 			}
 		} catch (Exception e) {
-			// suppress error
+			LOG.error(e.getLocalizedMessage(), e);
 		}
 		return SimpleChainResult.Continue;
 	}

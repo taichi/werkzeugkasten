@@ -9,11 +9,15 @@ import java.util.List;
 import org.handwerkszeug.chain.Chain;
 import org.handwerkszeug.chain.ChainResult;
 import org.handwerkszeug.chain.impl.SimpleChainResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.common.util.StringUtil;
 
 public class ResolveConf implements Chain<List<String>, ChainResult> {
+
+	static final Logger LOG = LoggerFactory.getLogger(ResolveConf.class);
 
 	@Override
 	public ChainResult execute(List<String> context) {
@@ -39,8 +43,8 @@ public class ResolveConf implements Chain<List<String>, ChainResult> {
 				}
 
 				@Override
-				public void happen(Exception exception) {
-					// suppress error
+				public void happen(Exception e) {
+					LOG.error(e.getLocalizedMessage(), e);
 				}
 			};
 		}
