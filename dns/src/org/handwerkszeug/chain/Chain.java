@@ -1,6 +1,6 @@
 package org.handwerkszeug.chain;
 
-public interface Chain<CTX> {
+public interface Chain<CTX, R extends ChainResult> {
 
-	ChainResult execute(CTX context);
+	R execute(CTX context);
 }

@@ -4,18 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.handwerkszeug.chain.Chain;
-import org.handwerkszeug.chain.ChainExecutor;
 import org.handwerkszeug.chain.ChainResult;
 
 public class DefaultChainExecutor<CTX, R extends ChainResult> implements
-		ChainExecutor<CTX, R> {
+		Chain<CTX, R> {
 
-	protected List<Chain<CTX>> chains = new ArrayList<Chain<CTX>>();
+	protected List<Chain<CTX, R>> chains = new ArrayList<Chain<CTX, R>>();
 
 	@Override
-	public ChainResult execute(CTX context) {
-		ChainResult r = null;
-		for (Chain<CTX> c : chains) {
+	public R execute(CTX context) {
+		R r = null;
+		for (Chain<CTX, R> c : this.chains) {
 			r = c.execute(context);
 			if (r.hasNext() == false) {
 				break;
@@ -24,4 +23,7 @@ public class DefaultChainExecutor<CTX, R extends ChainResult> implements
 		return r;
 	}
 
+	public void add(Chain<CTX, R> c) {
+		this.chains.add(c);
+	}
 }

@@ -1,10 +1,12 @@
 package org.handwerkszeug.dns;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 
+import org.handwerkszeug.dns.conf.SunJRE;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -20,9 +22,6 @@ import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.channel.socket.DatagramChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
 import org.junit.Before;
-import org.junit.Test;
-
-import sun.net.dns.ResolverConfiguration;
 
 public class ResolverTest {
 
@@ -112,7 +111,7 @@ public class ResolverTest {
 		}
 	}
 
-	@Test
+	// @Test
 	public void sendTest() throws Exception {
 		// use UDP/IP
 		DatagramChannelFactory factory = new NioDatagramChannelFactory(
@@ -143,8 +142,9 @@ public class ResolverTest {
 
 	protected String findDNSServer() throws Exception {
 		// FIXME this code run only sun JRE.
-		ResolverConfiguration conf = ResolverConfiguration.open();
-		List<?> list = conf.nameservers();
+		SunJRE jre = new SunJRE();
+		List<String> list = new ArrayList<String>();
+		jre.execute(list);
 		if (0 < list.size()) {
 			return list.get(0).toString();
 		}

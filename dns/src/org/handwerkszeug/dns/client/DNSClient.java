@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 import org.handwerkszeug.dns.DNSClass;
 import org.handwerkszeug.dns.DNSMessage;
 import org.handwerkszeug.dns.Name;
+import org.handwerkszeug.dns.NameServerContainer;
+import org.handwerkszeug.dns.NameServerContainerProvider;
 import org.handwerkszeug.dns.OpCode;
 import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.Type;
@@ -20,6 +22,7 @@ import org.handwerkszeug.util.EnumUtil;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipeline;
@@ -29,16 +32,15 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
-import org.jboss.netty.channel.socket.DatagramChannelFactory;
 import org.jboss.netty.channel.socket.oio.OioDatagramChannelFactory;
 
-import sun.net.dns.ResolverConfiguration;
 import werkzeugkasten.common.util.StringUtil;
 
 public class DNSClient extends SimpleChannelHandler {
 
 	protected static final String LINE_SEP = System
 			.getProperty("line.separator");
+	protected NameServerContainer container;
 	protected WKProtocols wkProtocols = new WKProtocols();
 	protected WKPortNumbers wkPortNumbers = new WKPortNumbers();
 
@@ -65,6 +67,10 @@ public class DNSClient extends SimpleChannelHandler {
 	}
 
 	protected void initialize() {
+		NameServerContainerProvider provider = new NameServerContainerProvider();
+		provider.initialize();
+		this.container = provider.getContainer();
+		this.container.initialize();
 		this.wkProtocols.load();
 		this.wkPortNumbers.load();
 	}
@@ -126,9 +132,7 @@ public class DNSClient extends SimpleChannelHandler {
 	}
 
 	protected InetAddress findDNSServer() throws Exception {
-		// FIXME this code run only sun JRE.
-		ResolverConfiguration conf = ResolverConfiguration.open();
-		List<?> list = conf.nameservers();
+		List<String> list = this.container.nameservers();
 		if (0 < list.size()) {
 			String host = list.get(0).toString();
 			return InetAddress.getByName(host);
@@ -154,7 +158,7 @@ public class DNSClient extends SimpleChannelHandler {
 
 	protected void sendRequest() {
 		// use UDP/IP
-		DatagramChannelFactory factory = new OioDatagramChannelFactory(
+		ChannelFactory factory = new OioDatagramChannelFactory(
 				Executors.newSingleThreadExecutor());
 
 		try {
