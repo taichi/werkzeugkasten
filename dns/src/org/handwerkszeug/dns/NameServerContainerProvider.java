@@ -9,8 +9,6 @@ import werkzeugkasten.common.util.Initializable;
 
 public class NameServerContainerProvider implements Initializable, Disposable {
 
-	public static final String BASE_NAME = NameServerContainer.class.getName();
-	public static final String SYSTEM_PROPERTY_NAME = BASE_NAME + ".name";
 	public static final String DEFAULT_NAME = "default";
 
 	protected Map<String, NameServerContainer> containers = new HashMap<String, NameServerContainer>();
@@ -34,7 +32,8 @@ public class NameServerContainerProvider implements Initializable, Disposable {
 	}
 
 	public NameServerContainer getContainer() {
-		String name = System.getProperty(SYSTEM_PROPERTY_NAME);
+		String name = System
+				.getProperty(Constants.SYSTEM_PROPERTY_ACTIVE_NAMESERVER_CONTAINER);
 		return getContainer(name);
 	}
 
