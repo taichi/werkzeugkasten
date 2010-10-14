@@ -50,7 +50,7 @@ public class DNSMessage {
 
 	public DNSMessage(ChannelBuffer buffer) {
 		this.header = new Header(buffer);
-		if (this.header.rcode().equals(RCode.FORMAT_ERROR) == false) {
+		if (this.header.rcode().equals(RCode.FormErr) == false) {
 			this.parse(buffer);
 		}
 	}

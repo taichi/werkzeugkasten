@@ -102,6 +102,14 @@ public abstract class AbstractRecord implements ResourceRecord {
 		buffer.writeShort(rr.dnsClass().value());
 	}
 
+	/**
+	 * 4.1.3. Resource record format<br/>
+	 * <b>RDATA</b> a variable length string of octets that describes the
+	 * resource. The format of this information varies according to the TYPE and
+	 * CLASS of the resource record.
+	 * 
+	 * @param buffer
+	 */
 	protected abstract void parseRDATA(ChannelBuffer buffer);
 
 	@Override

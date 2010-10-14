@@ -8,37 +8,39 @@ import org.handwerkszeug.util.VariableEnum;
  * the following interpretation:
  * 
  * @author taichi
+ * @see <a href="http://www.iana.org/assignments/dns-parameters">Domain Name
+ *      System (DNS) Parameters</a>
  */
 public enum RCode implements VariableEnum {
 
 	/**
 	 * No error condition
 	 */
-	NO_ERROR(0),
+	NoError(0),
 
 	/**
 	 * Format error - The name server was unable to interpret the query.
 	 */
-	FORMAT_ERROR(1),
+	FormErr(1),
 
 	/**
 	 * Server failure - The name server was unable to process this query due to
 	 * a problem with the name server.
 	 */
-	SERVER_FAILURE(2),
+	ServFail(2),
 
 	/**
 	 * Name Error - Meaningful only for responses from an authoritative name
 	 * server, this code signifies that the domain name referenced in the query
 	 * does not exist.
 	 */
-	NAME_ERROR(3),
+	NXDomain(3),
 
 	/**
 	 * Not Implemented - The name server does not support the requested kind of
 	 * query.
 	 */
-	NOT_IMPLEMENTED(4),
+	NotImp(4),
 
 	/**
 	 * Refused - The name server refuses to perform the specified operation for
@@ -46,7 +48,7 @@ public enum RCode implements VariableEnum {
 	 * information to the particular requester, or a name server may not wish to
 	 * perform a particular operation (e.g., zone transfer) for particular data.
 	 */
-	REFUSED(5);
+	Refused(5);
 
 	private int code;
 

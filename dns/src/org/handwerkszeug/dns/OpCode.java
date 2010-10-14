@@ -9,6 +9,8 @@ import org.handwerkszeug.util.VariableEnum;
  * are:
  * 
  * @author taichi
+ * @see <a href="http://www.iana.org/assignments/dns-parameters">Domain Name
+ *      System (DNS) Parameters</a>
  */
 public enum OpCode implements VariableEnum {
 	/**
@@ -34,7 +36,7 @@ public enum OpCode implements VariableEnum {
 
 	@Override
 	public int value() {
-		return code;
+		return this.code;
 	}
 
 	public static OpCode valueOf(int code) {

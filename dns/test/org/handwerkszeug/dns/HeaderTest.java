@@ -23,7 +23,7 @@ public class HeaderTest {
 	public void testEmit() {
 		target.flags(0x20F3);
 		target.opcode(OpCode.IQUERY);
-		target.rcode(RCode.FORMAT_ERROR);
+		target.rcode(RCode.FormErr);
 		target.qdcount(1000);
 		target.ancount(2000);
 		target.nscount(3000);
@@ -118,10 +118,10 @@ public class HeaderTest {
 	@Test
 	public void testRcode() {
 		target.flags(4); // 0000 0000 0000 0100
-		RCode rc = RCode.NOT_IMPLEMENTED;
+		RCode rc = RCode.NotImp;
 		assertEquals(rc, target.rcode());
 
-		rc = RCode.FORMAT_ERROR;
+		rc = RCode.FormErr;
 		target.rcode(rc);
 		assertEquals(rc, target.rcode());
 	}
@@ -133,7 +133,7 @@ public class HeaderTest {
 		target.id(38246);
 		target.flags(0xFFFF);
 		target.opcode(OpCode.IQUERY);
-		target.rcode(RCode.FORMAT_ERROR);
+		target.rcode(RCode.FormErr);
 		target.qdcount(1000);
 		target.ancount(2000);
 		target.nscount(3000);
@@ -146,7 +146,7 @@ public class HeaderTest {
 		target.id(38246);
 		target.flags(0xFFFF);
 		target.opcode(OpCode.IQUERY);
-		target.rcode(RCode.FORMAT_ERROR);
+		target.rcode(RCode.FormErr);
 		target.qdcount(1000);
 		target.ancount(2000);
 		target.nscount(3000);

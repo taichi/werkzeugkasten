@@ -17,7 +17,8 @@ import org.handwerkszeug.util.VariableEnum;
  * 3.2.2. TYPE values
  * 
  * @author taichi
- * 
+ * @see <a href="http://www.iana.org/assignments/dns-parameters">Domain Name
+ *      System (DNS) Parameters</a>
  */
 public enum Type implements VariableEnum {
 	/**
@@ -174,7 +175,7 @@ public enum Type implements VariableEnum {
 		}
 	},
 
-	// 3.2.3. QTYPE values
+	// RFC1035 3.2.3. QTYPE values
 	/**
 	 * A request for a transfer of an entire zone
 	 */
