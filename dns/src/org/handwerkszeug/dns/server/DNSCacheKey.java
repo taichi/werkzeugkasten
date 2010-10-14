@@ -3,8 +3,8 @@ package org.handwerkszeug.dns.server;
 import org.handwerkszeug.dns.DNSClass;
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.util.Validation;
 
-import werkzeugkasten.common.util.Validation;
 
 public class DNSCacheKey {
 	Name name;
