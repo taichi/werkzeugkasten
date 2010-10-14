@@ -169,7 +169,7 @@ public class Name {
 			return true;
 		}
 		if (obj instanceof Name) {
-			return equals((Name) obj);
+			return equals(Name.class.cast(obj));
 		}
 		return false;
 	}

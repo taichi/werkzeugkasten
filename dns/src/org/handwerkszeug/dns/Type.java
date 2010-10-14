@@ -173,9 +173,49 @@ public enum Type implements VariableEnum {
 			return new AAAARecord();
 		}
 	},
+
+	// 3.2.3. QTYPE values
 	/**
-	 * 
+	 * A request for a transfer of an entire zone
 	 */
+	AXFR(252) {
+		@Override
+		public ResourceRecord newRecord() {
+			// TODO error message.
+			throw new UnsupportedOperationException(
+					"QTYPE has no resource record.");
+		}
+	},
+	/**
+	 * A request for mailbox-related records (MB, MG or MR)
+	 */
+	MAILB(253) {
+		@Override
+		public ResourceRecord newRecord() {
+			throw new UnsupportedOperationException(
+					"QTYPE has no resource record.");
+		}
+	},
+	/**
+	 * A request for mail agent RRs (Obsolete - see MX)
+	 */
+	MAILA(254) {
+		@Override
+		public ResourceRecord newRecord() {
+			throw new UnsupportedOperationException(
+					"QTYPE has no resource record.");
+		}
+	},
+	/**
+	 * A request for all records
+	 */
+	ANY(255) {
+		@Override
+		public ResourceRecord newRecord() {
+			throw new UnsupportedOperationException(
+					"QTYPE has no resource record.");
+		}
+	},
 	UNKNOWN(-1) {
 		@Override
 		public ResourceRecord newRecord() {
