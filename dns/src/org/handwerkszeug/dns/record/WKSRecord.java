@@ -3,7 +3,7 @@ package org.handwerkszeug.dns.record;
 import java.net.InetAddress;
 
 import org.handwerkszeug.dns.NameCompressor;
-import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.client.WKPortNumbers;
 import org.handwerkszeug.dns.client.WKProtocols;
 import org.handwerkszeug.util.NetUtil;
@@ -54,7 +54,7 @@ public class WKSRecord extends AbstractRecord {
 	protected byte[] bitmap;
 
 	public WKSRecord() {
-		super(Type.WKS);
+		super(RRType.WKS);
 	}
 
 	@Override

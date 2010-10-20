@@ -20,7 +20,7 @@ import org.handwerkszeug.util.VariableEnum;
  * @see <a href="http://www.iana.org/assignments/dns-parameters">Domain Name
  *      System (DNS) Parameters</a>
  */
-public enum Type implements VariableEnum {
+public enum RRType implements VariableEnum {
 	/**
 	 * a host address
 	 */
@@ -226,7 +226,7 @@ public enum Type implements VariableEnum {
 
 	private int code;
 
-	private Type(int i) {
+	private RRType(int i) {
 		this.code = i;
 	}
 
@@ -237,7 +237,7 @@ public enum Type implements VariableEnum {
 		return this.code;
 	}
 
-	public static Type valueOf(int code) {
-		return EnumUtil.find(Type.values(), code, UNKNOWN);
+	public static RRType valueOf(int code) {
+		return EnumUtil.find(RRType.values(), code, UNKNOWN);
 	}
 }

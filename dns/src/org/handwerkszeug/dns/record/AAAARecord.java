@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.handwerkszeug.dns.NameCompressor;
-import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.dns.RRType;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -23,7 +23,7 @@ public class AAAARecord extends AbstractRecord {
 	protected byte[] address;
 
 	public AAAARecord() {
-		super(Type.AAAA);
+		super(RRType.AAAA);
 	}
 
 	@Override

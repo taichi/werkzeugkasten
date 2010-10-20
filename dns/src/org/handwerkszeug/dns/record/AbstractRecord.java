@@ -7,7 +7,7 @@ import org.handwerkszeug.dns.DNSClass;
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.ResourceRecord;
-import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.dns.RRType;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 import werkzeugkasten.common.util.StringUtil;
@@ -18,7 +18,7 @@ public abstract class AbstractRecord implements ResourceRecord {
 
 	public static int MAX_STRING_LENGTH = 255;
 
-	protected Type type;
+	protected RRType type;
 
 	protected Name name;
 
@@ -28,12 +28,12 @@ public abstract class AbstractRecord implements ResourceRecord {
 
 	protected int rdlength;
 
-	public AbstractRecord(Type type) {
+	public AbstractRecord(RRType type) {
 		this.type = type;
 	}
 
 	@Override
-	public Type type() {
+	public RRType type() {
 		return this.type;
 	}
 
@@ -79,7 +79,7 @@ public abstract class AbstractRecord implements ResourceRecord {
 
 	public static ResourceRecord parseSection(ChannelBuffer buffer) {
 		Name n = new Name(buffer);
-		Type t = Type.valueOf(buffer.readUnsignedShort());
+		RRType t = RRType.valueOf(buffer.readUnsignedShort());
 		DNSClass dc = DNSClass.valueOf(buffer.readUnsignedShort());
 		ResourceRecord result = t.newRecord();
 		result.name(n);

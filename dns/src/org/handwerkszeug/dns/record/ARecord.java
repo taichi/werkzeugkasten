@@ -3,7 +3,7 @@ package org.handwerkszeug.dns.record;
 import java.net.InetAddress;
 
 import org.handwerkszeug.dns.NameCompressor;
-import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.util.NetUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
@@ -20,7 +20,7 @@ public class ARecord extends AbstractRecord {
 	protected long address;
 
 	public ARecord() {
-		super(Type.A);
+		super(RRType.A);
 	}
 
 	@Override

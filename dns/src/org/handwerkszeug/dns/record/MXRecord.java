@@ -2,7 +2,7 @@ package org.handwerkszeug.dns.record;
 
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
-import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.dns.RRType;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -35,7 +35,7 @@ public class MXRecord extends AbstractRecord {
 	protected Name exchange;
 
 	public MXRecord() {
-		super(Type.MX);
+		super(RRType.MX);
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.handwerkszeug.dns.NameCompressor;
-import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.dns.RRType;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -19,7 +19,7 @@ public class TXTRecord extends AbstractRecord {
 	protected List<byte[]> strings;
 
 	public TXTRecord() {
-		super(Type.TXT);
+		super(RRType.TXT);
 	}
 
 	@Override

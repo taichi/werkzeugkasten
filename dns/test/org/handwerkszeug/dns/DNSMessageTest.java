@@ -74,7 +74,7 @@ public class DNSMessageTest {
 
 		List<ResourceRecord> q = msg.question();
 		ResourceRecord google = q.get(0);
-		assertEquals(Type.MX, google.type());
+		assertEquals(RRType.MX, google.type());
 		assertEquals(DNSClass.IN, google.dnsClass());
 		assertEquals("google.com.", new String(google.name().name));
 
@@ -83,7 +83,7 @@ public class DNSMessageTest {
 		// google.com. 805 IN MX 200 google.com.s9a2.psmtp.com.
 		ResourceRecord ans3 = msg.answer().get(2);
 		assertEquals(805, ans3.ttl());
-		assertEquals(Type.MX, ans3.type());
+		assertEquals(RRType.MX, ans3.type());
 		MXRecord ans3mx = (MXRecord) ans3;
 		assertEquals(200, ans3mx.preference());
 		assertEquals("google.com.s9a2.psmtp.com.", new String(
@@ -91,13 +91,13 @@ public class DNSMessageTest {
 
 		// google.com. 336761 IN NS ns3.google.com.
 		ResourceRecord auth = msg.authority().get(1);
-		assertEquals(Type.NS, auth.type());
+		assertEquals(RRType.NS, auth.type());
 		SingleNameRecord ns = (SingleNameRecord) auth;
 		assertEquals("ns3.google.com.", ns.oneName().toString());
 
 		// ns4.google.com. 303485 IN A 216.239.38.10
 		ResourceRecord add = msg.additional().get(3);
-		assertEquals(Type.A, add.type());
+		assertEquals(RRType.A, add.type());
 		assertEquals(303485L, add.ttl());
 		ARecord a = (ARecord) add;
 		assertEquals("216.239.38.10", a.address().getHostAddress());

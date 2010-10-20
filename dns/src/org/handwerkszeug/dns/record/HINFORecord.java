@@ -1,7 +1,7 @@
 package org.handwerkszeug.dns.record;
 
 import org.handwerkszeug.dns.NameCompressor;
-import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.dns.RRType;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -27,7 +27,7 @@ public class HINFORecord extends AbstractRecord {
 	protected byte[] os;
 
 	public HINFORecord() {
-		super(Type.HINFO);
+		super(RRType.HINFO);
 	}
 
 	@Override

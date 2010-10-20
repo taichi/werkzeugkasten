@@ -2,7 +2,7 @@ package org.handwerkszeug.dns.record;
 
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
-import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.dns.RRType;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -19,7 +19,7 @@ public class SingleNameRecord extends AbstractRecord {
 
 	protected Name oneName;
 
-	public SingleNameRecord(Type type) {
+	public SingleNameRecord(RRType type) {
 		super(type);
 	}
 

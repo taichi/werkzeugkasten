@@ -42,7 +42,7 @@ public interface ResourceRecord {
 	 * two octets containing one of the RR type codes. This field specifies the
 	 * meaning of the data in the RDATA field.
 	 */
-	Type type();
+	RRType type();
 
 	/**
 	 * a domain name to which this resource record pertains.

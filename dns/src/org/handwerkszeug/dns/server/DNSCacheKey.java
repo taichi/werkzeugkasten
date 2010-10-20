@@ -2,16 +2,16 @@ package org.handwerkszeug.dns.server;
 
 import org.handwerkszeug.dns.DNSClass;
 import org.handwerkszeug.dns.Name;
-import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.util.Validation;
 
 
 public class DNSCacheKey {
 	Name name;
-	Type t;
+	RRType t;
 	DNSClass c;
 
-	public DNSCacheKey(Name name, Type t, DNSClass c) {
+	public DNSCacheKey(Name name, RRType t, DNSClass c) {
 		super();
 		Validation.notNull(name, "name");
 		Validation.notNull(t, "t");
@@ -46,7 +46,7 @@ public class DNSCacheKey {
 	public boolean equals(DNSCacheKey other) {
 		boolean ne = this.name.equals(other.name);
 
-		boolean t = (this.t.equals(Type.ANY) || other.t.equals(Type.ANY) || this.t
+		boolean t = (this.t.equals(RRType.ANY) || other.t.equals(RRType.ANY) || this.t
 				.equals(other.t));
 
 		boolean c = (this.c.equals(DNSClass.ANY)

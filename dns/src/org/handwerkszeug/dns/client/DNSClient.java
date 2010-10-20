@@ -16,7 +16,7 @@ import org.handwerkszeug.dns.NameServerContainer;
 import org.handwerkszeug.dns.NameServerContainerProvider;
 import org.handwerkszeug.dns.OpCode;
 import org.handwerkszeug.dns.ResourceRecord;
-import org.handwerkszeug.dns.Type;
+import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.record.WKSRecord;
 import org.handwerkszeug.util.EnumUtil;
 import org.jboss.netty.bootstrap.ClientBootstrap;
@@ -48,7 +48,7 @@ public class DNSClient extends SimpleChannelHandler {
 
 	protected DNSClass dnsclass = DNSClass.IN;
 
-	protected Type type = Type.A;
+	protected RRType type = RRType.A;
 
 	protected OpCode opCode = OpCode.QUERY;
 
@@ -116,7 +116,7 @@ public class DNSClient extends SimpleChannelHandler {
 					this.dnsclass = dc;
 					continue;
 				}
-				Type t = EnumUtil.find(Type.values(), s, null);
+				RRType t = EnumUtil.find(RRType.values(), s, null);
 				if (t != null) {
 					this.type = t;
 					continue;
@@ -262,7 +262,7 @@ public class DNSClient extends SimpleChannelHandler {
 		if (list != null) {
 			for (ResourceRecord rr : list) {
 				stb.append(rr.toString());
-				if (rr.type().equals(Type.WKS)) {
+				if (rr.type().equals(RRType.WKS)) {
 					append(stb, (WKSRecord) rr);
 				}
 				stb.append(LINE_SEP);
