@@ -3,9 +3,11 @@ package org.handwerkszeug.dns.server;
 import org.handwerkszeug.dns.DNSMessage;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelHandler.Sharable;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.oneone.OneToOneDecoder;
 
+@Sharable
 public class DNSMessageDecoder extends OneToOneDecoder {
 
 	@Override
