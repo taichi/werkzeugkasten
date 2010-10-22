@@ -88,6 +88,14 @@ public class Header {
 		out.writeShort(arcount());
 	}
 
+	public void copy(Header from) {
+		this.flags(from.flags());
+		this.qdcount(from.qdcount());
+		this.ancount(from.ancount());
+		this.nscount(from.nscount());
+		this.arcount(from.arcount());
+	}
+
 	/**
 	 * A 16 bit identifier assigned by the program that generates any kind of
 	 * query. This identifier is copied the corresponding reply and can be used
@@ -95,11 +103,11 @@ public class Header {
 	 * 
 	 */
 	public int id() {
-		return id;
+		return this.id;
 	}
 
-	protected void id(int i) {
-		id = verify16bitValue("ID", i);
+	public void id(int i) {
+		this.id = verify16bitValue("ID", i);
 	}
 
 	private int verify16bitValue(String column, int i) {
@@ -110,16 +118,16 @@ public class Header {
 		return i;
 	}
 
-	protected int flags() {
-		return flags;
+	public int flags() {
+		return this.flags;
 	}
 
-	public void flags(int flags) {
+	protected void flags(int flags) {
 		this.flags = verify16bitValue("Flags", flags);
 	}
 
 	protected int flag(int shift, int mask) {
-		return (flags >> shift) & mask;
+		return (this.flags >> shift) & mask;
 	}
 
 	/**
@@ -144,9 +152,9 @@ public class Header {
 
 	public void opcode(OpCode op) {
 		// clear current opcode
-		flags &= 0x87FF; // 1000 0111 1111 1111
+		this.flags &= 0x87FF; // 1000 0111 1111 1111
 		// set opcode
-		flags |= op.value() << FLAGS_Opcode;
+		this.flags |= op.value() << FLAGS_Opcode;
 	}
 
 	/**
@@ -165,9 +173,9 @@ public class Header {
 	private void flip(int index, boolean is) {
 		int i = 1 << index; // TODO move to caller ?
 		if (is) {
-			flags |= i;
+			this.flags |= i;
 		} else {
-			flags &= i ^ 0xFFFF;
+			this.flags &= i ^ 0xFFFF;
 		}
 	}
 
@@ -225,9 +233,9 @@ public class Header {
 
 	public void rcode(RCode rc) {
 		// clear current response code
-		flags &= 0xFFF0; // 1111 1111 1111 0000
+		this.flags &= 0xFFF0; // 1111 1111 1111 0000
 		// set response code
-		flags |= rc.value();
+		this.flags |= rc.value();
 	}
 
 	/**
@@ -235,11 +243,11 @@ public class Header {
 	 * question section.
 	 */
 	public int qdcount() {
-		return qdcount;
+		return this.qdcount;
 	}
 
 	public void qdcount(int value) {
-		qdcount = verify16bitValue("qdcount", value);
+		this.qdcount = verify16bitValue("qdcount", value);
 	}
 
 	/**
@@ -247,11 +255,11 @@ public class Header {
 	 * the answer section.
 	 */
 	public int ancount() {
-		return ancount;
+		return this.ancount;
 	}
 
 	public void ancount(int value) {
-		ancount = verify16bitValue("ancount", value);
+		this.ancount = verify16bitValue("ancount", value);
 	}
 
 	/**
@@ -259,11 +267,11 @@ public class Header {
 	 * records in the authority records section.
 	 */
 	public int nscount() {
-		return nscount;
+		return this.nscount;
 	}
 
 	public void nscount(int value) {
-		nscount = verify16bitValue("nscount", value);
+		this.nscount = verify16bitValue("nscount", value);
 		;
 	}
 
@@ -272,11 +280,11 @@ public class Header {
 	 * the additional records section.
 	 */
 	public int arcount() {
-		return arcount;
+		return this.arcount;
 	}
 
 	public void arcount(int value) {
-		arcount = verify16bitValue("arcount", value);
+		this.arcount = verify16bitValue("arcount", value);
 	}
 
 	@Override
@@ -306,12 +314,12 @@ public class Header {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
-		result = prime * result + flags;
-		result = prime * result + qdcount;
-		result = prime * result + ancount;
-		result = prime * result + nscount;
-		result = prime * result + arcount;
+		result = prime * result + this.id;
+		result = prime * result + this.flags;
+		result = prime * result + this.qdcount;
+		result = prime * result + this.ancount;
+		result = prime * result + this.nscount;
+		result = prime * result + this.arcount;
 		return result;
 	}
 
@@ -330,22 +338,22 @@ public class Header {
 		if (other == null) {
 			return false;
 		}
-		if (id != other.id) {
+		if (this.id != other.id) {
 			return false;
 		}
-		if (flags != other.flags) {
+		if (this.flags != other.flags) {
 			return false;
 		}
-		if (qdcount != other.qdcount) {
+		if (this.qdcount != other.qdcount) {
 			return false;
 		}
-		if (ancount != other.ancount) {
+		if (this.ancount != other.ancount) {
 			return false;
 		}
-		if (nscount != other.nscount) {
+		if (this.nscount != other.nscount) {
 			return false;
 		}
-		if (arcount != other.arcount) {
+		if (this.arcount != other.arcount) {
 			return false;
 		}
 		return true;

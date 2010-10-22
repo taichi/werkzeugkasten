@@ -11,12 +11,13 @@ import java.util.regex.Pattern;
 
 import org.handwerkszeug.dns.DNSClass;
 import org.handwerkszeug.dns.DNSMessage;
+import org.handwerkszeug.dns.Header;
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameServerContainer;
 import org.handwerkszeug.dns.NameServerContainerProvider;
 import org.handwerkszeug.dns.OpCode;
-import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.record.WKSRecord;
 import org.handwerkszeug.util.EnumUtil;
 import org.jboss.netty.bootstrap.ClientBootstrap;
@@ -25,10 +26,7 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.ChannelStateEvent;
-import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
@@ -101,7 +99,7 @@ public class DNSClient extends SimpleChannelHandler {
 						if ((0 < num) && (num < 0xFFFF)) {
 							this.serverPort = num;
 						} else {
-							// TODO error msg.
+							// TODO error message.
 							System.err.println("invalid port number " + num);
 						}
 					}
@@ -141,7 +139,7 @@ public class DNSClient extends SimpleChannelHandler {
 	}
 
 	protected void setUpRequest() {
-		this.request = new DNSMessage();
+		this.request = new DNSMessage(new Header());
 		this.request.header().opcode(this.opCode);
 		this.request.header().rd(true);
 		for (String s : this.names) {
@@ -164,13 +162,9 @@ public class DNSClient extends SimpleChannelHandler {
 		try {
 			ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
-			bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
-				@Override
-				public ChannelPipeline getPipeline() {
-					return Channels.pipeline(DNSClient.this);
-				}
-			});
-			bootstrap.setOption("broadcast", "false");
+			bootstrap.getPipeline().addLast("handler", DNSClient.this);
+
+			// bootstrap.setOption("broadcast", "false");
 			bootstrap.setOption("sendBufferSize", 512);
 			bootstrap.setOption("receiveBufferSize", 512);
 
