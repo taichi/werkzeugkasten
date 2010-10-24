@@ -25,7 +25,7 @@ public class ServerConfiguration {
 
 	public void load(URL url) {
 		// TODO not implemented
-		this.bindingHosts.add(new InetSocketAddress("localhost", 53));
+		this.bindingHosts.add(new InetSocketAddress("127.0.0.1", 53));
 
 		NameServerContainerProvider provider = new NameServerContainerProvider();
 		provider.initialize();

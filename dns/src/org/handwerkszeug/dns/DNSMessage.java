@@ -50,7 +50,12 @@ public class DNSMessage {
 
 	public DNSMessage(ChannelBuffer buffer) {
 		this.header = new Header(buffer);
-		if (this.header.rcode().equals(RCode.FormErr) == false) {
+		if (this.header.rcode().equals(RCode.FormErr)) {
+			this.question = Collections.emptyList();
+			this.answer = Collections.emptyList();
+			this.authority = Collections.emptyList();
+			this.additional = Collections.emptyList();
+		} else {
 			this.parse(buffer);
 		}
 	}
@@ -83,6 +88,15 @@ public class DNSMessage {
 			result.add(rr);
 		}
 		return result;
+	}
+
+	public void copy(DNSMessage from) {
+		this.header().copy(from.header());
+
+		this.question().addAll(from.question());
+		this.answer().addAll(from.answer());
+		this.authority().addAll(from.authority());
+		this.additional().addAll(from.additional());
 	}
 
 	public void write(ChannelBuffer buffer) {

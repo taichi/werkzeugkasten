@@ -6,7 +6,7 @@ public class DNSClientTest {
 
 	@Test
 	public void main() throws Exception {
-		String[] args = { "iana.org", "AAAA", "IN" };
+		String[] args = { "@127.0.0.1", "iana.org", "AAAA", "IN" };
 		DNSClient.main(args);
 	}
 }

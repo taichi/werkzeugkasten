@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.handwerkszeug.dns.DNSMessage;
-import org.handwerkszeug.dns.RCode;
 import org.handwerkszeug.dns.conf.ServerConfiguration;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -13,12 +12,13 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelPipeline;
+import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.ChannelStateEvent;
+import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
-import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,16 +41,22 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, final MessageEvent e)
 			throws Exception {
-		DNSMessage original = DNSMessage.class.cast(e.getMessage());
+		final DNSMessage original = DNSMessage.class.cast(e.getMessage());
 
-		ClientBootstrap bootstrap = new ClientBootstrap(
-				this.clientChannelFactory);
-		bootstrap.getPipeline().addLast("handler",
-				new ClientHanler(original, e.getChannel()));
+		ClientBootstrap cb = new ClientBootstrap(this.clientChannelFactory);
+		cb.setOption("broadcast", "false");
+		cb.setPipelineFactory(new ChannelPipelineFactory() {
+			@Override
+			public ChannelPipeline getPipeline() throws Exception {
+
+				return Channels.pipeline(new ClientHanler(original, e
+						.getChannel()));
+			}
+		});
 
 		List<SocketAddress> newlist = new ArrayList<SocketAddress>(
 				this.config.forwarders());
-		sendRequest(e, original, bootstrap, newlist);
+		sendRequest(e, original, cb, newlist);
 	}
 
 	protected void sendRequest(final MessageEvent e, final DNSMessage original,
@@ -58,28 +64,30 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 			final List<SocketAddress> forwarders) {
 		if (0 < forwarders.size()) {
 			SocketAddress sa = forwarders.remove(0);
+			LOG.info("send to {}", sa);
 			ChannelFuture f = bootstrap.connect(sa);
-			f.addListener(new ChannelFutureListener() {
-				@Override
-				public void operationComplete(ChannelFuture future)
-						throws Exception {
-					if (future.isSuccess() == false) {
-						if (0 < forwarders.size()) {
-							// retry.
-							sendRequest(e, original, bootstrap, forwarders);
-						} else {
-							original.header().rcode(RCode.ServFail);
-							ChannelBuffer buffer = ChannelBuffers.buffer(512);
-							original.write(buffer);
-							e.getChannel().write(buffer);
-						}
-					}
-				}
-			});
+			// f.addListener(new ChannelFutureListener() {
+			// @Override
+			// public void operationComplete(ChannelFuture future)
+			// throws Exception {
+			// if (future.isSuccess() == false) {
+			// if (0 < forwarders.size()) {
+			// // retry.
+			// sendRequest(e, original, bootstrap, forwarders);
+			// } else {
+			// original.header().rcode(RCode.ServFail);
+			// ChannelBuffer buffer = ChannelBuffers.buffer(512);
+			// original.write(buffer);
+			// e.getChannel().write(buffer);
+			// }
+			// }
+			// }
+			// });
+			f.awaitUninterruptibly();
 		}
 	}
 
-	protected class ClientHanler extends SimpleChannelHandler {
+	protected class ClientHanler extends SimpleChannelUpstreamHandler {
 
 		protected DNSMessage original;
 
@@ -93,17 +101,26 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 		@Override
 		public void channelConnected(ChannelHandlerContext ctx,
 				ChannelStateEvent e) throws Exception {
+			LOG.info("ClientHanler#channelConnected");
 			ChannelBuffer buffer = ChannelBuffers.buffer(512);
 			DNSMessage newone = new DNSMessage();
-			newone.header().copy(this.original.header());
-
+			newone.copy(this.original);
 			newone.write(buffer);
-			e.getChannel().write(buffer);
+			Channel c = e.getChannel();
+			LOG.info(
+					"STATUS : {} {} {}",
+					new Object[] {
+							new boolean[] { c.isOpen(), c.isConnected(),
+									c.isWritable() }, c.getRemoteAddress(),
+							c.getClass() });
+
+			c.write(buffer);
 		}
 
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
 				throws Exception {
+			LOG.debug("ClientHanler#messageReceived");
 			ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
 			DNSMessage msg = new DNSMessage(buffer);
 			msg.header().id(this.original.header().id());
@@ -117,7 +134,8 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
 				throws Exception {
 			Throwable t = e.getCause();
-			LOG.error(t.getLocalizedMessage(), t);
+			t.printStackTrace();
+			LOG.error(t.getMessage(), t);
 			e.getFuture().setFailure(t);
 			e.getChannel().close();
 		}
@@ -127,7 +145,8 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
 			throws Exception {
 		Throwable t = e.getCause();
-		LOG.error(t.getLocalizedMessage(), e);
+		t.printStackTrace();
+		LOG.error(t.getMessage(), e);
 		e.getChannel().close();
 	}
 }

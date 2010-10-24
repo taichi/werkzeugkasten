@@ -5,13 +5,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.handwerkszeug.dns.conf.ServerConfiguration;
-import org.jboss.netty.bootstrap.ServerBootstrap;
+import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.group.ChannelGroup;
 import org.jboss.netty.channel.group.DefaultChannelGroup;
-import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
+import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
 import org.jboss.netty.util.ExternalResourceReleasable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,7 @@ public class DNSServer implements Initializable, Disposable {
 	protected ServerConfiguration config;
 	protected ChannelFactory serverChannelFactory;
 	protected ChannelFactory clientChannelFactory;
-	protected ServerBootstrap bootstrap;
+	protected ConnectionlessBootstrap bootstrap;
 	protected ChannelGroup group;
 
 	public static void main(String[] args) {
@@ -43,19 +42,20 @@ public class DNSServer implements Initializable, Disposable {
 
 	@Override
 	public void initialize() {
+		LOG.info("initialize");
 		this.config = new ServerConfiguration();
 
 		this.config.load(null);
 		// TODO from configuration. thread pool size.
 		ExecutorService executor = Executors.newCachedThreadPool();
-		this.clientChannelFactory = new NioClientSocketChannelFactory(executor,
-				executor);
-		this.serverChannelFactory = new NioServerSocketChannelFactory(executor,
-				executor);
+		// TODO TCP?
+		this.clientChannelFactory = new NioDatagramChannelFactory(executor);
+		// TODO TCP and/or UDP
+		this.serverChannelFactory = new NioDatagramChannelFactory(executor);
 		ChannelPipelineFactory pipelineFactory = new DNSServerPipelineFactory(
 				this.config, this.clientChannelFactory);
 
-		this.bootstrap = new ServerBootstrap(this.serverChannelFactory);
+		this.bootstrap = new ConnectionlessBootstrap(this.serverChannelFactory);
 		this.bootstrap.setPipelineFactory(pipelineFactory);
 
 		this.group = new DefaultChannelGroup();
@@ -71,6 +71,7 @@ public class DNSServer implements Initializable, Disposable {
 
 	public void process() {
 		for (SocketAddress sa : this.config.bindingHosts()) {
+			LOG.info("binding {}", sa);
 			this.group.add(this.bootstrap.bind(sa));
 		}
 	}

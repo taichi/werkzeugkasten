@@ -30,7 +30,7 @@ import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
-import org.jboss.netty.channel.socket.oio.OioDatagramChannelFactory;
+import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
 
 import werkzeugkasten.common.util.StringUtil;
 
@@ -156,7 +156,7 @@ public class DNSClient extends SimpleChannelHandler {
 
 	protected void sendRequest() {
 		// use UDP/IP
-		ChannelFactory factory = new OioDatagramChannelFactory(
+		ChannelFactory factory = new NioDatagramChannelFactory(
 				Executors.newSingleThreadExecutor());
 
 		try {
@@ -164,7 +164,7 @@ public class DNSClient extends SimpleChannelHandler {
 
 			bootstrap.getPipeline().addLast("handler", DNSClient.this);
 
-			// bootstrap.setOption("broadcast", "false");
+			bootstrap.setOption("broadcast", "false");
 			bootstrap.setOption("sendBufferSize", 512);
 			bootstrap.setOption("receiveBufferSize", 512);
 
