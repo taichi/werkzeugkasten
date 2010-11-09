@@ -4,6 +4,8 @@
 	<classpathentry kind="src" path="enhance"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="tomcat/bin/bootstrap.jar"/>
+	<classpathentry kind="lib" path="tomcat/server/lib/tomcat-util.jar"/>
+	<classpathentry kind="lib" path="tomcat/common/lib/servlet-api.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
