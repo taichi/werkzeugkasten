@@ -108,7 +108,7 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 			newone.write(buffer);
 			Channel c = e.getChannel();
 			LOG.info(
-					"STATUS : {} {} {}",
+					"STATUS : [isOpen/isConnected/isWritable {}] {} {}",
 					new Object[] {
 							new boolean[] { c.isOpen(), c.isConnected(),
 									c.isWritable() }, c.getRemoteAddress(),

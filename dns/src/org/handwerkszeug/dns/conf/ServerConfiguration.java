@@ -9,8 +9,13 @@ import java.util.List;
 import org.handwerkszeug.dns.NameServerContainer;
 import org.handwerkszeug.dns.NameServerContainerProvider;
 import org.handwerkszeug.dns.Zone;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ServerConfiguration {
+
+	static final Logger LOG = LoggerFactory
+			.getLogger(ServerConfiguration.class);
 
 	protected List<SocketAddress> bindingHosts = new ArrayList<SocketAddress>();
 
@@ -32,6 +37,7 @@ public class ServerConfiguration {
 		NameServerContainer container = provider.getContainer();
 		container.initialize();
 		for (String s : container.nameservers()) {
+			LOG.info("nameserver {}", s);
 			this.forwarders.add(new InetSocketAddress(s, 53));
 		}
 	}
