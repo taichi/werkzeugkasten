@@ -3,7 +3,6 @@ package org.handwerkszeug.dns.server;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.handwerkszeug.dns.DNSMessage;
 import org.handwerkszeug.dns.RCode;
@@ -48,7 +47,6 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 		cb.setPipelineFactory(new ChannelPipelineFactory() {
 			@Override
 			public ChannelPipeline getPipeline() throws Exception {
-
 				return Channels.pipeline(new ClientHanler(original, e
 						.getChannel(), e.getRemoteAddress()));
 			}
@@ -64,7 +62,7 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 			final List<SocketAddress> forwarders) {
 		if (0 < forwarders.size()) {
 			SocketAddress sa = forwarders.remove(0);
-			LOG.info("send to {}", sa);
+			LOG.debug("send to {}", sa);
 
 			ChannelFuture f = bootstrap.connect(sa);
 			ChannelBuffer newone = ChannelBuffers.buffer(512);
@@ -74,7 +72,7 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 			newone.resetReaderIndex();
 			final Channel c = f.getChannel();
 
-			LOG.info(
+			LOG.debug(
 					"STATUS : [isOpen/isConnected/isWritable {}] {} {}",
 					new Object[] {
 							new boolean[] { c.isOpen(), c.isConnected(),
@@ -85,8 +83,8 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 				@Override
 				public void operationComplete(ChannelFuture future)
 						throws Exception {
-					LOG.info("operationComplete");
-					// c.close();
+					LOG.info("operationComplete {}", future.isSuccess());
+					c.close();
 					if (future.isSuccess() == false) {
 						if (0 < forwarders.size()) {
 							sendRequest(e, original, bootstrap, forwarders);
@@ -94,13 +92,13 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 							original.header().rcode(RCode.ServFail);
 							ChannelBuffer buffer = ChannelBuffers.buffer(512);
 							original.write(buffer);
-							e.getChannel().write(buffer);
+							e.getChannel().write(buffer); // inbound channel
 						}
 					}
 				}
 			});
 
-			f.awaitUninterruptibly(30, TimeUnit.SECONDS);
+			// f.awaitUninterruptibly(30, TimeUnit.SECONDS);
 		}
 	}
 
@@ -128,25 +126,6 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 			this.originalAddress = sa;
 		}
 
-		// @Override
-		// public void channelConnected(ChannelHandlerContext ctx,
-		// ChannelStateEvent e) throws Exception {
-		// LOG.info("ClientHanler#channelConnected");
-		// ChannelBuffer buffer = ChannelBuffers.buffer(512);
-		// DNSMessage newone = new DNSMessage();
-		// newone.copy(this.original);
-		// newone.write(buffer);
-		// Channel c = e.getChannel();
-		// LOG.info(
-		// "STATUS : [isOpen/isConnected/isWritable {}] {} {}",
-		// new Object[] {
-		// new boolean[] { c.isOpen(), c.isConnected(),
-		// c.isWritable() }, c.getRemoteAddress(),
-		// c.getClass() });
-		//
-		// c.write(buffer);
-		// }
-
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
 				throws Exception {
@@ -156,8 +135,8 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 			msg.header().id(this.original.header().id());
 			ChannelBuffer newone = ChannelBuffers.buffer(buffer.capacity());
 			msg.write(newone);
+			newone.resetReaderIndex();
 			this.originalChannel.write(newone, this.originalAddress);
-			// this.originalChannel.close();
 		}
 
 		@Override
