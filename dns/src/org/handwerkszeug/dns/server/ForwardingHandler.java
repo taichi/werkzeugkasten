@@ -67,10 +67,11 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 			LOG.info("send to {}", sa);
 
 			ChannelFuture f = bootstrap.connect(sa);
-			ChannelBuffer buffer = ChannelBuffers.buffer(512);
-			DNSMessage newone = new DNSMessage();
-			newone.copy(original);
-			newone.write(buffer);
+			ChannelBuffer newone = ChannelBuffers.buffer(512);
+			DNSMessage msg = new DNSMessage();
+			msg.copy(original);
+			msg.write(newone);
+			newone.resetReaderIndex();
 			final Channel c = f.getChannel();
 
 			LOG.info(
@@ -80,7 +81,7 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 									c.isWritable() }, c.getRemoteAddress(),
 							c.getClass() });
 
-			c.write(buffer, sa).addListener(new ChannelFutureListener() {
+			c.write(newone, sa).addListener(new ChannelFutureListener() {
 				@Override
 				public void operationComplete(ChannelFuture future)
 						throws Exception {

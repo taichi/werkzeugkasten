@@ -143,7 +143,6 @@ public class ProxyHandler extends SimpleChannelUpstreamHandler {
 							original.messageSize() });
 			ProxyHandler.this.inboundChannel.write(newone,
 					ProxyHandler.this.inboundAddr);
-			// closeOnFlush(ctx.getChannel());
 		}
 
 		@Override

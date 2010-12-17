@@ -22,10 +22,8 @@ public class DNSServerPipelineFactory implements ChannelPipelineFactory {
 	@Override
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline result = Channels.pipeline();
-		// result.addLast("decoder", this.decoder);
-		// result.addLast("fowarder", new ForwardingHandler(this.config,
-		// this.clientChannelFactory));
-		result.addLast("fowarder", new ProxyHandler(this.config,
+		result.addLast("decoder", this.decoder);
+		result.addLast("fowarder", new ForwardingHandler(this.config,
 				this.clientChannelFactory));
 		return result;
 	}
