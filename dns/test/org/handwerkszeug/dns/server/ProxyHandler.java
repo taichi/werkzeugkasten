@@ -19,6 +19,7 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// this is a sandboxing code. not for testing.
 public class ProxyHandler extends SimpleChannelUpstreamHandler {
 
 	static final Logger LOG = LoggerFactory.getLogger(ForwardingHandler.class);
