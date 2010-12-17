@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import org.handwerkszeug.dns.DNSClass;
@@ -169,7 +170,7 @@ public class DNSClient extends SimpleChannelHandler {
 			// bootstrap.setOption("receiveBufferSize", 512);
 
 			ChannelFuture future = bootstrap.connect(this.serverAddress);
-			future.awaitUninterruptibly();
+			future.awaitUninterruptibly(30, TimeUnit.SECONDS);
 			if (future.isSuccess() == false) {
 				future.getCause().printStackTrace();
 			}

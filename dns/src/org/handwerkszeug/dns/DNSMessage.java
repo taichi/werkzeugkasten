@@ -97,6 +97,8 @@ public class DNSMessage {
 		this.answer().addAll(from.answer());
 		this.authority().addAll(from.authority());
 		this.additional().addAll(from.additional());
+
+		this.messageSize(from.messageSize());
 	}
 
 	public void write(ChannelBuffer buffer) {

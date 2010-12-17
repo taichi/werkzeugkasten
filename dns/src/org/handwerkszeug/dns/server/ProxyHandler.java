@@ -95,7 +95,7 @@ public class ProxyHandler extends SimpleChannelUpstreamHandler {
 
 		// newone.header().qr(false);
 		// newone.write(buffer);
-		// ch.write(buffer, e.getRemoteAddress());
+		// this.inboundChannel.write(buffer, this.inboundAddr);
 	}
 
 	@Override
@@ -130,12 +130,18 @@ public class ProxyHandler extends SimpleChannelUpstreamHandler {
 			LOG.info(msg.header().toString());
 			msg.header().id(original.header().id());
 			LOG.info(msg.header().toString());
+
 			ChannelBuffer newone = ChannelBuffers.buffer(512);
 			msg.write(newone);
+
 			LOG.info("isWritable :{}", this.inboundChannel.isWritable());
-			LOG.info("addr : {} {}", ProxyHandler.this.inboundAddr,
+			LOG.info("response : {} {}", ProxyHandler.this.inboundAddr,
 					this.inboundChannel.getLocalAddress());
-			ProxyHandler.this.inboundChannel.write(buffer,
+			newone.resetReaderIndex();
+			LOG.info("readble bytes {} {} {}",
+					new Object[] { newone.readableBytes(), msg.messageSize(),
+							original.messageSize() });
+			ProxyHandler.this.inboundChannel.write(newone,
 					ProxyHandler.this.inboundAddr);
 			// closeOnFlush(ctx.getChannel());
 		}
