@@ -10,7 +10,7 @@ import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.group.ChannelGroup;
 import org.jboss.netty.channel.group.DefaultChannelGroup;
-import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
+import org.jboss.netty.channel.socket.oio.OioDatagramChannelFactory;
 import org.jboss.netty.util.ExternalResourceReleasable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +49,9 @@ public class DNSServer implements Initializable, Disposable {
 		// TODO from configuration. thread pool size.
 		ExecutorService executor = Executors.newCachedThreadPool();
 		// TODO TCP?
-		this.clientChannelFactory = new NioDatagramChannelFactory(executor);
+		this.clientChannelFactory = new OioDatagramChannelFactory(executor);
 		// TODO TCP and/or UDP
-		this.serverChannelFactory = new NioDatagramChannelFactory(executor);
+		this.serverChannelFactory = new OioDatagramChannelFactory(executor);
 		ChannelPipelineFactory pipelineFactory = new DNSServerPipelineFactory(
 				this.config, this.clientChannelFactory);
 

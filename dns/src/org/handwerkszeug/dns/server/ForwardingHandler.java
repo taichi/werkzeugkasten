@@ -3,8 +3,10 @@ package org.handwerkszeug.dns.server;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.handwerkszeug.dns.DNSMessage;
+import org.handwerkszeug.dns.RCode;
 import org.handwerkszeug.dns.conf.ServerConfiguration;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -12,10 +14,10 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
@@ -29,8 +31,6 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 
 	protected ServerConfiguration config;
 	protected ChannelFactory clientChannelFactory;
-
-	protected Channel forwading;
 
 	public ForwardingHandler(ServerConfiguration config,
 			ChannelFactory clientChannelFactory) {
@@ -50,7 +50,7 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 			public ChannelPipeline getPipeline() throws Exception {
 
 				return Channels.pipeline(new ClientHanler(original, e
-						.getChannel()));
+						.getChannel(), e.getRemoteAddress()));
 			}
 		});
 
@@ -65,26 +65,52 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 		if (0 < forwarders.size()) {
 			SocketAddress sa = forwarders.remove(0);
 			LOG.info("send to {}", sa);
+
 			ChannelFuture f = bootstrap.connect(sa);
-			// f.addListener(new ChannelFutureListener() {
-			// @Override
-			// public void operationComplete(ChannelFuture future)
-			// throws Exception {
-			// if (future.isSuccess() == false) {
-			// if (0 < forwarders.size()) {
-			// // retry.
-			// sendRequest(e, original, bootstrap, forwarders);
-			// } else {
-			// original.header().rcode(RCode.ServFail);
-			// ChannelBuffer buffer = ChannelBuffers.buffer(512);
-			// original.write(buffer);
-			// e.getChannel().write(buffer);
-			// }
-			// }
-			// }
-			// });
-			f.awaitUninterruptibly();
+			ChannelBuffer buffer = ChannelBuffers.buffer(512);
+			DNSMessage newone = new DNSMessage();
+			newone.copy(original);
+			newone.write(buffer);
+			final Channel c = f.getChannel();
+
+			LOG.info(
+					"STATUS : [isOpen/isConnected/isWritable {}] {} {}",
+					new Object[] {
+							new boolean[] { c.isOpen(), c.isConnected(),
+									c.isWritable() }, c.getRemoteAddress(),
+							c.getClass() });
+
+			c.write(buffer, sa).addListener(new ChannelFutureListener() {
+				@Override
+				public void operationComplete(ChannelFuture future)
+						throws Exception {
+					LOG.info("operationComplete");
+					// c.close();
+					if (future.isSuccess() == false) {
+						if (0 < forwarders.size()) {
+							sendRequest(e, original, bootstrap, forwarders);
+						} else {
+							original.header().rcode(RCode.ServFail);
+							ChannelBuffer buffer = ChannelBuffers.buffer(512);
+							original.write(buffer);
+							e.getChannel().write(buffer);
+						}
+					}
+				}
+			});
+
+			f.awaitUninterruptibly(30, TimeUnit.SECONDS);
 		}
+	}
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
+			throws Exception {
+		LOG.error("ForwardingHandler#exceptionCaught");
+		Throwable t = e.getCause();
+		t.printStackTrace();
+		LOG.error(t.getMessage(), e);
+		e.getChannel().close();
 	}
 
 	protected class ClientHanler extends SimpleChannelUpstreamHandler {
@@ -93,29 +119,32 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 
 		protected Channel originalChannel;
 
-		public ClientHanler(DNSMessage msg, Channel c) {
+		protected SocketAddress originalAddress;
+
+		public ClientHanler(DNSMessage msg, Channel c, SocketAddress sa) {
 			this.original = msg;
 			this.originalChannel = c;
+			this.originalAddress = sa;
 		}
 
-		@Override
-		public void channelConnected(ChannelHandlerContext ctx,
-				ChannelStateEvent e) throws Exception {
-			LOG.info("ClientHanler#channelConnected");
-			ChannelBuffer buffer = ChannelBuffers.buffer(512);
-			DNSMessage newone = new DNSMessage();
-			newone.copy(this.original);
-			newone.write(buffer);
-			Channel c = e.getChannel();
-			LOG.info(
-					"STATUS : [isOpen/isConnected/isWritable {}] {} {}",
-					new Object[] {
-							new boolean[] { c.isOpen(), c.isConnected(),
-									c.isWritable() }, c.getRemoteAddress(),
-							c.getClass() });
-
-			c.write(buffer);
-		}
+		// @Override
+		// public void channelConnected(ChannelHandlerContext ctx,
+		// ChannelStateEvent e) throws Exception {
+		// LOG.info("ClientHanler#channelConnected");
+		// ChannelBuffer buffer = ChannelBuffers.buffer(512);
+		// DNSMessage newone = new DNSMessage();
+		// newone.copy(this.original);
+		// newone.write(buffer);
+		// Channel c = e.getChannel();
+		// LOG.info(
+		// "STATUS : [isOpen/isConnected/isWritable {}] {} {}",
+		// new Object[] {
+		// new boolean[] { c.isOpen(), c.isConnected(),
+		// c.isWritable() }, c.getRemoteAddress(),
+		// c.getClass() });
+		//
+		// c.write(buffer);
+		// }
 
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
@@ -126,13 +155,14 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 			msg.header().id(this.original.header().id());
 			ChannelBuffer newone = ChannelBuffers.buffer(buffer.capacity());
 			msg.write(newone);
-			this.originalChannel.write(newone);
-			e.getChannel().close();
+			this.originalChannel.write(newone, this.originalAddress);
+			// this.originalChannel.close();
 		}
 
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
 				throws Exception {
+			LOG.error("ClientHanler#exceptionCaught");
 			Throwable t = e.getCause();
 			t.printStackTrace();
 			LOG.error(t.getMessage(), t);
@@ -141,12 +171,4 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 		}
 	}
 
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
-			throws Exception {
-		Throwable t = e.getCause();
-		t.printStackTrace();
-		LOG.error(t.getMessage(), e);
-		e.getChannel().close();
-	}
 }

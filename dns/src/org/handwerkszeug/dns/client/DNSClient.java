@@ -165,12 +165,12 @@ public class DNSClient extends SimpleChannelHandler {
 			bootstrap.getPipeline().addLast("handler", DNSClient.this);
 
 			bootstrap.setOption("broadcast", "false");
-			bootstrap.setOption("sendBufferSize", 512);
-			bootstrap.setOption("receiveBufferSize", 512);
+			// bootstrap.setOption("sendBufferSize", 512);
+			// bootstrap.setOption("receiveBufferSize", 512);
 
 			ChannelFuture future = bootstrap.connect(this.serverAddress);
 			future.awaitUninterruptibly();
-			if (!future.isSuccess()) {
+			if (future.isSuccess() == false) {
 				future.getCause().printStackTrace();
 			}
 			future.getChannel().getCloseFuture().awaitUninterruptibly();
@@ -182,6 +182,9 @@ public class DNSClient extends SimpleChannelHandler {
 	@Override
 	public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e)
 			throws Exception {
+		System.out.println("DNSClient#channelConnected");
+		System.out.println(e.getChannel().getLocalAddress() + " | "
+				+ e.getChannel().getRemoteAddress());
 		ChannelBuffer buffer = ChannelBuffers.buffer(512);
 		this.request.write(buffer);
 		this.time = System.currentTimeMillis();
@@ -191,6 +194,9 @@ public class DNSClient extends SimpleChannelHandler {
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
 			throws Exception {
+		System.out.println("DNSClient#messageReceived");
+		System.out.println(e.getChannel().getLocalAddress() + " | "
+				+ e.getChannel().getRemoteAddress());
 		this.time = System.currentTimeMillis() - this.time;
 		ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
 		DNSMessage msg = new DNSMessage(buffer);
