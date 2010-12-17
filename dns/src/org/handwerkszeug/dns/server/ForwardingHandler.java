@@ -72,18 +72,20 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 			newone.resetReaderIndex();
 			final Channel c = f.getChannel();
 
-			LOG.debug(
-					"STATUS : [isOpen/isConnected/isWritable {}] {} {}",
-					new Object[] {
-							new boolean[] { c.isOpen(), c.isConnected(),
-									c.isWritable() }, c.getRemoteAddress(),
-							c.getClass() });
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(
+						"STATUS : [isOpen/isConnected/isWritable {}] {} {}",
+						new Object[] {
+								new boolean[] { c.isOpen(), c.isConnected(),
+										c.isWritable() }, c.getRemoteAddress(),
+								c.getClass() });
+			}
 
 			c.write(newone, sa).addListener(new ChannelFutureListener() {
 				@Override
 				public void operationComplete(ChannelFuture future)
 						throws Exception {
-					LOG.info("operationComplete {}", future.isSuccess());
+					LOG.debug("operationComplete {}", future.isSuccess());
 					c.close();
 					if (future.isSuccess() == false) {
 						if (0 < forwarders.size()) {
