@@ -86,7 +86,7 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 				public void operationComplete(ChannelFuture future)
 						throws Exception {
 					LOG.debug("operationComplete {}", future.isSuccess());
-					c.close();
+					// c.close(); // TODO where to go ?
 					if (future.isSuccess() == false) {
 						if (0 < forwarders.size()) {
 							sendRequest(e, original, bootstrap, forwarders);

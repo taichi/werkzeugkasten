@@ -21,7 +21,7 @@ import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.record.WKSRecord;
 import org.handwerkszeug.util.EnumUtil;
-import org.jboss.netty.bootstrap.ClientBootstrap;
+import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelFactory;
@@ -161,7 +161,8 @@ public class DNSClient extends SimpleChannelHandler {
 				Executors.newSingleThreadExecutor());
 
 		try {
-			ClientBootstrap bootstrap = new ClientBootstrap(factory);
+			ConnectionlessBootstrap bootstrap = new ConnectionlessBootstrap(
+					factory);
 
 			bootstrap.getPipeline().addLast("handler", DNSClient.this);
 
