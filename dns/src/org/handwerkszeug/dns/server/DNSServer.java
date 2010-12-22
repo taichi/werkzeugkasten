@@ -10,7 +10,7 @@ import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.group.ChannelGroup;
 import org.jboss.netty.channel.group.DefaultChannelGroup;
-import org.jboss.netty.channel.socket.oio.OioDatagramChannelFactory;
+import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
 import org.jboss.netty.util.ExternalResourceReleasable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +29,16 @@ public class DNSServer implements Initializable, Disposable {
 	protected ChannelGroup group;
 
 	public static void main(String[] args) {
-		DNSServer server = new DNSServer();
+		final DNSServer server = new DNSServer();
 		server.parseArgs(args);
 		server.initialize();
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				server.dispose();
+			}
+		});
+
 		server.process();
 	}
 
@@ -42,16 +49,16 @@ public class DNSServer implements Initializable, Disposable {
 
 	@Override
 	public void initialize() {
-		LOG.info("initialize");
+		LOG.debug("initialize");
 		this.config = new ServerConfiguration();
 
 		this.config.load(null);
 		// TODO from configuration. thread pool size.
 		ExecutorService executor = Executors.newCachedThreadPool();
 		// TODO TCP?
-		this.clientChannelFactory = new OioDatagramChannelFactory(executor);
+		this.clientChannelFactory = new NioDatagramChannelFactory(executor);
 		// TODO TCP and/or UDP
-		this.serverChannelFactory = new OioDatagramChannelFactory(executor);
+		this.serverChannelFactory = new NioDatagramChannelFactory(executor);
 		ChannelPipelineFactory pipelineFactory = new DNSServerPipelineFactory(
 				this.config, this.clientChannelFactory);
 
@@ -59,14 +66,6 @@ public class DNSServer implements Initializable, Disposable {
 		this.bootstrap.setPipelineFactory(pipelineFactory);
 
 		this.group = new DefaultChannelGroup();
-
-		Runnable r = new Runnable() {
-			@Override
-			public void run() {
-				dispose();
-			}
-		};
-		Runtime.getRuntime().addShutdownHook(new Thread(r));
 	}
 
 	public void process() {

@@ -85,8 +85,8 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 				@Override
 				public void operationComplete(ChannelFuture future)
 						throws Exception {
-					LOG.debug("operationComplete {}", future.isSuccess());
-					// c.close(); // TODO where to go ?
+					LOG.debug("request complete isSuccess : {}",
+							future.isSuccess());
 					if (future.isSuccess() == false) {
 						if (0 < forwarders.size()) {
 							sendRequest(e, original, bootstrap, forwarders);
@@ -94,7 +94,9 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 							original.header().rcode(RCode.ServFail);
 							ChannelBuffer buffer = ChannelBuffers.buffer(512);
 							original.write(buffer);
-							e.getChannel().write(buffer); // inbound channel
+							// close inbound channel
+							e.getChannel().write(buffer)
+									.addListener(ChannelFutureListener.CLOSE);
 						}
 					}
 				}
@@ -109,9 +111,7 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 			throws Exception {
 		LOG.error("ForwardingHandler#exceptionCaught");
 		Throwable t = e.getCause();
-		t.printStackTrace();
-		LOG.error(t.getMessage(), e);
-		e.getChannel().close();
+		LOG.error(t.getMessage(), t);
 	}
 
 	protected class ClientHanler extends SimpleChannelUpstreamHandler {
@@ -129,8 +129,8 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 		}
 
 		@Override
-		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
-				throws Exception {
+		public void messageReceived(ChannelHandlerContext ctx,
+				final MessageEvent e) throws Exception {
 			LOG.debug("ClientHanler#messageReceived");
 			ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
 			DNSMessage msg = new DNSMessage(buffer);
@@ -138,7 +138,14 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 			ChannelBuffer newone = ChannelBuffers.buffer(buffer.capacity());
 			msg.write(newone);
 			newone.resetReaderIndex();
-			this.originalChannel.write(newone, this.originalAddress);
+			this.originalChannel.write(newone, this.originalAddress)
+					.addListener(new ChannelFutureListener() {
+						@Override
+						public void operationComplete(ChannelFuture future)
+								throws Exception {
+							e.getChannel().close();
+						}
+					});
 		}
 
 		@Override
@@ -146,7 +153,6 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 				throws Exception {
 			LOG.error("ClientHanler#exceptionCaught");
 			Throwable t = e.getCause();
-			t.printStackTrace();
 			LOG.error(t.getMessage(), t);
 			e.getFuture().setFailure(t);
 			e.getChannel().close();
