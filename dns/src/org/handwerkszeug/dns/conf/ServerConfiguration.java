@@ -1,5 +1,7 @@
 package org.handwerkszeug.dns.conf;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URL;
@@ -11,6 +13,8 @@ import org.handwerkszeug.dns.NameServerContainerProvider;
 import org.handwerkszeug.dns.Zone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import werkzeugkasten.common.util.Streams;
 
 public class ServerConfiguration {
 
@@ -28,7 +32,26 @@ public class ServerConfiguration {
 	public ServerConfiguration() {
 	}
 
-	public void load(URL url) {
+	public void load(final URL url) {
+		new Streams.using<BufferedInputStream, Exception>() {
+			@Override
+			public BufferedInputStream open() throws Exception {
+				return new BufferedInputStream(url.openStream());
+			}
+
+			@Override
+			public void handle(BufferedInputStream stream) throws Exception {
+				load(stream);
+			}
+
+			@Override
+			public void happen(Exception exception) {
+				throw new RuntimeException(exception);
+			}
+		};
+	}
+
+	public void load(InputStream in) {
 		// TODO not implemented
 		this.bindingHosts.add(new InetSocketAddress("127.0.0.1", 53));
 

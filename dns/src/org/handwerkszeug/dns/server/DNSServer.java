@@ -1,6 +1,9 @@
 package org.handwerkszeug.dns.server;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.SocketAddress;
+import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,9 +31,9 @@ public class DNSServer implements Initializable, Disposable {
 	protected ConnectionlessBootstrap bootstrap;
 	protected ChannelGroup group;
 
-	public static void main(String[] args) {
-		final DNSServer server = new DNSServer();
-		server.parseArgs(args);
+	public static void main(String[] args) throws Exception {
+		ServerConfiguration conf = parseArgs(args);
+		final DNSServer server = new DNSServer(conf);
 		server.initialize();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
@@ -42,17 +45,48 @@ public class DNSServer implements Initializable, Disposable {
 		server.process();
 	}
 
-	protected void parseArgs(String[] args) {
-		// TODO not implemented
-		// find configuration file. maybe named.conf?
+	public static ServerConfiguration parseArgs(String[] args) throws Exception {
+		ServerConfiguration config = new ServerConfiguration();
+		URL from = null;
+		if ((args != null) && (0 < args.length)) {
+			from = readFrom(args[0]);
+		}
+		if (from == null) {
+			from = readFrom("named.yml");
+		}
+		if (from == null) {
+			ClassLoader cl = Thread.currentThread().getContextClassLoader();
+			from = cl.getResource("named.default.yml");
+		}
+		if (from == null) {
+			throw new IllegalStateException("configuration file is not found.");
+		}
+		config.load(from);
+		return config;
+	}
+
+	public static URL readFrom(String path) throws MalformedURLException {
+		LOG.info("read from {}", path);
+		File f = new File(path);
+		if (f.exists()) {
+			if (f.canRead()) {
+				return f.toURI().toURL();
+			} else {
+				LOG.info("{} cannot read", f.getAbsolutePath());
+			}
+		} else {
+			LOG.info("{} is not exists", f.getAbsolutePath());
+		}
+		return null;
+	}
+
+	public DNSServer(ServerConfiguration config) {
+		this.config = config;
 	}
 
 	@Override
 	public void initialize() {
 		LOG.debug("initialize");
-		this.config = new ServerConfiguration();
-
-		this.config.load(null);
 		// TODO from configuration. thread pool size.
 		ExecutorService executor = Executors.newCachedThreadPool();
 		// TODO TCP?
