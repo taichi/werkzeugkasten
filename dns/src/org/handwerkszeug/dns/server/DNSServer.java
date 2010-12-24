@@ -66,8 +66,8 @@ public class DNSServer implements Initializable, Disposable {
 	}
 
 	public static URL readFrom(String path) throws MalformedURLException {
-		LOG.info("read from {}", path);
 		File f = new File(path);
+		LOG.info("read from {}", f.getAbsolutePath());
 		if (f.exists()) {
 			if (f.canRead()) {
 				return f.toURI().toURL();
