@@ -3,8 +3,8 @@ bindingHosts :
     port : 53
   - address : 127.0.0.2
     port : 55
-  - !address 127.0.0.1:53
-  - !address 127.0.0.1 : 53
+#  - !address 127.0.0.1:53
+#  - !address 127.0.0.1 : 53
   - 127.0.0.1 : 53
   - 127.0.0.1:53
 
