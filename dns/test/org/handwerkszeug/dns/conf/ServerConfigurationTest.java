@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Iterator;
 
-import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.composer.Composer;
 import org.yaml.snakeyaml.events.Event;
@@ -19,7 +18,7 @@ import werkzeugkasten.common.util.Streams;
 
 public class ServerConfigurationTest {
 
-	@Test
+	// @Test
 	public void load() throws Exception {
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		final URL url = cl.getResource("named.default.yml");
@@ -39,6 +38,7 @@ public class ServerConfigurationTest {
 				// System.out.println(n);
 				// }
 				event(stream);
+
 			}
 
 			@Override
@@ -90,4 +90,5 @@ public class ServerConfigurationTest {
 			System.out.println(composer.getNode());
 		}
 	}
+
 }
