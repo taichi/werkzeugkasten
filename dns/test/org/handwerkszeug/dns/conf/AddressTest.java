@@ -78,18 +78,19 @@ public class AddressTest {
 		System.out.println("IPv6 Address with Port Number");
 		System.out.println(v6withPort.pattern());
 
-		String compressedV6Partial = "(" + v6PattenBase + "{0,5})";
-		Pattern compressedV6 = Pattern.compile("(" + compressedV6Partial
-				+ "?)::" + compressedV6Partial);
+		String compressedV6Partial = "(" + v6PattenBase + "{0,5})?";
+		Pattern compressedV6 = Pattern.compile(compressedV6Partial + "::"
+				+ compressedV6Partial);
 		String[] compressedAddr = { "2001:db8:aaaa:bbbb:cccc:dddd::1",
-				"2001:db8::1", "2001::1", "::1",
+				"2001:db8::1", "2001::1", "::1", "::", "2001:db8::",
 				"2001::db8:aaaa:bbbb:cccc:dddd:eeee" };
 		assertTrue(compressedV6, compressedAddr);
 
 		Pattern compressedV6WithPort = Pattern
 				.compile(withV6PortNumber(compressedV6.pattern()));
-		String[] v6addrWithPort = { "[2001:db8::1]:80", "2001:db8::1.80",
-				"2001:db8::1 port 80", "2001:db8::1p80", "2001:db8::1#80" };
+		String[] v6addrWithPort = { "[::]:80", "[2001:db8::1]:80",
+				"2001:db8::1.80", "2001:db8::1 port 80", "2001:db8::1p80",
+				"2001:db8::1#80" };
 		assertTrue(compressedV6WithPort, v6addrWithPort);
 
 		String[] v6addrWithIlleagalPort = { "[2001:db8::1]80",
@@ -115,8 +116,8 @@ public class AddressTest {
 		System.out.println("IPv6 Address with IPv4 Address");
 		System.out.println(v6WithV4.pattern());
 
-		Pattern compressedV6WithV4 = Pattern.compile("(" + compressedV6Partial
-				+ "?)::" + "((" + v6Partial + "):){0,5}" + v4);
+		Pattern compressedV6WithV4 = Pattern.compile(compressedV6Partial + "::"
+				+ "((" + v6Partial + "):){0,5}" + v4);
 
 		String[] compressedV6WithV4Addr = { "::13.1.68.3",
 				"::ffff:129.144.52.38", "2001:db8::13.1.68.3" };
@@ -148,21 +149,30 @@ public class AddressTest {
 		Assert.assertEquals(normalized, normalize(addr));
 		Assert.assertEquals(normalized, normalize(normalized));
 
+		Assert.assertEquals("0:0:0:0:0:ffff:129.144.52.38",
+				normalize("::ffff:129.144.52.38"));
+
 		Assert.assertEquals("0:0:0:0:0:0:0:1", normalize("::1"));
 		Assert.assertEquals("0:0:0:0:0:0:0:0", normalize("::"));
 
 		Assert.assertNull(normalize("0:0:0:0:0:0:0:0:0:0:1"));
 
-		Assert.assertEquals("2001:0:0:0:0:0:1:1", normalize("2001::1::1"));
+		Assert.assertNull(normalize("2001::1::1"));
 
 	}
 
 	protected String normalize(String addr) {
+		if ("::".equals(addr)) {
+			return "0:0:0:0:0:0:0:0"; // oops!!
+		}
 		String[] ary = addr.split(":");
 		int count = 8;
 		for (String s : ary) {
 			if (s.isEmpty() == false) {
 				count--;
+				if (0 < s.indexOf('.')) {
+					count--;
+				}
 			}
 		}
 
