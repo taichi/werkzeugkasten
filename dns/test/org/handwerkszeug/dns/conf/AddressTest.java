@@ -154,11 +154,13 @@ public class AddressTest {
 		Assert.assertEquals("0:0:0:0:0:ffff:129.144.52.38",
 				normalize("::ffff:129.144.52.38"));
 
+		Assert.assertEquals("2001:db8:0:0:0:0:0:0", normalize("2001:db8::"));
+
 		Assert.assertEquals("0:0:0:0:0:0:0:1", normalize("::1"));
 		Assert.assertEquals("0:0:0:0:0:0:0:0", normalize("::"));
 
+		// error case
 		Assert.assertNull(normalize("0:0:0:0:0:0:0:0:0:0:1"));
-
 		Assert.assertNull(normalize("2001::1::1"));
 
 	}
