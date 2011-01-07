@@ -86,6 +86,8 @@ public class AddressTest {
 				"2001::db8:aaaa:bbbb:cccc:dddd:eeee" };
 		assertTrue(compressedV6, compressedAddr);
 
+		System.out.println(compressedV6.pattern());
+
 		Pattern compressedV6WithPort = Pattern
 				.compile(withV6PortNumber(compressedV6.pattern()));
 		String[] v6addrWithPort = { "[::]:80", "[2001:db8::1]:80",
