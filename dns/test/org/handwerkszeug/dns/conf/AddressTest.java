@@ -167,9 +167,14 @@ public class AddressTest {
 		if ("::".equals(addr)) {
 			return "0:0:0:0:0:0:0:0"; // oops!!
 		}
-		String[] ary = addr.split(":");
+		String[] ary = addr.split("::");
+		if (2 < ary.length) {
+			return null;
+		}
+
+		String[] fields = addr.split(":");
 		int count = 8;
-		for (String s : ary) {
+		for (String s : fields) {
 			if (s.isEmpty() == false) {
 				count--;
 				if (0 < s.indexOf('.')) {
@@ -186,8 +191,8 @@ public class AddressTest {
 		}
 
 		StringBuilder stb = new StringBuilder();
-		for (int i = 0, length = ary.length; i < length; i++) {
-			String s = ary[i];
+		for (int i = 0, length = fields.length; i < length; i++) {
+			String s = fields[i];
 			if (s.isEmpty()) {
 				while (0 < count) {
 					stb.append('0');
