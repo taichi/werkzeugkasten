@@ -78,9 +78,11 @@ public class AddressTest {
 		System.out.println("IPv6 Address with Port Number");
 		System.out.println(v6withPort.pattern());
 
+		String negativeLookAhead = "(?!([0-9a-f]{1,4})(::?([0-9a-f]{1,4})){8,})";
+
 		String compressedV6Partial = "(" + v6PattenBase + "{0,5})?";
-		Pattern compressedV6 = Pattern.compile(compressedV6Partial + "::"
-				+ compressedV6Partial);
+		Pattern compressedV6 = Pattern.compile(negativeLookAhead
+				+ compressedV6Partial + "::" + compressedV6Partial);
 		String[] compressedAddr = { "2001:db8:aaaa:bbbb:cccc:dddd::1",
 				"2001:db8::1", "2001::1", "::1", "::", "2001:db8::",
 				"2001::db8:aaaa:bbbb:cccc:dddd:eeee" };
@@ -103,10 +105,8 @@ public class AddressTest {
 		System.out.println("compressed IPv6 Address with Port Number");
 		System.out.println(compressedV6WithPort.pattern());
 
-		// invalid compressed address but test is passed.
-		// any other compressed address test has same problem.
-		String[] invalidAddr = { "2001:db8:aaaa:bbbb:cccc:dddd::1:03:ff:2b" };
-		assertTrue(compressedV6, invalidAddr);
+		String[] invalidCompressedAddr = { "2001:db8:aaaa:bbbb:cccc:dddd::1:03:ff:2b" };
+		assertFalse(compressedV6, invalidCompressedAddr);
 
 		String v4Partial = "25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d";
 		String v4 = "(" + v4Partial + ")(\\.(" + v4Partial + ")){3}";
