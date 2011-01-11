@@ -143,6 +143,56 @@ public class AddressTest {
 				+ "\\]:" + port;
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 * @see http://www.intermapper.com/ipv6validator
+	 * @see http://download.dartware.com/thirdparty/test-ipv6-regex.pl
+	 */
+	@Test
+	public void fromDartwareDotCom() throws Exception {
+		String regex = "((([0-9a-f]{1,4}:){7}([0-9a-f]{1,4}|:))|(([0-9a-f]{1,4}:){6}(:[0-9a-f]{1,4}|((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9a-f]{1,4}:){5}(((:[0-9a-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9a-f]{1,4}:){4}(((:[0-9a-f]{1,4}){1,3})|((:[0-9a-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){3}(((:[0-9a-f]{1,4}){1,4})|((:[0-9a-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){2}(((:[0-9a-f]{1,4}){1,5})|((:[0-9a-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){1}(((:[0-9a-f]{1,4}){1,6})|((:[0-9a-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(:(((:[0-9a-f]{1,4}){1,7})|((:[0-9a-f]{1,4}){0,5}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?";
+		// String regex =
+		// "(((?=(?>.*?::)(?!.*::)))(::)?([0-9a-f]{1,4}::?){0,5}|([0-9a-f]{1,4}:){6})(\\2([0-9a-f]{1,4}(::?|$)){0,2}|((25[0-5]|(2[0-4]|1[0-9]|[1-9])?[0-9])(\\.|$)){4}|[0-9a-f]{1,4}:[0-9a-f]{1,4})(?<![^:]:)(?<!\\.)";
+		Pattern p = Pattern.compile(regex);
+
+		String[] v6address = { "2001:db8:0:0:8:800:200c:417a",
+				"ff02:0:0:0:0:1:ffff:ffff" };
+		assertTrue(p, v6address);
+
+		String[] compressedAddr = { "2001:db8:aaaa:bbbb:cccc:dddd::1",
+				"2001:db8::1", "2001::1", "::1", "::", "2001:db8::",
+				"2001::db8:aaaa:bbbb:cccc:dddd:eeee" };
+		assertTrue(p, compressedAddr);
+
+		String[] compressedV6WithV4Addr = { "::13.1.68.3",
+				"::ffff:129.144.52.38", "2001:db8::13.1.68.3" };
+		assertTrue(p, compressedV6WithV4Addr);
+
+		String[] invalidCompressedAddr = {
+				"2001:db8:aaaa:bbbb:cccc:dddd::1:03:ff:2b", "2001:db8::aa::bb",
+				"2001:db8::256.0.0.1" };
+		assertFalse(p, invalidCompressedAddr);
+
+		System.out.println("IPv6 Address with IPv4 Address from dartware.com");
+		System.out.println(p.pattern());
+
+		Pattern pwp = Pattern.compile(withV6PortNumber(regex));
+		String[] v6addrWithPort = { "[::]:80", "[2001:db8::1]:80",
+				"2001:db8::1.80", "2001:db8::1 port 80", "2001:db8::1p80",
+				"2001:db8::1#80" };
+		assertTrue(pwp, v6addrWithPort);
+
+		String[] compressedV6WithV4AddrAndPort = { "[::13.1.68.3]:80",
+				"::ffff:129.144.52.38.80", "2001:db8::13.1.68.3#80" };
+		assertTrue(pwp, compressedV6WithV4AddrAndPort);
+
+		System.out
+				.println("compressed IPv6 Address with IPv4 Address and Port Number from dartware.com");
+		System.out.println(pwp.pattern());
+
+	}
+
 	protected void assertTrue(Pattern test, String[] cases) {
 		for (String s : cases) {
 			Assert.assertTrue(s, test.matcher(s).matches());
