@@ -6,8 +6,7 @@ import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -67,6 +66,10 @@ public class AddressTest {
 		}
 	}
 
+	String withV4PortNumber(String pattern) {
+		return "(" + pattern + ")(:(\\d{1,4}))?";
+	}
+
 	void assertAddress(String addr, int port, InetSocketAddress isa) {
 		Assert.assertNotNull(isa);
 		Assert.assertEquals(addr, isa.getAddress().getHostAddress());
@@ -90,8 +93,35 @@ public class AddressTest {
 		return null;
 	}
 
-	protected String withV4PortNumber(String pattern) {
-		return "(" + pattern + ")(:(\\d{1,4}))?";
+	@Test
+	public void under65536() {
+		assertUnder65536("0");
+		assertUnder65536("100");
+		assertUnder65536("65535");
+		assertUnder65536("-1");
+		assertUnder65536("65536");
+		assertUnder65536("200000");
+		assertUnder65536("");
+		assertUnder65536(null);
+	}
+
+	protected void assertUnder65536(String data) {
+		Assert.assertEquals(under65536(data), under65536ByRegex(data));
+
+	}
+
+	protected boolean under65536ByRegex(String s) {
+		String regex = "(6553[0-5]|655[012]\\d|65[0-4]\\d{2}|6[0-4]\\d{3}|[0-5]?\\d{1,4})";
+		return s != null && Pattern.matches(regex, s);
+	}
+
+	protected boolean under65536(String s) {
+		try {
+			int i = Integer.parseInt(s);
+			return -1 < i && i < 65536;
+		} catch (NumberFormatException e) {
+		}
+		return false;
 	}
 
 	@Test
