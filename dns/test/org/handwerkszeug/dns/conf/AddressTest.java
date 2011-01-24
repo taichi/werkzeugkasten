@@ -1,5 +1,8 @@
 package org.handwerkszeug.dns.conf;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,16 +47,51 @@ public class AddressTest {
 				"255.255.0.1:8080" };
 		assertTrue(v4PatternWithPort, v4addrWithPort);
 
-		String[] v4addrWithIlleagalPort = { "192.168.0.1:10000",
+		String[] v4addrWithIlleagalPort = { "192.168.0.1:65536",
 				"127.0.0.1:80801" };
 		assertFalse(v4PatternWithPort, v4addrWithIlleagalPort);
 
 		System.out.println("IPv4 Address with Port Number");
 		System.out.println(v4PatternWithPort.pattern());
+
+		for (String s : v4address) {
+			InetSocketAddress isa = toAddress(s, v4PatternWithPort);
+			assertAddress(s, 53, isa);
+		}
+
+		int[] ary = { 1, 80, 8080 };
+		for (int i = 0; i < ary.length; i++) {
+			String addr = v4addrWithPort[i];
+			InetSocketAddress isa = toAddress(addr, v4PatternWithPort);
+			assertAddress(addr.substring(0, addr.lastIndexOf(':')), ary[i], isa);
+		}
+	}
+
+	void assertAddress(String addr, int port, InetSocketAddress isa) {
+		Assert.assertNotNull(isa);
+		Assert.assertEquals(addr, isa.getAddress().getHostAddress());
+		Assert.assertEquals(port, isa.getPort());
+	}
+
+	InetSocketAddress toAddress(String addrWithPort, Pattern p)
+			throws UnknownHostException {
+		int INDEX_HOST = 1;
+		int INDEX_PORT = 6;
+		Matcher m = p.matcher(addrWithPort);
+		if (m.matches() && m.reset().find()) {
+			InetAddress ia = InetAddress.getByName(m.group(INDEX_HOST));
+			String port = m.group(INDEX_PORT);
+			int portNum = 53;
+			if (port != null && port.isEmpty() == false) {
+				portNum = Integer.parseInt(port);
+			}
+			return new InetSocketAddress(ia, portNum);
+		}
+		return null;
 	}
 
 	protected String withV4PortNumber(String pattern) {
-		return pattern + "(:\\d{1,4})?";
+		return "(" + pattern + ")(:(\\d{1,4}))?";
 	}
 
 	@Test
