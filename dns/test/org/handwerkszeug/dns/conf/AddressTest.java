@@ -85,7 +85,7 @@ public class AddressTest {
 			InetAddress ia = InetAddress.getByName(m.group(INDEX_HOST));
 			String port = m.group(INDEX_PORT);
 			int portNum = 53;
-			if (port != null && port.isEmpty() == false) {
+			if ((port != null) && (port.isEmpty() == false)) {
 				portNum = Integer.parseInt(port);
 			}
 			return new InetSocketAddress(ia, portNum);
@@ -112,13 +112,13 @@ public class AddressTest {
 
 	protected boolean under65536ByRegex(String s) {
 		String regex = "(6553[0-5]|655[012]\\d|65[0-4]\\d{2}|6[0-4]\\d{3}|[0-5]?\\d{1,4})";
-		return s != null && Pattern.matches(regex, s);
+		return (s != null) && Pattern.matches(regex, s);
 	}
 
 	protected boolean under65536(String s) {
 		try {
 			int i = Integer.parseInt(s);
-			return -1 < i && i < 65536;
+			return (-1 < i) && (i < 65536);
 		} catch (NumberFormatException e) {
 		}
 		return false;
@@ -233,7 +233,7 @@ public class AddressTest {
 
 		for (String s : v6address) {
 			Matcher m = p.matcher(s);
-			if (m.find()) {
+			if (m.matches() && m.reset().find()) {
 				System.out.println("####");
 				String two = m.group(2);
 				if ((two != null) && (two.isEmpty() == false)) {
