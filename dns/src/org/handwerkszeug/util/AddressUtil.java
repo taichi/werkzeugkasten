@@ -6,16 +6,21 @@ import java.util.regex.Pattern;
 
 public class AddressUtil {
 
-	public static String v4Partial = "25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d";
-	public static String v4Address = "((" + v4Partial + ")(\\.(" + v4Partial
-			+ ")){3})";
-	public static String v4addrWithPort = v4Address + "(:(\\d{1,5}))?";
+	public static String under65536 = "(6553[0-5]|6(55[012]|(5[0-4]|[0-4]\\d)\\d)\\d|[1-5]?\\d{1,4})";
+	public static String v4Address = "((25[0-5]|(2[0-4]|1\\d|[1-9]?)\\d)(\\.|\\b)){4}(?<!\\.)";
+	public static String v4addrWithPort = "(" + v4Address + ")(:(" + under65536
+			+ "))?";
 	public static Pattern v4Pattern = Pattern.compile(v4addrWithPort);
+
+	public static InetSocketAddress toSocketAddress(String addressWithPort,
+			int defaultPort) {
+		return null;
+	}
 
 	public static InetSocketAddress toV4SocketAddress(String addressWithPort,
 			int defaultPort) {
 		int HOST = 1;
-		int PORT = 6;
+		int PORT = 7;
 		Matcher m = v4Pattern.matcher(addressWithPort);
 		if (m.matches() && m.reset().find()) {
 			int port = toInt(m.group(PORT), defaultPort);
@@ -33,7 +38,9 @@ public class AddressUtil {
 	protected static int toInt(String s, int defaultValue) {
 		int result = defaultValue;
 		try {
-			result = Integer.parseInt(s);
+			if (s != null && s.isEmpty() == false) {
+				result = Integer.parseInt(s);
+			}
 		} catch (NumberFormatException e) {
 		}
 		return result;

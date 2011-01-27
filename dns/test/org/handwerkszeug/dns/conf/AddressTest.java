@@ -1,8 +1,6 @@
 package org.handwerkszeug.dns.conf;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,8 +30,8 @@ public class AddressTest {
 		String[] ignorecase = { "256", "301", "1000" };
 		assertFalse(v4PartialPattern, ignorecase);
 
-		Pattern v4Pattern = Pattern.compile("(" + v4Partial + ")(\\.("
-				+ v4Partial + ")){3}");
+		Pattern v4Pattern = Pattern
+				.compile("((25[0-5]|(2[0-4]|1\\d|[1-9]?)\\d)(\\.|\\b)){4}(?<!\\.)");
 
 		String[] v4address = { "192.168.0.1", "127.0.0.1", "255.255.0.1" };
 		assertTrue(v4Pattern, v4address);
@@ -53,21 +51,10 @@ public class AddressTest {
 		System.out.println("IPv4 Address with Port Number");
 		System.out.println(v4PatternWithPort.pattern());
 
-		for (String s : v4address) {
-			InetSocketAddress isa = toAddress(s, v4PatternWithPort);
-			assertAddress(s, 53, isa);
-		}
-
-		int[] ary = { 1, 80, 8080 };
-		for (int i = 0; i < ary.length; i++) {
-			String addr = v4addrWithPort[i];
-			InetSocketAddress isa = toAddress(addr, v4PatternWithPort);
-			assertAddress(addr.substring(0, addr.lastIndexOf(':')), ary[i], isa);
-		}
 	}
 
 	String withV4PortNumber(String pattern) {
-		return "(" + pattern + ")(:(\\d{1,4}))?";
+		return "(" + pattern + ")(:())?";
 	}
 
 	void assertAddress(String addr, int port, InetSocketAddress isa) {
@@ -76,21 +63,36 @@ public class AddressTest {
 		Assert.assertEquals(port, isa.getPort());
 	}
 
-	InetSocketAddress toAddress(String addrWithPort, Pattern p)
-			throws UnknownHostException {
-		int INDEX_HOST = 1;
-		int INDEX_PORT = 6;
-		Matcher m = p.matcher(addrWithPort);
-		if (m.matches() && m.reset().find()) {
-			InetAddress ia = InetAddress.getByName(m.group(INDEX_HOST));
-			String port = m.group(INDEX_PORT);
-			int portNum = 53;
-			if ((port != null) && (port.isEmpty() == false)) {
-				portNum = Integer.parseInt(port);
-			}
-			return new InetSocketAddress(ia, portNum);
+	@Test
+	public void under256() {
+		assertUnder256("-1");
+		assertUnder256("");
+		assertUnder256(null);
+		for (int i = 0; i < 1000; i++) {
+			assertUnder256(String.valueOf(i));
 		}
-		return null;
+	}
+
+	protected void assertUnder256(String data) {
+		Assert.assertEquals(data, under256(data), under256ByRegex(data));
+	}
+
+	protected boolean under256ByRegex(String s) {
+		String regex = "\\b0*(25[0-5]|(2[0-4]|1\\d|[1-9]?)\\d)\\b";
+		return s != null && Pattern.matches(regex, s);
+	}
+
+	protected boolean under256(String s) {
+		return under(s, 256);
+	}
+
+	protected boolean under(String s, int value) {
+		try {
+			int i = Integer.parseInt(s);
+			return (-1 < i) && (i < value);
+		} catch (NumberFormatException e) {
+		}
+		return false;
 	}
 
 	@Test
@@ -113,7 +115,6 @@ public class AddressTest {
 
 	protected void assertUnder65536(String data) {
 		Assert.assertEquals(data, under65536(data), under65536ByRegex(data));
-
 	}
 
 	protected boolean under65536ByRegex(String s) {
@@ -122,12 +123,7 @@ public class AddressTest {
 	}
 
 	protected boolean under65536(String s) {
-		try {
-			int i = Integer.parseInt(s);
-			return (-1 < i) && (i < 65536);
-		} catch (NumberFormatException e) {
-		}
-		return false;
+		return under(s, 65536);
 	}
 
 	@Test
