@@ -96,22 +96,28 @@ public class AddressTest {
 	@Test
 	public void under65536() {
 		assertUnder65536("0");
-		assertUnder65536("100");
-		assertUnder65536("65535");
+		assertUnder65536("065");
+		assertUnder65536("004");
+		assertUnder65536("0004");
+		assertUnder65536("00004");
 		assertUnder65536("-1");
-		assertUnder65536("65536");
-		assertUnder65536("200000");
+		assertUnder65536("650000");
+		assertUnder65536("6550123");
+		assertUnder65536("601237");
 		assertUnder65536("");
 		assertUnder65536(null);
+		for (int i = 0; i < 700000; i++) {
+			assertUnder65536(String.valueOf(i));
+		}
 	}
 
 	protected void assertUnder65536(String data) {
-		Assert.assertEquals(under65536(data), under65536ByRegex(data));
+		Assert.assertEquals(data, under65536(data), under65536ByRegex(data));
 
 	}
 
 	protected boolean under65536ByRegex(String s) {
-		String regex = "(6553[0-5]|655[012]\\d|65[0-4]\\d{2}|6[0-4]\\d{3}|[0-5]?\\d{1,4})";
+		String regex = "\\b0*([1-5]?\\d{1,4}|6553[0-5]|6(55[012]|(5[0-4]|[0-4]\\d)\\d)\\d)\\b";
 		return (s != null) && Pattern.matches(regex, s);
 	}
 
@@ -220,9 +226,9 @@ public class AddressTest {
 	 */
 	@Test
 	public void fromDartwareDotCom() throws Exception {
+		String regex = "((([0-9a-f]{1,4}:){7}([0-9a-f]{1,4}|:))|(([0-9a-f]{1,4}:){6}(:[0-9a-f]{1,4}|((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9a-f]{1,4}:){5}(((:[0-9a-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9a-f]{1,4}:){4}(((:[0-9a-f]{1,4}){1,3})|((:[0-9a-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){3}(((:[0-9a-f]{1,4}){1,4})|((:[0-9a-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){2}(((:[0-9a-f]{1,4}){1,5})|((:[0-9a-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){1}(((:[0-9a-f]{1,4}){1,6})|((:[0-9a-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(:(((:[0-9a-f]{1,4}){1,7})|((:[0-9a-f]{1,4}){0,5}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?";
 		// String regex =
-		// "((([0-9a-f]{1,4}:){7}([0-9a-f]{1,4}|:))|(([0-9a-f]{1,4}:){6}(:[0-9a-f]{1,4}|((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9a-f]{1,4}:){5}(((:[0-9a-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9a-f]{1,4}:){4}(((:[0-9a-f]{1,4}){1,3})|((:[0-9a-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){3}(((:[0-9a-f]{1,4}){1,4})|((:[0-9a-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){2}(((:[0-9a-f]{1,4}){1,5})|((:[0-9a-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){1}(((:[0-9a-f]{1,4}){1,6})|((:[0-9a-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(:(((:[0-9a-f]{1,4}){1,7})|((:[0-9a-f]{1,4}){0,5}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?";
-		String regex = "(((?=(?>.*?::)(?!.*::)))(::)?([0-9a-f]{1,4}::?){0,5}|([0-9a-f]{1,4}:){6})(\\2([0-9a-f]{1,4}(::?|$)){0,2}|((25[0-5]|(2[0-4]|1[0-9]|[1-9])?[0-9])(\\.|$)){4}|[0-9a-f]{1,4}:[0-9a-f]{1,4})(?<![^:]:)(?<!\\.)";
+		// "(((?=(?>.*?::)(?!.*::)))(::)?([0-9a-f]{1,4}::?){0,5}|([0-9a-f]{1,4}:){6})(\\2([0-9a-f]{1,4}(::?|$)){0,2}|((25[0-5]|(2[0-4]|1[0-9]|[1-9])?[0-9])(\\.|$)){4}|[0-9a-f]{1,4}:[0-9a-f]{1,4})(?<![^:]:)(?<!\\.)";
 		Pattern p = Pattern.compile(regex);
 
 		String[] v6address = { "2001:db8:0:0:8:800:200c:417a",
@@ -231,18 +237,18 @@ public class AddressTest {
 				"2001::db8:aaaa:bbbb:cccc:dddd:eeee", "::1:2:3:4" };
 		assertTrue(p, v6address);
 
-		for (String s : v6address) {
-			Matcher m = p.matcher(s);
-			if (m.matches() && m.reset().find()) {
-				System.out.println("####");
-				String two = m.group(2);
-				if ((two != null) && (two.isEmpty() == false)) {
-					System.out.println(s);
-					System.out.println(two);
-				}
-				System.out.println("####");
-			}
-		}
+		// for (String s : v6address) {
+		// Matcher m = p.matcher(s);
+		// if (m.matches() && m.reset().find()) {
+		// System.out.println("####");
+		// String two = m.group(2);
+		// if ((two != null) && (two.isEmpty() == false)) {
+		// System.out.println(s);
+		// System.out.println(two);
+		// }
+		// System.out.println("####");
+		// }
+		// }
 
 		String[] compressedAddr = { "2001:db8:aaaa:bbbb:cccc:dddd::1",
 				"2001:db8::1", "2001::1", "::1", "::", "2001:db8::",
@@ -280,6 +286,11 @@ public class AddressTest {
 	protected void assertTrue(Pattern test, String[] cases) {
 		for (String s : cases) {
 			Assert.assertTrue(s, test.matcher(s).matches());
+			Matcher m = test.matcher(s);
+			if (m.find()) {
+
+				System.out.printf("### %s %s \n", s, m.group(0));
+			}
 		}
 	}
 
