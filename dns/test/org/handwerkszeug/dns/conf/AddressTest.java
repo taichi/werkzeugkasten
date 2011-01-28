@@ -1,9 +1,9 @@
 package org.handwerkszeug.dns.conf;
 
 import java.net.InetSocketAddress;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.handwerkszeug.util.AddressUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ import org.junit.Test;
  */
 public class AddressTest {
 
-	@Test
+	// @Test
 	public void ipV4AddressMatcher() throws Exception {
 		String v4Partial = "25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d";
 		Pattern v4PartialPattern = Pattern.compile(v4Partial);
@@ -54,7 +54,7 @@ public class AddressTest {
 	}
 
 	String withV4PortNumber(String pattern) {
-		return "(" + pattern + ")(:())?";
+		return "(" + pattern + ")(:(\\d{1,5}))?";
 	}
 
 	void assertAddress(String addr, int port, InetSocketAddress isa) {
@@ -65,6 +65,7 @@ public class AddressTest {
 
 	@Test
 	public void under256() {
+		System.out.println(AddressUtil.v6withBracketPort.pattern());
 		assertUnder256("-1");
 		assertUnder256("");
 		assertUnder256(null);
@@ -79,7 +80,7 @@ public class AddressTest {
 
 	protected boolean under256ByRegex(String s) {
 		String regex = "\\b0*(25[0-5]|(2[0-4]|1\\d|[1-9]?)\\d)\\b";
-		return s != null && Pattern.matches(regex, s);
+		return (s != null) && Pattern.matches(regex, s);
 	}
 
 	protected boolean under256(String s) {
@@ -222,9 +223,9 @@ public class AddressTest {
 	 */
 	@Test
 	public void fromDartwareDotCom() throws Exception {
-		String regex = "((([0-9a-f]{1,4}:){7}([0-9a-f]{1,4}|:))|(([0-9a-f]{1,4}:){6}(:[0-9a-f]{1,4}|((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9a-f]{1,4}:){5}(((:[0-9a-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9a-f]{1,4}:){4}(((:[0-9a-f]{1,4}){1,3})|((:[0-9a-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){3}(((:[0-9a-f]{1,4}){1,4})|((:[0-9a-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){2}(((:[0-9a-f]{1,4}){1,5})|((:[0-9a-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){1}(((:[0-9a-f]{1,4}){1,6})|((:[0-9a-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(:(((:[0-9a-f]{1,4}){1,7})|((:[0-9a-f]{1,4}){0,5}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?";
 		// String regex =
-		// "(((?=(?>.*?::)(?!.*::)))(::)?([0-9a-f]{1,4}::?){0,5}|([0-9a-f]{1,4}:){6})(\\2([0-9a-f]{1,4}(::?|$)){0,2}|((25[0-5]|(2[0-4]|1[0-9]|[1-9])?[0-9])(\\.|$)){4}|[0-9a-f]{1,4}:[0-9a-f]{1,4})(?<![^:]:)(?<!\\.)";
+		// "((([0-9a-f]{1,4}:){7}([0-9a-f]{1,4}|:))|(([0-9a-f]{1,4}:){6}(:[0-9a-f]{1,4}|((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9a-f]{1,4}:){5}(((:[0-9a-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3})|:))|(([0-9a-f]{1,4}:){4}(((:[0-9a-f]{1,4}){1,3})|((:[0-9a-f]{1,4})?:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){3}(((:[0-9a-f]{1,4}){1,4})|((:[0-9a-f]{1,4}){0,2}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){2}(((:[0-9a-f]{1,4}){1,5})|((:[0-9a-f]{1,4}){0,3}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(([0-9a-f]{1,4}:){1}(((:[0-9a-f]{1,4}){1,6})|((:[0-9a-f]{1,4}){0,4}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:))|(:(((:[0-9a-f]{1,4}){1,7})|((:[0-9a-f]{1,4}){0,5}:((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}))|:)))(%.+)?";
+		String regex = "(((?=(?>.*?::)(?!.*::)))(::)?([0-9a-f]{1,4}::?){0,5}|([0-9a-f]{1,4}:){6})(\\2([0-9a-f]{1,4}(::?|$)){0,2}|((25[0-5]|(2[0-4]|1[0-9]|[1-9])?[0-9])(\\.|$)){4}|[0-9a-f]{1,4}:[0-9a-f]{1,4})(?<![^:]:)(?<!\\.)";
 		Pattern p = Pattern.compile(regex);
 
 		String[] v6address = { "2001:db8:0:0:8:800:200c:417a",
@@ -282,11 +283,6 @@ public class AddressTest {
 	protected void assertTrue(Pattern test, String[] cases) {
 		for (String s : cases) {
 			Assert.assertTrue(s, test.matcher(s).matches());
-			Matcher m = test.matcher(s);
-			if (m.find()) {
-
-				System.out.printf("### %s %s \n", s, m.group(0));
-			}
 		}
 	}
 
