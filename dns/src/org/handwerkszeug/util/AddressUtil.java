@@ -1,6 +1,8 @@
 package org.handwerkszeug.util;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,36 +44,64 @@ public class AddressUtil {
 	public static final Pattern v6withBracketPort = Pattern.compile("\\["
 			+ internal_v6address + "\\](:" + under65536 + ")?$"); // 1 15
 
-	public static InetSocketAddress toSocketAddress(String addressWithPort,
+	protected static final List<SocketAddressConverter> CONVERTERS = new ArrayList<AddressUtil.SocketAddressConverter>();
+	static {
+		CONVERTERS.add(new FromV4Address());
+		CONVERTERS.add(new FromBracketV6Address());
+		CONVERTERS.add(new FromV6Address());
+		CONVERTERS.add(new FromHostname());
+	}
+
+	public static InetSocketAddress convertTo(String addressWithPort,
 			int defaultPort) {
-		// TODO
-		return null;
-	}
-
-	public static InetSocketAddress fromHostname(String host, int defaultPort) {
-		return toSocketAddress(host, defaultPort, hostWithPort, 1, 5);
-	}
-
-	public static InetSocketAddress fromV4(String addr, int defaultPort) {
-		return toSocketAddress(addr, defaultPort, v4withPort, 1, 7);
-	}
-
-	public static InetSocketAddress fromV6(String addr, int defaultPort) {
-		InetSocketAddress result = toSocketAddress(addr, defaultPort,
-				v6withSuffixPort, 1, 15);
-		if (result == null) {
-			result = toSocketAddress(addr, defaultPort, v6withBracketPort, 1,
-					15);
+		InetSocketAddress result = null;
+		for (SocketAddressConverter sac : CONVERTERS) {
+			result = sac.to(addressWithPort, defaultPort);
+			if (result != null) {
+				break;
+			}
 		}
 		return result;
 	}
 
+	public interface SocketAddressConverter {
+		InetSocketAddress to(String addr, int defaultPort);
+	}
+
+	public static class FromHostname implements SocketAddressConverter {
+		@Override
+		public InetSocketAddress to(String addr, int defaultPort) {
+			return toSocketAddress(addr, defaultPort, hostWithPort, 1, 5);
+		}
+	}
+
+	public static class FromV4Address implements SocketAddressConverter {
+		@Override
+		public InetSocketAddress to(String addr, int defaultPort) {
+			return toSocketAddress(addr, defaultPort, v4withPort, 1, 7);
+		}
+	}
+
+	public static class FromBracketV6Address implements SocketAddressConverter {
+		@Override
+		public InetSocketAddress to(String addr, int defaultPort) {
+			return toSocketAddress(addr, defaultPort, v6withBracketPort, 1, 15);
+		}
+	}
+
+	public static class FromV6Address implements SocketAddressConverter {
+		@Override
+		public InetSocketAddress to(String addr, int defaultPort) {
+			return toSocketAddress(addr, defaultPort, v6withSuffixPort, 1, 15);
+		}
+	}
+
 	protected static InetSocketAddress toSocketAddress(String addressWithPort,
-			int defaultPort, Pattern p, int HOST, int PORT) {
+			int defaultPort, Pattern p, int HOST_INDEX, int PORT_INDEX) {
 		Matcher m = p.matcher(addressWithPort);
 		if (m.matches() && m.reset().find()) {
-			int port = toInt(m.group(PORT), defaultPort);
-			return new InetSocketAddress(m.group(HOST), port);
+			int port = toInt(m.group(PORT_INDEX), defaultPort);
+			return new InetSocketAddress(m.group(HOST_INDEX), port);
 		}
 		return null;
 	}
