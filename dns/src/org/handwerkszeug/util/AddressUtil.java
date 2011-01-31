@@ -1,10 +1,15 @@
 package org.handwerkszeug.util;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @see <a href="http://tools.ietf.org/html/rfc4291">[RFC4291] IP Version 6
@@ -16,6 +21,8 @@ import java.util.regex.Pattern;
  * @author taichi
  */
 public class AddressUtil {
+
+	static final Logger LOG = LoggerFactory.getLogger(AddressUtil.class);
 
 	/**
 	 * @see <a href="http://tools.ietf.org/html/rfc952">[RFC952] DOD INTERNET
@@ -115,5 +122,17 @@ public class AddressUtil {
 		} catch (NumberFormatException e) {
 		}
 		return result;
+	}
+
+	public static InetAddress getByAddress(long address) {
+		byte[] a = new byte[] { (byte) ((address >>> 24) & 0xFF),
+				(byte) ((address >>> 16) & 0xFF),
+				(byte) ((address >>> 8) & 0xFF), (byte) (address & 0xFF) };
+		try {
+			return InetAddress.getByAddress(a);
+		} catch (UnknownHostException e) {
+			LOG.error(e.getLocalizedMessage(), e);
+			return null;
+		}
 	}
 }

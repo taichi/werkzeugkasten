@@ -4,7 +4,7 @@ import java.net.InetAddress;
 
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
-import org.handwerkszeug.util.NetUtil;
+import org.handwerkszeug.util.AddressUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -34,7 +34,7 @@ public class ARecord extends AbstractRecord {
 	}
 
 	public InetAddress address() {
-		return NetUtil.getByAddress(this.address);
+		return AddressUtil.getByAddress(this.address);
 	}
 
 	@Override

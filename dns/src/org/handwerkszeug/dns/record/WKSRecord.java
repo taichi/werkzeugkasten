@@ -6,7 +6,7 @@ import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.client.WKPortNumbers;
 import org.handwerkszeug.dns.client.WKProtocols;
-import org.handwerkszeug.util.NetUtil;
+import org.handwerkszeug.util.AddressUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -73,7 +73,7 @@ public class WKSRecord extends AbstractRecord {
 	}
 
 	public InetAddress address() {
-		return NetUtil.getByAddress(this.address);
+		return AddressUtil.getByAddress(this.address);
 	}
 
 	public short protocol() {
