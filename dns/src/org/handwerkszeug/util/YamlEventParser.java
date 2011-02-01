@@ -34,8 +34,12 @@ public class YamlEventParser {
 
 	public void parse() {
 		skip(2);
+		parse(this.parser.getEvent());
+		skip(2);
+	}
 
-		for (Event e = this.parser.getEvent(); this.parser.peekEvent() != null; e = this.parser
+	public void parse(Event current) {
+		for (Event e = current; this.parser.peekEvent() != null; e = this.parser
 				.getEvent()) {
 			if (e.is(ID.MappingStart)) {
 
@@ -43,8 +47,6 @@ public class YamlEventParser {
 
 			}
 		}
-
-		skip(2);
 	}
 
 	protected void skip(int count) {
