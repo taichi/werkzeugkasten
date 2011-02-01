@@ -27,9 +27,9 @@ public class YamlEventParser {
 	}
 
 	public void add(Handler handler) {
-		if (handler != null) {
-			this.handlers.put(handler.getNodeName(), handler);
-		}
+		// if (handler != null) {
+		// this.handlers.put(handler.getNodeName(), handler);
+		// }
 	}
 
 	public void parse() {
@@ -37,9 +37,7 @@ public class YamlEventParser {
 
 		for (Event e = this.parser.getEvent(); this.parser.peekEvent() != null; e = this.parser
 				.getEvent()) {
-			if (e.is(ID.Scalar)) {
-
-			} else if (e.is(ID.MappingStart)) {
+			if (e.is(ID.MappingStart)) {
 
 			} else if (e.is(ID.SequenceStart)) {
 
@@ -78,8 +76,23 @@ public class YamlEventParser {
 	}
 
 	public interface Handler {
-		String getNodeName();
+		// String getNodeName();
 
 		void handle(Parser parser);
+	}
+
+	public abstract class SequenceHandler implements Handler {
+		@Override
+		public void handle(Parser parser) {
+			for (Event e = parser.getEvent(); parser.peekEvent() != null; e = parser
+					.getEvent()) {
+				if (e.is(ID.SequenceEnd)) {
+					break;
+				}
+				handle(e);
+			}
+		}
+
+		protected abstract void handle(Event e);
 	}
 }
