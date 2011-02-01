@@ -2,10 +2,10 @@ package org.handwerkszeug.util;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.List;
 
 import org.yaml.snakeyaml.events.Event;
 import org.yaml.snakeyaml.events.Event.ID;
@@ -15,7 +15,6 @@ import org.yaml.snakeyaml.reader.StreamReader;
 
 public class YamlEventParser {
 
-	protected Map<String, Handler> handlers = new HashMap<String, YamlEventParser.Handler>();
 	protected final Parser parser;
 
 	public YamlEventParser(Parser parser) {
@@ -24,12 +23,6 @@ public class YamlEventParser {
 
 	public YamlEventParser(InputStream in) {
 		this(new ParserImpl(new StreamReader(new InputStreamReader(in))));
-	}
-
-	public void add(Handler handler) {
-		// if (handler != null) {
-		// this.handlers.put(handler.getNodeName(), handler);
-		// }
 	}
 
 	public void parse() {
@@ -77,24 +70,29 @@ public class YamlEventParser {
 		}
 	}
 
-	public interface Handler {
+	public interface Handler<T> {
 		// String getNodeName();
 
-		void handle(Parser parser);
+		T handle(Parser parser);
 	}
 
-	public abstract class SequenceHandler implements Handler {
+	public static abstract class SequenceHandler<T> implements Handler<List<T>> {
 		@Override
-		public void handle(Parser parser) {
+		public List<T> handle(Parser parser) {
+			List<T> result = new ArrayList<T>();
 			for (Event e = parser.getEvent(); parser.peekEvent() != null; e = parser
 					.getEvent()) {
 				if (e.is(ID.SequenceEnd)) {
 					break;
 				}
-				handle(e);
+				result.add(handle(e));
 			}
+			return result;
 		}
 
-		protected abstract void handle(Event e);
+		protected abstract T handle(Event e);
+	}
+
+	public static abstract class MappingHandler<T> implements Handler<T> {
 	}
 }
