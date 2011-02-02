@@ -73,17 +73,22 @@ public class YamlNodeAccepter {
 
 		@Override
 		public void handle(Node node) {
-			MappingNode mn = (MappingNode) node;
-			for (NodeTuple nt : mn.getValue()) {
-				Node key = nt.getKeyNode();
-				if (key.getNodeId().equals(NodeId.scalar)) {
-					ScalarNode sn = (ScalarNode) key;
-					Handler h = this.handlers.get(sn.getValue());
-					if (h != null) {
-						Node value = nt.getValueNode();
-						h.handle(value);
+			if (node instanceof MappingNode) {
+				MappingNode mn = (MappingNode) node;
+				for (NodeTuple nt : mn.getValue()) {
+					Node key = nt.getKeyNode();
+					if (key.getNodeId().equals(NodeId.scalar)) {
+						ScalarNode sn = (ScalarNode) key;
+						Handler h = this.handlers.get(sn.getValue());
+						if (h != null) {
+							Node value = nt.getValueNode();
+							h.handle(value);
+						}
 					}
 				}
+			} else {
+				throw new IllegalArgumentException(
+						"current node is not MappingNode " + node);
 			}
 		}
 	}
@@ -105,9 +110,14 @@ public class YamlNodeAccepter {
 
 		@Override
 		public void handle(Node node) {
-			SequenceNode sn = (SequenceNode) node;
-			for (Node n : sn.getValue()) {
-				this.handler.handle(n);
+			if (node instanceof SequenceNode) {
+				SequenceNode sn = (SequenceNode) node;
+				for (Node n : sn.getValue()) {
+					this.handler.handle(n);
+				}
+			} else {
+				throw new IllegalArgumentException(
+						"current node is not SequenceNode " + node);
 			}
 		}
 	}
