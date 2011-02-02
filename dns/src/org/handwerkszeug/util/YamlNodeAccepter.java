@@ -1,5 +1,6 @@
 package org.handwerkszeug.util;
 
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashMap;
@@ -24,50 +25,47 @@ public class YamlNodeAccepter {
 		this.rootHandler = root;
 	}
 
-	public void accept() {
-
-	}
-
-	public static void main(String[] args) {
-		Reader yaml = new InputStreamReader(
-				YamlNodeAccepter.class
-						.getResourceAsStream("/named.default.yml"));
+	public void accept(InputStream in) {
+		Reader yaml = new InputStreamReader(in);
 		Composer composer = new Composer(
 				new ParserImpl(new StreamReader(yaml)), new Resolver());
 		Node node = composer.getSingleNode();
-		System.out.println(node);
-		MappingNode mn = (MappingNode) node;
-		for (NodeTuple nt : mn.getValue()) {
-			Node key = nt.getKeyNode();
-			if (key instanceof ScalarNode) {
-				ScalarNode sn = (ScalarNode) key;
-				Node value = nt.getValueNode();
-				String s = sn.getValue();
-				if ("bindingHosts".equalsIgnoreCase(s)) {
-					bindingHosts(value);
-				}
-				if ("logging".equalsIgnoreCase(s)) {
-					logging(value);
-				}
-				if ("threadPoolSize".equalsIgnoreCase(s)) {
-					threadPoolSize(value);
-				}
-			}
-		}
+		this.rootHandler.handle(node);
 	}
 
 	public interface Handler {
+		String getNodeName();
+
 		void handle(Node node);
 	}
 
-	public interface NamedHandler extends Handler {
-		String getNodeName();
+	public static abstract class DefaultHandler implements Handler {
+		protected String name;
+
+		public DefaultHandler() {
+		}
+
+		public DefaultHandler(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String getNodeName() {
+			return this.name;
+		}
 	}
 
-	public static abstract class MappingHandler implements Handler {
+	public static class MappingHandler extends DefaultHandler {
 		Map<String, Handler> handlers = new HashMap<String, YamlNodeAccepter.Handler>();
 
-		public void add(NamedHandler handler) {
+		public MappingHandler() {
+		}
+
+		public MappingHandler(String name) {
+			super(name);
+		}
+
+		public void add(Handler handler) {
 			if (handler != null) {
 				this.handlers.put(handler.getNodeName(), handler);
 			}
@@ -90,27 +88,27 @@ public class YamlNodeAccepter {
 		}
 	}
 
-	public static abstract class SequenceHandler implements Handler {
+	public static class SequenceHandler extends DefaultHandler {
+		protected Handler handler;
+
+		public SequenceHandler() {
+		}
+
+		public SequenceHandler(Handler handler) {
+			this.handler = handler;
+		}
+
+		public SequenceHandler(String name, Handler handler) {
+			super(name);
+			this.handler = handler;
+		}
+
 		@Override
 		public void handle(Node node) {
 			SequenceNode sn = (SequenceNode) node;
 			for (Node n : sn.getValue()) {
-				handleElement(n);
+				this.handler.handle(n);
 			}
 		}
-
-		protected abstract void handleElement(Node node);
-	}
-
-	static void bindingHosts(Node node) {
-
-	}
-
-	static void logging(Node node) {
-
-	}
-
-	static void threadPoolSize(Node node) {
-
 	}
 }
