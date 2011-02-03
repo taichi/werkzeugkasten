@@ -2,10 +2,13 @@ package org.handwerkszeug.util;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.handwerkszeug.dns.Markers;
+import org.handwerkszeug.dns.nls.Messages;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.composer.Composer;
 import org.yaml.snakeyaml.nodes.MappingNode;
 import org.yaml.snakeyaml.nodes.Node;
@@ -19,6 +22,8 @@ import org.yaml.snakeyaml.resolver.Resolver;
 
 public class YamlNodeAccepter {
 
+	static final Logger LOG = LoggerFactory.getLogger(YamlNodeAccepter.class);
+
 	protected final Handler rootHandler;
 
 	protected YamlNodeAccepter(Handler root) {
@@ -26,9 +31,11 @@ public class YamlNodeAccepter {
 	}
 
 	public void accept(InputStream in) {
-		Reader yaml = new InputStreamReader(in);
-		Composer composer = new Composer(
-				new ParserImpl(new StreamReader(yaml)), new Resolver());
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(Markers.BOUNDARY, Messages.COMPOSE_YAML_NODE);
+		}
+		Composer composer = new Composer(new ParserImpl(new StreamReader(
+				new InputStreamReader(in))), new Resolver());
 		Node node = composer.getSingleNode();
 		this.rootHandler.handle(node);
 	}
@@ -87,8 +94,9 @@ public class YamlNodeAccepter {
 					}
 				}
 			} else {
-				throw new IllegalArgumentException(
-						"current node is not MappingNode " + node);
+				LOG.debug(Markers.DETAIL, Messages.INVALID_PARAMETER,
+						new Object[] { "MappingHandler#handle",
+								MappingNode.class, node });
 			}
 		}
 	}
@@ -116,8 +124,9 @@ public class YamlNodeAccepter {
 					this.handler.handle(n);
 				}
 			} else {
-				throw new IllegalArgumentException(
-						"current node is not SequenceNode " + node);
+				LOG.debug(Markers.DETAIL, Messages.INVALID_PARAMETER,
+						new Object[] { "SequenceHandler#handle",
+								SequenceNode.class, node });
 			}
 		}
 	}
