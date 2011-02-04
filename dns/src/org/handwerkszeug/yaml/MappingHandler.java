@@ -38,7 +38,6 @@ public class MappingHandler<CTX> extends DefaultHandler<CTX> {
 			MappingNode mn = (MappingNode) node;
 			for (NodeTuple nt : mn.getValue()) {
 				Node key = nt.getKeyNode();
-				System.out.println(key);
 				if (key.getNodeId().equals(NodeId.scalar)) {
 					ScalarNode sn = (ScalarNode) key;
 					YamlNodeHandler<CTX> h = this.handlers.get(sn.getValue());
