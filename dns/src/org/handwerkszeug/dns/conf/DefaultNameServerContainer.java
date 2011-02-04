@@ -32,7 +32,7 @@ public class DefaultNameServerContainer implements NameServerContainer {
 		DefaultChainExecutor<List<String>, ChainResult> dce = new DefaultChainExecutor<List<String>, ChainResult>();
 		dce.add(new SystemProperties());
 		dce.add(new SunJRE());
-		dce.add(new ResolveConf());
+		dce.add(new ResolvConf());
 		this.executor = dce;
 	}
 

@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
 import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.common.util.StringUtil;
 
-public class ResolveConf implements Chain<List<String>, ChainResult> {
+public class ResolvConf implements Chain<List<String>, ChainResult> {
 
-	static final Logger LOG = LoggerFactory.getLogger(ResolveConf.class);
+	static final Logger LOG = LoggerFactory.getLogger(ResolvConf.class);
 
 	@Override
 	public ChainResult execute(List<String> context) {

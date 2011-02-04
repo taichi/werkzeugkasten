@@ -11,7 +11,7 @@ public class ResolveConfTest {
 
 	@Test
 	public void testParse() {
-		ResolveConf target = new ResolveConf();
+		ResolvConf target = new ResolvConf();
 		List<String> list = new ArrayList<String>();
 
 		target.parse("domain example.com", list);
