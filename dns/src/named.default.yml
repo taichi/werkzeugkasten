@@ -8,6 +8,14 @@ bindingHosts :
   - 127.0.0.1 : 53
   - 127.0.0.1:53
 
+forwarders :
+  auto_detector :
+    - org.handwerkszeug.dns.conf.SunJRE
+    - org.handwerkszeug.dns.conf.ResolveConf
+  hosts :
+    - 127.0.0.1 : 53
+    - 127.0.0.1:53
+
 logging :
   appender : DEBUG
 

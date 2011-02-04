@@ -2,7 +2,9 @@ package org.handwerkszeug.dns.nls;
 
 public class Messages {
 
-	public static String INVALID_PARAMETER = "{} needs {} but {}";
+	public static String InvalidParameter = "{} needs {} but {}";
 
-	public static String COMPOSE_YAML_NODE = "compose yaml node";
+	public static String ComposeNode = "compose yaml node";
+
+	public static String UnsupportedAttribute = "unsupported attribute {}";
 }
