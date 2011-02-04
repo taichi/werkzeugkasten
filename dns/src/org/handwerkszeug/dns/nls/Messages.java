@@ -7,4 +7,6 @@ public class Messages {
 	public static String ComposeNode = "compose yaml node";
 
 	public static String UnsupportedAttribute = "unsupported attribute {}";
+
+	public static String UnsupportedNode = "unsupported node {}";
 }

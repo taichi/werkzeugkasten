@@ -3,6 +3,8 @@ package org.handwerkszeug.dns.conf;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.handwerkszeug.dns.Markers;
+import org.handwerkszeug.dns.nls.Messages;
 import org.handwerkszeug.yaml.DefaultHandler;
 import org.handwerkszeug.yaml.YamlNodeHandler;
 import org.slf4j.Logger;
@@ -10,19 +12,26 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeId;
 
-public class Address extends DefaultHandler<ServerConfiguration> {
+public class NodeToAddress extends DefaultHandler<ServerConfiguration> {
 
-	static final Logger LOG = LoggerFactory.getLogger(Address.class);
+	static final Logger LOG = LoggerFactory.getLogger(NodeToAddress.class);
 	static final Map<NodeId, YamlNodeHandler<ServerConfiguration>> converters = new HashMap<NodeId, YamlNodeHandler<ServerConfiguration>>();
+	static {
+		converters.put(NodeId.scalar, new ScalarToAddress());
+		converters.put(NodeId.mapping, new MappingToAddress());
+	}
+
+	public NodeToAddress() {
+	}
 
 	@Override
 	public void handle(Node node, ServerConfiguration context) {
-		YamlNodeHandler<ServerConfiguration> ynh = converters.get(node
+		YamlNodeHandler<ServerConfiguration> handler = converters.get(node
 				.getNodeId());
-		if (ynh == null) {
-
+		if (handler == null) {
+			LOG.debug(Markers.DETAIL, Messages.UnsupportedNode, node);
 		} else {
-			ynh.handle(node, context);
+			handler.handle(node, context);
 		}
 	}
 

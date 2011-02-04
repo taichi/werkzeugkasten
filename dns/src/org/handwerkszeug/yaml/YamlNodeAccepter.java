@@ -25,7 +25,7 @@ public class YamlNodeAccepter<CTX> {
 
 	public void accept(InputStream in, CTX context) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(Markers.BOUNDARY, Messages.ComposeNode);
+			LOG.trace(Markers.BOUNDARY, Messages.ComposeNode);
 		}
 		Composer composer = new Composer(new ParserImpl(new StreamReader(
 				new InputStreamReader(in))), new Resolver());
