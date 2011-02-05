@@ -103,7 +103,7 @@ public class DNSServer implements Initializable, Disposable {
 	}
 
 	public void process() {
-		for (SocketAddress sa : this.config.bindingHosts()) {
+		for (SocketAddress sa : this.config.getBindingHosts()) {
 			LOG.info("binding {}", sa);
 			this.group.add(this.bootstrap.bind(sa));
 		}

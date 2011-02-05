@@ -11,8 +11,16 @@ import java.util.List;
 import org.handwerkszeug.dns.NameServerContainer;
 import org.handwerkszeug.dns.NameServerContainerProvider;
 import org.handwerkszeug.dns.Zone;
+import org.handwerkszeug.util.AddressUtil;
+import org.handwerkszeug.yaml.DefaultHandler;
+import org.handwerkszeug.yaml.MappingHandler;
+import org.handwerkszeug.yaml.SequenceHandler;
+import org.handwerkszeug.yaml.YamlNodeAccepter;
+import org.handwerkszeug.yaml.YamlNodeHandler;
+import org.handwerkszeug.yaml.YamlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.nodes.Node;
 
 import werkzeugkasten.common.util.Streams;
 
@@ -27,7 +35,7 @@ public class ServerConfiguration {
 
 	protected List<Zone> zones = new ArrayList<Zone>();
 
-	protected int threadPoolSize = Integer.MAX_VALUE;
+	protected int threadPoolSize = 10;
 
 	public ServerConfiguration() {
 	}
@@ -53,7 +61,10 @@ public class ServerConfiguration {
 
 	public void load(InputStream in) {
 		// TODO not implemented
-		this.bindingHosts.add(new InetSocketAddress("127.0.0.1", 53));
+		YamlNodeHandler<ServerConfiguration> root = createRootHandler();
+		YamlNodeAccepter<ServerConfiguration> accepter = new YamlNodeAccepter<ServerConfiguration>(
+				root);
+		accepter.accept(in, this);
 
 		NameServerContainerProvider provider = new NameServerContainerProvider();
 		provider.initialize();
@@ -65,15 +76,35 @@ public class ServerConfiguration {
 		}
 	}
 
-	public List<SocketAddress> bindingHosts() {
+	protected YamlNodeHandler<ServerConfiguration> createRootHandler() {
+		MappingHandler<ServerConfiguration> root = new MappingHandler<ServerConfiguration>();
+		final NodeToAddress node2addr = new NodeToAddress();
+		root.add(new SequenceHandler<ServerConfiguration>("bindingHosts",
+				new DefaultHandler<ServerConfiguration>() {
+					@Override
+					public void handle(Node node, ServerConfiguration conf) {
+						node2addr.handle(node, conf.getBindingHosts());
+					}
+				}));
+		root.add(new DefaultHandler<ServerConfiguration>("threadPoolSize") {
+			@Override
+			public void handle(Node node, ServerConfiguration conf) {
+				String value = YamlUtil.getStringValue(node);
+				conf.threadPoolSize = AddressUtil.toInt(value, 10);
+			}
+		});
+		return root;
+	}
+
+	public List<SocketAddress> getBindingHosts() {
 		return this.bindingHosts;
 	}
 
-	public int threadPoolSize() {
+	public int getThreadPoolSize() {
 		return this.threadPoolSize;
 	}
 
-	public List<SocketAddress> forwarders() {
+	public List<SocketAddress> getForwarders() {
 		return this.forwarders;
 	}
 }

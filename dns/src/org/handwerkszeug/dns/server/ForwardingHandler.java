@@ -53,7 +53,7 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 		});
 
 		List<SocketAddress> newlist = new ArrayList<SocketAddress>(
-				this.config.forwarders());
+				this.config.getForwarders());
 		sendRequest(e, original, cb, newlist);
 	}
 

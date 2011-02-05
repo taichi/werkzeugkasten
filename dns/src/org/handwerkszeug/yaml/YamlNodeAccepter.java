@@ -19,7 +19,7 @@ public class YamlNodeAccepter<CTX> {
 
 	protected final YamlNodeHandler<CTX> rootHandler;
 
-	protected YamlNodeAccepter(YamlNodeHandler<CTX> root) {
+	public YamlNodeAccepter(YamlNodeHandler<CTX> root) {
 		this.rootHandler = root;
 	}
 

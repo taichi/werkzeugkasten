@@ -1,6 +1,6 @@
 package org.handwerkszeug.dns.conf;
 
-import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,21 +22,22 @@ import org.yaml.snakeyaml.nodes.ScalarNode;
 
 import werkzeugkasten.common.util.StringUtil;
 
-public class NodeToAddress extends DefaultHandler<List<InetSocketAddress>> {
+public class NodeToAddress extends DefaultHandler<List<SocketAddress>> {
 
 	static final Logger LOG = LoggerFactory.getLogger(NodeToAddress.class);
-	static final Map<NodeId, YamlNodeHandler<List<InetSocketAddress>>> converters = new HashMap<NodeId, YamlNodeHandler<List<InetSocketAddress>>>();
-	static {
+	Map<NodeId, YamlNodeHandler<List<SocketAddress>>> converters = new HashMap<NodeId, YamlNodeHandler<List<SocketAddress>>>();
+	{
 		converters.put(NodeId.scalar, new ScalarToAddress());
 		converters.put(NodeId.mapping, new MappingToAddress());
 	}
 
 	public NodeToAddress() {
+
 	}
 
 	@Override
-	public void handle(Node node, List<InetSocketAddress> context) {
-		YamlNodeHandler<List<InetSocketAddress>> handler = converters.get(node
+	public void handle(Node node, List<SocketAddress> context) {
+		YamlNodeHandler<List<SocketAddress>> handler = converters.get(node
 				.getNodeId());
 		if (handler == null) {
 			LOG.debug(Markers.DETAIL, Messages.UnsupportedNode, node);
@@ -45,8 +46,7 @@ public class NodeToAddress extends DefaultHandler<List<InetSocketAddress>> {
 		}
 	}
 
-	static class ScalarToAddress extends
-			DefaultHandler<List<InetSocketAddress>> {
+	static class ScalarToAddress extends DefaultHandler<List<SocketAddress>> {
 		protected int defaultPort = Constants.DEFAULT_PORT;
 
 		public ScalarToAddress() {
@@ -57,10 +57,10 @@ public class NodeToAddress extends DefaultHandler<List<InetSocketAddress>> {
 		}
 
 		@Override
-		public void handle(Node node, List<InetSocketAddress> context) {
+		public void handle(Node node, List<SocketAddress> context) {
 			if (node instanceof ScalarNode) {
 				ScalarNode sn = (ScalarNode) node;
-				InetSocketAddress addr = AddressUtil.convertTo(sn.getValue(),
+				SocketAddress addr = AddressUtil.convertTo(sn.getValue(),
 						this.defaultPort);
 				if (addr != null) {
 					context.add(addr);
@@ -72,8 +72,7 @@ public class NodeToAddress extends DefaultHandler<List<InetSocketAddress>> {
 		}
 	}
 
-	static class MappingToAddress extends
-			DefaultHandler<List<InetSocketAddress>> {
+	static class MappingToAddress extends DefaultHandler<List<SocketAddress>> {
 
 		protected int defaultPort = Constants.DEFAULT_PORT;
 
@@ -85,7 +84,7 @@ public class NodeToAddress extends DefaultHandler<List<InetSocketAddress>> {
 		}
 
 		@Override
-		public void handle(Node node, List<InetSocketAddress> context) {
+		public void handle(Node node, List<SocketAddress> context) {
 			if (node instanceof MappingNode) {
 				MappingNode mn = (MappingNode) node;
 				String[] ary = new String[2];
@@ -103,7 +102,7 @@ public class NodeToAddress extends DefaultHandler<List<InetSocketAddress>> {
 					}
 				}
 				if (StringUtil.isEmpty(ary[0]) == false) {
-					InetSocketAddress addr = AddressUtil.convertTo(ary[0],
+					SocketAddress addr = AddressUtil.convertTo(ary[0],
 							AddressUtil.toInt(ary[1], this.defaultPort));
 					if (addr != null) {
 						context.add(addr);

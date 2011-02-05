@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.StringReader;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +31,10 @@ public class NodeToAddressTest {
 		testScalarToAddress(new InetSocketAddress("127.0.0.1", 53), "127.0.0.1");
 	}
 
-	protected void testScalarToAddress(InetSocketAddress act, String data) {
+	protected void testScalarToAddress(SocketAddress act, String data) {
 		Node node = this.yaml.compose(new StringReader(data));
 		ScalarToAddress target = new ScalarToAddress();
-		List<InetSocketAddress> context = new ArrayList<InetSocketAddress>();
+		List<SocketAddress> context = new ArrayList<SocketAddress>();
 		target.handle(node, context);
 		assertEquals(act, context.get(0));
 	}
@@ -46,10 +47,10 @@ public class NodeToAddressTest {
 				"127.0.0.1 : 8080");
 	}
 
-	protected void testMappingToAddress(InetSocketAddress act, String data) {
+	protected void testMappingToAddress(SocketAddress act, String data) {
 		Node node = this.yaml.compose(new StringReader(data));
 		MappingToAddress target = new MappingToAddress();
-		List<InetSocketAddress> context = new ArrayList<InetSocketAddress>();
+		List<SocketAddress> context = new ArrayList<SocketAddress>();
 		target.handle(node, context);
 		assertEquals(act, context.get(0));
 	}
