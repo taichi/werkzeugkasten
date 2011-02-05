@@ -9,4 +9,6 @@ public class Messages {
 	public static String UnsupportedAttribute = "unsupported attribute {}";
 
 	public static String UnsupportedNode = "unsupported node {}";
+
+	public static String InvalidAddressFormat = "invalid address format {}";
 }

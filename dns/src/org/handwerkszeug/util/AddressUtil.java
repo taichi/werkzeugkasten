@@ -113,7 +113,7 @@ public class AddressUtil {
 		return null;
 	}
 
-	protected static int toInt(String s, int defaultValue) {
+	public static int toInt(String s, int defaultValue) {
 		int result = defaultValue;
 		try {
 			if ((s != null) && (s.isEmpty() == false)) {
