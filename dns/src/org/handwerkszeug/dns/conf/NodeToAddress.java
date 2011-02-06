@@ -10,6 +10,7 @@ import org.handwerkszeug.dns.Markers;
 import org.handwerkszeug.dns.nls.Messages;
 import org.handwerkszeug.util.AddressUtil;
 import org.handwerkszeug.yaml.DefaultHandler;
+import org.handwerkszeug.yaml.SequenceHandler;
 import org.handwerkszeug.yaml.YamlNodeHandler;
 import org.handwerkszeug.yaml.YamlUtil;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeId;
 import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.ScalarNode;
+import org.yaml.snakeyaml.nodes.SequenceNode;
 
 import werkzeugkasten.common.util.StringUtil;
 
@@ -29,10 +31,10 @@ public class NodeToAddress extends DefaultHandler<List<SocketAddress>> {
 	{
 		converters.put(NodeId.scalar, new ScalarToAddress());
 		converters.put(NodeId.mapping, new MappingToAddress());
+		converters.put(NodeId.sequence, new SequenceToAddress());
 	}
 
 	public NodeToAddress() {
-
 	}
 
 	@Override
@@ -43,6 +45,25 @@ public class NodeToAddress extends DefaultHandler<List<SocketAddress>> {
 			LOG.debug(Markers.DETAIL, Messages.UnsupportedNode, node);
 		} else {
 			handler.handle(node, context);
+		}
+	}
+
+	class SequenceToAddress extends DefaultHandler<List<SocketAddress>> {
+		public SequenceToAddress() {
+		}
+
+		@Override
+		public void handle(Node node, List<SocketAddress> context) {
+			if (node instanceof SequenceNode) {
+				new SequenceHandler<List<SocketAddress>>(
+						new DefaultHandler<List<SocketAddress>>() {
+							@Override
+							public void handle(Node node,
+									List<SocketAddress> context) {
+								NodeToAddress.this.handle(node, context);
+							}
+						}).handle(node, context);
+			}
 		}
 	}
 

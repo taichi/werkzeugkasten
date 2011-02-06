@@ -6,7 +6,11 @@ bindingHosts :
 #  - !address 127.0.0.1:53
 #  - !address 127.0.0.1 : 53
 #  - 127.0.0.1 : 53
-  - 127.0.0.1:53
+#  - 127.0.0.1:53
+   127.0.0.1:53
+#   127.0.0.1 : 53
+#  address : 127.0.0.1
+#  port : 53
 
 forwarders :
   auto_detector :

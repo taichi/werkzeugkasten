@@ -14,7 +14,6 @@ import org.handwerkszeug.dns.Zone;
 import org.handwerkszeug.util.AddressUtil;
 import org.handwerkszeug.yaml.DefaultHandler;
 import org.handwerkszeug.yaml.MappingHandler;
-import org.handwerkszeug.yaml.SequenceHandler;
 import org.handwerkszeug.yaml.YamlNodeAccepter;
 import org.handwerkszeug.yaml.YamlNodeHandler;
 import org.handwerkszeug.yaml.YamlUtil;
@@ -79,13 +78,12 @@ public class ServerConfiguration {
 	protected YamlNodeHandler<ServerConfiguration> createRootHandler() {
 		MappingHandler<ServerConfiguration> root = new MappingHandler<ServerConfiguration>();
 		final NodeToAddress node2addr = new NodeToAddress();
-		root.add(new SequenceHandler<ServerConfiguration>("bindingHosts",
-				new DefaultHandler<ServerConfiguration>() {
-					@Override
-					public void handle(Node node, ServerConfiguration conf) {
-						node2addr.handle(node, conf.getBindingHosts());
-					}
-				}));
+		root.add(new DefaultHandler<ServerConfiguration>("bindingHosts") {
+			@Override
+			public void handle(Node node, ServerConfiguration context) {
+				node2addr.handle(node, context.getBindingHosts());
+			}
+		});
 		root.add(new DefaultHandler<ServerConfiguration>("threadPoolSize") {
 			@Override
 			public void handle(Node node, ServerConfiguration conf) {
