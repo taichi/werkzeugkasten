@@ -74,6 +74,7 @@ public class ServerConfiguration {
 			}
 		});
 		root.add(new NodeToForwarders(node2addr));
+		// TODO logging
 		root.add(new DefaultHandler<ServerConfiguration>("threadPoolSize") {
 			@Override
 			public void handle(Node node, ServerConfiguration conf) {
