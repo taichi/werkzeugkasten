@@ -20,7 +20,6 @@ import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeId;
 import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.ScalarNode;
-import org.yaml.snakeyaml.nodes.SequenceNode;
 
 import werkzeugkasten.common.util.StringUtil;
 
@@ -29,9 +28,9 @@ public class NodeToAddress extends DefaultHandler<List<SocketAddress>> {
 	static final Logger LOG = LoggerFactory.getLogger(NodeToAddress.class);
 	Map<NodeId, YamlNodeHandler<List<SocketAddress>>> converters = new HashMap<NodeId, YamlNodeHandler<List<SocketAddress>>>();
 	{
-		converters.put(NodeId.scalar, new ScalarToAddress());
-		converters.put(NodeId.mapping, new MappingToAddress());
-		converters.put(NodeId.sequence, new SequenceToAddress());
+		this.converters.put(NodeId.scalar, new ScalarToAddress());
+		this.converters.put(NodeId.mapping, new MappingToAddress());
+		this.converters.put(NodeId.sequence, new SequenceToAddress());
 	}
 
 	public NodeToAddress() {
@@ -39,7 +38,7 @@ public class NodeToAddress extends DefaultHandler<List<SocketAddress>> {
 
 	@Override
 	public void handle(Node node, List<SocketAddress> context) {
-		YamlNodeHandler<List<SocketAddress>> handler = converters.get(node
+		YamlNodeHandler<List<SocketAddress>> handler = this.converters.get(node
 				.getNodeId());
 		if (handler == null) {
 			LOG.debug(Markers.DETAIL, Messages.UnsupportedNode, node);
@@ -49,21 +48,20 @@ public class NodeToAddress extends DefaultHandler<List<SocketAddress>> {
 	}
 
 	class SequenceToAddress extends DefaultHandler<List<SocketAddress>> {
+		YamlNodeHandler<List<SocketAddress>> delegate = new SequenceHandler<List<SocketAddress>>(
+				new DefaultHandler<List<SocketAddress>>() {
+					@Override
+					public void handle(Node node, List<SocketAddress> context) {
+						NodeToAddress.this.handle(node, context);
+					}
+				});
+
 		public SequenceToAddress() {
 		}
 
 		@Override
 		public void handle(Node node, List<SocketAddress> context) {
-			if (node instanceof SequenceNode) {
-				new SequenceHandler<List<SocketAddress>>(
-						new DefaultHandler<List<SocketAddress>>() {
-							@Override
-							public void handle(Node node,
-									List<SocketAddress> context) {
-								NodeToAddress.this.handle(node, context);
-							}
-						}).handle(node, context);
-			}
+			this.delegate.handle(node, context);
 		}
 	}
 

@@ -54,4 +54,16 @@ public class NodeToAddressTest {
 		target.handle(node, context);
 		assertEquals(act, context.get(0));
 	}
+
+	@Test
+	public void testSequenceToAddress() {
+		String data = "- 127.0.0.1:80\n- 192.168.0.1";
+		InetSocketAddress act = new InetSocketAddress("127.0.0.1", 80);
+		Node node = this.yaml.compose(new StringReader(data));
+		NodeToAddress target = new NodeToAddress();
+		List<SocketAddress> context = new ArrayList<SocketAddress>();
+		target.handle(node, context);
+		assertEquals(2, context.size());
+		assertEquals(act, context.get(0));
+	}
 }
