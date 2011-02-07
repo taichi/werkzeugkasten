@@ -1,12 +1,13 @@
 package org.handwerkszeug.dns.conf;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.StringReader;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.handwerkszeug.dns.conf.NodeToAddress.MappingToAddress;
 import org.handwerkszeug.dns.conf.NodeToAddress.ScalarToAddress;
@@ -34,9 +35,9 @@ public class NodeToAddressTest {
 	protected void testScalarToAddress(SocketAddress act, String data) {
 		Node node = this.yaml.compose(new StringReader(data));
 		ScalarToAddress target = new ScalarToAddress();
-		List<SocketAddress> context = new ArrayList<SocketAddress>();
+		Set<SocketAddress> context = new HashSet<SocketAddress>();
 		target.handle(node, context);
-		assertEquals(act, context.get(0));
+		assertEquals(act, context.iterator().next());
 	}
 
 	@Test
@@ -50,20 +51,20 @@ public class NodeToAddressTest {
 	protected void testMappingToAddress(SocketAddress act, String data) {
 		Node node = this.yaml.compose(new StringReader(data));
 		MappingToAddress target = new MappingToAddress();
-		List<SocketAddress> context = new ArrayList<SocketAddress>();
+		Set<SocketAddress> context = new HashSet<SocketAddress>();
 		target.handle(node, context);
-		assertEquals(act, context.get(0));
+		assertEquals(act, context.iterator().next());
 	}
 
 	@Test
 	public void testSequenceToAddress() {
-		String data = "- 127.0.0.1:80\n- 192.168.0.1";
+		String data = "- 127.0.0.1:80\n- 192.168.0.1\n- address : 127.0.0.1\n  port : 53";
 		InetSocketAddress act = new InetSocketAddress("127.0.0.1", 80);
 		Node node = this.yaml.compose(new StringReader(data));
 		NodeToAddress target = new NodeToAddress();
-		List<SocketAddress> context = new ArrayList<SocketAddress>();
+		Set<SocketAddress> context = new HashSet<SocketAddress>();
 		target.handle(node, context);
-		assertEquals(2, context.size());
-		assertEquals(act, context.get(0));
+		assertEquals(3, context.size());
+		assertTrue(context.contains(act));
 	}
 }

@@ -2,8 +2,8 @@ package org.handwerkszeug.dns.conf;
 
 import java.net.SocketAddress;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.handwerkszeug.dns.Constants;
 import org.handwerkszeug.dns.Markers;
@@ -23,22 +23,48 @@ import org.yaml.snakeyaml.nodes.ScalarNode;
 
 import werkzeugkasten.common.util.StringUtil;
 
-public class NodeToAddress extends DefaultHandler<List<SocketAddress>> {
+/**
+ * <p>
+ * convert Node to Address
+ * </p>
+ * you can use following examples.
+ * <p>
+ * <blockquote>
+ * 
+ * <pre>
+ * #sequence to addresses
+ *   - address : 127.0.0.1
+ *     port : 53
+ *   - 127.0.0.1 : 53
+ *   - 127.0.0.1:53
+ *  #mapping to address
+ *   127.0.0.1 : 53
+ *   address : 127.0.0.1
+ *   port : 53
+ *  #scalar to address
+ *    127.0.0.1:53
+ * </pre>
+ * 
+ * </blockquote>
+ * </p>
+ * 
+ * @author taichi
+ */
+public class NodeToAddress extends DefaultHandler<Set<SocketAddress>> {
 
 	static final Logger LOG = LoggerFactory.getLogger(NodeToAddress.class);
-	Map<NodeId, YamlNodeHandler<List<SocketAddress>>> converters = new HashMap<NodeId, YamlNodeHandler<List<SocketAddress>>>();
-	{
-		this.converters.put(NodeId.scalar, new ScalarToAddress());
-		this.converters.put(NodeId.mapping, new MappingToAddress());
-		this.converters.put(NodeId.sequence, new SequenceToAddress());
-	}
+	Map<NodeId, YamlNodeHandler<Set<SocketAddress>>> converters = new HashMap<NodeId, YamlNodeHandler<Set<SocketAddress>>>();
 
 	public NodeToAddress() {
+		this.converters.put(NodeId.scalar, new ScalarToAddress());
+		this.converters.put(NodeId.mapping, new MappingToAddress());
+		this.converters.put(NodeId.sequence,
+				new SequenceHandler<Set<SocketAddress>>(this));
 	}
 
 	@Override
-	public void handle(Node node, List<SocketAddress> context) {
-		YamlNodeHandler<List<SocketAddress>> handler = this.converters.get(node
+	public void handle(Node node, Set<SocketAddress> context) {
+		YamlNodeHandler<Set<SocketAddress>> handler = this.converters.get(node
 				.getNodeId());
 		if (handler == null) {
 			LOG.debug(Markers.DETAIL, Messages.UnsupportedNode, node);
@@ -47,25 +73,7 @@ public class NodeToAddress extends DefaultHandler<List<SocketAddress>> {
 		}
 	}
 
-	class SequenceToAddress extends DefaultHandler<List<SocketAddress>> {
-		YamlNodeHandler<List<SocketAddress>> delegate = new SequenceHandler<List<SocketAddress>>(
-				new DefaultHandler<List<SocketAddress>>() {
-					@Override
-					public void handle(Node node, List<SocketAddress> context) {
-						NodeToAddress.this.handle(node, context);
-					}
-				});
-
-		public SequenceToAddress() {
-		}
-
-		@Override
-		public void handle(Node node, List<SocketAddress> context) {
-			this.delegate.handle(node, context);
-		}
-	}
-
-	static class ScalarToAddress extends DefaultHandler<List<SocketAddress>> {
+	static class ScalarToAddress extends DefaultHandler<Set<SocketAddress>> {
 		protected int defaultPort = Constants.DEFAULT_PORT;
 
 		public ScalarToAddress() {
@@ -76,7 +84,7 @@ public class NodeToAddress extends DefaultHandler<List<SocketAddress>> {
 		}
 
 		@Override
-		public void handle(Node node, List<SocketAddress> context) {
+		public void handle(Node node, Set<SocketAddress> context) {
 			if (node instanceof ScalarNode) {
 				ScalarNode sn = (ScalarNode) node;
 				SocketAddress addr = AddressUtil.convertTo(sn.getValue(),
@@ -91,7 +99,7 @@ public class NodeToAddress extends DefaultHandler<List<SocketAddress>> {
 		}
 	}
 
-	static class MappingToAddress extends DefaultHandler<List<SocketAddress>> {
+	static class MappingToAddress extends DefaultHandler<Set<SocketAddress>> {
 
 		protected int defaultPort = Constants.DEFAULT_PORT;
 
@@ -103,7 +111,7 @@ public class NodeToAddress extends DefaultHandler<List<SocketAddress>> {
 		}
 
 		@Override
-		public void handle(Node node, List<SocketAddress> context) {
+		public void handle(Node node, Set<SocketAddress> context) {
 			if (node instanceof MappingNode) {
 				MappingNode mn = (MappingNode) node;
 				String[] ary = new String[2];

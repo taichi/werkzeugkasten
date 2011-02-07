@@ -2,14 +2,13 @@ package org.handwerkszeug.dns.conf;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.handwerkszeug.dns.NameServerContainer;
-import org.handwerkszeug.dns.NameServerContainerProvider;
 import org.handwerkszeug.dns.Zone;
 import org.handwerkszeug.util.AddressUtil;
 import org.handwerkszeug.yaml.DefaultHandler;
@@ -28,9 +27,9 @@ public class ServerConfiguration {
 	static final Logger LOG = LoggerFactory
 			.getLogger(ServerConfiguration.class);
 
-	protected List<SocketAddress> bindingHosts = new ArrayList<SocketAddress>();
+	protected Set<SocketAddress> bindingHosts = new HashSet<SocketAddress>();
 
-	protected List<SocketAddress> forwarders = new ArrayList<SocketAddress>();
+	protected Set<SocketAddress> forwarders = new HashSet<SocketAddress>();
 
 	protected List<Zone> zones = new ArrayList<Zone>();
 
@@ -59,20 +58,10 @@ public class ServerConfiguration {
 	}
 
 	public void load(InputStream in) {
-		// TODO not implemented
 		YamlNodeHandler<ServerConfiguration> root = createRootHandler();
 		YamlNodeAccepter<ServerConfiguration> accepter = new YamlNodeAccepter<ServerConfiguration>(
 				root);
 		accepter.accept(in, this);
-
-		NameServerContainerProvider provider = new NameServerContainerProvider();
-		provider.initialize();
-		NameServerContainer container = provider.getContainer();
-		container.initialize();
-		for (String s : container.nameservers()) {
-			LOG.info("nameserver {}", s);
-			this.forwarders.add(new InetSocketAddress(s, 53));
-		}
 	}
 
 	protected YamlNodeHandler<ServerConfiguration> createRootHandler() {
@@ -84,6 +73,7 @@ public class ServerConfiguration {
 				node2addr.handle(node, context.getBindingHosts());
 			}
 		});
+		root.add(new NodeToForwarders(node2addr));
 		root.add(new DefaultHandler<ServerConfiguration>("threadPoolSize") {
 			@Override
 			public void handle(Node node, ServerConfiguration conf) {
@@ -94,7 +84,7 @@ public class ServerConfiguration {
 		return root;
 	}
 
-	public List<SocketAddress> getBindingHosts() {
+	public Set<SocketAddress> getBindingHosts() {
 		return this.bindingHosts;
 	}
 
@@ -102,7 +92,7 @@ public class ServerConfiguration {
 		return this.threadPoolSize;
 	}
 
-	public List<SocketAddress> getForwarders() {
+	public Set<SocketAddress> getForwarders() {
 		return this.forwarders;
 	}
 }

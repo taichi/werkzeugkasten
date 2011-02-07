@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import org.handwerkszeug.dns.Constants;
 import org.handwerkszeug.dns.DNSClass;
 import org.handwerkszeug.dns.DNSMessage;
 import org.handwerkszeug.dns.Header;
@@ -53,7 +54,7 @@ public class DNSClient extends SimpleChannelHandler {
 
 	protected InetSocketAddress serverAddress;
 
-	protected int serverPort = 53; // default DNS port.
+	protected int serverPort = Constants.DEFAULT_PORT; // default DNS port.
 
 	protected DNSMessage request;
 
@@ -185,8 +186,8 @@ public class DNSClient extends SimpleChannelHandler {
 	public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e)
 			throws Exception {
 		System.out.println("DNSClient#channelConnected");
-		System.out.println(e.getChannel().getLocalAddress() + " | "
-				+ e.getChannel().getRemoteAddress());
+		System.out.printf("Local %s | Remote %s\n", e.getChannel()
+				.getLocalAddress(), e.getChannel().getRemoteAddress());
 		ChannelBuffer buffer = ChannelBuffers.buffer(512);
 		this.request.write(buffer);
 		this.time = System.currentTimeMillis();

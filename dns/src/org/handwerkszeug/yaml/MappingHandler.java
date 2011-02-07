@@ -26,7 +26,7 @@ public class MappingHandler<CTX> extends DefaultHandler<CTX> {
 
 	public void add(YamlNodeHandler<CTX> handler) {
 		if (handler != null) {
-			this.handlers.put(handler.getNodeName(), handler);
+			this.handlers.put(handler.getNodeName().toLowerCase(), handler);
 		}
 	}
 
@@ -36,7 +36,7 @@ public class MappingHandler<CTX> extends DefaultHandler<CTX> {
 			MappingNode mn = (MappingNode) node;
 			for (NodeTuple nt : mn.getValue()) {
 				String key = YamlUtil.getStringValue(nt.getKeyNode());
-				YamlNodeHandler<CTX> h = this.handlers.get(key);
+				YamlNodeHandler<CTX> h = this.handlers.get(key.toLowerCase());
 				if (h != null) {
 					Node value = nt.getValueNode();
 					h.handle(value, context);

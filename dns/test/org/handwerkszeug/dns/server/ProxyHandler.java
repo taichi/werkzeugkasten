@@ -51,7 +51,8 @@ public class ProxyHandler extends SimpleChannelUpstreamHandler {
 		// cb.setOption("receiveBufferSize", 512);
 		cb.getPipeline()
 				.addLast("handler", new OutboundHandler(inboundChannel));
-		ChannelFuture f = cb.connect(this.config.getForwarders().get(0));
+		ChannelFuture f = cb.connect(this.config.getForwarders().iterator()
+				.next());
 
 		this.outboundChannel = f.getChannel();
 		f.addListener(new ChannelFutureListener() {

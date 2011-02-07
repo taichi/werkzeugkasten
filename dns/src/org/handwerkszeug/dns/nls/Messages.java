@@ -11,4 +11,6 @@ public class Messages {
 	public static String UnsupportedNode = "unsupported node {}";
 
 	public static String InvalidAddressFormat = "invalid address format {}";
+
+	public static String DetectedForwardingServer = "detected forwarding server {}";
 }
