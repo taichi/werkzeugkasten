@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.handwerkszeug.dns.Markers;
 import org.handwerkszeug.dns.conf.ServerConfiguration;
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
 import org.jboss.netty.channel.ChannelFactory;
@@ -86,10 +87,10 @@ public class DNSServer implements Initializable, Disposable {
 
 	@Override
 	public void initialize() {
-		LOG.debug("initialize");
-		// TODO from configuration. thread pool size.
-		ExecutorService executor = Executors.newCachedThreadPool();
-		// TODO TCP?
+		LOG.debug(Markers.LIFECYCLE, "initialize server");
+		ExecutorService executor = Executors.newFixedThreadPool(this.config
+				.getThreadPoolSize());
+		// TODO need TCP?
 		this.clientChannelFactory = new NioDatagramChannelFactory(executor);
 		// TODO TCP and/or UDP
 		this.serverChannelFactory = new NioDatagramChannelFactory(executor);
@@ -104,7 +105,7 @@ public class DNSServer implements Initializable, Disposable {
 
 	public void process() {
 		for (SocketAddress sa : this.config.getBindingHosts()) {
-			LOG.info("binding {}", sa);
+			LOG.info(Markers.BOUNDARY, "binding {}", sa);
 			this.group.add(this.bootstrap.bind(sa));
 		}
 	}
