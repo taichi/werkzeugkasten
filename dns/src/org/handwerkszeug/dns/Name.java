@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.handwerkszeug.dns.nls.Messages;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 public class Name {
@@ -39,15 +40,13 @@ public class Name {
 		for (int i = 0, length = ary.length; i < length; i++) {
 			byte b = ary[i];
 			if ((b == '.') && (++i < length) && (ary[i] == '.')) {
-				// TODO error msg.
-				throw new IllegalArgumentException("null label is not valid");
+				throw new IllegalArgumentException(Messages.NullLabelIsNotValid);
 			}
 			labelsize++;
 		}
 		if (MAX_LABEL_SIZE < labelsize) {
-			// TODO error msg.
-			throw new IllegalArgumentException(
-					"Labels must be 63 characters or less. size=" + labelsize);
+			throw new IllegalArgumentException(String.format(
+					Messages.LabelsMustBe63orLess, labelsize));
 		}
 	}
 
@@ -70,8 +69,8 @@ public class Name {
 				buffer.readBytes(ary);
 				list.add(ary);
 			} else {
-				throw new IllegalStateException("Invalid compression mask : "
-						+ length);
+				throw new IllegalStateException(String.format(
+						Messages.InvalidCompressionMask, length));
 			}
 		}
 

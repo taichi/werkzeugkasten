@@ -1,5 +1,6 @@
 package org.handwerkszeug.dns;
 
+import org.handwerkszeug.dns.nls.Messages;
 import org.handwerkszeug.dns.record.AAAARecord;
 import org.handwerkszeug.dns.record.ARecord;
 import org.handwerkszeug.dns.record.HINFORecord;
@@ -182,9 +183,8 @@ public enum RRType implements VariableEnum {
 	AXFR(252) {
 		@Override
 		public ResourceRecord newRecord() {
-			// TODO error message.
-			throw new UnsupportedOperationException(
-					"QTYPE has no resource record.");
+			throw new UnsupportedOperationException(String.format(
+					Messages.NoResourceRecord, AXFR.name()));
 		}
 	},
 	/**
@@ -193,8 +193,8 @@ public enum RRType implements VariableEnum {
 	MAILB(253) {
 		@Override
 		public ResourceRecord newRecord() {
-			throw new UnsupportedOperationException(
-					"QTYPE has no resource record.");
+			throw new UnsupportedOperationException(String.format(
+					Messages.NoResourceRecord, MAILB.name()));
 		}
 	},
 	/**
@@ -203,8 +203,8 @@ public enum RRType implements VariableEnum {
 	MAILA(254) {
 		@Override
 		public ResourceRecord newRecord() {
-			throw new UnsupportedOperationException(
-					"QTYPE has no resource record.");
+			throw new UnsupportedOperationException(String.format(
+					Messages.NoResourceRecord, MAILA.name()));
 		}
 	},
 	/**
@@ -213,8 +213,8 @@ public enum RRType implements VariableEnum {
 	ANY(255) {
 		@Override
 		public ResourceRecord newRecord() {
-			throw new UnsupportedOperationException(
-					"QTYPE has no resource record.");
+			throw new UnsupportedOperationException(String.format(
+					Messages.NoResourceRecord, ANY.name()));
 		}
 	},
 	UNKNOWN(-1) {

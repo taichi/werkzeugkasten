@@ -3,6 +3,7 @@ package org.handwerkszeug.dns;
 import java.security.SecureRandom;
 import java.text.MessageFormat;
 
+import org.handwerkszeug.dns.nls.Messages;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -48,7 +49,7 @@ public class Header {
 
 	static {
 		RANDOM = new SecureRandom();
-		byte[] seed = RANDOM.generateSeed(20); // TODO more ?
+		byte[] seed = RANDOM.generateSeed(20); // TODO more ? from config?
 		RANDOM.setSeed(seed);
 	}
 
@@ -112,8 +113,8 @@ public class Header {
 
 	private int verify16bitValue(String column, int i) {
 		if ((i < MIN_USHORT) || (MAX_USHORT < i)) {
-			// TODO ERROR Message.
-			throw new IllegalArgumentException(column + ":" + i);
+			throw new IllegalArgumentException(String.format(
+					Messages.Not16bitValue, column, i));
 		}
 		return i;
 	}

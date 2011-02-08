@@ -6,8 +6,9 @@ import java.text.DecimalFormat;
 import org.handwerkszeug.dns.DNSClass;
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
-import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
+import org.handwerkszeug.dns.nls.Messages;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 import werkzeugkasten.common.util.StringUtil;
@@ -141,8 +142,8 @@ public abstract class AbstractRecord implements ResourceRecord {
 	protected byte[] readString(ChannelBuffer buffer) {
 		short length = buffer.readUnsignedByte();
 		if (MAX_STRING_LENGTH < length) {
-			// TODO ERROR MESSAGE
-			throw new IllegalStateException("string is too long");
+			throw new IllegalStateException(String.format(
+					Messages.StringMustBe255orLess, length));
 		}
 		byte[] newone = new byte[length];
 		buffer.readBytes(newone);

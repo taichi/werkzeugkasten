@@ -20,6 +20,7 @@ import org.handwerkszeug.dns.NameServerContainerProvider;
 import org.handwerkszeug.dns.OpCode;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResourceRecord;
+import org.handwerkszeug.dns.nls.Messages;
 import org.handwerkszeug.dns.record.WKSRecord;
 import org.handwerkszeug.util.EnumUtil;
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
@@ -101,8 +102,7 @@ public class DNSClient extends SimpleChannelHandler {
 						if ((0 < num) && (num < 0xFFFF)) {
 							this.serverPort = num;
 						} else {
-							// TODO error message.
-							System.err.println("invalid port number " + num);
+							System.err.printf(Messages.InvalidPortNumber, num);
 						}
 					}
 					break;
