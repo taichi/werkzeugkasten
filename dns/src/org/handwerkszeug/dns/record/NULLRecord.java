@@ -2,6 +2,7 @@ package org.handwerkszeug.dns.record;
 
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.nls.Messages;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -39,8 +40,8 @@ public class NULLRecord extends AbstractRecord {
 
 	public void anything(byte[] data) {
 		if (65535 < data.length) {
-			throw new IllegalArgumentException("data too long length:"
-					+ data.length);
+			throw new IllegalArgumentException(String.format(
+					Messages.DataMustBe65535orLess, data.length));
 		}
 		this.anything = data;
 	}

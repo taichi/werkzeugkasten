@@ -20,7 +20,9 @@ public class Messages {
 
 	public static String LabelsMustBe63orLess = "Labels must be 63 characters or less. current size=%s";
 
-	public static String StringMustBe255orLess = "string must be 255 characters or less. current length=%s";
+	public static String StringMustBe255orLess = "String must be 255 characters or less. current length=%s";
+
+	public static String DataMustBe65535orLess = "Data must be 255 characters or less. current length=%s";
 
 	public static String InvalidPortNumber = "invalid port number %s%n";
 
