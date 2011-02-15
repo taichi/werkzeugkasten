@@ -56,6 +56,7 @@ public class DNSServer implements Initializable, Disposable {
 			from = readFrom("named.yml");
 		}
 		if (from == null) {
+			LOG.info("read named.default.yml from ClassLoader");
 			ClassLoader cl = Thread.currentThread().getContextClassLoader();
 			from = cl.getResource("named.default.yml");
 		}
