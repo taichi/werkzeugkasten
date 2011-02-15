@@ -84,16 +84,25 @@ public class NameTest {
 
 	@Test
 	public void testSplit() {
-		byte[] ary = "google.com.".getBytes();
+		byte[] ary = "example.com.".getBytes();
 		Name name = new Name(ary);
 		List<byte[]> list = name.split();
-		assertEquals("google", new String(list.get(0)));
+		assertEquals("example", new String(list.get(0)));
 		assertEquals("com", new String(list.get(1)));
 	}
 
 	@Test
+	public void testToParent() {
+		Name name = new Name("example.com.");
+		assertEquals(new Name("com."), name.toParent());
+
+		name = new Name("org.");
+		assertEquals(Name.NULL_NAME, name.toParent());
+	}
+
+	@Test
 	public void testWrite() {
-		byte[] ary = "google.com.".getBytes();
+		byte[] ary = "example.com.".getBytes();
 		Name name = new Name(ary);
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
 		SimpleNameCompressor compressor = new SimpleNameCompressor();

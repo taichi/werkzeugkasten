@@ -1,4 +1,4 @@
-package org.handwerkszeug.dns.server;
+package org.handwerkszeug.dns.zone;
 
 import org.handwerkszeug.dns.DNSClass;
 import org.handwerkszeug.dns.Name;

@@ -1,5 +1,7 @@
 package org.handwerkszeug.dns;
 
+import java.util.List;
+
 public interface Zone {
 	Name name();
 
@@ -7,4 +9,5 @@ public interface Zone {
 
 	ZoneType type();
 
+	List<ResourceRecord> resolve(ResourceRecord query);
 }

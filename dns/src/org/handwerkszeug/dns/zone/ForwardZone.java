@@ -1,4 +1,4 @@
-package org.handwerkszeug.dns.server;
+package org.handwerkszeug.dns.zone;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.handwerkszeug.dns.DNSClass;
 import org.handwerkszeug.dns.Name;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.ZoneType;
 
 public class ForwardZone extends AbstractZone {
@@ -24,4 +25,9 @@ public class ForwardZone extends AbstractZone {
 		this.forwarders.add(host);
 	}
 
+	@Override
+	public List<ResourceRecord> resolve(ResourceRecord query) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

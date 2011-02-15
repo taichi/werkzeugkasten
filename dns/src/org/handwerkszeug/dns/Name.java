@@ -7,7 +7,9 @@ import java.util.List;
 import org.handwerkszeug.dns.nls.Messages;
 import org.jboss.netty.buffer.ChannelBuffer;
 
-public class Name {
+public class Name implements Comparable<Name> {
+
+	public static Name NULL_NAME = new Name(new byte[] { '.' });
 
 	/**
 	 * 4.1.4. Message compression
@@ -154,6 +156,18 @@ public class Name {
 		return result;
 	}
 
+	public Name toParent() {
+		for (int i = 0, length = this.name.length; i < length - 1; i++) {
+			byte b = this.name[i];
+			if (b == '.') {
+				byte[] newone = new byte[length - i - 1];
+				System.arraycopy(this.name, i + 1, newone, 0, newone.length);
+				return new Name(newone);
+			}
+		}
+		return NULL_NAME;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -175,6 +189,25 @@ public class Name {
 
 	public boolean equals(Name other) {
 		return (other != null) && Arrays.equals(this.name, other.name);
+	}
+
+	@Override
+	public int compareTo(Name o) {
+		// TODO use more effective algorithm for red black tree.
+		int ml = this.name.length;
+		int ol = o.name.length;
+		if (ml != ol) {
+			return ml - ol;
+		}
+		for (int i = this.name.length - 1, j = o.name.length - 1; -1 < i
+				&& -1 < j; i--, j--) {
+			byte mine = this.name[i];
+			byte other = o.name[j];
+			if (mine != other) {
+				return mine - other;
+			}
+		}
+		return 0;
 	}
 
 	@Override
