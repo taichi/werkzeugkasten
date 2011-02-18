@@ -176,6 +176,18 @@ public enum RRType implements VariableEnum {
 		}
 	},
 
+	/**
+	 * Non-Terminal DNS Name Redirection
+	 * 
+	 * @see http://www.ietf.org/rfc/rfc2672.txt
+	 */
+	DNAME(39) {
+		@Override
+		public ResourceRecord newRecord() {
+			return new SingleNameRecord(this);
+		}
+	},
+
 	// RFC1035 3.2.3. QTYPE values
 	/**
 	 * A request for a transfer of an entire zone
