@@ -26,7 +26,7 @@ public class ForwardZone extends AbstractZone {
 	}
 
 	@Override
-	public List<ResourceRecord> resolve(ResourceRecord query) {
+	public List<ResourceRecord> resolve(Name name, DNSClass dnsClass) {
 		// TODO Auto-generated method stub
 		return null;
 	}

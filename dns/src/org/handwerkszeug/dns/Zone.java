@@ -9,5 +9,5 @@ public interface Zone {
 
 	ZoneType type();
 
-	List<ResourceRecord> resolve(ResourceRecord query);
+	List<ResourceRecord> resolve(Name name, DNSClass dnsClass);
 }
