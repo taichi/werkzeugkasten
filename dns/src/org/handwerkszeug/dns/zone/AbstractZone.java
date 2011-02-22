@@ -9,7 +9,7 @@ public abstract class AbstractZone implements Zone {
 
 	protected ZoneType type;
 
-	protected DNSClass dnsclass;
+	protected DNSClass dnsClass;
 
 	protected Name name;
 
@@ -17,9 +17,9 @@ public abstract class AbstractZone implements Zone {
 		this(type, DNSClass.IN, name);
 	}
 
-	public AbstractZone(ZoneType type, DNSClass dnsclass, Name name) {
+	public AbstractZone(ZoneType type, DNSClass dnsClass, Name name) {
 		this.type = type;
-		this.dnsclass = dnsclass;
+		this.dnsClass = dnsClass;
 		this.name = name;
 	}
 
@@ -29,8 +29,8 @@ public abstract class AbstractZone implements Zone {
 	}
 
 	@Override
-	public DNSClass dnsclass() {
-		return this.dnsclass;
+	public DNSClass dnsClass() {
+		return this.dnsClass;
 	}
 
 	@Override

@@ -14,14 +14,14 @@ public class ZoneDatabase {
 
 	protected Map<ZoneKey, Zone> zones = new ConcurrentSkipListMap<ZoneKey, Zone>();
 
-	public Query prepare(Name name, DNSClass dnsclass) {
+	public Query prepare(Name name, DNSClass dnsClass) {
 		notNull(name, "name");
-		notNull(dnsclass, "dnsclass");
-		ZoneKey zk = new ZoneKey(name, dnsclass);
+		notNull(dnsClass, "dnsClass");
+		ZoneKey zk = new ZoneKey(name, dnsClass);
 		Zone found = this.zones.get(zk);
 		if (found != null) {
 			// exact match
-			return new Query(name, name, dnsclass, found, this);
+			return new Query(name, name, dnsClass, found, this);
 		}
 
 		Name child = name;
@@ -33,7 +33,7 @@ public class ZoneDatabase {
 			if (found == null) {
 				child = p;
 			} else {
-				return new Query(name, p, dnsclass, found, this);
+				return new Query(name, p, dnsClass, found, this);
 			}
 		}
 		// not found.
@@ -50,7 +50,7 @@ public class ZoneDatabase {
 		DNSClass dnsclass;
 
 		public ZoneKey(Zone z) {
-			this(z.name(), z.dnsclass());
+			this(z.name(), z.dnsClass());
 		}
 
 		public ZoneKey(ResourceRecord rr) {

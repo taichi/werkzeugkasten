@@ -8,7 +8,6 @@ import org.handwerkszeug.dns.DNSClass;
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.Zone;
-import org.handwerkszeug.dns.zone.SearchResult.Status;
 
 /**
  * @author taichi
@@ -41,24 +40,24 @@ public class Query {
 		this.database = database;
 	}
 
-	public SearchResult execute(/* ResolveContext? */) {
-		List<ResourceRecord> rrs = this.target.resolve(this.current,
-				this.dnsClass);
-		SearchResult result = new SearchResult(rrs);
-		if (rrs.isEmpty()) {
-			result.status = Status.NXDOMAIN;
-			return result;
-		} else if (contains(rrs)) {
-			result.status = Status.SUCCESS;
-			return result;
-		} else {
-			Query q = this.database.prepare(this.origin, this.dnsClass);
-			SearchResult sr = q.execute();
-			result.rrs.addAll(sr.rrs);
-			result.status = sr.status;
-			return sr;
-		}
-	}
+	// public SearchResult execute(/* ResolveContext? */) {
+	// List<ResourceRecord> rrs = this.target.resolve(this.current,
+	// this.dnsClass);
+	// SearchResult result = new SearchResult(rrs);
+	// if (rrs.isEmpty()) {
+	// result.status = Status.NXDOMAIN;
+	// return result;
+	// } else if (contains(rrs)) {
+	// result.status = Status.SUCCESS;
+	// return result;
+	// } else {
+	// Query q = this.database.prepare(this.origin, this.dnsClass);
+	// SearchResult sr = q.execute();
+	// result.rrs.addAll(sr.rrs);
+	// result.status = sr.status;
+	// return sr;
+	// }
+	// }
 
 	protected boolean contains(List<ResourceRecord> rrs) {
 		for (ResourceRecord rr : rrs) {

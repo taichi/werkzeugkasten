@@ -1,13 +1,11 @@
 package org.handwerkszeug.dns;
 
-import java.util.List;
-
 public interface Zone {
 	Name name();
 
-	DNSClass dnsclass();
+	DNSClass dnsClass();
 
 	ZoneType type();
 
-	List<ResourceRecord> resolve(Name name, DNSClass dnsClass);
+	Response find(Name qname, RRType type);
 }

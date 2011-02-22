@@ -48,7 +48,32 @@ public enum RCode implements VariableEnum {
 	 * information to the particular requester, or a name server may not wish to
 	 * perform a particular operation (e.g., zone transfer) for particular data.
 	 */
-	Refused(5);
+	Refused(5),
+
+	/**
+	 * Name Exists when it should not
+	 */
+	YXDomain(6),
+
+	/**
+	 * RR Set Exists when it should not
+	 */
+	YXRRSet(7),
+
+	/**
+	 * RR Set that should exist does not
+	 */
+	NXRRSet(8),
+
+	/**
+	 * Server Not Authoritative for zone
+	 */
+	NotAuth(9),
+
+	/**
+	 * Name not contained in zone
+	 */
+	NotZone(10);
 
 	private int code;
 

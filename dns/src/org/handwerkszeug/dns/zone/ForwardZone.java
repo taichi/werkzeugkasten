@@ -6,7 +6,8 @@ import java.util.List;
 
 import org.handwerkszeug.dns.DNSClass;
 import org.handwerkszeug.dns.Name;
-import org.handwerkszeug.dns.ResourceRecord;
+import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.Response;
 import org.handwerkszeug.dns.ZoneType;
 
 public class ForwardZone extends AbstractZone {
@@ -26,7 +27,7 @@ public class ForwardZone extends AbstractZone {
 	}
 
 	@Override
-	public List<ResourceRecord> resolve(Name name, DNSClass dnsClass) {
+	public Response find(Name qname, RRType type) {
 		// TODO Auto-generated method stub
 		return null;
 	}
