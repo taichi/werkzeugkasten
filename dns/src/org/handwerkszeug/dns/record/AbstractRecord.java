@@ -224,6 +224,18 @@ public abstract class AbstractRecord implements ResourceRecord {
 	}
 
 	@Override
+	public int compareTo(ResourceRecord o) {
+		int i = this.type().compareTo(o.type());
+		if (i == 0) {
+			i = this.name().compareTo(o.name());
+			if (i == 0) {
+				return this.dnsClass().compareTo(o.dnsClass());
+			}
+		}
+		return i;
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder stb = new StringBuilder();
 		stb.append(this.name().toString());

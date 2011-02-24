@@ -36,7 +36,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * @see <a href="http://www.iana.org/assignments/dns-parameters">Domain Name
  *      System (DNS) Parameters</a>
  */
-public interface ResourceRecord {
+public interface ResourceRecord extends Comparable<ResourceRecord> {
 
 	/**
 	 * two octets containing one of the RR type codes. This field specifies the

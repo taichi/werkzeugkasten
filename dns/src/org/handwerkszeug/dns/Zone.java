@@ -7,5 +7,5 @@ public interface Zone {
 
 	ZoneType type();
 
-	Response find(Name qname, RRType type);
+	Response find(Name qname, RRType qtype);
 }

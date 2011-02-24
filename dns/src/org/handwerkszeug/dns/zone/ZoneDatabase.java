@@ -12,12 +12,12 @@ import org.handwerkszeug.dns.Zone;
 
 public class ZoneDatabase {
 
-	protected Map<ZoneKey, Zone> zones = new ConcurrentSkipListMap<ZoneKey, Zone>();
+	protected Map<ZoneDatabaseKey, Zone> zones = new ConcurrentSkipListMap<ZoneDatabaseKey, Zone>();
 
 	public Query prepare(Name name, DNSClass dnsClass) {
 		notNull(name, "name");
 		notNull(dnsClass, "dnsClass");
-		ZoneKey zk = new ZoneKey(name, dnsClass);
+		ZoneDatabaseKey zk = new ZoneDatabaseKey(name, dnsClass);
 		Zone found = this.zones.get(zk);
 		if (found != null) {
 			// exact match
@@ -42,22 +42,22 @@ public class ZoneDatabase {
 
 	public void add(Zone zone/* TODO ZoneConfig? */) {
 		notNull(zone, "zone");
-		this.zones.put(new ZoneKey(zone), zone);
+		this.zones.put(new ZoneDatabaseKey(zone), zone);
 	}
 
-	static class ZoneKey implements Comparable<ZoneKey> {
+	static class ZoneDatabaseKey implements Comparable<ZoneDatabaseKey> {
 		Name name;
 		DNSClass dnsclass;
 
-		public ZoneKey(Zone z) {
+		public ZoneDatabaseKey(Zone z) {
 			this(z.name(), z.dnsClass());
 		}
 
-		public ZoneKey(ResourceRecord rr) {
+		public ZoneDatabaseKey(ResourceRecord rr) {
 			this(rr.name(), rr.dnsClass());
 		}
 
-		public ZoneKey(Name name, DNSClass dnsclass) {
+		public ZoneDatabaseKey(Name name, DNSClass dnsclass) {
 			notNull(name, "name");
 			notNull(dnsclass, "dnsclass");
 			this.name = name;
@@ -93,16 +93,16 @@ public class ZoneDatabase {
 			if (getClass() != other.getClass()) {
 				return false;
 			}
-			return equals((ZoneKey) other);
+			return equals((ZoneDatabaseKey) other);
 		}
 
-		public boolean equals(ZoneKey other) {
+		public boolean equals(ZoneDatabaseKey other) {
 			return (this.dnsclass == other.dnsclass)
 					&& this.name.equals(other.name);
 		}
 
 		@Override
-		public int compareTo(ZoneKey o) {
+		public int compareTo(ZoneDatabaseKey o) {
 			if (o == null) {
 				return 1;
 			}
