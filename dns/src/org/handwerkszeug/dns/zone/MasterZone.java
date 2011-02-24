@@ -15,7 +15,7 @@ import org.handwerkszeug.dns.ZoneType;
 
 public class MasterZone extends AbstractZone {
 
-	ConcurrentNavigableMap<ZoneKey, Set<ResourceRecord>> records = new ConcurrentSkipListMap<MasterZone.ZoneKey, Set<ResourceRecord>>();
+	final ConcurrentNavigableMap<ZoneKey, Set<ResourceRecord>> records = new ConcurrentSkipListMap<MasterZone.ZoneKey, Set<ResourceRecord>>();
 
 	public MasterZone(Name name) {
 		super(ZoneType.master, name);
