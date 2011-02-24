@@ -35,16 +35,17 @@ public class MasterZone extends AbstractZone {
 		notNull(rr, "rr");
 		ZoneKey key = new ZoneKey(rr.name(), rr.type());
 		for (;;) {
-			Set<ResourceRecord> list = this.records.get(key);
-			if (list == null) {
+			Set<ResourceRecord> current = this.records.get(key);
+			if (current == null) {
 				Set<ResourceRecord> newone = new ConcurrentSkipListSet<ResourceRecord>();
 				newone.add(rr);
-				list = this.records.putIfAbsent(key, newone);
-				if ((list == null) || internalAdd(list, rr)) {
+				Set<ResourceRecord> previous = this.records.putIfAbsent(key,
+						newone);
+				if ((previous == null) || internalAdd(previous, rr)) {
 					break;
 				}
 			} else {
-				if (internalAdd(list, rr)) {
+				if (internalAdd(current, rr)) {
 					break;
 				}
 			}
@@ -53,7 +54,12 @@ public class MasterZone extends AbstractZone {
 
 	private boolean internalAdd(Set<ResourceRecord> rrs, ResourceRecord rr) {
 		synchronized (rrs) {
-			return rrs.isEmpty() && rrs.add(rr);
+			if (rrs.isEmpty()) {// empty set is already removed from map.
+				return false;
+			} else {
+				rrs.add(rr); // duplicate entry has no problem.
+				return true;
+			}
 		}
 	}
 
@@ -62,7 +68,7 @@ public class MasterZone extends AbstractZone {
 		Set<ResourceRecord> rrs = this.records.remove(key);
 		if (rrs != null) {
 			synchronized (rrs) {
-				rrs.clear();
+				rrs.clear(); // mark removed entry.
 				return true;
 			}
 		}
