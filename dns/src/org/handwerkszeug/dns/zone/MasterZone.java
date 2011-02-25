@@ -2,20 +2,24 @@ package org.handwerkszeug.dns.zone;
 
 import static org.handwerkszeug.util.Validation.notNull;
 
+import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentNavigableMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+import org.handwerkszeug.dns.DNSMessage;
 import org.handwerkszeug.dns.Name;
+import org.handwerkszeug.dns.RCode;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.Response;
 import org.handwerkszeug.dns.ZoneType;
+import org.handwerkszeug.dns.record.SingleNameRecord;
 
 public class MasterZone extends AbstractZone {
 
-	final ConcurrentNavigableMap<ZoneKey, Set<ResourceRecord>> records = new ConcurrentSkipListMap<MasterZone.ZoneKey, Set<ResourceRecord>>();
+	final ConcurrentMap<Name, ConcurrentMap<RRType, Set<ResourceRecord>>> records = new ConcurrentSkipListMap<Name, ConcurrentMap<RRType, Set<ResourceRecord>>>();
 
 	public MasterZone(Name name) {
 		super(ZoneType.master, name);
@@ -25,100 +29,127 @@ public class MasterZone extends AbstractZone {
 	public Response find(Name qname, RRType qtype) {
 		notNull(qname, "qname");
 		notNull(qtype, "qtype");
-		ZoneKey zk = new ZoneKey(qname, qtype);
-		Set<ResourceRecord> rrs = this.records.get(zk);
 
+		ConcurrentMap<RRType, Set<ResourceRecord>> exactMatch = this.records
+				.get(qname);
+		if (exactMatch != null) {
+			Set<ResourceRecord> rrs = exactMatch.get(qtype);
+			if ((rrs != null) && (rrs.isEmpty() == false)) {
+				if (RRType.CNAME.equals(qtype)) {
+					return new NoErrorResponse(rrs);
+				} else {
+					Set<ResourceRecord> ans = new HashSet<ResourceRecord>();
+					for (ResourceRecord rr : rrs) {
+
+					}
+				}
+			}
+
+		}
+
+		for (Name n = qname; this.name.equals(Name.NULL_NAME) == false; n = n
+				.toParent()) {
+
+		}
+
+		// delegation
+		// nxdomain
+		// success
+		// nxrrset
 		return null;
+	}
+
+	static abstract class DefaultResponse implements Response {
+		final RCode rcode;
+
+		protected DefaultResponse(RCode rcode) {
+			this.rcode = rcode;
+		}
+
+		@Override
+		public RCode rcode() {
+			return this.rcode;
+		}
+	}
+
+	class NoErrorResponse extends DefaultResponse {
+		final Set<ResourceRecord> records;
+
+		public NoErrorResponse(Set<ResourceRecord> records) {
+			super(RCode.NoError);
+			this.records = records;
+		}
+
+		@Override
+		public void postProcess(DNSMessage responseMessage) {
+			responseMessage.answer().addAll(this.records);
+		}
+	}
+
+	class RecursiveResponse extends DefaultResponse {
+		final Set<SingleNameRecord> records;
+
+		public RecursiveResponse(Set<SingleNameRecord> records) {
+			super(RCode.NoError);
+			this.records = records;
+		}
+
+		@Override
+		public void postProcess(DNSMessage responseMessage) {
+
+		}
 	}
 
 	public void add(ResourceRecord rr) {
 		notNull(rr, "rr");
-		ZoneKey key = new ZoneKey(rr.name(), rr.type());
 		for (;;) {
-			Set<ResourceRecord> current = this.records.get(key);
+			ConcurrentMap<RRType, Set<ResourceRecord>> current = this.records
+					.get(rr.name());
 			if (current == null) {
-				Set<ResourceRecord> newone = new ConcurrentSkipListSet<ResourceRecord>();
-				newone.add(rr);
-				Set<ResourceRecord> previous = this.records.putIfAbsent(key,
-						newone);
-				if ((previous == null) || internalAdd(previous, rr)) {
+				ConcurrentMap<RRType, Set<ResourceRecord>> newone = new ConcurrentSkipListMap<RRType, Set<ResourceRecord>>();
+				Set<ResourceRecord> newset = new ConcurrentSkipListSet<ResourceRecord>();
+				newset.add(rr);
+				newone.put(rr.type(), newset);
+
+				ConcurrentMap<RRType, Set<ResourceRecord>> prevTypes = this.records
+						.putIfAbsent(rr.name(), newone);
+				if (prevTypes == null) {
 					break;
 				}
-			} else {
-				if (internalAdd(current, rr)) {
+				Set<ResourceRecord> prevRecs = prevTypes.putIfAbsent(rr.type(),
+						newset);
+				if (prevRecs == null) {
 					break;
+				}
+				prevRecs.add(rr);
+				break;
+			} else {
+				synchronized (current) {
+					Set<ResourceRecord> rrs = current.get(rr.type());
+					if ((rrs != null) && (rrs.isEmpty() == false)) {
+						rrs.add(rr);
+						break;
+					}
 				}
 			}
 		}
 	}
 
-	private boolean internalAdd(Set<ResourceRecord> rrs, ResourceRecord rr) {
-		synchronized (rrs) {
-			if (rrs.isEmpty()) {// empty set is already removed from map.
-				return false;
-			} else {
-				rrs.add(rr); // duplicate entry has no problem.
-				return true;
+	public void remove(ResourceRecord rr, boolean checkSets, boolean checkMap) {
+		notNull(rr, "rr");
+		ConcurrentMap<RRType, Set<ResourceRecord>> current = this.records
+				.get(rr.name());
+		if (current != null) {
+			synchronized (current) {
+				Set<ResourceRecord> sets = current.get(rr.type());
+				sets.remove(rr);
+				if (checkSets && sets.isEmpty()) {
+					current.remove(rr.type());
+					if (checkMap && current.isEmpty()) {
+						this.records.remove(rr.name());
+					}
+				}
 			}
-		}
-	}
-
-	public boolean remove(Name name, RRType type) {
-		ZoneKey key = new ZoneKey(name, type);
-		Set<ResourceRecord> rrs = this.records.remove(key);
-		if (rrs != null) {
-			synchronized (rrs) {
-				rrs.clear(); // mark removed entry.
-				return true;
-			}
-		}
-		return false;
-	}
-
-	class ZoneKey implements Comparable<ZoneKey> {
-		Name name;
-		RRType rrtype;
-
-		public ZoneKey(Name name, RRType rrtype) {
-			super();
-			notNull(name, "name");
-			notNull(rrtype, "rrtype");
-			this.name = name;
-			this.rrtype = rrtype;
-		}
-
-		@Override
-		public int compareTo(ZoneKey o) {
-			int i = this.name.compareTo(o.name);
-			return i == 0 ? this.rrtype.compareTo(o.rrtype) : i;
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + this.name.hashCode();
-			result = prime * result + this.rrtype.hashCode();
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (o == null) {
-				return false;
-			}
-			if (getClass() != o.getClass()) {
-				return false;
-			}
-			return equals((ZoneKey) o);
-		}
-
-		public boolean equals(ZoneKey other) {
-			return this.name.equals(other.name)
-					&& this.rrtype.equals(other.rrtype);
 		}
 	}
 }
