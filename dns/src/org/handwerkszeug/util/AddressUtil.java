@@ -124,15 +124,25 @@ public class AddressUtil {
 		return result;
 	}
 
-	public static InetAddress getByAddress(long address) {
-		byte[] a = new byte[] { (byte) ((address >>> 24) & 0xFF),
-				(byte) ((address >>> 16) & 0xFF),
-				(byte) ((address >>> 8) & 0xFF), (byte) (address & 0xFF) };
+	public static InetAddress getByAddress(long v4address) {
+		byte[] a = new byte[4];
+		for (int i = 0; i < 4; i++) {
+			a[i] = (byte) ((v4address >>> ((3 - i) * 8)) & 0xFF);
+		}
 		try {
 			return InetAddress.getByAddress(a);
 		} catch (UnknownHostException e) {
 			LOG.error(e.getLocalizedMessage(), e);
 			return null;
 		}
+	}
+
+	public static long toLong(InetAddress v4address) {
+		byte[] a = v4address.getAddress();
+		long result = 0;
+		for (int i = 0; i < 4; i++) {
+			result |= (long) ((a[i] & 0xFF)) << ((3 - i) * 8);
+		}
+		return result;
 	}
 }

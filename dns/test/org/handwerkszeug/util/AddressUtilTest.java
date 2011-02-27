@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
@@ -117,6 +118,21 @@ public class AddressUtilTest {
 		actual = AddressUtil.getByAddress(address);
 
 		assertEquals(expected, actual.getHostAddress());
+	}
+
+	@Test
+	public void testToLong() throws Exception {
+		// 11000000 10101000 00001010 00000001
+		testToLong(3232238081L);
+		// 00110011 00110011 00111100 11001100
+		testToLong(858995916L);
+
+	}
+
+	protected void testToLong(long expected) {
+		long actual = AddressUtil.toLong((Inet4Address) AddressUtil
+				.getByAddress(expected));
+		assertEquals(expected, actual);
 	}
 
 }

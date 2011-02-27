@@ -2,5 +2,9 @@ package org.handwerkszeug.dns;
 
 public interface ResolveContext {
 
-	DNSMessage dnsMessage();
+	DNSMessage request();
+
+	DNSMessage response();
+
+	Response resolve(Name qname, RRType qtype);
 }

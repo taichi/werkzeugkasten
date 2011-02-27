@@ -6,7 +6,7 @@ public class ZoneDatabaseTest {
 
 	@Test
 	public void testFind() {
-		ZoneDatabase db = new ZoneDatabase();
+		// ZoneDatabase db = new ZoneDatabase();
 		// db.add(new TestZone("example.com."));
 		// db.add(new TestZone("example.co.jp."));
 		// db.add(new TestZone("jp."));

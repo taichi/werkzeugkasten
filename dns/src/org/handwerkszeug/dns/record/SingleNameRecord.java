@@ -23,6 +23,11 @@ public class SingleNameRecord extends AbstractRecord {
 		super(type);
 	}
 
+	public SingleNameRecord(RRType type, Name oneName) {
+		super(type);
+		this.oneName = oneName;
+	}
+
 	@Override
 	protected void parseRDATA(ChannelBuffer buffer) {
 		this.oneName = new Name(buffer);

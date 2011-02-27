@@ -102,6 +102,10 @@ public class SOARecord extends AbstractRecord {
 		buffer.writeInt((int) this.minimum());
 	}
 
+	/**
+	 * The <domain-name> of the name server that was the original or primary
+	 * source of data for this zone.
+	 */
 	public Name mname() {
 		return this.mname;
 	}

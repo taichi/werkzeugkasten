@@ -6,5 +6,5 @@ package org.handwerkszeug.dns;
 public interface Response {
 	RCode rcode();
 
-	void postProcess(DNSMessage responseMessage);
+	void postProcess(ResolveContext context);
 }

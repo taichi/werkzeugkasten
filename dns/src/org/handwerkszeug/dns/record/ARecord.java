@@ -37,6 +37,10 @@ public class ARecord extends AbstractRecord {
 		return AddressUtil.getByAddress(this.address);
 	}
 
+	public void address(InetAddress v4address) {
+		this.address = AddressUtil.toLong(v4address);
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder stb = new StringBuilder();
