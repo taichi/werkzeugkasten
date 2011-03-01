@@ -1,16 +1,21 @@
 package org.handwerkszeug.dns.zone;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.net.InetAddress;
+import java.util.List;
 
+import org.handwerkszeug.dns.DNSMessage;
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.RCode;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.Response;
 import org.handwerkszeug.dns.record.ARecord;
 import org.handwerkszeug.dns.record.SOARecord;
 import org.handwerkszeug.dns.record.SingleNameRecord;
+import org.handwerkszeug.dns.server.DefaultResolveContext;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,13 +42,6 @@ public class MasterZoneTest {
 		return result;
 	}
 
-	protected ARecord a(Name name, InetAddress addr) {
-		ARecord a = new ARecord();
-		a.name(name);
-		a.address(addr);
-		return a;
-	}
-
 	@Test
 	public void testFind() throws Exception {
 		this.target.add(a("*.example.co.jp.", "192.168.100.2"));
@@ -58,8 +56,13 @@ public class MasterZoneTest {
 		assertEquals(RCode.NXDomain,
 				this.target.find(new Name("co.jp."), RRType.ANY).rcode());
 
-		Response res = this.target.find(new Name("example.co.jp"), RRType.A);
+		Response res = this.target.find(new Name("example.co.jp."), RRType.A);
+		DefaultResolveContext context = new DefaultResolveContext(
+				new DNSMessage());
+		res.postProcess(context);
 
+		List<ResourceRecord> list = context.response().answer();
+		assertTrue(list.contains(a("example.co.jp.", "192.168.0.1")));
+		assertTrue(list.contains(a("example.co.jp.", "192.168.100.1")));
 	}
-
 }

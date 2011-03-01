@@ -3,6 +3,11 @@ package org.handwerkszeug.dns.record;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import java.net.InetAddress;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
+
+import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.junit.Before;
@@ -44,5 +49,23 @@ public class AbstractRecordTest {
 		String act = this.target.toQuoteString(actual).toString();
 		assertEquals(begin, act);
 
+	}
+
+	protected ARecord a(String name, String addr) throws Exception {
+		ARecord result = new ARecord();
+		result.name(new Name(name));
+		result.address(InetAddress.getByName(addr));
+		return result;
+	}
+
+	@Test
+	public void testRecordEq() throws Exception {
+		ARecord first = a("example.co.jp.", "192.168.0.1");
+		ARecord second = a("example.co.jp.", "192.168.100.1");
+		Set<ARecord> set = new ConcurrentSkipListSet<ARecord>();
+		set.add(first);
+		set.add(second);
+
+		assertEquals(2, set.size());
 	}
 }
