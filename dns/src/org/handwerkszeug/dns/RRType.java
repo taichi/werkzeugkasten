@@ -27,7 +27,7 @@ public enum RRType implements VariableEnum {
 	 */
 	A(1) {
 		@Override
-		public ARecord newRecord() {
+		public ResourceRecord newRecord() {
 			return new ARecord();
 		}
 	},
@@ -72,7 +72,7 @@ public enum RRType implements VariableEnum {
 	 */
 	SOA(6) {
 		@Override
-		public SOARecord newRecord() {
+		public ResourceRecord newRecord() {
 			return new SOARecord();
 		}
 	},
@@ -108,7 +108,7 @@ public enum RRType implements VariableEnum {
 	 */
 	NULL(10) {
 		@Override
-		public NULLRecord newRecord() {
+		public ResourceRecord newRecord() {
 			return new NULLRecord();
 		}
 	},
@@ -117,7 +117,7 @@ public enum RRType implements VariableEnum {
 	 */
 	WKS(11) {
 		@Override
-		public WKSRecord newRecord() {
+		public ResourceRecord newRecord() {
 			return new WKSRecord();
 		}
 	},
@@ -135,7 +135,7 @@ public enum RRType implements VariableEnum {
 	 */
 	HINFO(13) {
 		@Override
-		public HINFORecord newRecord() {
+		public ResourceRecord newRecord() {
 			return new HINFORecord();
 		}
 	},
@@ -144,7 +144,7 @@ public enum RRType implements VariableEnum {
 	 */
 	MINFO(14) {
 		@Override
-		public MINFORecord newRecord() {
+		public ResourceRecord newRecord() {
 			return new MINFORecord();
 		}
 	},
@@ -153,7 +153,7 @@ public enum RRType implements VariableEnum {
 	 */
 	MX(15) {
 		@Override
-		public MXRecord newRecord() {
+		public ResourceRecord newRecord() {
 			return new MXRecord();
 		}
 	},
@@ -162,7 +162,7 @@ public enum RRType implements VariableEnum {
 	 */
 	TXT(16) {
 		@Override
-		public TXTRecord newRecord() {
+		public ResourceRecord newRecord() {
 			return new TXTRecord();
 		}
 	},
@@ -171,7 +171,7 @@ public enum RRType implements VariableEnum {
 	 */
 	AAAA(28) {
 		@Override
-		public AAAARecord newRecord() {
+		public ResourceRecord newRecord() {
 			return new AAAARecord();
 		}
 	},
@@ -231,7 +231,7 @@ public enum RRType implements VariableEnum {
 	},
 	UNKNOWN(-1) {
 		@Override
-		public NULLRecord newRecord() {
+		public ResourceRecord newRecord() {
 			return new NULLRecord();
 		}
 	};

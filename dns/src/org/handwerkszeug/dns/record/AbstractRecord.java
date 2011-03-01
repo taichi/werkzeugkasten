@@ -236,6 +236,55 @@ public abstract class AbstractRecord implements ResourceRecord {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((this.dnsClass == null) ? 0 : this.dnsClass.hashCode());
+		result = prime * result
+				+ ((this.name == null) ? 0 : this.name.hashCode());
+		result = prime * result + this.rdlength;
+		result = prime * result + (int) (this.ttl ^ (this.ttl >>> 32));
+		result = prime * result
+				+ ((this.type == null) ? 0 : this.type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		AbstractRecord other = (AbstractRecord) obj;
+		if (this.dnsClass != other.dnsClass) {
+			return false;
+		}
+		if (this.name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!this.name.equals(other.name)) {
+			return false;
+		}
+		if (this.rdlength != other.rdlength) {
+			return false;
+		}
+		if (this.ttl != other.ttl) {
+			return false;
+		}
+		if (this.type != other.type) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder stb = new StringBuilder();
 		stb.append(this.name().toString());

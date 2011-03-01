@@ -56,14 +56,13 @@ public class MasterZone extends AbstractZone {
 			}
 		}
 
-		for (Name qn = qname.toParent(); this.name.equals(Name.NULL_NAME) == false; qn = qn
+		for (Name qn = qname.toParent(); Name.NULL_NAME.equals(qn) == false; qn = qn
 				.toParent()) {
 			ConcurrentMap<RRType, NavigableSet<ResourceRecord>> match = this.records
 					.get(qn);
 			if (match != null) {
 				synchronized (match) {
 					if (match.isEmpty() == false) {
-
 					}
 				}
 			}
@@ -71,9 +70,11 @@ public class MasterZone extends AbstractZone {
 
 		// nxdomain
 		// nxrrset
-		return new NotFoundResponse(this.soaRecord());
+		return new NotFoundResponse(this.soaRecord()); // TODO cache ?
 	}
 
+	// add and remove needs queuing?
+	// if modify operations works on single thread, not conflict.
 	public void add(ResourceRecord rr) {
 		notNull(rr, "rr");
 		for (;;) {
