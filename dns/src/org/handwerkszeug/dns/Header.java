@@ -80,6 +80,15 @@ public class Header {
 
 	}
 
+	public Header(Header from) {
+		this();
+		this.flags(from.flags());
+		this.qdcount(from.qdcount());
+		this.ancount(from.ancount());
+		this.nscount(from.nscount());
+		this.arcount(from.arcount());
+	}
+
 	public void write(ChannelBuffer out) {
 		out.writeShort(id());
 		out.writeShort(flags());
@@ -87,14 +96,6 @@ public class Header {
 		out.writeShort(ancount());
 		out.writeShort(nscount());
 		out.writeShort(arcount());
-	}
-
-	public void copy(Header from) {
-		this.flags(from.flags());
-		this.qdcount(from.qdcount());
-		this.ancount(from.ancount());
-		this.nscount(from.nscount());
-		this.arcount(from.arcount());
 	}
 
 	/**

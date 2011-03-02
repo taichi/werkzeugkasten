@@ -66,8 +66,7 @@ public class ForwardingHandler extends SimpleChannelUpstreamHandler {
 
 			ChannelFuture f = bootstrap.connect(sa);
 			ChannelBuffer newone = ChannelBuffers.buffer(512);
-			DNSMessage msg = new DNSMessage();
-			msg.copy(original);
+			DNSMessage msg = new DNSMessage(original);
 			msg.write(newone);
 			newone.resetReaderIndex();
 			final Channel c = f.getChannel();

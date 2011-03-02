@@ -1,7 +1,10 @@
 package org.handwerkszeug.dns.record;
 
+import java.util.Arrays;
+
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.nls.Messages;
 import org.jboss.netty.buffer.ChannelBuffer;
 
@@ -23,6 +26,14 @@ public class NULLRecord extends AbstractRecord {
 		super(RRType.NULL);
 	}
 
+	public NULLRecord(NULLRecord from) {
+		super(from);
+		byte[] ary = from.anything();
+		if (ary != null) {
+			this.anything(Arrays.copyOf(ary, ary.length));
+		}
+	}
+
 	@Override
 	protected void parseRDATA(ChannelBuffer buffer) {
 		this.anything = new byte[rdlength()];
@@ -32,6 +43,11 @@ public class NULLRecord extends AbstractRecord {
 	@Override
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		buffer.writeBytes(anything());
+	}
+
+	@Override
+	protected ResourceRecord copy() {
+		return new NULLRecord(this);
 	}
 
 	public byte[] anything() {

@@ -3,6 +3,7 @@ package org.handwerkszeug.dns.record;
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -80,6 +81,17 @@ public class SOARecord extends AbstractRecord {
 		super(RRType.SOA);
 	}
 
+	public SOARecord(SOARecord from) {
+		super(from);
+		this.mname(from.mname());
+		this.rname(from.rname());
+		this.serial(from.serial());
+		this.refresh(from.refresh());
+		this.retry(from.retry());
+		this.expire(from.expire());
+		this.minimum(from.minimum());
+	}
+
 	@Override
 	protected void parseRDATA(ChannelBuffer buffer) {
 		this.mname(new Name(buffer));
@@ -100,6 +112,11 @@ public class SOARecord extends AbstractRecord {
 		buffer.writeInt((int) this.retry());
 		buffer.writeInt((int) this.expire());
 		buffer.writeInt((int) this.minimum());
+	}
+
+	@Override
+	protected ResourceRecord copy() {
+		return new SOARecord(this);
 	}
 
 	/**

@@ -79,4 +79,6 @@ public interface ResourceRecord extends Comparable<ResourceRecord> {
 	void parse(ChannelBuffer buffer);
 
 	void write(ChannelBuffer buffer, NameCompressor compressor);
+
+	ResourceRecord toQnameRecord(Name qname);
 }

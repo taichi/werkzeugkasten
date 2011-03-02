@@ -3,6 +3,7 @@ package org.handwerkszeug.dns.record;
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -28,6 +29,11 @@ public class SingleNameRecord extends AbstractRecord {
 		this.oneName = oneName;
 	}
 
+	public SingleNameRecord(SingleNameRecord from) {
+		super(from);
+		this.oneName = from.oneName();
+	}
+
 	@Override
 	protected void parseRDATA(ChannelBuffer buffer) {
 		this.oneName = new Name(buffer);
@@ -36,6 +42,11 @@ public class SingleNameRecord extends AbstractRecord {
 	@Override
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		this.oneName.write(buffer, compressor);
+	}
+
+	@Override
+	protected ResourceRecord copy() {
+		return new SingleNameRecord(this);
 	}
 
 	public Name oneName() {

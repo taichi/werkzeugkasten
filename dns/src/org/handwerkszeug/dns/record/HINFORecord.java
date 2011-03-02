@@ -1,7 +1,10 @@
 package org.handwerkszeug.dns.record;
 
+import java.util.Arrays;
+
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -30,6 +33,19 @@ public class HINFORecord extends AbstractRecord {
 		super(RRType.HINFO);
 	}
 
+	public HINFORecord(HINFORecord from) {
+		super(from);
+		byte[] c = from.cpu;
+		if (c != null) {
+			this.cpu = Arrays.copyOf(c, c.length);
+		}
+		byte[] o = from.os;
+		if (o != null) {
+			this.os = Arrays.copyOf(o, o.length);
+		}
+
+	}
+
 	@Override
 	protected void parseRDATA(ChannelBuffer buffer) {
 		this.cpu = readString(buffer);
@@ -40,6 +56,11 @@ public class HINFORecord extends AbstractRecord {
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		writeString(buffer, this.cpu);
 		writeString(buffer, this.os);
+	}
+
+	@Override
+	protected ResourceRecord copy() {
+		return new HINFORecord(this);
 	}
 
 	public String cpu() {

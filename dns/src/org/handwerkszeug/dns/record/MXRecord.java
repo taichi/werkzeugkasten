@@ -3,6 +3,7 @@ package org.handwerkszeug.dns.record;
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -38,6 +39,12 @@ public class MXRecord extends AbstractRecord {
 		super(RRType.MX);
 	}
 
+	public MXRecord(MXRecord from) {
+		super(from);
+		this.preference = from.preference();
+		this.exchange = from.exchange();
+	}
+
 	@Override
 	protected void parseRDATA(ChannelBuffer buffer) {
 		this.preference = buffer.readUnsignedShort();
@@ -49,6 +56,11 @@ public class MXRecord extends AbstractRecord {
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		buffer.writeShort(this.preference);
 		this.exchange.write(buffer, compressor);
+	}
+
+	@Override
+	protected ResourceRecord copy() {
+		return new MXRecord(this);
 	}
 
 	public int preference() {

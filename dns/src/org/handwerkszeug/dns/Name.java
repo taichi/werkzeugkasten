@@ -1,5 +1,7 @@
 package org.handwerkszeug.dns;
 
+import static org.handwerkszeug.util.Validation.notNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +12,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 public class Name implements Comparable<Name> {
 
 	public static Name NULL_NAME = new Name(new byte[] { '.' });
+	public static Name WILDCARD = new Name(new byte[] { '*' });
 
 	/**
 	 * 4.1.4. Message compression
@@ -21,7 +24,7 @@ public class Name implements Comparable<Name> {
 	 */
 	public static final int MAX_LABEL_SIZE = 63; // 0011 1111
 
-	protected byte[] name;
+	protected final byte[] name;
 
 	public Name(ChannelBuffer buffer) {
 		this.name = this.parse(buffer);
@@ -41,7 +44,7 @@ public class Name implements Comparable<Name> {
 		int labelsize = 0;
 		for (int i = 0, length = ary.length; i < length; i++) {
 			byte b = ary[i];
-			if ((b == '.') && (++i < length) && (ary[i] == '.')) {
+			if (('.' == b) && (++i < length) && ('.' == ary[i])) {
 				throw new IllegalArgumentException(Messages.NullLabelIsNotValid);
 			}
 			labelsize++;
@@ -143,7 +146,7 @@ public class Name implements Comparable<Name> {
 		List<byte[]> result = new ArrayList<byte[]>();
 		for (int i = 0, begin = 0, part = 0, length = this.name.length; i < length; i++) {
 			byte b = this.name[i];
-			if (b == '.') {
+			if ('.' == b) {
 				byte[] newone = new byte[part];
 				System.arraycopy(this.name, begin, newone, 0, part);
 				result.add(newone);
@@ -159,13 +162,43 @@ public class Name implements Comparable<Name> {
 	public Name toParent() {
 		for (int i = 0, length = this.name.length; i < length - 1; i++) {
 			byte b = this.name[i];
-			if (b == '.') {
+			if ('.' == b) {
 				byte[] newone = new byte[length - i - 1];
 				System.arraycopy(this.name, i + 1, newone, 0, newone.length);
 				return new Name(newone);
 			}
 		}
 		return NULL_NAME;
+	}
+
+	public Name toWildcard() {
+		for (int i = 1, length = this.name.length; i < length; i++) {
+			byte b = this.name[i];
+			if ('.' == b) {
+				byte[] newone = new byte[length - i - 1 + 2];
+				newone[0] = '*';
+				newone[1] = '.';
+				System.arraycopy(this.name, i + 1, newone, 2, newone.length - 2);
+				return new Name(newone);
+			}
+		}
+		return WILDCARD;
+	}
+
+	public boolean contains(Name other) {
+		notNull(other, "other");
+		int myLength = this.name.length;
+		int otherLength = other.name.length;
+		if (myLength < otherLength) {
+			return false;
+		}
+		int diff = myLength - otherLength;
+		for (int i = 0; i < otherLength; i++) {
+			if (this.name[i + diff] != other.name[i]) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -199,8 +232,8 @@ public class Name implements Comparable<Name> {
 		if (ml != ol) {
 			return ml - ol;
 		}
-		for (int i = this.name.length - 1, j = o.name.length - 1; -1 < i
-				&& -1 < j; i--, j--) {
+		for (int i = this.name.length - 1, j = o.name.length - 1; (-1 < i)
+				&& (-1 < j); i--, j--) {
 			byte mine = this.name[i];
 			byte other = o.name[j];
 			if (mine != other) {

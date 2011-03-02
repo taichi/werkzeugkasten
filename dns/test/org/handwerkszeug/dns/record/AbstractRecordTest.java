@@ -9,6 +9,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
+import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +19,7 @@ public class AbstractRecordTest {
 
 	class R extends AbstractRecord {
 		public R() {
-			super(null);
+			super(RRType.A);
 		}
 
 		@Override
@@ -29,6 +31,11 @@ public class AbstractRecordTest {
 		protected void writeRDATA(ChannelBuffer buffer,
 				NameCompressor compressor) {
 
+		}
+
+		@Override
+		protected ResourceRecord copy() {
+			return null;
 		}
 	}
 

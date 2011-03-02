@@ -3,6 +3,7 @@ package org.handwerkszeug.dns.record;
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -35,6 +36,12 @@ public class MINFORecord extends AbstractRecord {
 		super(RRType.MINFO);
 	}
 
+	public MINFORecord(MINFORecord from) {
+		super(from);
+		this.rmailbx(from.rmailbx());
+		this.emailbx(from.emailbx());
+	}
+
 	@Override
 	protected void parseRDATA(ChannelBuffer buffer) {
 		this.rmailbx = new Name(buffer);
@@ -45,6 +52,11 @@ public class MINFORecord extends AbstractRecord {
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		this.rmailbx().write(buffer, compressor);
 		this.emailbx().write(buffer, compressor);
+	}
+
+	@Override
+	protected ResourceRecord copy() {
+		return new MINFORecord(this);
 	}
 
 	public Name rmailbx() {

@@ -7,8 +7,8 @@ import org.handwerkszeug.dns.record.SOARecord;
 public class NotFoundResponse extends DefaultResponse {
 	final SOARecord soaRecord;
 
-	public NotFoundResponse(SOARecord soaRecord) {
-		super(RCode.NXDomain);
+	public NotFoundResponse(RCode rcode, SOARecord soaRecord) {
+		super(rcode);
 		this.soaRecord = soaRecord;
 	}
 

@@ -3,9 +3,11 @@ package org.handwerkszeug.dns.record;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -26,6 +28,14 @@ public class AAAARecord extends AbstractRecord {
 		super(RRType.AAAA);
 	}
 
+	public AAAARecord(AAAARecord from) {
+		super(from);
+		byte[] ary = from.address;
+		if (ary != null) {
+			this.address = Arrays.copyOf(ary, ary.length);
+		}
+	}
+
 	@Override
 	protected void parseRDATA(ChannelBuffer buffer) {
 		byte[] newone = new byte[16];
@@ -36,6 +46,11 @@ public class AAAARecord extends AbstractRecord {
 	@Override
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		buffer.writeBytes(this.address);
+	}
+
+	@Override
+	protected ResourceRecord copy() {
+		return new AAAARecord(this);
 	}
 
 	public InetAddress address() {

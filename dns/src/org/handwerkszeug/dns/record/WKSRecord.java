@@ -1,9 +1,11 @@
 package org.handwerkszeug.dns.record;
 
 import java.net.InetAddress;
+import java.util.Arrays;
 
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.client.WKPortNumbers;
 import org.handwerkszeug.dns.client.WKProtocols;
 import org.handwerkszeug.util.AddressUtil;
@@ -57,6 +59,16 @@ public class WKSRecord extends AbstractRecord {
 		super(RRType.WKS);
 	}
 
+	public WKSRecord(WKSRecord from) {
+		super(from);
+		this.address = from.address;
+		this.protocol = from.protocol();
+		byte[] ary = from.bitmap();
+		if (ary != null) {
+			this.bitmap(Arrays.copyOf(ary, ary.length));
+		}
+	}
+
 	@Override
 	protected void parseRDATA(ChannelBuffer buffer) {
 		this.address = buffer.readUnsignedInt();
@@ -70,6 +82,11 @@ public class WKSRecord extends AbstractRecord {
 		buffer.writeInt((int) this.address);
 		buffer.writeByte(this.protocol);
 		buffer.writeBytes(this.bitmap);
+	}
+
+	@Override
+	protected ResourceRecord copy() {
+		return new WKSRecord(this);
 	}
 
 	public InetAddress address() {

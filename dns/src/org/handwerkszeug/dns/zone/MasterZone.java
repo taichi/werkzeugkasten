@@ -2,6 +2,7 @@ package org.handwerkszeug.dns.zone;
 
 import static org.handwerkszeug.util.Validation.notNull;
 
+import java.util.HashSet;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
@@ -9,6 +10,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.handwerkszeug.dns.Name;
+import org.handwerkszeug.dns.RCode;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.Response;
@@ -17,15 +19,18 @@ import org.handwerkszeug.dns.record.SOARecord;
 import org.handwerkszeug.dns.server.CNAMEResponse;
 import org.handwerkszeug.dns.server.NoErrorResponse;
 import org.handwerkszeug.dns.server.NotFoundResponse;
+import org.handwerkszeug.dns.server.ReferralResponse;
 
 public class MasterZone extends AbstractZone {
 
-	final SOARecord soaRecord;
 	final ConcurrentMap<Name, ConcurrentMap<RRType, NavigableSet<ResourceRecord>>> records = new ConcurrentSkipListMap<Name, ConcurrentMap<RRType, NavigableSet<ResourceRecord>>>();
+	final Response nxDomain;
+	final Response nxRRSet;
 
 	public MasterZone(Name name, SOARecord soaRecord) {
 		super(ZoneType.master, name);
-		this.soaRecord = soaRecord;
+		this.nxDomain = new NotFoundResponse(RCode.NXDomain, soaRecord);
+		this.nxRRSet = new NotFoundResponse(RCode.NXRRSet, soaRecord);
 	}
 
 	@Override
@@ -37,11 +42,25 @@ public class MasterZone extends AbstractZone {
 				.get(qname);
 		if (exactMatch != null) {
 			NavigableSet<ResourceRecord> rrs = exactMatch.get(qtype);
-			if ((rrs != null) && (rrs.isEmpty() == false)) {
+			if (rrs != null) {
 				synchronized (rrs) {
 					if (rrs.isEmpty() == false) {
 						return new NoErrorResponse(rrs);
 					}
+				}
+			}
+			if (RRType.ANY.equals(qtype)) {
+				Set<ResourceRecord> result = new HashSet<ResourceRecord>();
+				for (RRType type : exactMatch.keySet()) {
+					Set<ResourceRecord> s = exactMatch.get(type);
+					if (s != null) {
+						synchronized (s) {
+							result.addAll(s);
+						}
+					}
+				}
+				if (result.isEmpty() == false) {
+					return new NoErrorResponse(result);
 				}
 			}
 			if (RRType.CNAME.equals(qtype) == false) {
@@ -54,6 +73,7 @@ public class MasterZone extends AbstractZone {
 					}
 				}
 			}
+			return this.nxRRSet;
 		}
 
 		for (Name qn = qname.toParent(); Name.NULL_NAME.equals(qn) == false; qn = qn
@@ -63,14 +83,43 @@ public class MasterZone extends AbstractZone {
 			if (match != null) {
 				synchronized (match) {
 					if (match.isEmpty() == false) {
+						Set<ResourceRecord> set = match.get(RRType.NS);
+						if (set.isEmpty() == false) {
+							return new ReferralResponse(set);
+						}
 					}
 				}
 			}
 		}
 
-		// nxdomain
-		// nxrrset
-		return new NotFoundResponse(this.soaRecord()); // TODO cache ?
+		// TODO this process is very heavy. needs hasWildcard flag?
+		if (Name.NULL_NAME.equals(qname) == false) {
+			for (Name qn = qname; Name.NULL_NAME.equals(qn) == false; qn = qn
+					.toParent()) {
+				Name wild = qn.toWildcard();
+				ConcurrentMap<RRType, NavigableSet<ResourceRecord>> match = this.records
+						.get(wild);
+				if (match != null) {
+					synchronized (match) {
+						if (match.isEmpty() == false) {
+							Set<ResourceRecord> matchSet = match.get(qtype);
+							if (matchSet.isEmpty() == false) {
+								Set<ResourceRecord> set = new HashSet<ResourceRecord>(
+										matchSet.size());
+								for (ResourceRecord rr : matchSet) {
+									set.add(rr.toQnameRecord(qname));
+								}
+								return new NoErrorResponse(set);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// TODO support DNAMERecord.
+
+		return this.nxDomain;
 	}
 
 	// add and remove needs queuing?
@@ -134,9 +183,5 @@ public class MasterZone extends AbstractZone {
 				}
 			}
 		}
-	}
-
-	public SOARecord soaRecord() {
-		return this.soaRecord;
 	}
 }

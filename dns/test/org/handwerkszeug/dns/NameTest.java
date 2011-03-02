@@ -1,6 +1,7 @@
 package org.handwerkszeug.dns;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -168,5 +169,23 @@ public class NameTest {
 		} catch (IllegalArgumentException e) {
 			assertTrue(true);
 		}
+	}
+
+	@Test
+	public void testToWildcard() throws Exception {
+		assertEquals(new Name("*.example.co.jp."), new Name(
+				"www.example.co.jp.").toWildcard());
+		assertEquals(new Name("*."), new Name("jp.").toWildcard());
+		assertEquals(Name.WILDCARD, new Name("jp").toWildcard());
+		assertEquals(Name.WILDCARD, Name.NULL_NAME.toWildcard());
+	}
+
+	@Test
+	public void testContains() throws Exception {
+		Name n = new Name("example.co.jp.");
+		assertTrue(n.contains(new Name("co.jp.")));
+		assertTrue(n.contains(new Name("example.co.jp.")));
+		assertFalse(n.contains(new Name("co.jp")));
+		assertFalse(n.contains(new Name("www.example.co.jp.")));
 	}
 }

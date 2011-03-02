@@ -4,6 +4,7 @@ import java.net.InetAddress;
 
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
+import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.util.AddressUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
@@ -23,6 +24,11 @@ public class ARecord extends AbstractRecord {
 		super(RRType.A);
 	}
 
+	public ARecord(ARecord from) {
+		super(from);
+		this.address = from.address;
+	}
+
 	@Override
 	protected void parseRDATA(ChannelBuffer buffer) {
 		this.address = buffer.readUnsignedInt();
@@ -31,6 +37,11 @@ public class ARecord extends AbstractRecord {
 	@Override
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		buffer.writeInt((int) this.address);
+	}
+
+	@Override
+	protected ResourceRecord copy() {
+		return new ARecord(this);
 	}
 
 	public InetAddress address() {

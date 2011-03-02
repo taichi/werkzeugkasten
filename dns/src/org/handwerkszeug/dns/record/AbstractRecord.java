@@ -33,6 +33,14 @@ public abstract class AbstractRecord implements ResourceRecord {
 		this.type = type;
 	}
 
+	public AbstractRecord(AbstractRecord from) {
+		this.type = from.type();
+		this.name(from.name());
+		this.dnsClass(from.dnsClass());
+		this.ttl(from.ttl());
+		this.rdlength(from.rdlength());
+	}
+
 	@Override
 	public RRType type() {
 		return this.type;
@@ -222,6 +230,15 @@ public abstract class AbstractRecord implements ResourceRecord {
 		}
 		return toArray(string.substring(1, string.length() - 1));
 	}
+
+	@Override
+	public ResourceRecord toQnameRecord(Name qname) {
+		ResourceRecord newone = copy();
+		newone.name(qname);
+		return newone;
+	}
+
+	protected abstract ResourceRecord copy();
 
 	@Override
 	public int compareTo(ResourceRecord o) {

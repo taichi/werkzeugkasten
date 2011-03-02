@@ -90,8 +90,7 @@ public class ProxyHandler extends SimpleChannelUpstreamHandler {
 		LOG.info("{}", this.original.header().toString());
 
 		ChannelBuffer buffer = ChannelBuffers.buffer(512);
-		DNSMessage newone = new DNSMessage();
-		newone.copy(this.original);
+		DNSMessage newone = new DNSMessage(this.original);
 		newone.write(buffer);
 		this.outboundChannel.write(buffer);
 
