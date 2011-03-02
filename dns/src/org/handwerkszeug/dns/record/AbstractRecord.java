@@ -13,7 +13,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
 
 import werkzeugkasten.common.util.StringUtil;
 
-public abstract class AbstractRecord implements ResourceRecord {
+public abstract class AbstractRecord<T extends ResourceRecord> implements
+		ResourceRecord, Comparable<T> {
 
 	public static byte[] EMPTY_BYTE_ARRAY = new byte[0];
 
@@ -33,7 +34,7 @@ public abstract class AbstractRecord implements ResourceRecord {
 		this.type = type;
 	}
 
-	public AbstractRecord(AbstractRecord from) {
+	public AbstractRecord(AbstractRecord<T> from) {
 		this.type = from.type();
 		this.name(from.name());
 		this.dnsClass(from.dnsClass());
@@ -241,7 +242,7 @@ public abstract class AbstractRecord implements ResourceRecord {
 	protected abstract ResourceRecord newInstance();
 
 	@Override
-	public int compareTo(ResourceRecord o) {
+	public int compareTo(T o) {
 		int i = this.type().compareTo(o.type());
 		if (i == 0) {
 			i = this.name().compareTo(o.name());
@@ -272,13 +273,15 @@ public abstract class AbstractRecord implements ResourceRecord {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
+		if (obj instanceof AbstractRecord) {
+			@SuppressWarnings("unchecked")
+			AbstractRecord<T> other = (AbstractRecord<T>) obj;
+			return equals(other);
 		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		AbstractRecord other = (AbstractRecord) obj;
+		return false;
+	}
+
+	public boolean equals(AbstractRecord<T> other) {
 		if (this.dnsClass != other.dnsClass) {
 			return false;
 		}

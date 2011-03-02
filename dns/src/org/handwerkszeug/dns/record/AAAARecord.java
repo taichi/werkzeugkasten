@@ -16,7 +16,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * @author taichi
  * 
  */
-public class AAAARecord extends AbstractRecord {
+public class AAAARecord extends AbstractRecord<AAAARecord> {
 
 	/**
 	 * A 128 bit IPv6 address is encoded in the data portion of an AAAA resource
@@ -63,6 +63,16 @@ public class AAAARecord extends AbstractRecord {
 
 	public void address(Inet6Address v6address) {
 		this.address = v6address.getAddress();
+	}
+
+	@Override
+	public int compareTo(AAAARecord o) {
+		int result = super.compareTo(o);
+		if (result == 0) {
+			// TODO unimplemented
+		}
+
+		return result;
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * 
  * @author taichi
  */
-public class ARecord extends AbstractRecord {
+public class ARecord extends AbstractRecord<ARecord> {
 
 	/**
 	 * A 32 bit Internet address.
@@ -50,6 +50,19 @@ public class ARecord extends AbstractRecord {
 
 	public void address(InetAddress v4address) {
 		this.address = AddressUtil.toLong(v4address);
+	}
+
+	@Override
+	public int compareTo(ARecord o) {
+		if (super.compareTo(o) == 0) {
+			if (this.address < o.address) {
+				return -1;
+			}
+			if (this.address > o.address) {
+				return 1;
+			}
+		}
+		return 0;
 	}
 
 	@Override
