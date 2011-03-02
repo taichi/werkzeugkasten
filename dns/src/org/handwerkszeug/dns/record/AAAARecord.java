@@ -49,7 +49,7 @@ public class AAAARecord extends AbstractRecord {
 	}
 
 	@Override
-	protected ResourceRecord copy() {
+	protected ResourceRecord newInstance() {
 		return new AAAARecord(this);
 	}
 

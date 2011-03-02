@@ -34,7 +34,7 @@ public class AbstractRecordTest {
 		}
 
 		@Override
-		protected ResourceRecord copy() {
+		protected ResourceRecord newInstance() {
 			return null;
 		}
 	}

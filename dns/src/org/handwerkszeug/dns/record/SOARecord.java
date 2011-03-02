@@ -115,7 +115,7 @@ public class SOARecord extends AbstractRecord {
 	}
 
 	@Override
-	protected ResourceRecord copy() {
+	protected ResourceRecord newInstance() {
 		return new SOARecord(this);
 	}
 

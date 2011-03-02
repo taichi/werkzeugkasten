@@ -59,7 +59,7 @@ public class MXRecord extends AbstractRecord {
 	}
 
 	@Override
-	protected ResourceRecord copy() {
+	protected ResourceRecord newInstance() {
 		return new MXRecord(this);
 	}
 

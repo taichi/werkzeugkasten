@@ -55,7 +55,7 @@ public class MINFORecord extends AbstractRecord {
 	}
 
 	@Override
-	protected ResourceRecord copy() {
+	protected ResourceRecord newInstance() {
 		return new MINFORecord(this);
 	}
 

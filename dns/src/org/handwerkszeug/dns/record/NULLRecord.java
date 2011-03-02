@@ -46,7 +46,7 @@ public class NULLRecord extends AbstractRecord {
 	}
 
 	@Override
-	protected ResourceRecord copy() {
+	protected ResourceRecord newInstance() {
 		return new NULLRecord(this);
 	}
 

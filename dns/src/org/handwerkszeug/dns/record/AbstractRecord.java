@@ -233,12 +233,12 @@ public abstract class AbstractRecord implements ResourceRecord {
 
 	@Override
 	public ResourceRecord toQnameRecord(Name qname) {
-		ResourceRecord newone = copy();
+		ResourceRecord newone = newInstance();
 		newone.name(qname);
 		return newone;
 	}
 
-	protected abstract ResourceRecord copy();
+	protected abstract ResourceRecord newInstance();
 
 	@Override
 	public int compareTo(ResourceRecord o) {

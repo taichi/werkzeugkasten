@@ -59,7 +59,7 @@ public class HINFORecord extends AbstractRecord {
 	}
 
 	@Override
-	protected ResourceRecord copy() {
+	protected ResourceRecord newInstance() {
 		return new HINFORecord(this);
 	}
 

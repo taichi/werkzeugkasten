@@ -85,7 +85,7 @@ public class WKSRecord extends AbstractRecord {
 	}
 
 	@Override
-	protected ResourceRecord copy() {
+	protected ResourceRecord newInstance() {
 		return new WKSRecord(this);
 	}
 

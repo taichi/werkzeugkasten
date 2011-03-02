@@ -51,7 +51,7 @@ public class TXTRecord extends AbstractRecord {
 	}
 
 	@Override
-	protected ResourceRecord copy() {
+	protected ResourceRecord newInstance() {
 		return new TXTRecord(this);
 	}
 
