@@ -17,7 +17,7 @@ import org.junit.Test;
 
 public class AbstractRecordTest {
 
-	class R extends AbstractRecord {
+	class R extends AbstractRecord<R> {
 		public R() {
 			super(RRType.A);
 		}
