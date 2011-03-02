@@ -93,7 +93,7 @@ public class MasterZone extends AbstractZone {
 		}
 
 		// TODO this process is very heavy. needs hasWildcard flag?
-		if (Name.NULL_NAME.equals(qname) == false) {
+		if (qname.contains(this.name())) {
 			for (Name qn = qname; Name.NULL_NAME.equals(qn) == false; qn = qn
 					.toParent()) {
 				Name wild = qn.toWildcard();
