@@ -17,7 +17,7 @@ import org.junit.Test;
 
 public class AbstractRecordTest {
 
-	class R extends AbstractRecord<R> {
+	class R extends AbstractRecord<ARecord> {
 		public R() {
 			super(RRType.A);
 		}
@@ -39,7 +39,7 @@ public class AbstractRecordTest {
 		}
 	}
 
-	AbstractRecord target;
+	AbstractRecord<ARecord> target;
 
 	@Before
 	public void setUp() {

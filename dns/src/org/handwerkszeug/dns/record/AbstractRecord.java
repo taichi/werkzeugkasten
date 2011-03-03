@@ -246,14 +246,15 @@ public abstract class AbstractRecord<T extends ResourceRecord> implements
 		if (o == null) {
 			return 1;
 		}
-		int i = this.type().compareTo(o.type());
-		if (i == 0) {
-			i = this.name().compareTo(o.name());
-			if (i == 0) {
-				return this.dnsClass().compareTo(o.dnsClass());
-			}
+		int result = this.type().compareTo(o.type());
+		if (result != 0) {
+			return result;
 		}
-		return i;
+		result = this.name().compareTo(o.name());
+		if (result != 0) {
+			return result;
+		}
+		return this.dnsClass().compareTo(o.dnsClass());
 	}
 
 	@Override

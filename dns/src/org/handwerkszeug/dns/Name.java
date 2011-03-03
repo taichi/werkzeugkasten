@@ -104,6 +104,7 @@ public class Name implements Comparable<Name> {
 	}
 
 	public void write(ChannelBuffer buffer, NameCompressor compressor) {
+		// TODO DNAME and other non compress RR
 		if (writePointer(buffer, compressor, this) == false) {
 			compressor.put(this, buffer.writerIndex());
 			List<byte[]> list = split();

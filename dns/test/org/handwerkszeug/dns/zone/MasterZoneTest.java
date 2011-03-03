@@ -57,12 +57,24 @@ public class MasterZoneTest {
 				this.target.find(new Name("co.jp."), RRType.ANY).rcode());
 
 		Response res = this.target.find(new Name("example.co.jp."), RRType.A);
+		assertEquals(RCode.NoError, res.rcode());
+
 		DefaultResolveContext context = new DefaultResolveContext(
 				new DNSMessage());
 		res.postProcess(context);
-
 		List<ResourceRecord> list = context.response().answer();
+		assertEquals(2, list.size());
 		assertTrue(list.contains(a("example.co.jp.", "192.168.0.1")));
 		assertTrue(list.contains(a("example.co.jp.", "192.168.100.1")));
+
+		Response wild = this.target.find(new Name("scp.example.co.jp."),
+				RRType.A);
+		assertEquals(RCode.NoError, wild.rcode());
+		DefaultResolveContext wildc = new DefaultResolveContext(
+				new DNSMessage());
+		wild.postProcess(wildc);
+		List<ResourceRecord> wl = wildc.response().answer();
+		assertEquals(1, wl.size());
+		assertEquals(a("scp.example.co.jp.", "192.168.100.2"), wl.get(0));
 	}
 }

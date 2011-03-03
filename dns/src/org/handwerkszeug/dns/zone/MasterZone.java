@@ -38,6 +38,10 @@ public class MasterZone extends AbstractZone {
 		notNull(qname, "qname");
 		notNull(qtype, "qtype");
 
+		if (qname.contains(this.name()) == false) {
+			return this.nxDomain;
+		}
+
 		ConcurrentMap<RRType, NavigableSet<ResourceRecord>> exactMatch = this.records
 				.get(qname);
 		if (exactMatch != null) {
@@ -76,7 +80,7 @@ public class MasterZone extends AbstractZone {
 			return this.nxRRSet;
 		}
 
-		for (Name qn = qname.toParent(); Name.NULL_NAME.equals(qn) == false; qn = qn
+		for (Name qn = qname.toParent(); this.name().equals(qn) == false; qn = qn
 				.toParent()) {
 			ConcurrentMap<RRType, NavigableSet<ResourceRecord>> match = this.records
 					.get(qn);
@@ -87,37 +91,37 @@ public class MasterZone extends AbstractZone {
 						if (set.isEmpty() == false) {
 							return new ReferralResponse(set);
 						}
-					}
-				}
-			}
-		}
-
-		// TODO this process is very heavy. needs hasWildcard flag?
-		if (qname.contains(this.name())) {
-			for (Name qn = qname; Name.NULL_NAME.equals(qn) == false; qn = qn
-					.toParent()) {
-				Name wild = qn.toWildcard();
-				ConcurrentMap<RRType, NavigableSet<ResourceRecord>> match = this.records
-						.get(wild);
-				if (match != null) {
-					synchronized (match) {
-						if (match.isEmpty() == false) {
-							Set<ResourceRecord> matchSet = match.get(qtype);
-							if (matchSet.isEmpty() == false) {
-								Set<ResourceRecord> set = new HashSet<ResourceRecord>(
-										matchSet.size());
-								for (ResourceRecord rr : matchSet) {
-									set.add(rr.toQnameRecord(qname));
-								}
-								return new NoErrorResponse(set);
-							}
+						// TODO support DNAMERecord.
+						set = match.get(RRType.DNAME);
+						if (set.isEmpty() == false) {
+							return null;
 						}
 					}
 				}
 			}
 		}
 
-		// TODO support DNAMERecord.
+		for (Name qn = qname; this.name().equals(qn) == false; qn = qn
+				.toParent()) {
+			Name wild = qn.toWildcard();
+			ConcurrentMap<RRType, NavigableSet<ResourceRecord>> match = this.records
+					.get(wild);
+			if (match != null) {
+				synchronized (match) {
+					if (match.isEmpty() == false) {
+						Set<ResourceRecord> matchSet = match.get(qtype);
+						if (matchSet.isEmpty() == false) {
+							Set<ResourceRecord> set = new HashSet<ResourceRecord>(
+									matchSet.size());
+							for (ResourceRecord rr : matchSet) {
+								set.add(rr.toQnameRecord(qname));
+							}
+							return new NoErrorResponse(set);
+						}
+					}
+				}
+			}
+		}
 
 		return this.nxDomain;
 	}
