@@ -2,6 +2,7 @@ package werkzeugkasten.common.util;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -39,8 +40,8 @@ public class ArrayUtil {
 	 * @return 配列が追加された結果の配列
 	 */
 	public static Object[] add(final Object[] a, final Object[] b) {
-		if (a != null && b != null) {
-			if (a.length != 0 && b.length != 0) {
+		if ((a != null) && (b != null)) {
+			if ((a.length != 0) && (b.length != 0)) {
 				Object[] array = (Object[]) Array.newInstance(a.getClass()
 						.getComponentType(), a.length + b.length);
 				System.arraycopy(a, 0, array, 0, a.length);
@@ -88,6 +89,7 @@ public class ArrayUtil {
 	 * @param array
 	 * @param ch
 	 * @return 配列中のcharのindex
+	 * @see Arrays#binarySearch(char[], char)
 	 */
 	public static int indexOf(char[] array, char ch) {
 		if (array != null) {
@@ -132,7 +134,7 @@ public class ArrayUtil {
 	 * @return 配列が空かどうか
 	 */
 	public static boolean isEmpty(Object[] arrays) {
-		return (arrays == null || arrays.length == 0);
+		return ((arrays == null) || (arrays.length == 0));
 	}
 
 	/**
@@ -165,9 +167,9 @@ public class ArrayUtil {
 	 * @return 順番は無視して2つの配列が等しいかどうか
 	 */
 	public static boolean equalsIgnoreSequence(Object[] array1, Object[] array2) {
-		if (array1 == null && array2 == null) {
+		if ((array1 == null) && (array2 == null)) {
 			return true;
-		} else if (array1 == null || array2 == null) {
+		} else if ((array1 == null) || (array2 == null)) {
 			return false;
 		}
 		if (array1.length != array2.length) {
@@ -188,7 +190,9 @@ public class ArrayUtil {
 	 * 
 	 * @param array
 	 * @return 配列の文字列表現
+	 * @see Arrays#toString(Object[])
 	 */
+	@Deprecated
 	public static String toString(Object[] array) {
 		if (array == null) {
 			return "null";
@@ -222,5 +226,37 @@ public class ArrayUtil {
 			array[i] = Array.get(obj, i);
 		}
 		return array;
+	}
+
+	/**
+	 * {@link Comparable} や {@link Comparator}の実装を行う際に使用するbyte[]の比較処理です。
+	 * 
+	 * @see Comparable#compareTo(Object)
+	 * @see Comparator#compare(Object, Object)
+	 */
+	public static int compare(byte[] lefts, byte[] rights) {
+		if (lefts == rights) {
+			return 0;
+		}
+		if ((lefts != null) && (rights == null)) {
+			return 1;
+		}
+		if ((lefts == null) && (rights != null)) {
+			return -1;
+		}
+		int ll = lefts.length;
+		int rl = rights.length;
+		int min = Math.min(ll, rl);
+		for (int i = 0; i < min; i++) {
+			byte lb = lefts[i];
+			byte rb = rights[i];
+			if (lb < rb) {
+				return -1;
+			}
+			if (lb > rb) {
+				return 1;
+			}
+		}
+		return ll - rl;
 	}
 }
