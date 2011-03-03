@@ -4,6 +4,7 @@ import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResourceRecord;
+import org.handwerkszeug.util.CompareUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -22,7 +23,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * 
  * @author taichi
  */
-public class MXRecord extends AbstractRecord {
+public class MXRecord extends AbstractRecord<MXRecord> {
 
 	/**
 	 * A 16 bit integer which specifies the preference given to this RR among
@@ -69,6 +70,21 @@ public class MXRecord extends AbstractRecord {
 
 	public Name exchange() {
 		return this.exchange;
+	}
+
+	@Override
+	public int compareTo(MXRecord o) {
+		if (this == o) {
+			return 0;
+		}
+		int result = super.compareTo(o);
+		if (result == 0) {
+			result = CompareUtil.compare(this.preference(), o.preference());
+			if (result == 0) {
+				result = this.exchange().compareTo(o.exchange());
+			}
+		}
+		return result;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResourceRecord;
+import org.handwerkszeug.util.CompareUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -33,7 +34,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
  * </pre>
  */
-public class SOARecord extends AbstractRecord {
+public class SOARecord extends AbstractRecord<SOARecord> {
 
 	/**
 	 * The <domain-name> of the name server that was the original or primary
@@ -177,6 +178,42 @@ public class SOARecord extends AbstractRecord {
 
 	public void minimum(long uint) {
 		this.minimum = uint & 0xFFFFFFFFL;
+	}
+
+	@Override
+	public int compareTo(SOARecord o) {
+		if (this == o) {
+			return 0;
+		}
+		int result = super.compareTo(o);
+		if (result != 0) {
+			return result;
+		}
+		result = this.mname().compareTo(o.mname());
+		if (result != 0) {
+			return result;
+		}
+		result = this.rname().compareTo(o.rname());
+		if (result != 0) {
+			return result;
+		}
+		result = CompareUtil.compare(this.serial(), o.serial());
+		if (result != 0) {
+			return result;
+		}
+		result = CompareUtil.compare(this.refresh(), o.refresh());
+		if (result != 0) {
+			return result;
+		}
+		result = CompareUtil.compare(this.retry(), o.retry());
+		if (result != 0) {
+			return result;
+		}
+		result = CompareUtil.compare(this.expire(), o.expire());
+		if (result != 0) {
+			return result;
+		}
+		return CompareUtil.compare(this.minimum(), o.minimum());
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.client.WKPortNumbers;
 import org.handwerkszeug.dns.client.WKProtocols;
 import org.handwerkszeug.util.AddressUtil;
+import org.handwerkszeug.util.CompareUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -38,7 +39,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * @author taichi
  * 
  */
-public class WKSRecord extends AbstractRecord {
+public class WKSRecord extends AbstractRecord<WKSRecord> {
 
 	/**
 	 * An 32 bit Internet address
@@ -107,6 +108,26 @@ public class WKSRecord extends AbstractRecord {
 
 	public void bitmap(byte[] bytes) {
 		this.bitmap = bytes;
+	}
+
+	@Override
+	public int compareTo(WKSRecord o) {
+		if (this == o) {
+			return 0;
+		}
+		int result = super.compareTo(o);
+		if (result != 0) {
+			return result;
+		}
+		result = CompareUtil.compare(this.address, o.address);
+		if (result != 0) {
+			return result;
+		}
+		result = CompareUtil.compare(this.protocol(), o.protocol());
+		if (result != 0) {
+			return result;
+		}
+		return CompareUtil.compare(this.bitmap(), o.bitmap());
 	}
 
 	/**

@@ -8,6 +8,7 @@ import java.util.List;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResourceRecord;
+import org.handwerkszeug.util.CompareUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -16,7 +17,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * @author taichi
  * 
  */
-public class TXTRecord extends AbstractRecord {
+public class TXTRecord extends AbstractRecord<TXTRecord> {
 
 	protected List<byte[]> strings;
 
@@ -57,6 +58,27 @@ public class TXTRecord extends AbstractRecord {
 
 	public String txt() {
 		return this.toString();
+	}
+
+	@Override
+	public int compareTo(TXTRecord o) {
+		if (this == o) {
+			return 0;
+		}
+		int result = super.compareTo(o);
+		if (result != 0) {
+			return result;
+		}
+		int mySize = this.strings.size();
+		int yrSize = o.strings.size();
+		int min = Math.min(mySize, yrSize);
+		for (int i = 0; i < min; i++) {
+			result = CompareUtil.compare(this.strings.get(i), o.strings.get(i));
+			if (result != 0) {
+				return result;
+			}
+		}
+		return mySize - yrSize;
 	}
 
 	@Override

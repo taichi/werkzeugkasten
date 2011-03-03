@@ -11,7 +11,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * 
  * @author taichi
  */
-public class MINFORecord extends AbstractRecord {
+public class MINFORecord extends AbstractRecord<MINFORecord> {
 
 	/**
 	 * A <domain-name> which specifies a mailbox which is responsible for the
@@ -73,6 +73,21 @@ public class MINFORecord extends AbstractRecord {
 
 	public void emailbx(Name name) {
 		this.emailbx = name;
+	}
+
+	@Override
+	public int compareTo(MINFORecord o) {
+		if (this == o) {
+			return 0;
+		}
+		int result = super.compareTo(o);
+		if (result == 0) {
+			result = this.rmailbx().compareTo(o.rmailbx());
+			if (result == 0) {
+				result = this.emailbx().compareTo(o.emailbx());
+			}
+		}
+		return result;
 	}
 
 	@Override

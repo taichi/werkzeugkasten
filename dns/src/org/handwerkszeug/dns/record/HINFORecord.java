@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResourceRecord;
+import org.handwerkszeug.util.CompareUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -17,7 +18,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * @author taichi
  * 
  */
-public class HINFORecord extends AbstractRecord {
+public class HINFORecord extends AbstractRecord<HINFORecord> {
 
 	/**
 	 * A <character-string> which specifies the CPU type.
@@ -77,6 +78,21 @@ public class HINFORecord extends AbstractRecord {
 
 	public void os(String os) {
 		this.os = os.getBytes(); // TODO encoding ?
+	}
+
+	@Override
+	public int compareTo(HINFORecord o) {
+		if (this == o) {
+			return 0;
+		}
+		int result = super.compareTo(o);
+		if (result == 0) {
+			result = CompareUtil.compare(this.cpu, o.cpu);
+			if (result == 0) {
+				result = CompareUtil.compare(this.os, o.os);
+			}
+		}
+		return result;
 	}
 
 	@Override

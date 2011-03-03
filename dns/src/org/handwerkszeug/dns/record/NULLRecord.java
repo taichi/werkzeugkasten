@@ -6,6 +6,7 @@ import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResourceRecord;
 import org.handwerkszeug.dns.nls.Messages;
+import org.handwerkszeug.util.CompareUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -14,7 +15,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * @author taichi
  * 
  */
-public class NULLRecord extends AbstractRecord {
+public class NULLRecord extends AbstractRecord<NULLRecord> {
 
 	/**
 	 * Anything at all may be in the RDATA field so long as it is 65535 octets
@@ -60,5 +61,13 @@ public class NULLRecord extends AbstractRecord {
 					Messages.DataMustBe65535orLess, data.length));
 		}
 		this.anything = data;
+	}
+
+	@Override
+	public int compareTo(NULLRecord o) {
+		if ((this != o) && (super.compareTo(o) == 0)) {
+			return CompareUtil.compare(this.anything(), o.anything());
+		}
+		return 0;
 	}
 }

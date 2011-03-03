@@ -243,6 +243,9 @@ public abstract class AbstractRecord<T extends ResourceRecord> implements
 
 	@Override
 	public int compareTo(T o) {
+		if (o == null) {
+			return 1;
+		}
 		int i = this.type().compareTo(o.type());
 		if (i == 0) {
 			i = this.name().compareTo(o.name());

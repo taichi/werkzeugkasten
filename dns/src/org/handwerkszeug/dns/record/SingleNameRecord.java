@@ -16,7 +16,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * 
  * @author taichi
  */
-public class SingleNameRecord extends AbstractRecord {
+public class SingleNameRecord extends AbstractRecord<SingleNameRecord> {
 
 	protected Name oneName;
 
@@ -51,6 +51,14 @@ public class SingleNameRecord extends AbstractRecord {
 
 	public Name oneName() {
 		return this.oneName;
+	}
+
+	@Override
+	public int compareTo(SingleNameRecord o) {
+		if ((this != o) && (super.compareTo(o) == 0)) {
+			return this.oneName().compareTo(o.oneName());
+		}
+		return 0;
 	}
 
 	@Override

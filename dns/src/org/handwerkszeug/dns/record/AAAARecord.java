@@ -8,6 +8,7 @@ import java.util.Arrays;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResourceRecord;
+import org.handwerkszeug.util.CompareUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -67,12 +68,10 @@ public class AAAARecord extends AbstractRecord<AAAARecord> {
 
 	@Override
 	public int compareTo(AAAARecord o) {
-		int result = super.compareTo(o);
-		if (result == 0) {
-			// TODO unimplemented
+		if ((this != o) && (super.compareTo(o) == 0)) {
+			return CompareUtil.compare(this.address, o.address);
 		}
-
-		return result;
+		return 0;
 	}
 
 	@Override
