@@ -202,6 +202,23 @@ public class Name implements Comparable<Name> {
 		return true;
 	}
 
+	public Name replace(Name from, Name to) {
+		notNull(from, "from");
+		notNull(to, "to");
+		if (contains(from)) {
+			int toLength = to.name.length;
+			int diff = this.name.length - from.name.length;
+			int newsize = diff + toLength;
+			if (newsize < MAX_LABEL_SIZE) {
+				byte[] newone = new byte[newsize];
+				System.arraycopy(this.name, 0, newone, 0, diff);
+				System.arraycopy(to.name, 0, newone, diff, toLength);
+				return new Name(newone);
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

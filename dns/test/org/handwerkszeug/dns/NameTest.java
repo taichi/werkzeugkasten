@@ -2,6 +2,7 @@ package org.handwerkszeug.dns;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -187,5 +188,21 @@ public class NameTest {
 		assertTrue(n.contains(new Name("example.co.jp.")));
 		assertFalse(n.contains(new Name("co.jp")));
 		assertFalse(n.contains(new Name("www.example.co.jp.")));
+	}
+
+	@Test
+	public void testReplace() throws Exception {
+		Name n = new Name("example.co.jp.");
+		Name from = new Name("co.jp.");
+		Name to = new Name("org.");
+		assertEquals(new Name("example.org."), n.replace(from, to));
+		assertNull(n.replace(to, from));
+
+		StringBuilder stb = new StringBuilder();
+		for (int i = 0; i < 60; i++) {
+			stb.append(String.valueOf(i % 10));
+		}
+		Name tooLong = new Name(stb.toString());
+		assertNull(n.replace(from, tooLong));
 	}
 }

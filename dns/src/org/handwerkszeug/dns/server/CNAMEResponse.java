@@ -4,6 +4,7 @@ import org.handwerkszeug.dns.RCode;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResolveContext;
 import org.handwerkszeug.dns.ResourceRecord;
+import org.handwerkszeug.dns.Response;
 import org.handwerkszeug.dns.record.SingleNameRecord;
 
 public class CNAMEResponse extends DefaultResponse {
@@ -19,6 +20,8 @@ public class CNAMEResponse extends DefaultResponse {
 	@Override
 	public void postProcess(ResolveContext context) {
 		context.response().answer().add(this.cname);
-		context.resolve(this.cname.oneName(), this.qtype);
+		Response r = context.resolve(this.cname.oneName(), this.qtype);
+		r.postProcess(context);
+
 	}
 }

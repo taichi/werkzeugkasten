@@ -5,6 +5,7 @@ import org.handwerkszeug.dns.RCode;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResolveContext;
 import org.handwerkszeug.dns.ResourceRecord;
+import org.handwerkszeug.dns.Response;
 import org.handwerkszeug.dns.record.SingleNameRecord;
 
 public class DNAMEResponse extends DefaultResponse {
@@ -23,6 +24,10 @@ public class DNAMEResponse extends DefaultResponse {
 	@Override
 	public void postProcess(ResolveContext context) {
 		// TODO not implemented
+
+		Name name = qname;
+		Response r = context.resolve(name, qtype);
+		r.postProcess(context);
 	}
 
 }
