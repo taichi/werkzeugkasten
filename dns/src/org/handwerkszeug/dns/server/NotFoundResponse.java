@@ -1,5 +1,6 @@
 package org.handwerkszeug.dns.server;
 
+import org.handwerkszeug.dns.DNSMessage;
 import org.handwerkszeug.dns.RCode;
 import org.handwerkszeug.dns.ResolveContext;
 import org.handwerkszeug.dns.record.SOARecord;
@@ -14,6 +15,8 @@ public class NotFoundResponse extends DefaultResponse {
 
 	@Override
 	public void postProcess(ResolveContext context) {
-		context.response().authority().add(this.soaRecord);
+		DNSMessage res = context.response();
+		res.header().rcode(this.rcode());
+		res.authority().add(this.soaRecord);
 	}
 }

@@ -22,6 +22,5 @@ public class CNAMEResponse extends DefaultResponse {
 		context.response().answer().add(this.cname);
 		Response r = context.resolve(this.cname.oneName(), this.qtype);
 		r.postProcess(context);
-
 	}
 }

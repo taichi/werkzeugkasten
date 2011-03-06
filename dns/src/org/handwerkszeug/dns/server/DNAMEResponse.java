@@ -1,5 +1,6 @@
 package org.handwerkszeug.dns.server;
 
+import org.handwerkszeug.dns.DNSMessage;
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.RCode;
 import org.handwerkszeug.dns.RRType;
@@ -23,11 +24,19 @@ public class DNAMEResponse extends DefaultResponse {
 
 	@Override
 	public void postProcess(ResolveContext context) {
-		// TODO not implemented
-
-		Name name = qname;
-		Response r = context.resolve(name, qtype);
-		r.postProcess(context);
+		DNSMessage res = context.response();
+		res.answer().add(this.dname);
+		Name name = qname.replace(this.dname.name(), this.dname.oneName());
+		if (name == null) {
+			context.response().header().rcode(RCode.YXDomain);
+		} else {
+			SingleNameRecord cname = new SingleNameRecord(RRType.CNAME, name);
+			cname.name(qname);
+			res.answer().add(cname);
+			res.header().aa(true);
+			Response r = context.resolve(name, qtype);
+			r.postProcess(context);
+		}
 	}
 
 }

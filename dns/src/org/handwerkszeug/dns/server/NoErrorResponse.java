@@ -24,6 +24,7 @@ public class NoErrorResponse extends DefaultResponse {
 	@Override
 	public void postProcess(ResolveContext context) {
 		DNSMessage res = context.response();
+		res.header().rcode(this.rcode());
 		res.header().aa(this.aa);
 		res.answer().addAll(this.records);
 		// TODO additional section ?
