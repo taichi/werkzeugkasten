@@ -17,6 +17,7 @@ import org.handwerkszeug.dns.Response;
 import org.handwerkszeug.dns.ZoneType;
 import org.handwerkszeug.dns.record.SOARecord;
 import org.handwerkszeug.dns.server.CNAMEResponse;
+import org.handwerkszeug.dns.server.DNAMEResponse;
 import org.handwerkszeug.dns.server.NoErrorResponse;
 import org.handwerkszeug.dns.server.NotFoundResponse;
 import org.handwerkszeug.dns.server.ReferralResponse;
@@ -54,17 +55,17 @@ public class MasterZone extends AbstractZone {
 				}
 			}
 			if (RRType.ANY.equals(qtype)) {
-				Set<ResourceRecord> result = new HashSet<ResourceRecord>();
+				Set<ResourceRecord> newset = new HashSet<ResourceRecord>();
 				for (RRType type : exactMatch.keySet()) {
 					Set<ResourceRecord> s = exactMatch.get(type);
 					if (s != null) {
 						synchronized (s) {
-							result.addAll(s);
+							newset.addAll(s);
 						}
 					}
 				}
-				if (result.isEmpty() == false) {
-					return new NoErrorResponse(result);
+				if (newset.isEmpty() == false) {
+					return new NoErrorResponse(newset);
 				}
 			}
 			if (RRType.CNAME.equals(qtype) == false) {
@@ -87,14 +88,13 @@ public class MasterZone extends AbstractZone {
 			if (match != null) {
 				synchronized (match) {
 					if (match.isEmpty() == false) {
-						Set<ResourceRecord> set = match.get(RRType.NS);
+						NavigableSet<ResourceRecord> set = match.get(RRType.NS);
 						if (set.isEmpty() == false) {
 							return new ReferralResponse(set);
 						}
-						// TODO support DNAMERecord.
 						set = match.get(RRType.DNAME);
 						if (set.isEmpty() == false) {
-							return null;
+							return new DNAMEResponse(set.first(), qname, qtype);
 						}
 					}
 				}
