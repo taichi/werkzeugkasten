@@ -78,8 +78,8 @@ public class MasterZoneTest {
 
 	@Test
 	public void testDNAME() throws Exception {
-		SingleNameRecord dname = new SingleNameRecord(RRType.DNAME, new Name(
-				"example.com."));
+		final SingleNameRecord dname = new SingleNameRecord(RRType.DNAME,
+				new Name("example.com."));
 		dname.name(new Name("forward.example.co.jp."));
 		this.target.add(dname);
 		Response r = this.target.find(new Name("ftp.forward.example.co.jp."),
@@ -88,8 +88,10 @@ public class MasterZoneTest {
 			@Override
 			public Response resolve(Name qname, RRType qtype) {
 				DNSMessage res = this.response();
-				// TODO not impl
 				assertEquals(new Name("ftp.example.com."), qname);
+				assertEquals(2, res.answer().size());
+				assertEquals(dname, res.answer().get(0));
+				assertEquals(RRType.CNAME, res.answer().get(1).type());
 				return new NoErrorResponse(new HashSet<ResourceRecord>());
 			}
 		});
