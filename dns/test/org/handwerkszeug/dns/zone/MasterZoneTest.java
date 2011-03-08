@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.net.InetAddress;
+import java.util.HashSet;
 import java.util.List;
 
 import org.handwerkszeug.dns.DNSMessage;
@@ -16,6 +17,7 @@ import org.handwerkszeug.dns.record.ARecord;
 import org.handwerkszeug.dns.record.SOARecord;
 import org.handwerkszeug.dns.record.SingleNameRecord;
 import org.handwerkszeug.dns.server.DefaultResolveContext;
+import org.handwerkszeug.dns.server.NoErrorResponse;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,10 +51,6 @@ public class MasterZoneTest {
 		this.target.add(a("example.co.jp.", "192.168.0.1"));
 		this.target.add(a("example.co.jp.", "192.168.100.1"));
 
-		SingleNameRecord ftp = new SingleNameRecord(RRType.NS, new Name(
-				"share.example.co.jp."));
-		ftp.name(new Name("ftp.example.co.jp."));
-		this.target.add(ftp);
 		assertEquals(RCode.NXDomain,
 				this.target.find(new Name("co.jp."), RRType.ANY).rcode());
 
@@ -76,5 +74,24 @@ public class MasterZoneTest {
 		List<ResourceRecord> wl = wildc.response().answer();
 		assertEquals(1, wl.size());
 		assertEquals(a("scp.example.co.jp.", "192.168.100.2"), wl.get(0));
+	}
+
+	@Test
+	public void testDNAME() throws Exception {
+		SingleNameRecord dname = new SingleNameRecord(RRType.DNAME, new Name(
+				"example.com."));
+		dname.name(new Name("forward.example.co.jp."));
+		this.target.add(dname);
+		Response r = this.target.find(new Name("ftp.forward.example.co.jp."),
+				RRType.A);
+		r.postProcess(new DefaultResolveContext(new DNSMessage()) {
+			@Override
+			public Response resolve(Name qname, RRType qtype) {
+				DNSMessage res = this.response();
+				// TODO not impl
+				assertEquals(new Name("ftp.example.com."), qname);
+				return new NoErrorResponse(new HashSet<ResourceRecord>());
+			}
+		});
 	}
 }

@@ -89,11 +89,11 @@ public class MasterZone extends AbstractZone {
 				synchronized (match) {
 					if (match.isEmpty() == false) {
 						NavigableSet<ResourceRecord> set = match.get(RRType.NS);
-						if (set.isEmpty() == false) {
+						if ((set != null) && (set.isEmpty() == false)) {
 							return new ReferralResponse(set);
 						}
 						set = match.get(RRType.DNAME);
-						if (set.isEmpty() == false) {
+						if ((set != null) && (set.isEmpty() == false)) {
 							return new DNAMEResponse(set.first(), qname, qtype);
 						}
 					}
