@@ -177,6 +177,19 @@ public enum RRType implements VariableEnum {
 	},
 
 	/**
+	 * Naming Authority Pointer
+	 * 
+	 * @see http://tools.ietf.org/html/rfc3403#section-4
+	 */
+	NAPTR(35) {
+		@Override
+		public ResourceRecord newRecord() {
+			// TODO not implemented...
+			throw new UnsupportedOperationException();
+		}
+	},
+
+	/**
 	 * Non-Terminal DNS Name Redirection
 	 * 
 	 * @see http://www.ietf.org/rfc/rfc2672.txt
