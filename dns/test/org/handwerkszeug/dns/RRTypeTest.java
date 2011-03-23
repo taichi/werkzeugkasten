@@ -1,5 +1,8 @@
 package org.handwerkszeug.dns;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +14,14 @@ public class RRTypeTest {
 
 	@Test
 	public void testName() throws Exception {
+		// printing for grammar file.
+		Set<RRType> set = new HashSet<RRType>();
+		set.add(RRType.ANY);
+		set.add(RRType.UNKNOWN);
 		for (RRType rr : RRType.values()) {
+			if (set.contains(rr)) {
+				System.out.print("// ");
+			}
 			System.out.printf("|%s%n", rr.name());
 		}
 		for (RRType rr : RRType.values()) {
@@ -29,6 +39,9 @@ public class RRTypeTest {
 				stb.append(Character.toUpperCase(c));
 				stb.append("'");
 				stb.append(")");
+			}
+			if (set.contains(rr)) {
+				System.out.print("// ");
 			}
 			System.out.printf("%s\t:\t%s;%n", name, stb.toString());
 		}
