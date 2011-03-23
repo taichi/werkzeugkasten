@@ -26,7 +26,7 @@ public class RRTypeTest {
 				stb.append("'");
 				stb.append("|");
 				stb.append("'");
-				stb.append(c);
+				stb.append(Character.toUpperCase(c));
 				stb.append("'");
 				stb.append(")");
 			}
