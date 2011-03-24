@@ -22,7 +22,7 @@ public class RRTypeTest {
 			if (set.contains(rr)) {
 				System.out.print("// ");
 			}
-			System.out.printf("|%s%n", rr.name());
+			System.out.printf("\t|\t%s%n", rr.name());
 		}
 		for (RRType rr : RRType.values()) {
 			String name = rr.name();
