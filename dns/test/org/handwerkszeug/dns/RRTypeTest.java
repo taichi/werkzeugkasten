@@ -16,6 +16,7 @@ public class RRTypeTest {
 	public void testName() throws Exception {
 		// printing for grammar file.
 		Set<RRType> set = new HashSet<RRType>();
+		set.add(RRType.NULL);
 		set.add(RRType.ANY);
 		set.add(RRType.UNKNOWN);
 		for (RRType rr : RRType.values()) {
