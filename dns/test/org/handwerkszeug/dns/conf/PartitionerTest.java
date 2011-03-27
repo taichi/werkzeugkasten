@@ -14,7 +14,7 @@ public class PartitionerTest {
 		ByteArrayInputStream bai = new ByteArrayInputStream(s.getBytes("UTF-8"));
 		Partitioner p = new Partitioner(bai);
 		while (true) {
-			Partitioner.Partition pp = p.partition();
+			Partition pp = p.partition();
 			if (pp == Partitioner.EOF) {
 				break;
 			}

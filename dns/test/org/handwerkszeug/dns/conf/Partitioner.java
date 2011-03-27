@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.handwerkszeug.dns.conf.Partition.PartitionType;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.DynamicChannelBuffer;
 
@@ -19,47 +20,6 @@ public class Partitioner {
 
 	public Partitioner(BufferedInputStream source) {
 		this.source = source;
-	}
-
-	enum PartitionType {
-		Default, Quoted, LP, RP, Comment, Whitespace, EOL, EOF;
-	}
-
-	public static class Partition {
-		final PartitionType type;
-		final byte[] division;
-
-		public Partition(PartitionType type) {
-			this(type, null);
-		}
-
-		public Partition(PartitionType type, byte[] buffer) {
-			this.type = type;
-			this.division = buffer;
-		}
-
-		public PartitionType type() {
-			return this.type;
-		}
-
-		public byte[] division() {
-			return this.division;
-		}
-
-		@Override
-		public String toString() {
-			StringBuilder stb = new StringBuilder();
-			stb.append("[");
-			stb.append(this.type);
-			stb.append("]<");
-			if (this.division == null) {
-				stb.append("null");
-			} else {
-				stb.append(new String(this.division));
-			}
-			stb.append(">");
-			return stb.toString();
-		}
 	}
 
 	static final int INITIAL_BUFFER_SIZE = 200;
