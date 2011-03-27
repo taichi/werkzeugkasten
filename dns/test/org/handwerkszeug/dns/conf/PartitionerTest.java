@@ -8,8 +8,9 @@ public class PartitionerTest {
 
 	@Test
 	public void testPartition() throws Exception {
-		// String s = "A \t\tB ;hogehoge fugafuga\r\nmogemoge\t\t\tAAA";
-		String s = "\t\t\tAAA";
+		String s = "A \t\tB C;hogehoge fugafuga\r\n\nmogemoge\t\t\tABC\"aaaa \n bbbbb\"";
+		// String s = "ZYX\t\t\tABC";
+		// String s = "\nmogemoge";
 		ByteArrayInputStream bai = new ByteArrayInputStream(s.getBytes("UTF-8"));
 		Partitioner p = new Partitioner(bai);
 		while (true) {
