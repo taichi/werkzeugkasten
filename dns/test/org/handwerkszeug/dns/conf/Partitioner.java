@@ -36,7 +36,6 @@ public class Partitioner {
 				if (0 < this.working.readerIndex()) {
 					result = makePartition(PartitionType.Default, 0);
 					discardBefore(0);
-					return result;
 				}
 				break;
 			}
@@ -69,22 +68,10 @@ public class Partitioner {
 			}
 
 			if (ch == '(') {
-				result = partitionBefore();
-				if (result == null) {
-					result = Partition.LP;
-				} else {
-					this.next = Partition.LP;
-				}
-				discardBefore(0);
+				result = currentOrNext(partitionBefore(), Partition.LP);
 			}
 			if (ch == ')') {
-				result = partitionBefore();
-				if (result == null) {
-					result = Partition.RP;
-				} else {
-					this.next = Partition.RP;
-				}
-				discardBefore(0);
+				result = currentOrNext(partitionBefore(), Partition.RP);
 			}
 
 			if ((ch == '"')) {
@@ -100,12 +87,7 @@ public class Partitioner {
 						int end = this.working.readerIndex() - 1;
 						Partition ws = makePartition(PartitionType.Whitespace,
 								begin, end);
-						discardBefore(1);
-						if (result == null) {
-							result = ws;
-						} else {
-							this.next = ws;
-						}
+						result = currentOrNext(result, ws, 1);
 						break;
 					}
 				}
@@ -117,6 +99,21 @@ public class Partitioner {
 		return Partition.EOF;
 	}
 
+	protected Partition currentOrNext(Partition before, Partition p) {
+		return currentOrNext(before, p, 0);
+	}
+
+	protected Partition currentOrNext(Partition before, Partition p, int discard) {
+		Partition result = before;
+		if (before == null) {
+			result = p;
+		} else {
+			this.next = p;
+		}
+		discardBefore(discard);
+		return result;
+	}
+
 	protected Partition readTo(Partition back, PartitionType type, char stop) {
 		Partition result = back;
 		int begin = this.working.readerIndex() - 1;
@@ -125,12 +122,7 @@ public class Partitioner {
 			if ((c == stop) || (c == -1)) {
 				int end = this.working.readerIndex();
 				Partition p = makePartition(type, begin, end);
-				discardBefore(0);
-				if (back == null) {
-					result = p;
-				} else {
-					this.next = p;
-				}
+				result = currentOrNext(back, p);
 				break;
 			}
 		}

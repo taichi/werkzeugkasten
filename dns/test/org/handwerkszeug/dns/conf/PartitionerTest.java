@@ -13,7 +13,7 @@ public class PartitionerTest {
 
 	@Test
 	public void testPartition() throws Exception {
-		String s = "A \t\tB C;hogehoge fugafuga\r\n\nmogemoge\t\t\tABC\"aaaa \n bbbbb\"";
+		String s = "A \t\tB C;hogehoge fugafuga\r\n\n\r\nmogemoge\t\t\tABC\"aaaa \n bbbbb\"";
 		// String s = "ZYX\t\t\tABC";
 		// String s = "\nmogemoge";
 
@@ -26,11 +26,13 @@ public class PartitionerTest {
 		list.add(new Partition(PartitionType.Comment, ";hogehoge fugafuga\r\n"
 				.getBytes()));
 		list.add(Partition.EOL);
+		list.add(Partition.EOL);
 		list.add(new Partition(PartitionType.Default, "mogemoge".getBytes()));
 		list.add(new Partition(PartitionType.Whitespace, "\t\t\t".getBytes()));
 		list.add(new Partition(PartitionType.Default, "ABC".getBytes()));
 		list.add(new Partition(PartitionType.Quoted, "\"aaaa \n bbbbb\""
 				.getBytes()));
+		list.add(Partition.EOF);
 
 		Partitioner p = create(s);
 		for (Partition exp : list) {

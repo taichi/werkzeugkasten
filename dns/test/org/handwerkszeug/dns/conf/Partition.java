@@ -71,13 +71,12 @@ public class Partition {
 		StringBuilder stb = new StringBuilder();
 		stb.append("[");
 		stb.append(this.type);
-		stb.append("]<");
-		if (this.division == null) {
-			stb.append("null");
-		} else {
+		stb.append("]");
+		if (this.division != null) {
+			stb.append("<");
 			stb.append(new String(this.division));
+			stb.append(">");
 		}
-		stb.append(">");
 		return stb.toString();
 	}
 }
