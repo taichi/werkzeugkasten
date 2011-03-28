@@ -1,10 +1,7 @@
 package org.handwerkszeug.dns.conf;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import org.handwerkszeug.dns.conf.Partition.PartitionType;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -12,33 +9,25 @@ import org.jboss.netty.buffer.DynamicChannelBuffer;
 
 public class Partitioner {
 
-	final BufferedInputStream source;
+	final InputStream source;
+
+	static final int DEFAULT_BUFFER_SIZE = 200;
+	protected ChannelBuffer working;
+	protected Partition next;
 
 	public Partitioner(InputStream in) {
-		this(new BufferedInputStream(in));
+		this(in, DEFAULT_BUFFER_SIZE);
 	}
 
-	public Partitioner(BufferedInputStream source) {
-		this.source = source;
+	public Partitioner(InputStream in, int size) {
+		this.source = in;
+		this.working = new DynamicChannelBuffer(size);
 	}
-
-	static final int INITIAL_BUFFER_SIZE = 200;
-	protected ChannelBuffer working = new DynamicChannelBuffer(
-			INITIAL_BUFFER_SIZE);
-
-	protected Queue<Partition> partitionQueue = new LinkedList<Partition>();
-
-	public static final Partition EOF = new Partition(PartitionType.EOF);
-
-	public static final Partition EOL = new Partition(PartitionType.EOL);
-
-	public static final Partition LP = new Partition(PartitionType.LP);
-
-	public static final Partition RP = new Partition(PartitionType.RP);
 
 	public Partition partition() {
-		Partition result = this.partitionQueue.poll();
+		Partition result = this.next;
 		if (result != null) {
+			this.next = null;
 			return result;
 		}
 		while (true) {
@@ -56,9 +45,9 @@ public class Partitioner {
 				if (n == '\n') {
 					if (this.working.readerIndex() < 3) {
 						this.working.discardReadBytes();
-						return EOL;
+						return Partition.EOL;
 					}
-					this.partitionQueue.add(EOL);
+					this.next = Partition.EOL;
 					result = makePartition(PartitionType.Default, 2);
 					discardBefore(0);
 				} else {
@@ -68,30 +57,38 @@ public class Partitioner {
 			if (ch == '\n') {
 				if (this.working.readerIndex() < 2) {
 					this.working.discardReadBytes();
-					return EOL;
+					return Partition.EOL;
 				}
-				this.partitionQueue.add(EOL);
+				this.next = Partition.EOL;
 				result = makePartition(PartitionType.Default, 1);
 				discardBefore(0);
 			}
 
 			if (ch == ';') {
-				result = readTo(partitionBefore(), '\n');
+				result = readTo(partitionBefore(), PartitionType.Comment, '\n');
 			}
 
 			if (ch == '(') {
-				this.partitionQueue.add(LP);
-				result = makePartition(PartitionType.Default, 1);
+				result = partitionBefore();
+				if (result == null) {
+					result = Partition.LP;
+				} else {
+					this.next = Partition.LP;
+				}
 				discardBefore(0);
 			}
 			if (ch == ')') {
-				this.partitionQueue.add(RP);
-				result = makePartition(PartitionType.Default, 1);
+				result = partitionBefore();
+				if (result == null) {
+					result = Partition.RP;
+				} else {
+					this.next = Partition.RP;
+				}
 				discardBefore(0);
 			}
 
 			if ((ch == '"')) {
-				result = readTo(partitionBefore(), '"');
+				result = readTo(partitionBefore(), PartitionType.Quoted, '"');
 			}
 
 			if (((ch == ' ') || (ch == '\t'))) {
@@ -104,10 +101,10 @@ public class Partitioner {
 						Partition ws = makePartition(PartitionType.Whitespace,
 								begin, end);
 						discardBefore(1);
-						if (result != null) {
-							this.partitionQueue.add(ws);
-						} else {
+						if (result == null) {
 							result = ws;
+						} else {
+							this.next = ws;
 						}
 						break;
 					}
@@ -117,33 +114,34 @@ public class Partitioner {
 				return result;
 			}
 		}
-		return EOF;
+		return Partition.EOF;
 	}
 
-	protected Partition readTo(Partition back, char stop) {
+	protected Partition readTo(Partition back, PartitionType type, char stop) {
+		Partition result = back;
 		int begin = this.working.readerIndex() - 1;
 		while (true) {
 			byte c = readByte();
 			if ((c == stop) || (c == -1)) {
 				int end = this.working.readerIndex();
-				Partition p = makePartition(PartitionType.Quoted, begin, end);
+				Partition p = makePartition(type, begin, end);
 				discardBefore(0);
-				if (back != null) {
-					this.partitionQueue.add(p);
+				if (back == null) {
+					result = p;
 				} else {
-					back = p;
+					this.next = p;
 				}
 				break;
 			}
 		}
-		return back;
+		return result;
 	}
 
 	protected byte readByte() {
 		try {
 			if (this.working.readable() == false) {
 				if (0 < this.source.available()) {
-					this.working.writeBytes(this.source, INITIAL_BUFFER_SIZE);
+					this.working.writeBytes(this.source, DEFAULT_BUFFER_SIZE);
 				}
 			}
 			if (this.working.readable()) {
