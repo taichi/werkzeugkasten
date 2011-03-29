@@ -2,17 +2,33 @@ package org.handwerkszeug.dns;
 
 import static org.handwerkszeug.util.Validation.notNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.handwerkszeug.dns.nls.Messages;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 
 public class Name implements Comparable<Name> {
 
-	public static Name NULL_NAME = new Name(new byte[] { '.' });
-	public static Name WILDCARD = new Name(new byte[] { '*' });
+	public static final Name NULL_NAME;
+	public static final Name WILDCARD;
+
+	static final byte[] WILDCARD_ARRAY = new byte[] { '*' };
+
+	static {
+		NULL_NAME = create(new byte[] { '.' });
+		WILDCARD = create(WILDCARD_ARRAY);
+	}
+
+	static Name create(byte[] array) {
+		List<byte[]> l = new ArrayList<byte[]>(1);
+		l.add(array);
+		return new Name(Collections.unmodifiableList(l));
+	}
 
 	/**
 	 * 4.1.4. Message compression
@@ -20,42 +36,30 @@ public class Name implements Comparable<Name> {
 	public static final int MASK_POINTER = 0xC0; // 1100 0000
 
 	/**
-	 * 2.3.1. Preferred name syntax
+	 * 2.3.4. Size limits
 	 */
 	public static final int MAX_LABEL_SIZE = 63; // 0011 1111
 
-	protected final byte[] name;
+	/**
+	 * 2.3.4. Size limits
+	 */
+	public static final int MAX_NAME_SIZE = 255;
+
+	protected final List<byte[]> name;
 
 	public Name(ChannelBuffer buffer) {
 		this.name = this.parse(buffer);
 	}
 
 	public Name(String name) {
-		// TODO charset? double byte string?
-		this(name.getBytes());
+		this.name = this.parse(name);
 	}
 
-	protected Name(byte[] rawdata) {
-		verify(rawdata);
+	protected Name(List<byte[]> rawdata) {
 		this.name = rawdata;
 	}
 
-	protected void verify(byte[] ary) {
-		int labelsize = 0;
-		for (int i = 0, length = ary.length; i < length; i++) {
-			byte b = ary[i];
-			if (('.' == b) && (++i < length) && ('.' == ary[i])) {
-				throw new IllegalArgumentException(Messages.NullLabelIsNotValid);
-			}
-			labelsize++;
-		}
-		if (MAX_LABEL_SIZE < labelsize) {
-			throw new IllegalArgumentException(String.format(
-					Messages.LabelsMustBe63orLess, labelsize));
-		}
-	}
-
-	protected byte[] parse(ChannelBuffer buffer) {
+	protected List<byte[]> parse(ChannelBuffer buffer) {
 		List<byte[]> list = new ArrayList<byte[]>();
 		boolean jumped = false;
 
@@ -83,47 +87,121 @@ public class Name implements Comparable<Name> {
 			buffer.resetReaderIndex();
 		}
 
-		return freeze(buffer, list);
+		return Collections.unmodifiableList(list);
 	}
 
-	protected byte[] freeze(ChannelBuffer buffer, List<byte[]> list) {
-		int size = 0;
-		for (byte[] a : list) {
-			size += a.length;
-			size += 1;
+	/**
+	 * 5.1. Format
+	 * 
+	 * <pre>
+	 * \X              where X is any character other than a digit (0-9), is
+	 *                 used to quote that character so that its special meaning
+	 *                 does not apply.  For example, "\." can be used to place
+	 *                 a dot character in a label.
+	 * 
+	 * \DDD            where each D is a digit is the octet corresponding to
+	 *                 the decimal number described by DDD.  The resulting
+	 *                 octet is assumed to be text and is not checked for
+	 *                 special meaning.
+	 * </pre>
+	 * 
+	 * @param namedata
+	 * @return
+	 */
+	protected List<byte[]> parse(String namedata) {
+		if (".".equals(namedata)) {
+			return NULL_NAME.name;
 		}
-		byte[] result = new byte[size];
-		int pos = 0;
-		for (byte[] a : list) {
-			System.arraycopy(a, 0, result, pos, a.length);
-			pos += a.length;
-			result[pos] = '.';
-			pos++;
+		// TODO IDN support from RFC3490 RFC3491 RFC3492 RFC3454
+		List<byte[]> result = new ArrayList<byte[]>();
+		byte[] bytes = namedata.getBytes();
+		int namesize = 0;
+		ChannelBuffer buffer = ChannelBuffers.buffer(MAX_LABEL_SIZE);
+		int current = 0;
+		int length = bytes.length;
+
+		boolean escape = false;
+		int digits = 0;
+		int value = 0;
+		for (; current < length; current++) {
+			byte b = bytes[current];
+			if (escape) {
+				if (isDigits(b) && digits++ < 3) {
+					value *= 10;
+					value += (b - '0');
+					if (255 < value) {
+						throw new IllegalArgumentException(String.format(
+								"invalid escape invalid value %s", value));
+					}
+					if (1 < digits) {
+						writeByte(namedata, buffer, (byte) value);
+						escape = false;
+					}
+				} else if (0 < digits) {
+					throw new IllegalArgumentException(String.format(
+							"invalid escape invalid current byte %s", b));
+				} else {
+					writeByte(namedata, buffer, b);
+					escape = false;
+				}
+			} else if (b == '\\') {
+				escape = true;
+				digits = 0;
+				value = 0;
+			} else if (b == '.') {
+				namesize = namesize + addBytes(result, buffer) + 1;
+			} else {
+				writeByte(namedata, buffer, b);
+			}
+		}
+
+		// relative domain name
+		if (buffer.readable()) {
+			namesize = namesize + addBytes(result, buffer) + 1;
+		}
+		if (MAX_NAME_SIZE < namesize) {
+			throw new IllegalArgumentException(String.format(
+					Messages.NamesMustBe255orLess, namesize));
 		}
 		return result;
 	}
 
-	protected byte[] parse(String namedata) {
-		return null;
+	protected void writeByte(String namedata, ChannelBuffer buffer, byte b) {
+		if (buffer.writable()) {
+			buffer.writeByte(b);
+		} else {
+			throw new IllegalArgumentException(String.format(
+					Messages.LabelsMustBe63orLess, namedata));
+		}
+	}
+
+	protected int addBytes(List<byte[]> result, ChannelBuffer buffer) {
+		int size = buffer.readableBytes();
+		if (size < 1) {
+			throw new IllegalArgumentException(Messages.NullLabelIsNotValid);
+		}
+		byte[] newone = new byte[size];
+		buffer.readBytes(newone);
+		buffer.clear();
+		result.add(newone);
+		return size;
+	}
+
+	protected boolean isDigits(byte b) {
+		return b <= '0' && b <= '9';
 	}
 
 	public void write(ChannelBuffer buffer, NameCompressor compressor) {
 		// TODO DNAME and other non compress RR
+		// TODO need writing cache?
 		if (writePointer(buffer, compressor, this) == false) {
 			compressor.put(this, buffer.writerIndex());
-			List<byte[]> list = split();
-			int namelength = this.name.length;
-			int consumed = 0;
-			for (byte[] current : list) {
+			for (int i = 0, size = this.name.size(); i < size; i++) {
+				byte[] current = this.name.get(i);
 				buffer.writeByte(current.length);
 				buffer.writeBytes(current);
-
-				consumed += (current.length + 1);
-				int newlength = namelength - consumed;
-				if (0 < newlength) {
-					byte[] newone = new byte[newlength];
-					System.arraycopy(this.name, consumed, newone, 0, newlength);
-					Name n = new Name(newone);
+				if (i < size) {
+					Name n = new Name(this.name.subList(i, size - 1));
 					if (writePointer(buffer, compressor, n)) {
 						break;
 					} else {
@@ -147,59 +225,38 @@ public class Name implements Comparable<Name> {
 		return false;
 	}
 
-	protected List<byte[]> split() {
-		List<byte[]> result = new ArrayList<byte[]>();
-		for (int i = 0, begin = 0, part = 0, length = this.name.length; i < length; i++) {
-			byte b = this.name[i];
-			if ('.' == b) {
-				byte[] newone = new byte[part];
-				System.arraycopy(this.name, begin, newone, 0, part);
-				result.add(newone);
-				part = 0;
-				begin = i + 1;
-			} else {
-				part++;
-			}
-		}
-		return result;
-	}
-
 	public Name toParent() {
-		for (int i = 0, length = this.name.length; i < length - 1; i++) {
-			byte b = this.name[i];
-			if ('.' == b) {
-				byte[] newone = new byte[length - i - 1];
-				System.arraycopy(this.name, i + 1, newone, 0, newone.length);
-				return new Name(newone);
-			}
+		int size = this.name.size();
+		if (1 < size) {
+			List<byte[]> newone = this.name.subList(1, size);
+			return new Name(newone);
 		}
 		return NULL_NAME;
 	}
 
 	public Name toWildcard() {
-		for (int i = 1, length = this.name.length; i < length; i++) {
-			byte b = this.name[i];
-			if ('.' == b) {
-				byte[] newone = new byte[length - i - 1 + 2];
-				newone[0] = '*';
-				newone[1] = '.';
-				System.arraycopy(this.name, i + 1, newone, 2, newone.length - 2);
-				return new Name(newone);
-			}
+		int size = this.name.size();
+		if (1 < size) {
+			List<byte[]> newone = new ArrayList<byte[]>(size);
+			newone.add(WILDCARD_ARRAY);
+			newone.addAll(this.name.subList(1, size));
+			return new Name(Collections.unmodifiableList(newone));
 		}
 		return WILDCARD;
 	}
 
 	public boolean contains(Name other) {
 		notNull(other, "other");
-		int myLength = this.name.length;
-		int otherLength = other.name.length;
-		if (myLength < otherLength) {
+		int mySize = this.name.size();
+		int otherSize = other.name.size();
+		if (mySize < otherSize) {
 			return false;
 		}
-		int diff = myLength - otherLength;
-		for (int i = 0; i < otherLength; i++) {
-			if (this.name[i + diff] != other.name[i]) {
+		int diff = mySize - otherSize;
+		for (int i = 0; i < otherSize; i++) {
+			byte[] me = this.name.get(i + diff);
+			byte[] yu = other.name.get(i);
+			if (Arrays.equals(me, yu) == false) {
 				return false;
 			}
 		}
@@ -210,14 +267,17 @@ public class Name implements Comparable<Name> {
 		notNull(from, "from");
 		notNull(to, "to");
 		if (contains(from)) {
-			int toLength = to.name.length;
-			int diff = this.name.length - from.name.length;
-			int newsize = diff + toLength;
-			if (newsize < MAX_LABEL_SIZE) {
-				byte[] newone = new byte[newsize];
-				System.arraycopy(this.name, 0, newone, 0, diff);
-				System.arraycopy(to.name, 0, newone, diff, toLength);
-				return new Name(newone);
+			int diff = this.name.size() - from.name.size();
+			int newsize = diff + to.name.size();
+			List<byte[]> newone = new ArrayList<byte[]>(newsize);
+			newone.addAll(this.name.subList(0, diff));
+			newone.addAll(to.name);
+			int size = 0;
+			for (byte[] ary : newone) {
+				size += ary.length;
+			}
+			if (size < MAX_NAME_SIZE) {
+				return new Name(Collections.unmodifiableList(newone));
 			}
 		}
 		return null;
@@ -227,7 +287,9 @@ public class Name implements Comparable<Name> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(this.name);
+		for (byte[] b : this.name) {
+			result = prime * result + Arrays.hashCode(b);
+		}
 		return result;
 	}
 
@@ -243,23 +305,49 @@ public class Name implements Comparable<Name> {
 	}
 
 	public boolean equals(Name other) {
-		return (other != null) && Arrays.equals(this.name, other.name);
+		if (other == null) {
+			return false;
+		}
+		int mySize = this.name.size();
+		int yrSize = other.name.size();
+		if (mySize != yrSize) {
+			return false;
+		}
+		for (int i = 0; i < mySize; i++) {
+			byte[] me = this.name.get(i);
+			byte[] yu = other.name.get(i);
+			if (Arrays.equals(me, yu) == false) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public int compareTo(Name o) {
 		// TODO use more effective algorithm for red black tree.
-		int ml = this.name.length;
-		int ol = o.name.length;
-		if (ml != ol) {
-			return ml - ol;
+		int mySize = this.name.size();
+		int yrSize = o.name.size();
+		if (mySize != yrSize) {
+			return mySize - yrSize;
 		}
-		for (int i = this.name.length - 1, j = o.name.length - 1; (-1 < i)
-				&& (-1 < j); i--, j--) {
-			byte mine = this.name[i];
-			byte other = o.name[j];
-			if (mine != other) {
-				return mine - other;
+		int minSize = Math.min(mySize, yrSize);
+		for (int i = minSize - 1; (-1 < i); i--) {
+			byte[] mine = this.name.get(i);
+			byte[] other = o.name.get(i);
+			if (Arrays.equals(mine, other) == false) {
+				int size = Math.min(mine.length, other.length);
+				for (int ii = size - 1; -1 < ii; i--) {
+					byte mb = mine[ii];
+					byte yb = other[ii];
+					if (mb != yb) {
+						if (mb < yb) {
+							return -1;
+						} else {
+							return 1;
+						}
+					}
+				}
 			}
 		}
 		return 0;
@@ -267,7 +355,34 @@ public class Name implements Comparable<Name> {
 
 	@Override
 	public String toString() {
-		// TODO charset ?
-		return new String(this.name);
+		StringBuilder stb = new StringBuilder();
+		DecimalFormat fmt = new DecimalFormat();
+		fmt.setMinimumIntegerDigits(3);
+		for (byte[] ary : this.name) {
+			for (int i = 0, l = ary.length; i < l; i++) {
+				int b = ary[i] & 0xFF;
+				if (b < 0x21 || 0x80 < b) {
+					stb.append('\\');
+					stb.append(fmt.format(b));
+				} else {
+					switch (b) {
+					case '"':
+					case '.':
+					case '(':
+					case ')':
+					case '\\':
+					case '@':
+					case '$':
+						stb.append('\\');
+					default:
+						stb.append((char) b);
+						break;
+					}
+				}
+			}
+			stb.append('.');
+		}
+
+		return stb.toString();
 	}
 }

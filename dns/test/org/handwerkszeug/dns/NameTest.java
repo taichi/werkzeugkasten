@@ -72,7 +72,7 @@ public class NameTest {
 	public void testParse() {
 		Name name = new Name(this.buffer);
 
-		assertEquals("google.com.", new String(name.name));
+		assertEquals("google.com.", name.toString());
 
 		int mx = this.buffer.readUnsignedShort();
 		assertEquals(15, mx);
@@ -81,13 +81,13 @@ public class NameTest {
 		assertEquals(DNSClass.IN, IN);
 
 		Name n = new Name(this.buffer); // ANSERS SECTION 1st record
-		assertEquals("google.com.", new String(n.name));
+		assertEquals("google.com.", n.toString());
 	}
 
 	@Test
 	public void testSplit() {
 		Name name = new Name("example.com.");
-		List<byte[]> list = name.split();
+		List<byte[]> list = name.name;
 		assertEquals("example", new String(list.get(0)));
 		assertEquals("com", new String(list.get(1)));
 	}
@@ -147,7 +147,7 @@ public class NameTest {
 		this.buffer.readerIndex(28);
 
 		Name n = new Name(this.buffer);
-		assertEquals("google.com.", new String(n.name));
+		assertEquals("google.com.", n.toString());
 	}
 
 	@Test
@@ -161,7 +161,7 @@ public class NameTest {
 		try {
 			StringBuilder stb = new StringBuilder();
 			for (int i = 0; i < 64; i++) {
-				stb.append("a.");
+				stb.append("a");
 			}
 			new Name(stb.toString());
 			fail();
@@ -197,7 +197,10 @@ public class NameTest {
 		assertNull(n.replace(to, from));
 
 		StringBuilder stb = new StringBuilder();
-		for (int i = 0; i < 60; i++) {
+		for (int i = 1; i < 250; i++) {
+			if ((i % 63) == 0) {
+				stb.append(".");
+			}
 			stb.append(String.valueOf(i % 10));
 		}
 		Name tooLong = new Name(stb.toString());

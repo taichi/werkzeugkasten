@@ -76,7 +76,7 @@ public class DNSMessageTest {
 		ResourceRecord google = q.get(0);
 		assertEquals(RRType.MX, google.type());
 		assertEquals(DNSClass.IN, google.dnsClass());
-		assertEquals("google.com.", new String(google.name().name));
+		assertEquals("google.com.", google.name().toString());
 
 		assertEquals(4, msg.answer().size());
 
@@ -86,8 +86,7 @@ public class DNSMessageTest {
 		assertEquals(RRType.MX, ans3.type());
 		MXRecord ans3mx = (MXRecord) ans3;
 		assertEquals(200, ans3mx.preference());
-		assertEquals("google.com.s9a2.psmtp.com.", new String(
-				ans3mx.exchange().name));
+		assertEquals("google.com.s9a2.psmtp.com.", ans3mx.exchange().toString());
 
 		// google.com. 336761 IN NS ns3.google.com.
 		ResourceRecord auth = msg.authority().get(1);

@@ -18,7 +18,9 @@ public class Messages {
 
 	public static String InvalidCompressionMask = "Invalid compression mask %s";
 
-	public static String LabelsMustBe63orLess = "Labels must be 63 characters or less. current size=%s";
+	public static String LabelsMustBe63orLess = "Labels must be 63 characters or less. current input=%s";
+
+	public static String NamesMustBe255orLess = "Labels must be 255 characters or less. current size=%s";
 
 	public static String StringMustBe255orLess = "String must be 255 characters or less. current length=%s";
 
