@@ -200,8 +200,9 @@ public class Name implements Comparable<Name> {
 				byte[] current = this.name.get(i);
 				buffer.writeByte(current.length);
 				buffer.writeBytes(current);
-				if (i < size) {
-					Name n = new Name(this.name.subList(i, size - 1));
+				if (i + 1 < size) {
+					Name n = new Name(this.name.subList(i + 1, size));
+					System.out.println(n);
 					if (writePointer(buffer, compressor, n)) {
 						break;
 					} else {
