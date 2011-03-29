@@ -35,9 +35,9 @@ public class Name implements Comparable<Name> {
 		this(name.getBytes());
 	}
 
-	protected Name(byte[] name) {
-		verify(name);
-		this.name = name;
+	protected Name(byte[] rawdata) {
+		verify(rawdata);
+		this.name = rawdata;
 	}
 
 	protected void verify(byte[] ary) {
@@ -101,6 +101,10 @@ public class Name implements Comparable<Name> {
 			pos++;
 		}
 		return result;
+	}
+
+	protected byte[] parse(String namedata) {
+		return null;
 	}
 
 	public void write(ChannelBuffer buffer, NameCompressor compressor) {

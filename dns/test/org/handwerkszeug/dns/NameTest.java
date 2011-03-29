@@ -86,8 +86,7 @@ public class NameTest {
 
 	@Test
 	public void testSplit() {
-		byte[] ary = "example.com.".getBytes();
-		Name name = new Name(ary);
+		Name name = new Name("example.com.");
 		List<byte[]> list = name.split();
 		assertEquals("example", new String(list.get(0)));
 		assertEquals("com", new String(list.get(1)));
@@ -104,8 +103,7 @@ public class NameTest {
 
 	@Test
 	public void testWrite() {
-		byte[] ary = "example.com.".getBytes();
-		Name name = new Name(ary);
+		Name name = new Name("example.com.");
 		ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
 		SimpleNameCompressor compressor = new SimpleNameCompressor();
 		name.write(cb, compressor);
