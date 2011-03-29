@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.handwerkszeug.dns.nls.Messages;
@@ -17,10 +18,11 @@ public class Name implements Comparable<Name> {
 	public static final Name NULL_NAME;
 	public static final Name WILDCARD;
 
+	static final byte[] NULL_ARRAY = new byte[0];
 	static final byte[] WILDCARD_ARRAY = new byte[] { '*' };
 
 	static {
-		NULL_NAME = create(new byte[] { '.' });
+		NULL_NAME = create(NULL_ARRAY);
 		WILDCARD = create(WILDCARD_ARRAY);
 	}
 
@@ -63,9 +65,13 @@ public class Name implements Comparable<Name> {
 		List<byte[]> list = new ArrayList<byte[]>();
 		boolean jumped = false;
 
-		for (int length = buffer.readUnsignedByte(); 0 < length; length = buffer
+		int namesize = 0;
+		for (int length = buffer.readUnsignedByte(); -1 < length; length = buffer
 				.readUnsignedByte()) {
-			if ((length & MASK_POINTER) != 0) {
+			if (length == 0) {
+				list.add(NULL_ARRAY);
+				break;
+			} else if ((length & MASK_POINTER) != 0) {
 				int p = ((length ^ MASK_POINTER) << 8)
 						+ buffer.readUnsignedByte();
 				if (jumped == false) {
@@ -74,6 +80,11 @@ public class Name implements Comparable<Name> {
 				}
 				buffer.readerIndex(p);
 			} else if (length <= MAX_LABEL_SIZE) {
+				namesize += length;
+				if (MAX_NAME_SIZE < namesize) {
+					throw new IllegalArgumentException(String.format(
+							Messages.NamesMustBe255orLess, namesize));
+				}
 				byte[] ary = new byte[length];
 				buffer.readBytes(ary);
 				list.add(ary);
@@ -126,22 +137,22 @@ public class Name implements Comparable<Name> {
 		for (; current < length; current++) {
 			byte b = bytes[current];
 			if (escape) {
-				if (isDigits(b) && digits++ < 3) {
+				if ((b <= '0' && b <= '9') && digits++ < 3) {
 					value *= 10;
 					value += (b - '0');
-					if (255 < value) {
+					if (value < 0 || 255 < value) {
 						throw new IllegalArgumentException(String.format(
 								"invalid escape invalid value %s", value));
 					}
 					if (1 < digits) {
-						writeByte(namedata, buffer, (byte) value);
+						appendByte(namedata, buffer, (byte) value);
 						escape = false;
 					}
 				} else if (0 < digits) {
 					throw new IllegalArgumentException(String.format(
 							"invalid escape invalid current byte %s", b));
 				} else {
-					writeByte(namedata, buffer, b);
+					appendByte(namedata, buffer, b);
 					escape = false;
 				}
 			} else if (b == '\\') {
@@ -151,13 +162,16 @@ public class Name implements Comparable<Name> {
 			} else if (b == '.') {
 				namesize = namesize + addBytes(result, buffer) + 1;
 			} else {
-				writeByte(namedata, buffer, b);
+				appendByte(namedata, buffer, b);
 			}
 		}
 
 		// relative domain name
 		if (buffer.readable()) {
 			namesize = namesize + addBytes(result, buffer) + 1;
+		} else {
+			result.add(NULL_ARRAY);
+			namesize += 1;
 		}
 		if (MAX_NAME_SIZE < namesize) {
 			throw new IllegalArgumentException(String.format(
@@ -166,7 +180,7 @@ public class Name implements Comparable<Name> {
 		return result;
 	}
 
-	protected void writeByte(String namedata, ChannelBuffer buffer, byte b) {
+	protected void appendByte(String namedata, ChannelBuffer buffer, byte b) {
 		if (buffer.writable()) {
 			buffer.writeByte(b);
 		} else {
@@ -187,10 +201,6 @@ public class Name implements Comparable<Name> {
 		return size;
 	}
 
-	protected boolean isDigits(byte b) {
-		return b <= '0' && b <= '9';
-	}
-
 	public void write(ChannelBuffer buffer, NameCompressor compressor) {
 		// TODO DNAME and other non compress RR
 		// TODO need writing cache?
@@ -198,18 +208,18 @@ public class Name implements Comparable<Name> {
 			compressor.put(this, buffer.writerIndex());
 			for (int i = 0, size = this.name.size(); i < size; i++) {
 				byte[] current = this.name.get(i);
-				buffer.writeByte(current.length);
-				buffer.writeBytes(current);
-				if (i + 1 < size) {
-					Name n = new Name(this.name.subList(i + 1, size));
-					System.out.println(n);
-					if (writePointer(buffer, compressor, n)) {
-						break;
-					} else {
-						compressor.put(n, buffer.writerIndex());
+				int cl = current.length;
+				buffer.writeByte(cl);
+				if (0 < cl) {
+					buffer.writeBytes(current);
+					if (i + 1 < size) {
+						Name n = new Name(this.name.subList(i + 1, size));
+						if (writePointer(buffer, compressor, n)) {
+							break;
+						} else {
+							compressor.put(n, buffer.writerIndex());
+						}
 					}
-				} else {
-					buffer.writeZero(1); // Null label
 				}
 			}
 		}
@@ -359,7 +369,8 @@ public class Name implements Comparable<Name> {
 		StringBuilder stb = new StringBuilder();
 		DecimalFormat fmt = new DecimalFormat();
 		fmt.setMinimumIntegerDigits(3);
-		for (byte[] ary : this.name) {
+		for (Iterator<byte[]> cursor = this.name.iterator(); cursor.hasNext();) {
+			byte[] ary = cursor.next();
 			for (int i = 0, l = ary.length; i < l; i++) {
 				int b = ary[i] & 0xFF;
 				if (b < 0x21 || 0x80 < b) {
@@ -381,9 +392,10 @@ public class Name implements Comparable<Name> {
 					}
 				}
 			}
-			stb.append('.');
+			if (cursor.hasNext()) {
+				stb.append('.');
+			}
 		}
-
 		return stb.toString();
 	}
 }

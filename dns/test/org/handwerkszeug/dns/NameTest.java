@@ -206,4 +206,9 @@ public class NameTest {
 		Name tooLong = new Name(stb.toString());
 		assertNull(n.replace(from, tooLong));
 	}
+
+	@Test
+	public void testEscape() throws Exception {
+		throw new UnsupportedOperationException();
+	}
 }

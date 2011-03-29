@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Before;
-import org.junit.Test;
 
 public class RRTypeTest {
 
@@ -12,7 +11,7 @@ public class RRTypeTest {
 	public void setUp() throws Exception {
 	}
 
-	@Test
+	// @Test
 	public void testName() throws Exception {
 		// printing for grammar file.
 		Set<RRType> set = new HashSet<RRType>();
