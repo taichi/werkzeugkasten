@@ -26,6 +26,8 @@ public class Messages {
 
 	public static String MixtureOfEscapedDigitAndNonDigit = "mixture of escaped digit and non-digit namedata=%s";
 
+	public static String InvalidEscapeSequence = "invalid escape sequence namedata=%s";
+
 	public static String StringMustBe255orLess = "String must be 255 characters or less. current length=%s";
 
 	public static String DataMustBe65535orLess = "Data must be 65535 characters or less. current length=%s";

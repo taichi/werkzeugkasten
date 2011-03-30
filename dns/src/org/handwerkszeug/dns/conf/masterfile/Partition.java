@@ -1,4 +1,4 @@
-package org.handwerkszeug.dns.conf;
+package org.handwerkszeug.dns.conf.masterfile;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-package org.handwerkszeug.dns.conf;
+package org.handwerkszeug.dns.conf.masterfile;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,7 +6,9 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.handwerkszeug.dns.conf.Partition.PartitionType;
+import org.handwerkszeug.dns.conf.masterfile.Partition;
+import org.handwerkszeug.dns.conf.masterfile.Partitioner;
+import org.handwerkszeug.dns.conf.masterfile.Partition.PartitionType;
 import org.junit.Test;
 
 public class PartitionerTest {

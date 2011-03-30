@@ -1,9 +1,9 @@
-package org.handwerkszeug.dns.conf;
+package org.handwerkszeug.dns.conf.masterfile;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.handwerkszeug.dns.conf.Partition.PartitionType;
+import org.handwerkszeug.dns.conf.masterfile.Partition.PartitionType;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.DynamicChannelBuffer;
 

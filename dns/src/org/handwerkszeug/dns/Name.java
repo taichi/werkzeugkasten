@@ -170,7 +170,7 @@ public class Name implements Comparable<Name> {
 
 		if (escape) {
 			throw new IllegalArgumentException(String.format(
-					Messages.MixtureOfEscapedDigitAndNonDigit, namedata));
+					Messages.InvalidEscapeSequence, namedata));
 		}
 
 		if (buffer.readable()) {
