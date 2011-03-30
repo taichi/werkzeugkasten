@@ -22,6 +22,10 @@ public class Messages {
 
 	public static String NamesMustBe255orLess = "Labels must be 255 characters or less. current size=%s";
 
+	public static String EscapedDecimalIsInvalid = "escaped decimal is invalid  value=%s";
+
+	public static String MixtureOfEscapedDigitAndNonDigit = "mixture of escaped digit and non-digit namedata=%s";
+
 	public static String StringMustBe255orLess = "String must be 255 characters or less. current length=%s";
 
 	public static String DataMustBe65535orLess = "Data must be 65535 characters or less. current length=%s";

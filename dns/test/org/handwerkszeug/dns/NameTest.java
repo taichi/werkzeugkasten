@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.buffer.DynamicChannelBuffer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -111,7 +112,7 @@ public class NameTest {
 		assertEquals(name, actual);
 	}
 
-	// @Test
+	@Test
 	public void test() {
 		int google = this.buffer.readUnsignedByte();
 		assertEquals(6, google);
@@ -168,6 +169,57 @@ public class NameTest {
 		} catch (IllegalArgumentException e) {
 			assertTrue(true);
 		}
+
+		try {
+			StringBuilder stb = new StringBuilder();
+			for (int i = 0; i < 128; i++) {
+				stb.append("a");
+				stb.append(".");
+			}
+			new Name(stb.toString());
+			fail();
+		} catch (IllegalArgumentException e) {
+			assertTrue(true);
+		}
+	}
+
+	@Test
+	public void testEscape() throws Exception {
+		String namedata = "\\\"\\(\\)\\.\\;\\@\\$";
+		Name n = new Name(namedata);
+		assertEquals(namedata, n.toString());
+
+		StringBuilder stb = new StringBuilder();
+		for (int i = 0; i < 126; i++) {
+			stb.append("a");
+			stb.append(".");
+		}
+		stb.append("\\..");
+		Name tooLong = new Name(stb.toString());
+		ChannelBuffer buf = new DynamicChannelBuffer(300);
+		tooLong.write(buf, NullNameCompressor.INSTANCE);
+		assertEquals(255, buf.readableBytes());
+
+	}
+
+	@Test
+	public void testEscapeNumber() throws Exception {
+		String namedata = "\\128\\032";
+		Name n = new Name(namedata);
+		assertEquals(namedata, n.toString());
+
+		escapeFail("\\256");
+		escapeFail("\\1a");
+		escapeFail("\\12");
+	}
+
+	protected void escapeFail(String data) {
+		try {
+			new Name(data);
+			fail();
+		} catch (IllegalArgumentException e) {
+			assertTrue(true);
+		}
 	}
 
 	@Test
@@ -207,8 +259,4 @@ public class NameTest {
 		assertNull(n.replace(from, tooLong));
 	}
 
-	@Test
-	public void testEscape() throws Exception {
-		throw new UnsupportedOperationException();
-	}
 }

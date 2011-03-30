@@ -137,20 +137,22 @@ public class Name implements Comparable<Name> {
 		for (; current < length; current++) {
 			byte b = bytes[current];
 			if (escape) {
-				if ((b <= '0' && b <= '9') && digits++ < 3) {
+				if ((('0' <= b) && (b <= '9')) && (digits++ < 3)) {
 					value *= 10;
 					value += (b - '0');
-					if (value < 0 || 255 < value) {
+					if (255 < value) {
 						throw new IllegalArgumentException(String.format(
-								"invalid escape invalid value %s", value));
+								Messages.EscapedDecimalIsInvalid, value));
 					}
-					if (1 < digits) {
+					if (2 < digits) {
 						appendByte(namedata, buffer, (byte) value);
 						escape = false;
 					}
 				} else if (0 < digits) {
-					throw new IllegalArgumentException(String.format(
-							"invalid escape invalid current byte %s", b));
+					throw new IllegalArgumentException(
+							String.format(
+									Messages.MixtureOfEscapedDigitAndNonDigit,
+									namedata));
 				} else {
 					appendByte(namedata, buffer, b);
 					escape = false;
@@ -166,13 +168,19 @@ public class Name implements Comparable<Name> {
 			}
 		}
 
-		// relative domain name
-		if (buffer.readable()) {
-			namesize = namesize + addBytes(result, buffer) + 1;
-		} else {
-			result.add(NULL_ARRAY);
-			namesize += 1;
+		if (escape) {
+			throw new IllegalArgumentException(String.format(
+					Messages.MixtureOfEscapedDigitAndNonDigit, namedata));
 		}
+
+		if (buffer.readable()) {
+			// relative domain name
+			namesize = namesize + addBytes(result, buffer);
+		} else {
+			// absolute domain name
+			result.add(NULL_ARRAY);
+		}
+		namesize += 1;
 		if (MAX_NAME_SIZE < namesize) {
 			throw new IllegalArgumentException(String.format(
 					Messages.NamesMustBe255orLess, namesize));
@@ -373,15 +381,16 @@ public class Name implements Comparable<Name> {
 			byte[] ary = cursor.next();
 			for (int i = 0, l = ary.length; i < l; i++) {
 				int b = ary[i] & 0xFF;
-				if (b < 0x21 || 0x80 < b) {
+				if ((b < 0x21) || (0x7F < b)) {
 					stb.append('\\');
 					stb.append(fmt.format(b));
 				} else {
 					switch (b) {
 					case '"':
-					case '.':
 					case '(':
 					case ')':
+					case '.':
+					case ';':
 					case '\\':
 					case '@':
 					case '$':
