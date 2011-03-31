@@ -6,8 +6,6 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.handwerkszeug.dns.conf.masterfile.Partition;
-import org.handwerkszeug.dns.conf.masterfile.Partitioner;
 import org.handwerkszeug.dns.conf.masterfile.Partition.PartitionType;
 import org.junit.Test;
 
@@ -36,13 +34,7 @@ public class PartitionerTest {
 				.getBytes()));
 		list.add(Partition.EOF);
 
-		Partitioner p = create(s);
-		for (Partition exp : list) {
-			Partition act = p.partition();
-			System.out.println(act);
-			assertEquals(exp, act);
-		}
-
+		assertPartitions(list, s);
 		// while (true) {
 		// Partition pp = p.partition();
 		// if (pp == Partition.EOF) {
@@ -61,9 +53,26 @@ public class PartitionerTest {
 		list.add(Partition.LP);
 		list.add(new Partition(PartitionType.Default, "aaaa".getBytes()));
 		list.add(Partition.RP);
-		Partitioner p = create(s);
+		assertPartitions(list, s);
+	}
 
-		for (Partition exp : list) {
+	@Test
+	public void testQuoted() throws Exception {
+		String s = "$INCLUDE \"c:\\program \nfiles\\named.conf\"";
+		List<Partition> list = new ArrayList<Partition>();
+		list.add(new Partition(PartitionType.Default, "$INCLUDE".getBytes()));
+		list.add(new Partition(PartitionType.Whitespace, " ".getBytes()));
+		list.add(new Partition(PartitionType.Quoted,
+				"\"c:\\program \nfiles\\named.conf\"".getBytes()));
+
+		assertPartitions(list, s);
+	}
+
+	protected void assertPartitions(List<Partition> expected, String data)
+			throws Exception {
+		Partitioner p = create(data);
+
+		for (Partition exp : expected) {
 			assertEquals(exp, p.partition());
 		}
 	}
