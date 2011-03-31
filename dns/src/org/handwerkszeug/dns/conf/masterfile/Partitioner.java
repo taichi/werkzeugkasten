@@ -11,7 +11,7 @@ public class Partitioner {
 
 	final InputStream source;
 
-	static final int DEFAULT_BUFFER_SIZE = 200;
+	static final int DEFAULT_BUFFER_SIZE = 2000;
 	protected ChannelBuffer working;
 	protected Partition next;
 
