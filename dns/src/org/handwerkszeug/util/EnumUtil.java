@@ -1,6 +1,5 @@
 package org.handwerkszeug.util;
 
-
 public class EnumUtil {
 
 	public static <E extends Enum<E> & VariableEnum> E find(E[] values,
@@ -24,8 +23,12 @@ public class EnumUtil {
 
 	public static <E extends Enum<E>> E find(E[] values, String value,
 			E defaultValue) {
+		if (value == null || value.isEmpty()) {
+			return defaultValue;
+		}
+		String key = value.toUpperCase();
 		for (E e : values) {
-			if (e.name().equals(value)) {
+			if (e.name().equals(key)) {
 				return e;
 			}
 		}

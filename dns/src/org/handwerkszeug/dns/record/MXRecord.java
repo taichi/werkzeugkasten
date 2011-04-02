@@ -1,5 +1,7 @@
 package org.handwerkszeug.dns.record;
 
+import java.util.List;
+
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
@@ -57,6 +59,23 @@ public class MXRecord extends AbstractRecord<MXRecord> {
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		buffer.writeShort(this.preference);
 		this.exchange.write(buffer, compressor);
+	}
+
+	@Override
+	public void setRDATA(List<String> list) {
+		if (2 == list.size()) {
+			int pref = Integer.parseInt(list.get(0));
+			if (-1 < pref && pref < 65536) {
+				this.preference = pref;
+			} else {
+				// TODO error message.
+				throw new IllegalArgumentException();
+			}
+			this.exchange = new Name(list.get(1));
+		} else {
+			// TODO error message
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override

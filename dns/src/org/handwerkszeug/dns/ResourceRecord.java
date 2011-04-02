@@ -1,5 +1,7 @@
 package org.handwerkszeug.dns;
 
+import java.util.List;
+
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -75,6 +77,8 @@ public interface ResourceRecord {
 	int rdlength();
 
 	void rdlength(int rdlength);
+
+	void setRDATA(List<String> list);
 
 	void parse(ChannelBuffer buffer);
 

@@ -2,6 +2,7 @@ package org.handwerkszeug.dns.record;
 
 import java.net.InetAddress;
 import java.util.Arrays;
+import java.util.List;
 
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
@@ -83,6 +84,12 @@ public class WKSRecord extends AbstractRecord<WKSRecord> {
 		buffer.writeInt((int) this.address);
 		buffer.writeByte(this.protocol);
 		buffer.writeBytes(this.bitmap);
+	}
+
+	@Override
+	public void setRDATA(List<String> list) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override

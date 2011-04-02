@@ -1,6 +1,7 @@
 package org.handwerkszeug.dns.record;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
@@ -44,6 +45,11 @@ public class NULLRecord extends AbstractRecord<NULLRecord> {
 	@Override
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		buffer.writeBytes(anything());
+	}
+
+	@Override
+	public void setRDATA(List<String> list) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

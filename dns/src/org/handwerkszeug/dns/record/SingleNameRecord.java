@@ -1,5 +1,7 @@
 package org.handwerkszeug.dns.record;
 
+import java.util.List;
+
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
@@ -42,6 +44,15 @@ public class SingleNameRecord extends AbstractRecord<SingleNameRecord> {
 	@Override
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		this.oneName.write(buffer, compressor);
+	}
+
+	@Override
+	public void setRDATA(List<String> list) {
+		if (0 < list.size()) {
+			this.oneName = new Name(list.get(0));
+		} else {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override

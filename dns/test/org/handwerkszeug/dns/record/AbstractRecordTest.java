@@ -4,6 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.net.InetAddress;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
@@ -36,6 +37,10 @@ public class AbstractRecordTest {
 		@Override
 		protected ResourceRecord newInstance() {
 			return null;
+		}
+
+		@Override
+		public void setRDATA(List<String> list) {
 		}
 	}
 

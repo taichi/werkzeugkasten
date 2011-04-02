@@ -1,6 +1,7 @@
 package org.handwerkszeug.dns.record;
 
 import java.net.InetAddress;
+import java.util.List;
 
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
@@ -38,6 +39,20 @@ public class ARecord extends AbstractRecord<ARecord> {
 	@Override
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		buffer.writeInt((int) this.address);
+	}
+
+	@Override
+	public void setRDATA(List<String> list) {
+		if (0 < list.size()) {
+			String s = list.get(0);
+			if (AddressUtil.v4Address.matcher(s).matches()) {
+				InetAddress addr = AddressUtil.getByName(s);
+				this.address = AddressUtil.toLong(addr);
+			}
+		} else {
+			// TODO error message.
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override

@@ -52,6 +52,13 @@ public class TXTRecord extends AbstractRecord<TXTRecord> {
 	}
 
 	@Override
+	public void setRDATA(List<String> list) {
+		for (String s : list) {
+			this.strings.add(s.getBytes());
+		}
+	}
+
+	@Override
 	protected ResourceRecord newInstance() {
 		return new TXTRecord(this);
 	}

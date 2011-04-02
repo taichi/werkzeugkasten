@@ -35,6 +35,10 @@ public class Partition {
 		return this.division;
 	}
 
+	public String getString() {
+		return new String(this.division);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

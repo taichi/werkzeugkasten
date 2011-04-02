@@ -40,8 +40,9 @@ public class Partitioner {
 				if (0 < this.working.readerIndex()) {
 					result = makePartition(PartitionType.Default, 0);
 					discardBefore(0);
+				} else {
+					break;
 				}
-				break;
 			}
 			if (ch == '\r') {
 				byte n = readByte();

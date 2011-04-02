@@ -4,10 +4,12 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
 import org.handwerkszeug.dns.ResourceRecord;
+import org.handwerkszeug.util.AddressUtil;
 import org.handwerkszeug.util.CompareUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
@@ -52,6 +54,20 @@ public class AAAARecord extends AbstractRecord<AAAARecord> {
 	@Override
 	protected ResourceRecord newInstance() {
 		return new AAAARecord(this);
+	}
+
+	@Override
+	public void setRDATA(List<String> list) {
+		if (0 < list.size()) {
+			String s = list.get(0);
+			if (AddressUtil.v6Address.matcher(s).matches()) {
+				InetAddress addr = AddressUtil.getByName(s);
+				this.address = addr.getAddress();
+			}
+		} else {
+			// TODO error message.
+			throw new IllegalArgumentException();
+		}
 	}
 
 	public InetAddress address() {

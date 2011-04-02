@@ -265,4 +265,8 @@ public enum RRType implements VariableEnum {
 	public static RRType valueOf(int code) {
 		return EnumUtil.find(RRType.values(), code, UNKNOWN);
 	}
+
+	public static RRType find(String value) {
+		return EnumUtil.find(RRType.values(), value, null);
+	}
 }

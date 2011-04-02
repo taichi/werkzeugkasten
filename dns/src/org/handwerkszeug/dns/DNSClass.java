@@ -49,4 +49,8 @@ public enum DNSClass implements VariableEnum {
 	public static DNSClass valueOf(int value) {
 		return EnumUtil.find(DNSClass.values(), value);
 	}
+
+	public static DNSClass find(String value) {
+		return EnumUtil.find(DNSClass.values(), value, null);
+	}
 }

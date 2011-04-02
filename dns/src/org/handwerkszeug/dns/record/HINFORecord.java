@@ -1,6 +1,7 @@
 package org.handwerkszeug.dns.record;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
@@ -57,6 +58,17 @@ public class HINFORecord extends AbstractRecord<HINFORecord> {
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		writeString(buffer, this.cpu);
 		writeString(buffer, this.os);
+	}
+
+	@Override
+	public void setRDATA(List<String> list) {
+		if (list.size() == 2) {
+			this.cpu(list.get(0));
+			this.os(list.get(1));
+		} else {
+			// TODO error message.
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override

@@ -145,4 +145,13 @@ public class AddressUtil {
 		}
 		return result;
 	}
+
+	public static InetAddress getByName(String host) {
+		try {
+			return InetAddress.getByName(host);
+		} catch (UnknownHostException e) {
+			LOG.error(host, e);
+			throw new IllegalArgumentException(e);
+		}
+	}
 }

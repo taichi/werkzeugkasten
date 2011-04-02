@@ -1,5 +1,7 @@
 package org.handwerkszeug.dns.record;
 
+import java.util.List;
+
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
@@ -113,6 +115,16 @@ public class SOARecord extends AbstractRecord<SOARecord> {
 		buffer.writeInt((int) this.retry());
 		buffer.writeInt((int) this.expire());
 		buffer.writeInt((int) this.minimum());
+	}
+
+	@Override
+	public void setRDATA(List<String> list) {
+		if (6 < list.size()) {
+			// XXX
+		} else {
+			// TODO error message.
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override

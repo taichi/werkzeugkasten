@@ -68,6 +68,23 @@ public class PartitionerTest {
 		assertPartitions(list, s);
 	}
 
+	@Test
+	public void testDirective() throws Exception {
+		String s = "$TTL 30";
+		Partitioner p = create(s);
+
+		List<Partition> list = new ArrayList<Partition>();
+		list.add(new Partition(PartitionType.Default, "$TTL".getBytes()));
+		list.add(new Partition(PartitionType.Whitespace, " ".getBytes()));
+		list.add(new Partition(PartitionType.Default, "30".getBytes()));
+
+		for (Partition exp : list) {
+			Partition act = p.partition();
+			System.out.println(new String(act.division()));
+			assertEquals(exp, act);
+		}
+	}
+
 	protected void assertPartitions(List<Partition> expected, String data)
 			throws Exception {
 		Partitioner p = create(data);

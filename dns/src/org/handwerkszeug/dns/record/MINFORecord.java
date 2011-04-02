@@ -1,5 +1,7 @@
 package org.handwerkszeug.dns.record;
 
+import java.util.List;
+
 import org.handwerkszeug.dns.Name;
 import org.handwerkszeug.dns.NameCompressor;
 import org.handwerkszeug.dns.RRType;
@@ -52,6 +54,17 @@ public class MINFORecord extends AbstractRecord<MINFORecord> {
 	protected void writeRDATA(ChannelBuffer buffer, NameCompressor compressor) {
 		this.rmailbx().write(buffer, compressor);
 		this.emailbx().write(buffer, compressor);
+	}
+
+	@Override
+	public void setRDATA(List<String> list) {
+		if (2 == list.size()) {
+			this.rmailbx(new Name(list.get(0)));
+			this.emailbx(new Name(list.get(1)));
+		} else {
+			// TODO error message.
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override
