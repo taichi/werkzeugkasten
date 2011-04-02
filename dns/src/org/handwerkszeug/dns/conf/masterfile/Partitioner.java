@@ -6,8 +6,12 @@ import java.io.InputStream;
 import org.handwerkszeug.dns.conf.masterfile.Partition.PartitionType;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.DynamicChannelBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Partitioner {
+
+	static final Logger LOG = LoggerFactory.getLogger(Partitioner.class);
 
 	final InputStream source;
 
@@ -168,5 +172,13 @@ public class Partitioner {
 	protected void discardBefore(int backSize) {
 		this.working.readerIndex(this.working.readerIndex() - backSize);
 		this.working.discardReadBytes();
+	}
+
+	public void close() {
+		try {
+			this.source.close();
+		} catch (IOException e) {
+			LOG.error(e.getLocalizedMessage(), e);
+		}
 	}
 }

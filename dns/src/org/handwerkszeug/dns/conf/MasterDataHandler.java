@@ -4,7 +4,7 @@ import org.handwerkszeug.dns.ResourceRecord;
 
 public interface MasterDataHandler {
 	// lifecycle methods
-	void initialize();
+	void initialize(ServerConfiguration conf);
 
 	void commit();
 

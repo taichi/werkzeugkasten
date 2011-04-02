@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 import org.handwerkszeug.dns.conf.MasterDataHandler;
 import org.handwerkszeug.dns.conf.MasterDataResource;
+import org.handwerkszeug.dns.conf.ServerConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,8 @@ public class MasterFileParser implements MasterDataResource {
 
 	final Partitioner partitioner;
 
+	ServerConfiguration conf;
+
 	public MasterFileParser(File master) {
 		this(FileUtil.open(master));
 	}
@@ -32,12 +35,12 @@ public class MasterFileParser implements MasterDataResource {
 	}
 
 	@Override
-	public void initialize() {
+	public void initialize(ServerConfiguration conf) {
+		notNull(conf, "conf");
 		if (LOG.isInfoEnabled()) {
 			LOG.info("initialize");
 		}
-		// TODO Auto-generated method stub
-
+		this.conf = conf;
 	}
 
 	@Override
@@ -45,15 +48,14 @@ public class MasterFileParser implements MasterDataResource {
 		if (LOG.isInfoEnabled()) {
 			LOG.info("dispose");
 		}
-		// TODO Auto-generated method stub
-
+		this.partitioner.close();
 	}
 
 	@Override
 	public void process(MasterDataHandler processor) {
 		notNull(processor, "processor");
 		try {
-			processor.initialize();
+			processor.initialize(this.conf);
 			// TODO not implemented...
 		} catch (RuntimeException e) {
 			processor.rollback();
