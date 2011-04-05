@@ -107,7 +107,7 @@ public class MasterFileParser implements MasterDataResource {
 			Partition first = line.next();
 
 			if (isDirective(first)) {
-				String directive = new String(first.division()).toUpperCase();
+				String directive = first.getString().toUpperCase();
 				if ("$INCLUDE".equals(directive)) {
 					String path = null;
 					Name newOrigin = this.origin;
