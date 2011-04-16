@@ -55,4 +55,22 @@ public abstract class AbstractConfiguration implements Configuration {
 		return this.repositories;
 	}
 
+	protected void load() {
+		File cur = new File(".", Constants.DIR_REPOSITORY);
+		if (cur.exists()) {
+			addLocalRepository(cur);
+		}
+		StringBuilder stb = new StringBuilder();
+		stb.append(".m2");
+		stb.append('/');
+		stb.append(Constants.DIR_REPOSITORY);
+		File usr = new File(System.getProperty("user.home"), stb.toString());
+		if (usr.exists()) {
+			addLocalRepository(usr);
+		}
+	
+		addRepository(new RemoteRepository(Constants.CENTRAL_REPOSITORY,
+				builder));
+	}
+
 }

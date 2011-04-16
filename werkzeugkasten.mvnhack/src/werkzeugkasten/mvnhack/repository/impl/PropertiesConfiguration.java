@@ -1,6 +1,5 @@
 package werkzeugkasten.mvnhack.repository.impl;
 
-import java.io.File;
 import java.util.Properties;
 
 import werkzeugkasten.common.util.StringUtil;
@@ -17,24 +16,6 @@ public class PropertiesConfiguration extends AbstractConfiguration {
 		load(properties);
 	}
 
-	protected void load() {
-		File cur = new File(".", Constants.DIR_REPOSITORY);
-		if (cur.exists()) {
-			addLocalRepository(cur);
-		}
-		StringBuilder stb = new StringBuilder();
-		stb.append(".m2");
-		stb.append('/');
-		stb.append(Constants.DIR_REPOSITORY);
-		File usr = new File(System.getProperty("user.home"), stb.toString());
-		if (usr.exists()) {
-			addLocalRepository(usr);
-		}
-
-		addRepository(new RemoteRepository(Constants.CENTRAL_REPOSITORY,
-				builder));
-	}
-
 	protected void load(Properties properties) {
 		String rs = properties.getProperty(Constants.PROP_REPOSITORY);
 		if (StringUtil.isEmpty(rs) == false) {
@@ -45,9 +26,9 @@ public class PropertiesConfiguration extends AbstractConfiguration {
 			}
 		}
 		UrlUtil.setUpProxy(properties.getProperty(Constants.PROP_PROXY));
-		String hosts = properties.getProperty("http.nonProxyHosts");
+		String hosts = properties.getProperty(Constants.PROP_NONPROXY);
 		if (StringUtil.isEmpty(hosts) == false) {
-			System.setProperty("http.nonProxyHosts", hosts);
+			System.setProperty(Constants.PROP_NONPROXY, hosts);
 		}
 	}
 }
