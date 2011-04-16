@@ -33,7 +33,7 @@ public class DefaultContextTest {
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		URL url = cl.getResource("repository");
 		File repository = new File(url.getPath());
-		DefaultConfiguration config = new DefaultConfiguration();
+		AbstractConfiguration config = new PropertiesConfiguration();
 		config.addRepository(new LocalRepository(repository, builder));
 		File repo = new File(repository.getParentFile(), "repo");
 		config.addRepository(new LocalRepository(repo, builder));

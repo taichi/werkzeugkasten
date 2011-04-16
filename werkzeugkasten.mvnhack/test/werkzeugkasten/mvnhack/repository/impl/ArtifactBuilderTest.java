@@ -49,7 +49,7 @@ public class ArtifactBuilderTest {
 		assertNotNull(in);
 		StAXArtifactBuilder builder = new StAXArtifactBuilder();
 		Artifact a = builder.build(new DefaultContext(
-				new DefaultConfiguration()), in);
+				new PropertiesConfiguration()), in);
 		assertNotNull(a);
 		assertEquals("groupId", a.getGroupId());
 		assertEquals("artifactId", a.getArtifactId());

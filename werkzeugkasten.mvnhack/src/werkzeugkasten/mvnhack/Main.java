@@ -13,10 +13,11 @@ import java.util.Properties;
 
 import werkzeugkasten.common.util.Streams;
 import werkzeugkasten.common.util.UrlUtil;
-import werkzeugkasten.mvnhack.repository.impl.DefaultConfiguration;
+import werkzeugkasten.mvnhack.repository.Configuration;
 import werkzeugkasten.mvnhack.repository.impl.DefaultContext;
 import werkzeugkasten.mvnhack.repository.impl.FlatDestination;
 import werkzeugkasten.mvnhack.repository.impl.LocalRepository;
+import werkzeugkasten.mvnhack.repository.impl.PropertiesConfiguration;
 
 public class Main {
 
@@ -39,14 +40,21 @@ public class Main {
 			return;
 		}
 
-		Properties props = System.getProperties();
-		DefaultConfiguration config = new DefaultConfiguration(props);
+		Configuration config = null;
+		if (cmd.dependencies == null) {
+			Properties props = System.getProperties();
+			config = new PropertiesConfiguration(props);
+		} else {
+			config = new PropertiesConfiguration();
+		}
+
 		if (cmd.isFlat) {
 			config.addDestination(new FlatDestination(cmd.destDir));
 		} else {
 			LocalRepository lr = new LocalRepository(cmd.destDir, null);
 			config.addDestination(lr);
 		}
+
 		DefaultContext ctx = new DefaultContext(config);
 		ctx.resolve(cmd.groupId, cmd.artifactId, cmd.version);
 	}
@@ -89,6 +97,7 @@ public class Main {
 		String version = null;
 		boolean isFlat = true;
 		File destDir = new File(".");
+		File dependencies;
 	}
 
 	protected static final String HELP = "werkzeugkasten/mvnhack/Help.";

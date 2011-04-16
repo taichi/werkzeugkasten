@@ -40,7 +40,7 @@ public class LocalRepositoryTest {
 		root = kid.getParentFile();
 		another = new File(root, "another");
 		builder = new StAXArtifactBuilder();
-		context = new DefaultContext(new DefaultConfiguration());
+		context = new DefaultContext(new PropertiesConfiguration());
 		target = new LocalRepository(kid, builder);
 	}
 
@@ -64,7 +64,7 @@ public class LocalRepositoryTest {
 			FileUtil.delete(another.getPath());
 		}
 		LocalRepository lr = new LocalRepository(another, builder);
-		lr.copyFrom(new DefaultContext(new DefaultConfiguration()), target, a);
+		lr.copyFrom(new DefaultContext(new PropertiesConfiguration()), target, a);
 		assertNotNull(lr.load(context, "net.sourceforge.jexcelapi", "jxl",
 				"2.6.6"));
 	}

@@ -43,7 +43,7 @@ public class RemoteRepositoryTest {
 		}
 		flat = new FlatDestination(localRoot);
 		target = new RemoteRepository(Constants.CENTRAL_REPOSITORY, builder);
-		DefaultConfiguration conf = new DefaultConfiguration();
+		AbstractConfiguration conf = new PropertiesConfiguration();
 		conf.addRepository(target);
 		conf.addDestination(flat);
 		context = new DefaultContext(conf);
