@@ -184,17 +184,7 @@ public class Main {
 					&& NodeId.sequence.equals(an.getNodeId())) {
 				SequenceNode sn = (SequenceNode) an;
 				for (Node elem : sn.getValue()) {
-					if (NodeId.sequence.equals(elem.getNodeId())) {
-						SequenceNode artifact = (SequenceNode) elem;
-						List<String> list = new ArrayList<String>();
-						for (Node n : artifact.getValue()) {
-							String s = getValue(n);
-							if (StringUtil.isEmpty(s) == false) {
-								list.add(s);
-							}
-						}
-						resolve(context, list);
-					} else if (NodeId.scalar.equals(elem.getNodeId())) {
+					if (NodeId.scalar.equals(elem.getNodeId())) {
 						ScalarNode artifact = (ScalarNode) elem;
 						String[] arts = getValue(artifact).split("\\s");
 						List<String> list = Arrays.asList(arts);
