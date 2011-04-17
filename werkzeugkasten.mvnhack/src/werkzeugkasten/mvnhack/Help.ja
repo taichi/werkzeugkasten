@@ -1,6 +1,6 @@
 リモート及びローカルにあるmaven2のリポジトリからライブラリを取得します。
 
-java -jar mvnhack-0.0.2.jar [groupId] [artifactId] [version] flat=[on/off] dest=[path]
+java -jar mvnhack-0.0.3.jar [groupId] [artifactId] [version] flat=[on/off] dest=[path]
 
 - groupId
   groupId と artifactId が同じなら省略する事が出来ます。
@@ -16,6 +16,30 @@ java -jar mvnhack-0.0.2.jar [groupId] [artifactId] [version] flat=[on/off] dest=
 サンプル ...
 java -jar mvnhack.jar commons-httpclient commons-httpclient 2.0.2
  このコマンドでは、commons-httpclient-2.0.2.jar 及び commons-logging-1.0.3.jar を取得する事が出来ます。
+
+
+java -jar mvnhack-0.0.3.jar [yml]
+
+- yml
+  yamlファイル内に記述された設定を元にライブラリを取得します。
+  このパラメータが省略され、dependencies.ymlが実行ディレクトリに存在する場合、当該ファイルを使用します。
+
+dependencies.yml サンプル...
+    flatten : true
+    destination : ./lib
+    proxy : http://proxy.example.com:8080
+    http.nonProxyHosts : localhost
+
+    repositories :
+      - http://repository.codehaus.org/
+      - https://repository.jboss.org/nexus/content/repositories/releases/
+
+    dependencies :
+      - org.yaml snakeyaml 1.8
+
+このファイルでは、codehaus及びjbossのリポジトリを参照先として追加しています。
+snakeyamlは、groupId及びartifactId及びversionがスペース区切りで依存ライブラリとして指定されています。
+
 
 より詳しい情報は、 
   http://code.google.com/p/werkzeugkasten/wiki/mvnhack
