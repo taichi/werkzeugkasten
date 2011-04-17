@@ -153,10 +153,8 @@ public class Main {
 
 	protected void overrideArgs(Cmd cmd, MappingNode node) {
 		for (NodeTuple nt : node.getValue()) {
-			Node keyNode = nt.getKeyNode();
-			Node valNode = nt.getKeyNode();
-			String key = getValue(keyNode);
-			String val = getValue(valNode);
+			String key = getValue(nt.getKeyNode());
+			String val = getValue(nt.getKeyNode());
 			if (StringUtil.isEmpty(key) == false
 					&& StringUtil.isEmpty(val) == false) {
 				if ("flatten".equals(key)) {
