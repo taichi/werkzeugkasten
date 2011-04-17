@@ -44,7 +44,7 @@ public class Main {
 	}
 
 	protected void execute(String[] args) throws Exception {
-		if (args == null || args.length < 2) {
+		if (args == null) {
 			printHelp();
 			return;
 		}
@@ -119,6 +119,7 @@ public class Main {
 				cmd.dependencies = dep;
 				return cmd;
 			}
+			return null;
 		} else {
 			return null;
 		}
@@ -154,17 +155,14 @@ public class Main {
 	protected void overrideArgs(Cmd cmd, MappingNode node) {
 		for (NodeTuple nt : node.getValue()) {
 			String key = getValue(nt.getKeyNode());
-			String val = getValue(nt.getKeyNode());
+			String val = getValue(nt.getValueNode());
 			if (StringUtil.isEmpty(key) == false
 					&& StringUtil.isEmpty(val) == false) {
 				if ("flatten".equals(key)) {
 					cmd.isFlat = val
 							.matches("([yY][eE][sS]|[tT][rR][uU][eE]|[oO][nN])");
 				} else if ("destination".equals(key)) {
-					File dest = new File(val);
-					if (dest.exists() && dest.canWrite()) {
-						cmd.destDir = dest;
-					}
+					cmd.destDir = new File(val);
 				}
 			}
 		}
