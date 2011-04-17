@@ -1,4 +1,4 @@
-eclipse : true
+destination : ./lib
 proxy : http://proxy.example.com:8080
 http.nonProxyHosts : localhost
 
@@ -15,3 +15,4 @@ artifacts :
   - - com.google.protobuf
     - protobuf-java
     - 2.4.0a
+  - commons-pool 1.5.6

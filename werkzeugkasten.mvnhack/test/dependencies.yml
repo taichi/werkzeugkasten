@@ -1,6 +1,5 @@
 flatten : true
 destination : ./lib
-eclipse : true
 #proxy : http://proxy.example.com:8080
 #http.nonProxyHosts : localhost
 
@@ -8,7 +7,7 @@ repositories :
   - http://repository.codehaus.org/
   - https://repository.jboss.org/nexus/content/repositories/releases/
 
-artifacts :
+dependencies :
   - - org.codehaus.jackson
     - jackson-mapper-asl
     - 1.7.6
