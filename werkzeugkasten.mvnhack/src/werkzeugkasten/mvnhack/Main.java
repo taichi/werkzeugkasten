@@ -140,7 +140,7 @@ public class Main {
 		InputStream in = null;
 		try {
 			Reader r = new InputStreamReader(new BufferedInputStream(
-					new FileInputStream(conf)));
+					new FileInputStream(conf)), "UTF-8");
 			Node node = yaml.compose(r);
 			if (NodeId.mapping.equals(node.getNodeId())) {
 				return (MappingNode) node;
