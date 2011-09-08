@@ -139,13 +139,14 @@
     </init-param>
     <init-param>
       <param-name>useFileMappedBuffer</param-name>
-      <param-value>true</param-value>
+      <param-value>false</param-value>
     </init-param>
+    <!--
     <init-param>
       <param-name>resourceCache</param-name>
       <param-value>resourceCache</param-value>
     </init-param>
-    <!--
+    
     <init-param>
       <param-name>cacheControl</param-name>
       <param-value>max-age=3600,public</param-value>
