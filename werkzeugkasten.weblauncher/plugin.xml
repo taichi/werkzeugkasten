@@ -8,6 +8,16 @@
       <classpathVariableInitializer
             class="werkzeugkasten.weblauncher.variable.Variable"
             readOnly="true"
+            variable="SERVLET_API_3_0">
+      </classpathVariableInitializer>
+      <classpathVariableInitializer
+            class="werkzeugkasten.weblauncher.variable.Variable"
+            readOnly="true"
+            variable="JSP_API_2_2">
+      </classpathVariableInitializer>
+      <classpathVariableInitializer
+            class="werkzeugkasten.weblauncher.variable.Variable"
+            readOnly="true"
             variable="SERVLET_API_2_5">
       </classpathVariableInitializer>
       <classpathVariableInitializer
@@ -253,6 +263,10 @@
    </extension>
    <extension
          point="werkzeugkasten.weblauncher.libraryConfigurator">
+      <libraryConfigurator
+            class="werkzeugkasten.weblauncher.launch.Servlet30Jsp22"
+            type="Servlet 3.0 + JSP 2.2">
+      </libraryConfigurator>
       <libraryConfigurator
             class="werkzeugkasten.weblauncher.launch.Servlet25Jsp21"
             type="Servlet 2.5 + JSP 2.1">
