@@ -30,6 +30,9 @@ import werkzeugkasten.weblauncher.Activator;
 import werkzeugkasten.weblauncher.Constants;
 import werkzeugkasten.weblauncher.preferences.WebPreferences;
 
+/**
+ * @author taichi
+ */
 public class Jetty7LaunchConfigurationBuilder implements
 		LaunchConfigurationBuilder {
 
