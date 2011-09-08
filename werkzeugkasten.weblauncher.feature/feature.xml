@@ -2,7 +2,7 @@
 <feature
       id="werkzeugkasten.weblauncher.feature"
       label="WebLauncher"
-      version="0.0.27"
+      version="0.0.28"
       provider-name="ryushi">
 
    <description url="http://code.google.com/p/werkzeugkasten/">
@@ -421,7 +421,7 @@
          id="werkzeugkasten.weblauncher"
          download-size="0"
          install-size="0"
-         version="0.0.13"
+         version="0.0.14"
          unpack="false"/>
 
    <plugin
@@ -453,5 +453,17 @@
          download-size="0"
          install-size="0"
          version="0.1.1"/>
+
+   <plugin
+         id="werkzeugkasten.weblauncher.jetty7"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
+
+   <plugin
+         id="werkzeugkasten.weblauncher.jetty8"
+         download-size="0"
+         install-size="0"
+         version="0.0.1"/>
 
 </feature>
